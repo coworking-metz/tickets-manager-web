@@ -6,11 +6,8 @@ export interface User {
   name: string;
   email: string;
   roles: string[];
+  picture: string;
 }
-
-export const login = (): Promise<string> => {
-  return HTTP.get('auth/login');
-};
 
 export const logout = (): Promise<void> => {
   return HTTP.get('auth/logout');
@@ -18,7 +15,7 @@ export const logout = (): Promise<void> => {
 
 export const refreshToken = (
   isCancellable = true,
-): Promise<{ access_token: string; refresh_token: string }> =>
+): Promise<{ access_token: string; refresh_token: string; user: User }> =>
   HTTP.get('auth/token', {
     ...(!isCancellable ? { cancelToken: axios.CancelToken.source().token } : {}),
   }).then(({ data }) => data);

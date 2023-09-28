@@ -2,17 +2,20 @@ import App from './App.vue';
 import { i18nInstance } from './i18n';
 import router from './router';
 import { ROUTE_NAMES } from './router/names';
+import HTTP from './services/http';
+import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { createApp } from 'vue';
-import './style.css';
 
 const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
 app.use(i18nInstance);
+
+createHttpInterceptors(HTTP);
 
 router.beforeEach(async (to, from, next) => {
   const httpStore = useHttpStore();

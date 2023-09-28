@@ -1,6 +1,8 @@
 <template>
-  <span v-if="state.isLoading">{{ $t('loading') }}</span>
-  <router-view v-else />
+  <div class="">
+    <span v-if="state.isLoading">{{ $t('loading') }}</span>
+    <router-view v-else />
+  </div>
 </template>
 
 <script lang="ts" setup>
