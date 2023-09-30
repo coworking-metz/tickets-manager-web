@@ -1,17 +1,17 @@
-import { useHttpStore } from './http';
-import { User, logout, refreshToken } from '@/services/api/auth';
+import { useHttpStore } from './http.js';
 import { defineStore } from 'pinia';
+import { logout, refreshToken } from '@/services/api/auth.js';
 
 /**
  * In order to avoid asking for multiple refresh tokens at the same time when it has expired,
  * this singleton holds the http request Promise until a new token is fetched.
  */
-let refreshPromise: Promise<void> | null = null;
+let refreshPromise = null;
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    accessToken: null as string | null,
-    user: null as User | null,
+    accessToken: null,
+    user: null,
   }),
   actions: {
     fetchTokens() {

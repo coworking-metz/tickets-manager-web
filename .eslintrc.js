@@ -16,17 +16,10 @@ module.exports = {
     node: true,
     es2020: true,
   },
-  plugins: [
-    'vue',
-    'vuejs-accessibility',
-    '@typescript-eslint', // @see https://stackoverflow.com/a/66525357/15183871
-    'import',
-    'prettier',
-  ],
+  plugins: ['vue', 'vuejs-accessibility', 'import', 'prettier'],
   extends: [
     'plugin:@intlify/vue-i18n/recommended',
     '@vue/eslint-config-prettier',
-    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:vue/recommended',
     'eslint-config-prettier', // to turn off all Prettier rules that might conflict
     'plugin:prettier/recommended',
@@ -61,20 +54,11 @@ module.exports = {
     ],
     'vue/component-api-style': [ERROR, ['script-setup', 'composition']],
     'vue/block-tag-newline': ERROR,
-    'vue/block-lang': [
-      ERROR,
-      {
-        script: {
-          lang: 'ts',
-        },
-      },
-    ],
     'no-console': [WARNING, { allow: ['warn', 'error', 'info'] }],
     'no-debugger': WARNING,
     'no-shadow': OFF,
     // @see https://stackoverflow.com/a/63767419/15183871
     'no-unused-vars': OFF,
-    '@typescript-eslint/no-unused-vars': OFF,
     'prettier/prettier': [
       'error',
       {
@@ -99,18 +83,6 @@ module.exports = {
     ],
   },
   overrides: [
-    {
-      files: ['*.vue', '*.ts'],
-      parser: 'vue-eslint-parser',
-      parserOptions: {
-        parser: require.resolve('@typescript-eslint/parser'),
-        extraFileExtensions: ['.vue'],
-        ecmaFeatures: {
-          jsx: true,
-          noImplicitAny: false,
-        },
-      },
-    },
     {
       files: ['*.json'],
       parser: 'jsonc-eslint-parser',
@@ -146,12 +118,6 @@ module.exports = {
       // Specify the version of `vue-i18n` you are using.
       // If not specified, the message will be parsed twice.
       messageSyntaxVersion: '^9.0.0',
-    },
-    'import/resolver': {
-      typescript: {
-        // @see https://stackoverflow.com/a/71699452/15183871
-        project: [`${path.resolve(__dirname, 'tsconfig.json')}`],
-      },
     },
   },
   ignorePatterns: ['node_modules', 'build', 'dist', 'package-lock.json'],

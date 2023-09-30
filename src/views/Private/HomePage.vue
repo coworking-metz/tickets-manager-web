@@ -2,8 +2,8 @@
   <h1>{{ $t('home.title', { name: authStore.user?.name }) }}</h1>
 </template>
 
-<script setup lang="ts">
-import { useAuthStore } from '@/store/auth';
+<script setup>
+import { useAuthStore } from '@/store/auth.js';
 
 const authStore = useAuthStore();
 </script>

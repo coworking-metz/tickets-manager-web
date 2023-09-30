@@ -7,6 +7,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import HTTP from '@/services/http';
+<script setup>
+import HTTP from '@/services/http.js';
 </script>

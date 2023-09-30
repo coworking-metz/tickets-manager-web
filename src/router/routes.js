@@ -1,5 +1,4 @@
-// Composables
-import { ROUTE_NAMES } from './names';
+import { ROUTE_NAMES } from './names.js';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [

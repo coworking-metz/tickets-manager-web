@@ -1,26 +1,20 @@
-import { CancelTokenSource } from 'axios';
 import { defineStore } from 'pinia';
-
-export interface HttpRequest {
-  id: string;
-  cancelTokenSource: CancelTokenSource;
-}
 
 export const useHttpStore = defineStore('http', {
   state: () => ({
-    requests: [] as HttpRequest[],
+    requests: [],
   }),
   actions: {
-    addRequest(request: HttpRequest) {
+    addRequest(request) {
       this.requests.push(request);
     },
-    removeRequest(requestId: string) {
+    removeRequest(requestId) {
       const requestIndex = this.requests.findIndex(({ id }) => id === requestId);
       if (requestIndex >= 0) {
         this.requests.splice(requestIndex, 1);
       }
     },
-    cancelAllRequests(reason?: string) {
+    cancelAllRequests(reason) {
       this.requests.forEach(({ id, cancelTokenSource }) => {
         cancelTokenSource.cancel(reason);
         this.removeRequest(id);

@@ -5,13 +5,13 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const state = reactive({
-  isLoading: true as boolean,
+  isLoading: true,
 });
 
 router.isReady().finally(() => {

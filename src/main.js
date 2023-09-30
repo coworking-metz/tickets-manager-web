@@ -1,12 +1,12 @@
 import App from './App.vue';
-import { i18nInstance } from './i18n';
-import router from './router';
-import { ROUTE_NAMES } from './router/names';
-import HTTP from './services/http';
-import createHttpInterceptors from './services/interceptors';
-import pinia from './store';
-import { useAuthStore } from './store/auth';
-import { useHttpStore } from './store/http';
+import { i18nInstance } from './i18n/i18n.js';
+import { ROUTE_NAMES } from './router/names.js';
+import router from './router/routes.js';
+import HTTP from './services/http.js';
+import createHttpInterceptors from './services/interceptors.js';
+import { useAuthStore } from './store/auth.js';
+import { useHttpStore } from './store/http.js';
+import pinia from './store/pinia.js';
 import { createApp } from 'vue';
 
 const app = createApp(App);
