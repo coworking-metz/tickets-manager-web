@@ -8,7 +8,6 @@ import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { createApp } from 'vue';
-import { LocationQueryRaw, useRouter } from 'vue-router';
 
 const app = createApp(App);
 
