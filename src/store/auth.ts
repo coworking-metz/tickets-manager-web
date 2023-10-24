@@ -2,6 +2,8 @@ import { useHttpStore } from './http';
 import { User, refreshTokens } from '@/services/api/auth';
 import { defineStore } from 'pinia';
 
+const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
+
 /**
  * In order to avoid asking for multiple refresh tokens at the same time when it has expired,
  * this singleton holds the http request Promise until a new token is fetched.
@@ -32,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
   }),
   actions: {
     setRefreshToken(refreshToken: string) {
-      localStorage.setItem('rt', refreshToken);
+      localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
     setAccessToken(accessToken: string) {
       this.accessToken = accessToken || null;
@@ -40,13 +42,19 @@ export const useAuthStore = defineStore('auth', {
     },
     fetchTokens() {
       if (!refreshPromise) {
-        refreshPromise = refreshTokens(false)
-          .then(({ access_token }) => {
-            this.setAccessToken(access_token);
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
+        const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
+        if (refreshToken) {
+          refreshPromise = refreshTokens(refreshToken, false)
+            .then(({ access_token, refresh_token }) => {
+              this.setRefreshToken(refresh_token);
+              this.setAccessToken(access_token);
+            })
+            .finally(() => {
+              refreshPromise = null;
+            });
+        } else {
+          throw new Error('No refresh token found');
+        }
       }
       return refreshPromise;
     },

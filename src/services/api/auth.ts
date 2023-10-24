@@ -14,9 +14,9 @@ export const logout = (): Promise<void> => {
 };
 
 export const refreshTokens = (
+  refreshToken: string,
   isCancellable = true,
 ): Promise<{ access_token: string; refresh_token: string }> => {
-  const refreshToken = localStorage.getItem('rt');
   return HTTP.post(
     '/auth/tokens',
     { refresh_token: refreshToken },
