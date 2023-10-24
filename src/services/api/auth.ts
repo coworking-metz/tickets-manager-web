@@ -15,7 +15,7 @@ export const logout = (): Promise<void> => {
 
 export const refreshTokens = (
   isCancellable = true,
-): Promise<{ access_token: string; refresh_token: string; user: User }> => {
+): Promise<{ access_token: string; refresh_token: string }> => {
   const refreshToken = localStorage.getItem('rt');
   return HTTP.post(
     '/auth/tokens',

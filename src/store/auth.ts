@@ -8,6 +8,23 @@ import { defineStore } from 'pinia';
  */
 let refreshPromise: Promise<void> | null = null;
 
+// https://stackoverflow.com/a/38552302
+const parseJwt = (token: string) => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join(''),
+  );
+
+  return JSON.parse(jsonPayload);
+};
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     accessToken: null as string | null,
@@ -17,12 +34,15 @@ export const useAuthStore = defineStore('auth', {
     setRefreshToken(refreshToken: string) {
       localStorage.setItem('rt', refreshToken);
     },
+    setAccessToken(accessToken: string) {
+      this.accessToken = accessToken || null;
+      this.user = parseJwt(accessToken) || null;
+    },
     fetchTokens() {
       if (!refreshPromise) {
         refreshPromise = refreshTokens(false)
-          .then(({ access_token, user }) => {
-            this.accessToken = access_token;
-            this.user = user;
+          .then(({ access_token }) => {
+            this.setAccessToken(access_token);
           })
           .finally(() => {
             refreshPromise = null;

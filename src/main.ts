@@ -21,7 +21,7 @@ createHttpInterceptors(HTTP);
 router.beforeEach(async (to, from, next) => {
   const httpStore = useHttpStore();
   const authStore = useAuthStore();
-  const router = useRouter();
+
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
   // don't it on hash change
@@ -35,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.query.accessToken) {
-    authStore.accessToken = to.query.accessToken as string;
+    authStore.setAccessToken(to.query.accessToken as string);
   }
 
   if (!to.matched.some((route) => route.meta.allowAnonymous)) {
