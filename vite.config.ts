@@ -20,6 +20,6 @@ export default defineConfig({
     alias: {
       '@': resolve(dirname(fileURLToPath(import.meta.url)), './src'),
     },
-    extensions: ['.json', '.ts', '.tsx', '.vue'],
+    extensions: ['.json', '.ts', '.vue'],
   },
 });

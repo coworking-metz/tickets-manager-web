@@ -8,6 +8,7 @@ import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { createApp } from 'vue';
+import { LocationQueryRaw, useRouter } from 'vue-router';
 
 const app = createApp(App);
 
@@ -20,11 +21,21 @@ createHttpInterceptors(HTTP);
 router.beforeEach(async (to, from, next) => {
   const httpStore = useHttpStore();
   const authStore = useAuthStore();
+  const router = useRouter();
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
   // don't it on hash change
   if (from.name !== to.name) {
     httpStore.cancelAllRequests('Route has changed');
+  }
+
+  // retrieve tokens from query params
+  if (to.query.refreshToken) {
+    authStore.setRefreshToken(to.query.refreshToken as string);
+  }
+
+  if (to.query.accessToken) {
+    authStore.accessToken = to.query.accessToken as string;
   }
 
   if (!to.matched.some((route) => route.meta.allowAnonymous)) {
@@ -33,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
     if (!authStore.accessToken) {
       return authStore
         .fetchTokens()
-        .then(() => next())
+        .then(next)
         .catch(() => {
           // When user has invalid session,
           // set redirectPath to allow loging page to redirect user on desired page afterwards
