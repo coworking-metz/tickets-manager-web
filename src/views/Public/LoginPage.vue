@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>{{ $t('login.title') }}</h1>
+  <div class="">
+    <h1 class="text-3xl font-bold underline">{{ $t('login.title') }}</h1>
     <PButton
       :href="HTTP.getUri({ url: '/auth/login', params: $route.query })"
       :label="$t('action.login')" />

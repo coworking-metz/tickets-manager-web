@@ -10,6 +10,7 @@ import { useHttpStore } from './store/http';
 import { createHead } from '@unhead/vue';
 import PrimeVue from 'primevue/config';
 import { createApp } from 'vue';
+import '@/styles/main.css';
 
 const app = createApp(App);
 const head = createHead();
