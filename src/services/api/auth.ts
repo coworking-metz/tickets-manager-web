@@ -14,7 +14,7 @@ export const logout = (): Promise<void> => {
 };
 
 export const refreshTokens = (
-  refreshToken: string,
+  refreshToken: string | null,
   isCancellable = true,
 ): Promise<{ access_token: string; refresh_token: string }> => {
   return HTTP.post(

@@ -43,18 +43,15 @@ export const useAuthStore = defineStore('auth', {
     fetchTokens() {
       if (!refreshPromise) {
         const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
-        if (refreshToken) {
-          refreshPromise = refreshTokens(refreshToken, false)
-            .then(({ access_token, refresh_token }) => {
-              this.setRefreshToken(refresh_token);
-              this.setAccessToken(access_token);
-            })
-            .finally(() => {
-              refreshPromise = null;
-            });
-        } else {
-          throw new Error('No refresh token found');
-        }
+
+        refreshPromise = refreshTokens(refreshToken, false)
+          .then(({ access_token, refresh_token }) => {
+            this.setRefreshToken(refresh_token);
+            this.setAccessToken(access_token);
+          })
+          .finally(() => {
+            refreshPromise = null;
+          });
       }
       return refreshPromise;
     },
