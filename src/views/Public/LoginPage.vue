@@ -1,9 +1,9 @@
 <template>
   <div>
     <h1>{{ $t('login.title') }}</h1>
-    <a :href="HTTP.getUri({ url: '/auth/login', params: $route.query })">
-      {{ $t('action.login') }}
-    </a>
+    <PButton
+      :href="HTTP.getUri({ url: '/auth/login', params: $route.query })"
+      :label="$t('action.login')" />
   </div>
 </template>
 

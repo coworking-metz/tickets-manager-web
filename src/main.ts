@@ -7,13 +7,18 @@ import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
+import { createHead } from '@unhead/vue';
+import PrimeVue from 'primevue/config';
 import { createApp } from 'vue';
 
 const app = createApp(App);
+const head = createHead();
 
 app.use(pinia);
 app.use(router);
 app.use(i18nInstance);
+app.use(PrimeVue, { ripple: true });
+app.use(head);
 
 createHttpInterceptors(HTTP);
 
