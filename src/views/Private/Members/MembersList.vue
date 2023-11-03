@@ -9,7 +9,7 @@
           <RouterLink
             class="block hover:bg-gray-50"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL, params: { id: member.id } }">
-            <MembersListCard loading :member="member" />
+            <MembersListCard :loading="state.isFetching" :member="member" />
           </RouterLink>
         </li>
       </ul>
