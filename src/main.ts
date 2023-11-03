@@ -8,7 +8,6 @@ import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { createHead } from '@unhead/vue';
-import PrimeVue from 'primevue/config';
 import { createApp } from 'vue';
 import '@/styles/main.css';
 
@@ -18,7 +17,6 @@ const head = createHead();
 app.use(pinia);
 app.use(router);
 app.use(i18nInstance);
-app.use(PrimeVue, { ripple: true });
 app.use(head);
 
 createHttpInterceptors(HTTP);
@@ -49,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
     if (!authStore.accessToken) {
       return authStore
         .fetchTokens()
-        .then(next)
+        .then(() => next())
         .catch(() => {
           // When user has invalid session,
           // set redirectPath to allow loging page to redirect user on desired page afterwards

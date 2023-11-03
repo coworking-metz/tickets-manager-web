@@ -1,0 +1,88 @@
+.transition-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  overflow-y: visible;
+  flex-grow: 1;
+
+  /* hide scrollbars */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.transition-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  min-height: 100%;
+  /* why 350ms ? https://stackoverflow.com/a/7609370/15183871 */
+  transition: transform 350ms linear, opacity 350ms ease-in-out;
+}
+
+.slide-right-leave-active,
+.slide-left-leave-active,
+.slide-left-leave-to,
+.slide-right-leave-to {
+  transition: transform 350ms ease-in, opacity 350ms ease-out 150ms;
+}
+
+.slide-left-enter-active {
+  transform: translateX(100%);
+}
+
+.slide-left-enter-to,
+.slide-left-leave-active {
+  transform: translateX(0);
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-active {
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-to,
+.slide-right-leave-active {
+  transform: translateX(0);
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+.slide-left-enter-active,
+.slide-right-enter-active {
+  opacity: 0;
+}
+
+.slide-left-leave-active,
+.slide-right-leave-active {
+  opacity: 0;
+}
+
+.slide-left-enter-to,
+.slide-right-enter-to {
+  opacity: 1;
+}
+
+/* Tone down the animation to avoid vestibular motion triggers like scaling or panning large objects. */
+@media (prefers-reduced-motion) {
+  .slide-left-enter-active,
+  .slide-left-leave-active,
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    transition: none;
+  }
+}

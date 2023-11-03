@@ -27,7 +27,8 @@ module.exports = {
     'plugin:@intlify/vue-i18n/recommended',
     '@vue/eslint-config-prettier',
     'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
+    'plugin:tailwindcss/recommended',
     'eslint-config-prettier', // to turn off all Prettier rules that might conflict
     'plugin:prettier/recommended',
     'prettier',
@@ -154,5 +155,5 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ['node_modules', 'build', 'dist', 'package-lock.json'],
+  ignorePatterns: ['**/*.scss', 'node_modules', 'build', 'dist', 'yarn.lock'],
 };

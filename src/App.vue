@@ -1,13 +1,11 @@
 <template>
-  <div class="">
-    <Head>
-      <title>{{ $t('head.title') }}</title>
-      <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
-      <link :href="`prime-vue-assets/soho-${state.theme}/theme.css`" rel="stylesheet" />
-    </Head>
-    <span v-if="state.isLoading">{{ $t('loading') }}</span>
-    <router-view v-else />
-  </div>
+  <Head>
+    <title>{{ $t('head.title') }}</title>
+    <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
+    <link :href="`prime-vue-assets/soho-${state.theme}/theme.css`" rel="stylesheet" />
+  </Head>
+  <p-progress-spinner v-if="state.isLoading" class="m-auto" />
+  <router-view v-else />
 </template>
 
 <script lang="ts" setup>

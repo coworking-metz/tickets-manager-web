@@ -45,9 +45,9 @@ export const useAuthStore = defineStore('auth', {
         const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
 
         refreshPromise = refreshTokens(refreshToken, false)
-          .then(({ access_token, refresh_token }) => {
-            this.setRefreshToken(refresh_token);
-            this.setAccessToken(access_token);
+          .then(({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
+            this.setRefreshToken(newRefresToken);
+            this.setAccessToken(newAccessToken);
           })
           .finally(() => {
             refreshPromise = null;
