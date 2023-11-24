@@ -4,7 +4,7 @@
     <div class="flex flex-row flex-wrap items-center justify-between gap-1 px-4 py-5 sm:p-6">
       <h4 class="text-lg font-medium">{{ $t('members.detail.orders.subscriptions.title') }}</h4>
       <span
-        class="rounded-full bg-indigo-500/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+        class="rounded-full bg-indigo-500/10 px-3 py-1 text-sm leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
         {{ $t('members.detail.orders.subscriptions.active', { count: +active }) }}
       </span>
     </div>
@@ -66,9 +66,7 @@ import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/memb
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
 import { PropType } from 'vue';
-dayjs.extend(LocalizedFormat);
 
 defineProps({
   subscriptions: {

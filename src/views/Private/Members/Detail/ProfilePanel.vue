@@ -43,18 +43,17 @@
 
       <div class="flex flex-col">
         <p class="block text-sm font-medium text-gray-700">
-          {{
-            $t('members.detail.profile.macAddresses.label', { count: state.macAddresses.length })
-          }}
+          {{ $t('members.detail.profile.macAddresses.label', { count: state.devices.length }) }}
         </p>
         <i18n-t
           class="block text-gray-500"
           keypath="members.detail.profile.macAddresses.description.text"
+          scope="global"
           tag="small">
           <template #link>
             <a
               class="font-medium text-blue-600 hover:underline dark:text-blue-500"
-              href=""
+              href="https://www.studentinternet.eu/fr/docs/nederlands/depannage/comment-puis-je-trouver-ladresse-mac-de-mon-appareil/"
               target="_blank">
               {{ $t('members.detail.profile.macAddresses.description.link') }}
             </a>
@@ -67,8 +66,8 @@
         </i18n-t>
         <ul class="mt-1 flex flex-col gap-6">
           <li
-            v-for="(macAddress, index) in state.macAddresses"
-            :key="`mac-address-${macAddress}`"
+            v-for="(device, index) in state.devices"
+            :key="`device-${device.id}`"
             class="flex rounded-md shadow-sm">
             <div class="relative flex grow items-stretch focus-within:z-10">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -79,10 +78,23 @@
                   type="mdi" />
               </div>
               <input
-                v-model="state.macAddresses[index].address"
+                v-model="state.devices[index].macAddress"
                 class="block w-full rounded-none rounded-l-md border-gray-300 pl-10 uppercase focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="A0:B1:C2:D3:E4:F5"
                 type="text" />
+
+              <a
+                v-if="state.devices[index].macAddress"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden"
+                :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
+                target="_blank">
+                {{ $t('members.detail.profile.macAddresses.check') }}
+                <SvgIcon
+                  aria-hidden="true"
+                  class="ml-1 inline-block h-5 w-5"
+                  :path="mdiOpenInNew"
+                  type="mdi" />
+              </a>
             </div>
             <button
               class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -102,9 +114,7 @@
               type="button"
               @click="onAddMacAddress">
               <SvgIcon aria-hidden="true" class="mr-3 h-5 w-5" :path="mdiPlus" type="mdi" />
-              {{
-                $t('members.detail.profile.macAddresses.add', { count: state.macAddresses.length })
-              }}
+              {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
             </button>
           </li>
         </ul>
@@ -161,7 +171,7 @@
         </SwitchGroup>
       </ul>
     </div>
-    <div class="flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
+    <div class="flex flex-row border-t-[1px] border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
       <AppButton :icon="mdiCheckAll" type="submit">
         {{ $t('action.apply') }}
       </AppButton>
@@ -172,7 +182,7 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { Member } from '@/services/api/members';
+import { Device, Member } from '@/services/api/members';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiClose, mdiLaptop, mdiCheckAll, mdiPlus, mdiOpenInNew } from '@mdi/js';
@@ -180,10 +190,6 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
 import { watch } from 'vue';
 import { PropType, reactive } from 'vue';
-
-interface MacAddress {
-  address: string;
-}
 
 const props = defineProps({
   member: {
@@ -197,7 +203,7 @@ const state = reactive({
   lastname: null as string | null,
   email: null as string | null,
   phone: null as string | null,
-  macAddresses: [] as MacAddress[],
+  devices: [] as Device[],
   isManager: false as boolean,
   hasParkingAccess: false as boolean,
 });
@@ -211,15 +217,15 @@ const rules = {
 const vuelidate = useVuelidate(rules, state);
 
 const onAddMacAddress = () => {
-  state.macAddresses.push({ address: '' });
+  state.devices.push({ id: '', macAddress: '' });
 };
 
 const onRemoveMacAddress = (index: number) => {
-  state.macAddresses.splice(index, 1);
+  state.devices.splice(index, 1);
 };
 
 const onSubmit = () => {
-  console.log(state.macAddresses);
+  // TODO: vuelidate and call the API
 };
 
 watch(
@@ -230,7 +236,7 @@ watch(
       state.lastname = member.lastname || null;
       state.email = member.email || null;
       state.phone = member.phone || null;
-      state.macAddresses = member.macAddresses.map((address) => ({ address })) || [];
+      state.devices = member.devices || null;
     }
   },
   { immediate: true },

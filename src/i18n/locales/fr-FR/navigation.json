@@ -1,4 +1,6 @@
 {
+  "close": "Fermer le menu",
   "members": "@:members.list.title",
+  "open": "Ouvrir le menu",
   "stats": "@:stats.title"
 }

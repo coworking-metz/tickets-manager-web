@@ -3,6 +3,37 @@ import HTTP from '../http';
 export const COUPON_UNIT_COST_IN_EUR = 6 as const;
 export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;
 
+export interface Coupon {
+  id: string;
+  purchaseDate: string;
+  tickets: number;
+}
+
+export interface Subscription {
+  id: string;
+  startDate: string;
+  endDate: string;
+  purchased: string;
+}
+
+export interface Attendance {
+  id: string;
+  date: string;
+  amount: number;
+  type: 'SUBSCRIPTION' | 'TICKET';
+}
+
+export interface Membership {
+  id: string;
+  purchaseDate: string;
+  membershipStart: string;
+}
+
+export interface Device {
+  id: string;
+  macAddress: string;
+}
+
 export interface MemberListItem {
   id: number;
   picture: string;
@@ -12,33 +43,7 @@ export interface MemberListItem {
   lastname: string;
   lastSeen: string;
   balance: number;
-  subscription: {
-    startDate: string;
-    endDate: string;
-    purchased: string;
-  };
-  memberships: {
-    purchaseDate: string;
-    membershipStart: string;
-  }[];
-  macAddresses: string[];
-}
-
-export interface Coupon {
-  purchaseDate: string;
-  tickets: number;
-}
-
-export interface Subscription {
-  startDate: string;
-  endDate: string;
-  purchased: string;
-}
-
-export interface Attendance {
-  date: string;
-  amount: number;
-  type: 'SUBSCRIPTION' | 'COUPON';
+  subscription: Subscription;
 }
 
 export interface Member extends MemberListItem {
@@ -46,6 +51,8 @@ export interface Member extends MemberListItem {
   tickets: Coupon[];
   presences: Attendance[];
   subscriptions: Subscription[];
+  devices: Device[];
+  memberships: Membership[];
 }
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {

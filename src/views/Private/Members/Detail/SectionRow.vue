@@ -1,12 +1,12 @@
 <template>
-  <section class="flex flex-row flex-wrap gap-3 px-3">
+  <section class="flex flex-row flex-wrap gap-3">
     <aside class="flex min-w-[12rem] shrink grow basis-0 flex-col">
       <slot name="title">
         <h2 v-if="title" class="text-xl font-medium leading-6 text-gray-900">
           {{ title }}
         </h2>
       </slot>
-      <slot name="title">
+      <slot name="description">
         <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-600">
           {{ description }}
         </p>
