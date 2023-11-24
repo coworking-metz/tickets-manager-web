@@ -1,10 +1,14 @@
 import HTTP from '../http';
 import axios from 'axios';
 
+export const COUPON_UNIT_COST_IN_EUR = 6 as const;
+export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;
+
 export interface MemberListItem {
   id: number;
   picture: string;
   email: string;
+  phone: string;
   firstname: string;
   lastname: string;
   lastSeen: string;
@@ -21,16 +25,28 @@ export interface MemberListItem {
   macAddresses: string[];
 }
 
+export interface Coupon {
+  purchaseDate: string;
+  tickets: number;
+}
+
+export interface Subscription {
+  startDate: string;
+  endDate: string;
+  purchased: string;
+}
+
+export interface Attendance {
+  date: string;
+  amount: number;
+  type: 'SUBSCRIPTION' | 'COUPON';
+}
+
 export interface Member extends MemberListItem {
-  tickets: {
-    purchaseDate: string;
-    tickets: number;
-  }[];
-  presences: {
-    date: string;
-    amount: number;
-    type: 'SUBSCRIPTION' | 'BALANCE';
-  }[];
+  created: string;
+  tickets: Coupon[];
+  presences: Attendance[];
+  subscriptions: Subscription[];
 }
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {

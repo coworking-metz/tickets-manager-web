@@ -1,5 +1,8 @@
 import * as frenchMessages from './locales/fr-FR';
+import dayjs from 'dayjs';
 import { createI18n, IntlDateTimeFormats, IntlNumberFormats } from 'vue-i18n';
+import 'dayjs/locale/fr.js';
+import 'dayjs/locale/en-gb.js';
 
 const datetimeFormats: IntlDateTimeFormats = {
   'fr-FR': {
@@ -29,6 +32,7 @@ const numberFormats: IntlNumberFormats = {
 };
 
 const defaultLang = import.meta.env.VUE_APP_DEFAULT_LOCALE || 'fr-FR';
+dayjs.locale(defaultLang.substring(0, 2));
 
 export const i18nInstance = createI18n({
   globalInjection: true,
@@ -40,6 +44,8 @@ export const i18nInstance = createI18n({
 });
 
 const setI18nLanguage = async (locale: string): Promise<string> => {
+  const language = locale.substring(0, 2);
+  dayjs.locale(language);
   i18nInstance.global.locale.value = locale;
   return locale;
 };

@@ -12,10 +12,17 @@ export default defineConfig({
   envDir: resolve(dirname(fileURLToPath(import.meta.url)), './src/config'),
   envPrefix: 'VUE_',
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => ['dotlottie-player'].includes(tag),
+        },
+      },
+    }),
     // https://vue-i18n.intlify.dev/guide/advanced/optimization.html
     VueI18nPlugin({}),
   ],
+  assetsInclude: ['**/*.lottie'],
   resolve: {
     alias: {
       '@': resolve(dirname(fileURLToPath(import.meta.url)), './src'),

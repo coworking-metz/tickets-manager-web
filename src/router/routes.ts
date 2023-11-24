@@ -21,12 +21,7 @@ export const routes: RouteRecordRaw[] = [
     path: '',
     component: () => import('@/views/Private/PrivateLayout.vue'),
     children: [
-      { path: '', redirect: { name: ROUTE_NAMES.HOME } },
-      {
-        path: 'home',
-        name: ROUTE_NAMES.HOME,
-        component: () => import('@/views/Private/HomePage.vue'),
-      },
+      { path: '', redirect: { name: ROUTE_NAMES.MEMBERS.LIST } },
       {
         path: 'members',
         component: () => import('@/views/Private/Members/MembersPage.vue'),
@@ -35,6 +30,9 @@ export const routes: RouteRecordRaw[] = [
             path: '',
             name: ROUTE_NAMES.MEMBERS.LIST,
             component: () => import('@/views/Private/Members/MembersList.vue'),
+            props: (route) => ({
+              tab: route.hash.replace('#', ''),
+            }),
           },
           {
             path: ':id',
@@ -45,6 +43,11 @@ export const routes: RouteRecordRaw[] = [
             }),
           },
         ],
+      },
+      {
+        path: 'stats',
+        name: ROUTE_NAMES.STATS,
+        component: () => import('@/views/Private/Stats/StatsPage.vue'),
       },
       {
         path: 'profile',

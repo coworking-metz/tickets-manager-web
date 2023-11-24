@@ -7,19 +7,23 @@
       <div class="flex flex-col sm:ml-6">
         <div class="sm:border-l sm:border-gray-200 sm:pl-6">
           <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            {{ $t('user.profile.title') }}
+            {{ $t('stats.title') }}
           </h1>
           <p class="mt-1 text-base text-gray-500">
-            {{ $t('user.profile.description') }}
+            {{ $t('stats.description') }}
           </p>
         </div>
         <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-          <button
+          <router-link
             class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            type="button"
-            @click="onLogout">
-            {{ $t('action.logout') }}
-          </button>
+            to="/">
+            {{ $t('action.backToHome') }}
+          </router-link>
+          <a
+            class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            href="mailto:contact@coworking-metz.fr">
+            {{ $t('action.contact') }}
+          </a>
         </div>
       </div>
     </section>
@@ -28,14 +32,4 @@
 
 <script lang="ts" setup>
 import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
-import { useAuthStore } from '@/store/auth';
-import { useRouter } from 'vue-router';
-
-const authStore = useAuthStore();
-const router = useRouter();
-
-const onLogout = () => {
-  authStore.logout();
-  router.push('/login');
-};
 </script>

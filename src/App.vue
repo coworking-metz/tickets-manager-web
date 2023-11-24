@@ -2,13 +2,14 @@
   <Head>
     <title>{{ $t('head.title') }}</title>
     <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
+    <html :lang="$i18n.locale.substring(0, 2)" />
   </Head>
-  <LoadingSpinner v-if="state.isLoading" class="m-auto h-24 w-24" />
+  <LoadingSpinner v-if="state.isLoading" class="m-auto h-16 w-16" />
   <router-view v-else />
 </template>
 
 <script lang="ts" setup>
-import LoadingSpinner from './components/LoadingSpinner.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';

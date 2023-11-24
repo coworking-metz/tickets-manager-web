@@ -1,4 +1,4 @@
 {
-  "home": "@:home.title",
-  "members": "@:members.list.title"
+  "members": "@:members.list.title",
+  "stats": "@:stats.title"
 }

@@ -7,9 +7,12 @@ import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
+import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { createHead } from '@unhead/vue';
 import { createApp } from 'vue';
+import Vue3Autocounter from 'vue3-autocounter';
 import '@/styles/main.css';
+import 'typeface-inter';
 
 const app = createApp(App);
 const head = createHead();
@@ -18,6 +21,8 @@ app.use(pinia);
 app.use(router);
 app.use(i18nInstance);
 app.use(head);
+app.component('DotLottiePlayer', DotLottiePlayer);
+app.component('AnimatedCounter', Vue3Autocounter);
 
 createHttpInterceptors(HTTP);
 

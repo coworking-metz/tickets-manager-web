@@ -8,3 +8,4 @@ declare module '*.vue' {
 }
 
 declare module '@jamescoyle/vue-icon';
+declare module '*.lottie';
