@@ -66,7 +66,7 @@ import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/memb
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import LocalizedFormat from 'dayjs/plugin/LocalizedFormat.js';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
 import { PropType } from 'vue';
 dayjs.extend(LocalizedFormat);
 

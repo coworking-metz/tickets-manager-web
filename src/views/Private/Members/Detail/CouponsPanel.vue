@@ -54,7 +54,7 @@ import { COUPON_UNIT_COST_IN_EUR, Coupon } from '@/services/api/members';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import LocalizedFormat from 'dayjs/plugin/LocalizedFormat.js';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
 import { PropType } from 'vue';
 dayjs.extend(LocalizedFormat);
 

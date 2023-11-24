@@ -20,13 +20,12 @@ import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { PropType, computed, ref } from 'vue';
 import VueECharts from 'vue-echarts';
-import { useI18n } from 'vue-i18n';
 import type { HeatmapSeriesOption } from 'echarts/charts';
 import type {
+  CalendarComponentOption,
   TitleComponentOption,
   TooltipComponentOption,
   VisualMapComponentOption,
-  CalendarComponentOption,
 } from 'echarts/components';
 import type { ComposeOption } from 'echarts/core';
 
@@ -48,8 +47,6 @@ const props = defineProps({
   },
 });
 const chart = ref<InstanceType<typeof VueECharts> | null>(null);
-
-const i18n = useI18n();
 
 const options = computed<
   ComposeOption<

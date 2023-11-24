@@ -1,5 +1,4 @@
 import HTTP from '../http';
-import axios from 'axios';
 
 export const COUPON_UNIT_COST_IN_EUR = 6 as const;
 export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;

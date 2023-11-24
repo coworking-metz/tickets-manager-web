@@ -36,7 +36,7 @@
 import { MemberListItem } from '@/services/api/members';
 import { PropType } from 'vue';
 
-const props = defineProps({
+defineProps({
   member: {
     type: Object as PropType<MemberListItem>,
     default: null,
