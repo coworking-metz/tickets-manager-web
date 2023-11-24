@@ -2,7 +2,7 @@
   <article class="mx-auto flex min-h-screen w-full max-w-7xl flex-col sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <template v-else-if="state.member">
-      <SectionRow class="mt-12 sm:mt-40">
+      <SectionRow class="mt-12 px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
           <div class="flex flex-row items-center space-x-5">
             <div class="shrink-0">
@@ -21,9 +21,12 @@
                 scope="global"
                 tag="p">
                 <template #date>
-                  <time class="text-gray-900" :datetime="state.member.lastSeen">
-                    <!-- {{ $d(new Date(state.member.lastSeen), 'long') }} -->
-                    {{ dayjs().calendar(dayjs(state.member.lastSeen)) }}
+                  <time class="lowercase text-gray-900" :datetime="state.member.lastSeen">
+                    {{
+                      dayjs().isSame(state.member.lastSeen, 'day')
+                        ? dayjs(state.member.lastSeen).fromNow()
+                        : dayjs(state.member.lastSeen).calendar(dayjs())
+                    }}
                   </time>
                 </template>
               </i18n-t>
@@ -32,33 +35,54 @@
         </header>
       </SectionRow>
 
-      <SectionRow
-        class="mt-6"
-        :description="$t('members.detail.attendance.description')"
-        :title="$t('members.detail.attendance.title')">
+      <SectionRow class="mt-6">
         <PresenceGraph :member="state.member" />
+        <template #title>
+          <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
+            {{ $t('members.detail.attendance.title') }}
+          </h2>
+        </template>
+        <template #description>
+          <p class="mt-1 whitespace-pre-line px-3 text-sm text-gray-600 sm:px-0">
+            {{ $t('members.detail.attendance.description') }}
+          </p>
+        </template>
         <template #append>
-          <dl class="sticky top-3 flex flex-col gap-3">
+          <dl class="sticky top-3 flex flex-col gap-3 px-3 sm:px-0">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">
-                {{ $t('members.detail.attendance.last30days.label') }}
-              </dt>
+              <template v-if="!!attendanceLast30Days">
+                <dt class="truncate text-sm font-medium text-gray-500">
+                  {{ $t('members.detail.attendance.last30days.label') }}
+                </dt>
+                <i18n-t
+                  class="mt-1"
+                  keypath="members.detail.attendance.last30days.value"
+                  scope="global"
+                  tag="dd">
+                  <template #amount>
+                    <animated-counter
+                      class="block text-3xl font-semibold tracking-tight text-gray-900"
+                      :decimals="Number(!Number.isInteger(attendanceLast30Days))"
+                      :duration="1"
+                      :end-amount="attendanceLast30Days"
+                      separator=" "
+                      :suffix="`
+                      ${$t('members.detail.attendance.last30days.suffix', {
+                        count: Math.round(attendanceLast30Days),
+                      })}`" />
+                  </template>
+                </i18n-t>
+              </template>
               <i18n-t
+                v-else
                 class="mt-1"
                 keypath="members.detail.attendance.last30days.value"
                 scope="global"
                 tag="dd">
                 <template #amount>
-                  <animated-counter
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :decimals="Number(!Number.isInteger(attendanceLast30Days))"
-                    :duration="1"
-                    :end-amount="attendanceLast30Days"
-                    separator=" "
-                    :suffix="`
-                      ${$t('members.detail.attendance.last30days.suffix', {
-                        count: Math.round(attendanceLast30Days),
-                      })}`" />
+                  <span class="block text-3xl font-semibold tracking-tight text-gray-900">
+                    {{ $t('members.detail.attendance.last30days.empty') }}
+                  </span>
                 </template>
               </i18n-t>
             </div>
@@ -69,7 +93,7 @@
       <hr class="mt-6 border-t border-gray-200" />
 
       <SectionRow
-        class="mt-6"
+        class="mt-6 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" />
@@ -91,7 +115,7 @@
 
       <SectionRow
         ref="ordersRowElement"
-        class="mb-12 sm:mb-24"
+        class="mb-12 px-3 sm:mb-24 sm:px-0"
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
         <div class="flex flex-row flex-wrap items-stretch gap-3">
@@ -180,9 +204,7 @@ import {
 } from '@/services/api/members';
 import { useIntersectionObserver } from '@vueuse/core';
 import dayjs from 'dayjs';
-import calendar from 'dayjs/plugin/calendar.js';
 import { computed, reactive, ref, watch } from 'vue';
-dayjs.extend(calendar);
 
 const props = defineProps({
   id: {

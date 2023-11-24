@@ -1,12 +1,12 @@
 <template>
-  <aside class="hidden w-28 flex-col items-center overflow-y-auto bg-amber-500 py-6 md:flex">
-    <div class="flex shrink-0 items-center">
+  <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500">
+    <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
       <img
         alt="Your Company"
         class="h-8 w-auto"
         src="https://tailwindui.com/img/logos/mark.svg?color=white" />
     </div>
-    <nav class="mt-6 flex w-full grow flex-col gap-1 px-2">
+    <nav class="my-6 flex w-full grow flex-col gap-1 px-2">
       <router-link
         v-for="item in sidebarNavigation"
         :key="item.label"

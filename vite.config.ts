@@ -31,4 +31,7 @@ export default defineConfig({
     },
     extensions: ['.json', '.ts', '.vue'],
   },
+  server: {
+    host: '0.0.0.0',
+  },
 });

@@ -3,6 +3,7 @@
     "attendance": {
       "description": "Les présences de ce membre au cours des 6 derniers mois.\nLes présences sont enregistrées automatiquement lorsque le membre se connecte au réseau wifi du coworking.",
       "last30days": {
+        "empty": "Absent",
         "label": "Présent",
         "suffix": "jour | seul jour | jours",
         "value": "{amount} sur les 30 derniers jours"
@@ -64,11 +65,12 @@
       },
       "macAddresses": {
         "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
+        "check": "Vérifier",
         "description": {
           "link": "adresse MAC",
           "text": "Permet de connaître la présence au travers d'une {link}"
         },
-        "label": "Appareil | Appareils",
+        "label": "Appareil | Appareil | Appareils",
         "remove": "Retirer"
       },
       "phone": {
