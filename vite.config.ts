@@ -20,7 +20,9 @@ export default defineConfig({
       },
     }),
     // https://vue-i18n.intlify.dev/guide/advanced/optimization.html
-    VueI18nPlugin({}),
+    VueI18nPlugin({
+      runtimeOnly: false, // https://stackoverflow.com/a/73857056
+    }),
   ],
   assetsInclude: ['**/*.lottie'],
   resolve: {
