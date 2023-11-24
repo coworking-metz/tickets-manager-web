@@ -1,0 +1,98 @@
+{
+  "detail": {
+    "attendance": {
+      "description": "Les présences de ce membre au cours des 6 derniers mois.\nLes présences sont enregistrées automatiquement lorsque le membre se connecte au réseau wifi du coworking.",
+      "last30days": {
+        "label": "Présent",
+        "suffix": "jour | seul jour | jours",
+        "value": "{amount} sur les 30 derniers jours"
+      },
+      "title": "Présence"
+    },
+    "header": {
+      "description": "Présent pour la dernière fois {date}"
+    },
+    "orders": {
+      "coupons": {
+        "add": "Ajouter des tickets",
+        "amount": "{count} ticket | {count} seul ticket | {count} tickets",
+        "purchased": "Commandé le {date}",
+        "remaining": "Aucun disponible | Plus qu'un | {count} restants",
+        "title": "Tickets à l'unité"
+      },
+      "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autre joyeusetés comme les dons sont exclues.",
+      "spent": {
+        "monthly": {
+          "label": "En moyenne",
+          "value": "{amount} par mois"
+        },
+        "total": {
+          "label": "En tout",
+          "value": "{count} dépensé | {count} dépensé | {count} dépensés"
+        }
+      },
+      "subscriptions": {
+        "active": "Actif | Inactif",
+        "add": "Ajouter un abonnement",
+        "days": "{count} jour | {count} seul jour | {count} jours",
+        "period": "du {startDate} au {endDate}",
+        "purchased": "Commandé le {date}",
+        "title": "Abonnements"
+      },
+      "title": "Historique des commandes"
+    },
+    "profile": {
+      "description": "Les informations de contact et autres données personnelles de ce membre.\nCes informations ne sont pas publiques.",
+      "email": {
+        "label": "Adresse email"
+      },
+      "features": {
+        "manager": {
+          "description": "Permet de gérer les membres et les services et d'accéder à toutes les fonctionnalités.\nEn gros, il a les pleins pouvoirs.",
+          "label": "Administrateur"
+        },
+        "parking": {
+          "description": "Permet d'ouvrir la barrière du parking au travers de l'application mobile.",
+          "label": "Accès au parking"
+        }
+      },
+      "firstname": {
+        "label": "Prénom"
+      },
+      "lastname": {
+        "label": "Nom"
+      },
+      "macAddresses": {
+        "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
+        "description": {
+          "link": "adresse MAC",
+          "text": "Permet de connaître la présence au travers d'une {link}"
+        },
+        "label": "Appareil | Appareils",
+        "remove": "Retirer"
+      },
+      "phone": {
+        "label": "Téléphone"
+      },
+      "since": {
+        "label": "Membre depuis"
+      },
+      "title": "Profil"
+    }
+  },
+  "list": {
+    "head": {
+      "title": "@:members.list.title"
+    },
+    "search": {
+      "label": "Rechercher un coworker",
+      "placeholder": "@:members.list.search.label"
+    },
+    "tabs": {
+      "active": "Actif | Actifs",
+      "all": "Tous",
+      "present": "Présent | Présents"
+    },
+    "title": "Coworkers"
+  }
+}

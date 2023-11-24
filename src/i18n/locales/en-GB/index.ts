@@ -1,1 +1,1 @@
-export { default as home } from './home.json';
+export { default as stats } from './stats.json';
