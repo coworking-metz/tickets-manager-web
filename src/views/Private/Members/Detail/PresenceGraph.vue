@@ -20,14 +20,14 @@ import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { PropType, computed, ref } from 'vue';
 import VueECharts from 'vue-echarts';
-import type { HeatmapSeriesOption } from 'echarts/charts';
+import type { HeatmapSeriesOption } from 'echarts/charts.js';
 import type {
   CalendarComponentOption,
   TitleComponentOption,
   TooltipComponentOption,
   VisualMapComponentOption,
-} from 'echarts/components';
-import type { ComposeOption } from 'echarts/core';
+} from 'echarts/components.js';
+import type { ComposeOption } from 'echarts/core.js';
 
 use([
   TitleComponent,
