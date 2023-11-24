@@ -27,7 +27,7 @@
       :class="{
         ['h-screen w-full max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
         ['max-w-[7rem]']: state.isMenuOpen,
-      }"></div>
+      }" />
     <main
       :class="{
         ['flex w-full flex-col self-stretch max-sm:pt-16']: true,
