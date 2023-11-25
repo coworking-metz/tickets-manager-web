@@ -7,6 +7,7 @@ import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
+import { useSettingsStore } from './store/settings';
 import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { createHead } from '@unhead/vue';
 import { createApp } from 'vue';
@@ -19,7 +20,6 @@ const head = createHead();
 
 app.use(pinia);
 app.use(router);
-app.use(i18nInstance);
 app.use(head);
 app.component('DotLottiePlayer', DotLottiePlayer);
 app.component('AnimatedCounter', Vue3Autocounter);
@@ -67,4 +67,10 @@ router.beforeEach(async (to, from, next) => {
   return next();
 });
 
-app.mount('#app');
+// set i18n locale from the one stored in settings
+app.use(i18nInstance);
+useSettingsStore()
+  .setLocale(i18nInstance.global.locale.value)
+  .finally(() => {
+    app.mount('#app');
+  });

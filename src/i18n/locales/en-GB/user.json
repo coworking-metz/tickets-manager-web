@@ -1,16 +1,16 @@
 {
   "profile": {
-    "description": "Pas grand chose pour le moment. En cours de réflexion.",
+    "description": "Not much for now. Still in contemplation.",
     "head": {
       "title": "@:user.profile.title"
     },
     "locale": {
-      "label": "Langue",
+      "label": "Language",
       "value": {
         "en-GB": "English",
         "fr-FR": "Français"
       }
     },
-    "title": "Mon profil"
+    "title": "My Profile"
   }
 }

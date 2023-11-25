@@ -1,5 +1,6 @@
+import { DEFAULT_LOCALE } from '@/i18n';
+
 export const DEFAULT_CURRENCY = 'EUR';
-export const DEFAULT_LOCALE = 'fr-FR';
 
 export const formatAmount = (
   amount: number,
