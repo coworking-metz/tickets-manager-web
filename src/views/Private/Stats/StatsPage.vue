@@ -1,13 +1,13 @@
 <template>
-  <article class="mx-auto flex max-h-[840px] grow flex-col px-6 py-12 lg:px-8">
+  <article class="mx-auto flex max-h-[840px] w-full max-w-3xl grow flex-col px-6 py-12 lg:px-8">
     <Head>
       <title>{{ $t('stats.head.title') }}</title>
     </Head>
-    <section class="my-auto flex flex-col items-start sm:flex-row">
+    <section class="my-auto flex w-full flex-col items-start sm:flex-row">
       <div class="mb-6">
         <dotlottie-player autoplay="true" class="h-[92px]" loop :src="RollingTumbleweed" />
       </div>
-      <div class="flex flex-col sm:ml-6">
+      <div class="flex w-full flex-col sm:ml-6">
         <div class="sm:border-l sm:border-gray-200 sm:pl-6">
           <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             {{ $t('stats.title') }}

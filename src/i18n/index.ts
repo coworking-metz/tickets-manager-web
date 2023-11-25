@@ -1,4 +1,4 @@
-import * as frenchMessages from './locales/fr-FR';
+import { LOCALE_STORAGE_KEY } from '@/store/settings';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar.js';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
@@ -23,8 +23,23 @@ dayjs.updateLocale('fr', {
   },
 });
 
-const datetimeFormats: IntlDateTimeFormats = {
+export const datetimeFormats: IntlDateTimeFormats = {
   'fr-FR': {
+    short: {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    },
+    long: {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      weekday: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+    },
+  },
+  'en-GB': {
     short: {
       year: 'numeric',
       month: 'short',
@@ -41,8 +56,14 @@ const datetimeFormats: IntlDateTimeFormats = {
   },
 };
 
-const numberFormats: IntlNumberFormats = {
+export const numberFormats: IntlNumberFormats = {
   'fr-FR': {
+    currency: {
+      style: 'currency',
+      currency: 'EUR',
+    },
+  },
+  'en-GB': {
     currency: {
       style: 'currency',
       currency: 'EUR',
@@ -50,34 +71,15 @@ const numberFormats: IntlNumberFormats = {
   },
 };
 
-const defaultLang = import.meta.env.VUE_APP_DEFAULT_LOCALE || 'fr-FR';
+export const DEFAULT_LOCALE = import.meta.env.VUE_APP_DEFAULT_LOCALE || 'fr-FR';
+export const SUPPORTED_LOCALES = ['fr-FR', 'en-GB'] as const;
+const initialLocale = localStorage.getItem(LOCALE_STORAGE_KEY) || DEFAULT_LOCALE;
 
 export const i18nInstance = createI18n({
   globalInjection: true,
-  locale: defaultLang,
-  fallbackLocale: defaultLang,
-  messages: { [defaultLang]: frenchMessages },
+  locale: initialLocale,
+  // fallbackLocale: DEFAULT_LOCALE,
+  // messages: { [initialLocale]: messages },
   datetimeFormats,
   numberFormats,
 });
-
-const setI18nLanguage = async (locale: string): Promise<string> => {
-  const language = locale.substring(0, 2);
-  dayjs.locale(language);
-  i18nInstance.global.locale.value = locale;
-  return locale;
-};
-
-export const changeLocale = async (lang: string): Promise<string> => {
-  if (
-    i18nInstance.global.locale.value !== lang &&
-    !Object.keys(i18nInstance.global.messages).includes(lang)
-  ) {
-    const messages = await import(/* @vite-ignore */ `../locales/${lang}/index.ts`);
-    i18nInstance.global.setLocaleMessage(lang, messages);
-  }
-
-  return setI18nLanguage(lang);
-};
-
-setI18nLanguage(defaultLang);

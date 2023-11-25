@@ -1,0 +1,100 @@
+{
+  "detail": {
+    "attendance": {
+      "description": "Member's presence over the last 6 months.\nAttendance is automatically recorded when the member connects to the coworking's wifi network.",
+      "last30days": {
+        "empty": "Absent",
+        "label": "Present",
+        "suffix": "day | single day | days",
+        "value": "{amount} out of the last 30 days"
+      },
+      "title": "Presence"
+    },
+    "header": {
+      "description": "Present for the last time on {date}"
+    },
+    "orders": {
+      "coupons": {
+        "add": "Add tickets",
+        "amount": "{count} ticket | {count} single ticket | {count} tickets",
+        "purchased": "Ordered on {date}",
+        "remaining": "None available | More than one | {count} remaining",
+        "title": "Individual Tickets"
+      },
+      "description": "All orders placed by this member, along with their amounts.\nOrders for coffee and other goodies like donations are excluded.",
+      "spent": {
+        "monthly": {
+          "label": "On average",
+          "value": "{amount} per month"
+        },
+        "total": {
+          "label": "Total",
+          "value": "{count} spent | {count} spent | {count} spent"
+        }
+      },
+      "subscriptions": {
+        "active": "Active | Inactive",
+        "add": "Add a subscription",
+        "days": "{count} day | {count} single day | {count} days",
+        "period": "from {startDate} to {endDate}",
+        "purchased": "Ordered on {date}",
+        "title": "Subscriptions"
+      },
+      "title": "Order History"
+    },
+    "profile": {
+      "description": "Contact information and other personal data of this member.\nThis information is not public.",
+      "email": {
+        "label": "Email Address"
+      },
+      "features": {
+        "manager": {
+          "description": "Allows managing members and services and accessing all features.\nIn short, it has full powers.",
+          "label": "Administrator"
+        },
+        "parking": {
+          "description": "Allows opening the parking barrier through the mobile application.",
+          "label": "Parking Access"
+        }
+      },
+      "firstname": {
+        "label": "First Name"
+      },
+      "lastname": {
+        "label": "Last Name"
+      },
+      "macAddresses": {
+        "add": "Specify a device | Add another device | Add other devices",
+        "check": "Check",
+        "description": {
+          "link": "MAC address",
+          "text": "Allows knowing the presence through a {link}"
+        },
+        "label": "Device | Device | Devices",
+        "remove": "Remove"
+      },
+      "phone": {
+        "label": "Phone"
+      },
+      "since": {
+        "label": "Member since"
+      },
+      "title": "Profile"
+    }
+  },
+  "list": {
+    "head": {
+      "title": "@:members.list.title"
+    },
+    "search": {
+      "label": "Search for a coworker",
+      "placeholder": "@:members.list.search.label"
+    },
+    "tabs": {
+      "active": "Active | Actives",
+      "all": "All",
+      "present": "Present | Presents"
+    },
+    "title": "Coworkers"
+  }
+}
