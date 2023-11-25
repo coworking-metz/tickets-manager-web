@@ -1,18 +1,53 @@
-# Vue 3 + TypeScript + Vite
+# Tickets Manager Web
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Manage members, services and collect stats from [Le Poulailler - Coworking Metz](https://www.coworking-metz.fr).
 
-## Recommended IDE Setup
+## Getting Started
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+These instructions will give you a copy of the project up and running on
+your local machine for development and testing purposes.
 
-## Type Support For `.vue` Imports in TS
+### Prerequisites
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Requirements for the software and other tools to build, test and push
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+- [Git](https://git-scm.com/) - Version control system
+- [Node](https://nodejs.org/en) - Cross-platform JavaScript runtime environment
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Install
+
+A step by step series of examples that tell you how to get a development environment running:
+
+```bash
+git clone git@github.com:coworking-metz/tickets-manager-web.git
+cd tickets-manager-web
+yarn
+```
+
+### Start the project
+
+```bash
+yarn dev
+```
+
+### Build locally
+
+```bash
+yarn build
+yarn serve
+```
+
+Then go to http://localhost:9090
+
+## Deploy
+
+Everything is done through [GitHub actions](https://github.com/coworking-metz/tickets-manager-web/actions).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+- [README-Template](https://github.com/PurpleBooth/a-good-readme-template) for what you're reading
+
