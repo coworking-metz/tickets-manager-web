@@ -1,6 +1,9 @@
 <template>
-  <div class="relative flex grow flex-col bg-white">
-    <div class="mx-auto flex w-full max-w-7xl grow flex-col">
+  <article class="relative flex grow flex-col bg-white">
+    <Head>
+      <title>{{ $t('login.head.title') }}</title>
+    </Head>
+    <section class="mx-auto flex w-full max-w-7xl grow flex-col">
       <div class="relative z-10 flex grow flex-col lg:w-full lg:max-w-2xl">
         <svg
           aria-hidden="true"
@@ -14,14 +17,10 @@
           <nav
             aria-label="Global"
             class="flex items-center justify-between sm:h-10 lg:justify-start">
-            <a class="-m-1.5 p-1.5" href="#">
-              <span class="sr-only">Your Company</span>
+            <a class="-m-1.5 p-1.5" href="https://www.coworking-metz.fr">
+              <span class="sr-only">{{ $t('login.logo.label') }}</span>
 
-              <!-- TOGO: add logo -->
-              <img
-                alt="Your Company"
-                class="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" />
+              <img :alt="$t('login.logo.label')" class="h-16 w-auto" :src="monoLogo" />
             </a>
           </nav>
         </div>
@@ -33,11 +32,14 @@
                 class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                 {{ $t('login.headline.text') }}
                 <a
-                  class="whitespace-nowrap font-semibold text-indigo-600"
+                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600"
                   href="https://www.coworking-metz.fr/">
-                  <span aria-hidden="true" class="absolute inset-0" />
                   {{ $t('login.headline.readMore') }}
-                  <span aria-hidden="true">&rarr;</span>
+                  <SvgIcon
+                    aria-hidden="true"
+                    class="ml-1 h-4 w-4"
+                    :path="mdiArrowRight"
+                    type="mdi" />
                 </a>
               </div>
             </div>
@@ -55,38 +57,36 @@
                 <LoadingSpinner v-if="state.isLoggingIn" class="h-5 w-5" />
                 {{ $t('action.login') }}
               </a>
-              <a
-                class="text-base font-semibold leading-7 text-gray-900"
-                href="https://www.coworking-metz.fr/">
-                {{ $t('login.headline.readMore') }}
-                <span aria-hidden="true">→</span>
-              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
+    </section>
+    <section
       class="relative min-h-[420px] overflow-hidden bg-gray-50 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
       <img
         :alt="$t('login.picture.background.alt')"
-        class="aspect-[3/2] object-cover grayscale-[100%] lg:aspect-auto lg:h-full lg:w-full"
+        class="aspect-auto h-full object-cover grayscale-[100%] lg:w-full"
         :src="state.selectedPhoto" />
       <i
         class="pointer-events-none absolute inset-0 mix-blend-screen"
         style="background-color: rgb(243, 175, 16, 0.6)" />
       <img
         :alt="$t('login.picture.logo.alt')"
-        class="absolute inset-0 m-auto h-full max-h-[320px] w-full max-w-[320px] object-contain"
-        :src="verticalLogo" />
-    </div>
-  </div>
+        class="pointer-events-none absolute inset-0 m-auto h-full max-h-[320px] w-full max-w-[320px] object-contain"
+        :src="typoLePoulailler" />
+    </section>
+  </article>
 </template>
 
 <script setup lang="ts">
-import verticalLogo from '@/assets/logo-lepoulailler-vertical.png';
+import monoLogo from '@/assets/logo-mono.png';
+import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import HTTP from '@/services/http';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiArrowRight } from '@mdi/js';
+import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';
 
 const PHOTOS = [

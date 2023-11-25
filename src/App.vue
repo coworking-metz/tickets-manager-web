@@ -1,6 +1,5 @@
 <template>
   <Head>
-    <title>{{ $t('head.title') }}</title>
     <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
     <html :lang="$i18n.locale.substring(0, 2)" />
   </Head>
@@ -10,13 +9,20 @@
 
 <script lang="ts" setup>
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+const i18n = useI18n();
 const router = useRouter();
 const state = reactive({
   isLoading: true as boolean,
+});
+
+useHead({
+  titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' - '),
 });
 
 router.isReady().finally(() => {

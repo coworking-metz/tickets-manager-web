@@ -1,4 +1,7 @@
 {
   "description": "C'est vide pour le moment. Revenez plus tard !",
+  "head": {
+    "title": "@:stats.title"
+  },
   "title": "Statistiques"
 }

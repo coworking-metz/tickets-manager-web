@@ -2,7 +2,12 @@
   <article class="mx-auto flex min-h-screen w-full max-w-7xl flex-col sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <template v-else-if="state.member">
-      <SectionRow class="mt-12 px-3 sm:mt-40 sm:px-0">
+      <Head>
+        <title>
+          {{ [state.member.firstname, state.member.lastname].filter(Boolean).join(' ') }}
+        </title>
+      </Head>
+      <SectionRow class="px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
           <div class="flex flex-row items-center space-x-5">
             <div class="shrink-0">
@@ -35,8 +40,10 @@
         </header>
       </SectionRow>
 
-      <SectionRow class="mt-6">
-        <PresenceGraph :member="state.member" />
+      <SectionRow class="mt-12">
+        <PresenceGraph
+          class="bg-white px-6 pb-6 shadow sm:overflow-hidden sm:rounded-md"
+          :member="state.member" />
         <template #title>
           <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
             {{ $t('members.detail.attendance.title') }}
@@ -90,10 +97,10 @@
         </template>
       </SectionRow>
 
-      <hr class="mt-6 border-t border-gray-200" />
+      <hr class="my-6 border-t border-gray-200" />
 
       <SectionRow
-        class="mt-6 px-3 sm:px-0"
+        class="px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" />
@@ -173,14 +180,6 @@
                 </template>
               </i18n-t>
             </div>
-            <!-- <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">
-                {{ $t('members.detail.orders.spent.total.label') }}
-              </dt>
-              <i18n-t class="mt-1 text-3xl font-semibold tracking-tight text-gray-900" tag="dd">
-                2021
-              </i18n-t>
-            </div> -->
           </dl>
         </template>
       </SectionRow>
@@ -202,6 +201,7 @@ import {
   SUBSCRIPTION_UNIT_COST_IN_EUR,
   getMember,
 } from '@/services/api/members';
+import { Head } from '@unhead/vue/components';
 import { useIntersectionObserver } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, ref, watch } from 'vue';

@@ -1,6 +1,9 @@
 {
   "profile": {
     "description": "Pas grand chose pour le moment. En cours de réflexion.",
+    "head": {
+      "title": "@:user.profile.title"
+    },
     "title": "Mon profil"
   }
 }
