@@ -1,5 +1,8 @@
 <template>
   <article class="mx-auto flex w-full max-w-6xl grow flex-col pb-6 pt-12 sm:px-6 sm:pt-40 lg:px-8">
+    <Head>
+      <title>{{ $t('members.list.head.title') }}</title>
+    </Head>
     <h1
       class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
       {{ $t('members.list.title') }}
@@ -98,6 +101,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { MemberListItem, getAllMembers } from '@/services/api/members';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
+import { Head } from '@unhead/vue/components';
 import { useVirtualList } from '@vueuse/core';
 import { computed, onMounted } from 'vue';
 import { reactive } from 'vue';

@@ -1,5 +1,8 @@
 <template>
   <article class="mx-auto flex max-h-[840px] grow flex-col px-6 py-12 lg:px-8">
+    <Head>
+      <title>{{ $t('user.profile.head.title') }}</title>
+    </Head>
     <section class="my-auto flex flex-col items-start sm:flex-row">
       <div class="mb-6">
         <dotlottie-player autoplay="true" class="h-[92px]" loop :src="RollingTumbleweed" />
@@ -29,6 +32,7 @@
 <script lang="ts" setup>
 import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
 import { useAuthStore } from '@/store/auth';
+import { Head } from '@unhead/vue/components';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();

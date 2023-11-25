@@ -1,0 +1,14 @@
+{
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "editor.formatOnSave": true,
+  "editor.rulers": [100],
+  "eslint.format.enable": true,
+  "eslint.validate": ["javascript", "typescript", "vue", "json", "jsonc", "scss"],
+  "html.format.wrapLineLength": 100,
+  "svg.preview.background": "editor",
+  "files.insertFinalNewline": true,
+  "i18n-ally.localesPaths": [
+    "src/i18n",
+    "src/i18n/locales"
+  ],
+}

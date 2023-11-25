@@ -1,10 +1,7 @@
 <template>
   <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500">
     <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
-      <img
-        alt="Your Company"
-        class="h-8 w-auto"
-        src="https://tailwindui.com/img/logos/mark.svg?color=white" />
+      <img alt="Your Company" class="h-16 w-auto" :src="monoLogo" />
     </div>
     <nav class="my-6 flex w-full grow flex-col gap-1 px-2">
       <router-link
@@ -39,13 +36,14 @@
           alt=""
           class="inline-block h-9 w-9 rounded-full"
           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-        <span class="mt-2 text-center">{{ authStore.user?.name }}</span>
+        <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
       </router-link>
     </nav>
   </aside>
 </template>
 
 <script setup lang="ts">
+import monoLogo from '@/assets/logo-mono-inverted.svg';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';

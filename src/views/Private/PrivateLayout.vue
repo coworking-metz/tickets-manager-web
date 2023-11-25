@@ -13,9 +13,16 @@
         <span class="sr-only">
           {{ !state.isMenuOpen ? $t('navigation.open') : $t('navigation.close') }}
         </span>
-        <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiMenu" type="mdi" />
+        <SvgIcon
+          aria-hidden="true"
+          :class="{
+            ['h-6 w-6 transition-transform duration-300']: true,
+            ['!rotate-[540deg]']: !state.isMenuOpen,
+          }"
+          :path="state.isMenuOpen ? mdiMenuOpen : mdiMenu"
+          type="mdi" />
       </button>
-      <img alt="Your Company" class="h-full w-auto py-2" :src="horizontalLogo" />
+      <img alt="Le Poulailler - Coworking Metz" class="h-full w-auto p-3" :src="typoLePoulailler" />
     </header>
     <NavigationDrawer
       :class="{
@@ -39,10 +46,10 @@
 </template>
 
 <script setup lang="ts">
-import horizontalLogo from '@/assets/logo-lepoulailler-horizontal.png';
+import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import NavigationDrawer from '@/components/layout/NavigationDrawer.vue';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiMenu } from '@mdi/js';
+import { mdiMenu, mdiMenuOpen } from '@mdi/js';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
