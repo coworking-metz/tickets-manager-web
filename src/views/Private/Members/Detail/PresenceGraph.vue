@@ -1,10 +1,15 @@
 <template>
   <section class="overflow-y-auto">
-    <VueECharts ref="chart" class="m-auto" :option="options" style="height: 144px; width: 640px" />
+    <VueECharts
+      ref="chart"
+      :option="options"
+      style="height: 144px; width: 640px"
+      @click="onSelectPresence" />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
 import { theme } from '@/styles/colors';
 import dayjs from 'dayjs';
@@ -20,6 +25,8 @@ import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { PropType, computed, ref } from 'vue';
 import VueECharts from 'vue-echarts';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import type { HeatmapSeriesOption } from 'echarts/charts.js';
 import type {
   CalendarComponentOption,
@@ -40,6 +47,8 @@ use([
 
 dayjs.extend(weekOfYear);
 
+const i18n = useI18n();
+const router = useRouter();
 const props = defineProps({
   member: {
     type: Object as PropType<Member>,
@@ -62,7 +71,15 @@ const options = computed<
     position: 'top',
     formatter: ({ data }: any) => {
       const [date, amount] = data as [string, number];
-      return dayjs(date).format('LL') + ' : ' + amount;
+      return i18n.t('members.detail.attendance.graph.tooltip', {
+        date: dayjs(date).format('LL'),
+        amount:
+          amount === 1
+            ? i18n.t('members.detail.attendance.graph.value.FULL')
+            : amount === 0.5
+              ? i18n.t('members.detail.attendance.graph.value.HALF')
+              : i18n.t('members.detail.attendance.graph.value.NONE'),
+      });
     },
   },
   visualMap: {
@@ -71,7 +88,7 @@ const options = computed<
     max: 1,
     show: false,
     inRange: {
-      color: [theme.papayaWhip, theme.meatBrown], //From smaller to bigger value ->
+      color: ['#ffffff', theme.peachYellow, theme.meatBrown], //From smaller to bigger value ->
     },
     // pieces: [
     //   { min: 0, max: 0.5, color: 'red' },
@@ -96,8 +113,24 @@ const options = computed<
     coordinateSystem: 'calendar',
     data: props.member.presences.map(({ date, amount }) => [
       dayjs(date).format('YYYY-MM-DD'),
-      ...(amount ? [amount] : []),
+      amount,
     ]),
   },
 }));
+
+const onSelectPresence = ({ data }: any) => {
+  const [date] = data as [string];
+  const selectedPresence = props.member.presences.find(
+    (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
+  );
+  if (selectedPresence) {
+    router.push({
+      name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+      params: {
+        presenceId: selectedPresence.id,
+        id: router.currentRoute.value.params.id,
+      },
+    });
+  }
+};
 </script>

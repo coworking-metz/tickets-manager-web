@@ -2,6 +2,14 @@
   "detail": {
     "attendance": {
       "description": "Les présences de ce membre au cours des 6 derniers mois.\nLes présences sont enregistrées automatiquement lorsque le membre se connecte au réseau wifi du coworking.",
+      "graph": {
+        "tooltip": "{date}: {amount}",
+        "value": {
+          "FULL": "journée complète",
+          "HALF": "demi-journée",
+          "NONE": "absent"
+        }
+      },
       "last30days": {
         "empty": "Absent",
         "label": "Présent",
@@ -86,6 +94,7 @@
     "head": {
       "title": "@:members.list.title"
     },
+    "lastSeen": "Présent pour la dernière fois {date}",
     "search": {
       "label": "Rechercher un coworker",
       "placeholder": "@:members.list.search.label"

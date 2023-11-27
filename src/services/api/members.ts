@@ -16,11 +16,13 @@ export interface Subscription {
   purchased: string;
 }
 
+export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';
+
 export interface Attendance {
   id: string;
   date: string;
   amount: number;
-  type: 'SUBSCRIPTION' | 'TICKET';
+  type: AttendanceType;
 }
 
 export interface Membership {

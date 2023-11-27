@@ -1,0 +1,16 @@
+{
+  "detail": {
+    "count": {
+      "label": "Nombre de tickets",
+      "unit": "ticket | ticket | tickets"
+    },
+    "description": "Passée le {purchasedDate} à {purchasedTime}",
+    "head": {
+      "title": "@:coupons.detail.title"
+    },
+    "purchased": {
+      "label": "Commandé le | Commandé le | Commandés le"
+    },
+    "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
+  }
+}

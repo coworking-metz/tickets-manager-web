@@ -36,11 +36,39 @@ export const routes: RouteRecordRaw[] = [
           },
           {
             path: ':id',
-            name: ROUTE_NAMES.MEMBERS.DETAIL,
+            name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
             component: () => import('@/views/Private/Members/MembersDetail.vue'),
             props: (route) => ({
               id: route.params.id,
             }),
+            children: [
+              {
+                path: 'coupons/:couponId',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
+                component: () => import('@/views/Private/Members/Detail/CouponsDetail.vue'),
+                props: (route) => ({
+                  id: route.params.couponId,
+                }),
+              },
+              {
+                path: 'subscriptions/:subscriptionId',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+                component: () => import('@/views/Private/Members/Detail/SubscriptionsDetail.vue'),
+                props: (route) => ({
+                  id: route.params.subscriptionId,
+                }),
+              },
+              {
+                path: 'presences/:presenceId',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+                component: () => import('@/views/Private/Members/Detail/PresencesDetail.vue'),
+                props: (route) => ({
+                  id: route.params.presenceId,
+                }),
+              },
+
+              { path: ':catchAll(.*)', redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX } },
+            ],
           },
         ],
       },
@@ -56,4 +84,5 @@ export const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  { path: '/:catchAll(.*)', redirect: '/' },
 ];

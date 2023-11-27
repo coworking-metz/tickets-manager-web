@@ -16,16 +16,22 @@
             <span class="truncate">{{ member?.email }}</span>
           </p>
         </div>
-        <div v-if="member?.lastSeen">
-          <p class="text-sm text-gray-900">
-            Last seen
-            {{ ' ' }}
-            <time :datetime="member.lastSeen">{{ member.lastSeen }}</time>
-          </p>
-          <!-- <p class="mt-2 flex items-center text-sm text-gray-500">
-                      {{ application.stage }}
-                    </p> -->
-        </div>
+        <i18n-t
+          v-if="member?.lastSeen"
+          class="my-auto text-sm text-gray-700"
+          keypath="members.detail.header.description"
+          scope="global"
+          tag="p">
+          <template #date>
+            <time class="font-medium lowercase text-gray-900" :datetime="member.lastSeen">
+              {{
+                dayjs().isSame(member.lastSeen, 'day')
+                  ? dayjs(member.lastSeen).fromNow()
+                  : dayjs(member.lastSeen).calendar(dayjs())
+              }}
+            </time>
+          </template>
+        </i18n-t>
       </div>
     </div>
     <slot name="append" />
@@ -34,6 +40,7 @@
 
 <script setup lang="ts">
 import { MemberListItem } from '@/services/api/members';
+import dayjs from 'dayjs';
 import { PropType } from 'vue';
 
 defineProps({

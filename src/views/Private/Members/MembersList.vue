@@ -34,37 +34,35 @@
       </nav>
 
       <div class="mx-3 w-full max-w-sm sm:mx-0">
-        <label class="sr-only" for="search-member">{{ $t('members.list.search.label') }}</label>
-        <div class="flex rounded-md shadow-sm">
-          <div class="relative grow focus-within:z-10">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+        <label class="sr-only" for="members-search">{{ $t('members.list.search.label') }}</label>
+        <AppTextField
+          id="members-search"
+          v-model="state.search"
+          hide-details
+          name="members-search"
+          :placeholder="$t('members.list.search.placeholder')"
+          :prepend-icon="mdiMagnify"
+          tabindex="1"
+          type="search">
+          <template #after>
+            <button
+              class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              tabindex="1"
+              type="button">
               <SvgIcon
                 aria-hidden="true"
                 class="h-5 w-5 text-gray-400"
-                :path="mdiMagnify"
+                :path="mdiSort"
                 type="mdi" />
-            </div>
-            <input
-              v-model="state.search"
-              class="block w-full rounded-none rounded-l-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500"
-              name="search-member"
-              :placeholder="$t('members.list.search.placeholder')"
-              tabindex="1"
-              type="text" />
-          </div>
-          <button
-            class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            tabindex="1"
-            type="button">
-            <SvgIcon aria-hidden="true" class="h-5 w-5 text-gray-400" :path="mdiSort" type="mdi" />
-            <span class="ml-2">{{ $t('action.sort') }}</span>
-            <SvgIcon
-              aria-hidden="true"
-              class="-mr-1.5 ml-2.5 h-5 w-5 text-gray-400"
-              :path="mdiChevronDown"
-              type="mdi" />
-          </button>
-        </div>
+              <span class="ml-2">{{ $t('action.sort') }}</span>
+              <SvgIcon
+                aria-hidden="true"
+                class="-mr-1.5 ml-2.5 h-5 w-5 text-gray-400"
+                :path="mdiChevronDown"
+                type="mdi" />
+            </button>
+          </template>
+        </AppTextField>
       </div>
     </div>
 
@@ -84,7 +82,7 @@
         <li v-else v-for="{ data: member } in list" :key="`member-${member.id}`">
           <RouterLink
             class="block hover:bg-gray-50"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL, params: { id: member.id } }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX, params: { id: member.id } }">
             <MembersListCard :member="member" />
           </RouterLink>
         </li>
@@ -95,11 +93,11 @@
 
 <script setup lang="ts">
 import MembersListCard from './MembersListCard.vue';
+import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { MemberListItem, getAllMembers } from '@/services/api/members';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { useVirtualList } from '@vueuse/core';

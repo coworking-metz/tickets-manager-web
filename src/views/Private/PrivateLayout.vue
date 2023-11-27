@@ -5,7 +5,7 @@
       ['max-sm:overflow-y-hidden']: state.isMenuOpen,
     }">
     <header
-      class="fixed top-0 z-20 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-75 shadow-sm backdrop-blur sm:hidden">
+      class="fixed top-0 z-20 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-[75%] shadow-sm backdrop-blur sm:hidden">
       <button
         class="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
         type="button"
@@ -26,7 +26,7 @@
     </header>
     <NavigationDrawer
       :class="{
-        ['top-0 z-10 h-screen shrink-0 max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky']: true,
+        ['top-0 z-10 h-screen shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky']: true,
         ['max-sm:max-w-[7rem]']: state.isMenuOpen,
       }" />
 
@@ -35,11 +35,7 @@
         ['h-screen w-full max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
         ['max-w-[7rem]']: state.isMenuOpen,
       }" />
-    <main
-      :class="{
-        ['flex w-full flex-col self-stretch max-sm:pt-16']: true,
-        ['max-sm:min-w-[100vw]']: state.isMenuOpen,
-      }">
+    <main class="flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16">
       <router-view />
     </main>
   </div>
@@ -48,7 +44,6 @@
 <script setup lang="ts">
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import NavigationDrawer from '@/components/layout/NavigationDrawer.vue';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMenu, mdiMenuOpen } from '@mdi/js';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
