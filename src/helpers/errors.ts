@@ -63,3 +63,13 @@ export const parseErrorText = async (error: AnyError): Promise<string> => {
   }
   return error.message;
 };
+
+export const scrollToFirstError = () => {
+  const firstErrorElement = document.querySelector('[aria-invalid="true"]');
+  if (firstErrorElement) {
+    firstErrorElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
+};

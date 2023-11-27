@@ -8,33 +8,42 @@
         {{ $t('members.detail.orders.coupons.remaining', { count: remaining }) }}
       </span>
     </div>
-    <ul class="max-h-[40rem] shrink grow divide-y divide-gray-200 overflow-y-auto px-6" role="list">
-      <li
-        v-for="coupon in coupons"
-        :key="`coupon-${coupon.tickets}-${coupon.purchaseDate}`"
-        class="flex flex-col gap-1 py-4">
-        <div class="flex flex-row items-end gap-1">
-          <i18n-t
-            keypath="members.detail.orders.coupons.amount"
-            :plural="coupon.tickets"
-            scope="global"
-            tag="span">
-            <template #count>
-              <strong class="text-3xl">{{ coupon.tickets }}</strong>
-            </template>
-          </i18n-t>
-          <p class="ml-auto text-lg">
-            {{ fractionAmount(coupon.tickets * COUPON_UNIT_COST_IN_EUR) }}
-          </p>
-        </div>
+    <ul class="max-h-[40rem] shrink grow divide-y divide-gray-200 overflow-y-auto" role="list">
+      <li v-for="coupon in coupons" :key="`coupon-${coupon.tickets}-${coupon.purchaseDate}`">
+        <RouterLink
+          :class="{
+            ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
+            ['bg-slate-50']:
+              $route.params.couponId === `${coupon.id}` &&
+              $route.name === ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
+          }"
+          :to="{
+            name: ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
+            params: { couponId: coupon.id },
+          }">
+          <div class="flex flex-row items-end gap-1">
+            <i18n-t
+              keypath="members.detail.orders.coupons.amount"
+              :plural="coupon.tickets"
+              scope="global"
+              tag="span">
+              <template #count>
+                <strong class="text-3xl">{{ coupon.tickets }}</strong>
+              </template>
+            </i18n-t>
+            <p class="ml-auto text-lg">
+              {{ fractionAmount(coupon.tickets * COUPON_UNIT_COST_IN_EUR) }}
+            </p>
+          </div>
 
-        <time class="text-sm text-gray-400" :datetime="dayjs(coupon.purchaseDate).toISOString()">
-          {{
-            $t('members.detail.orders.coupons.purchased', {
-              date: dayjs(coupon.purchaseDate).format('LLL'),
-            })
-          }}
-        </time>
+          <time class="text-sm text-gray-400" :datetime="dayjs(coupon.purchaseDate).toISOString()">
+            {{
+              $t('members.detail.orders.coupons.purchased', {
+                date: dayjs(coupon.purchaseDate).format('LLL'),
+              })
+            }}
+          </time>
+        </RouterLink>
       </li>
     </ul>
     <div class="mt-auto flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
@@ -50,8 +59,8 @@
 </template>
 <script setup lang="ts">
 import { fractionAmount } from '@/helpers/currency';
+import { ROUTE_NAMES } from '@/router/names';
 import { COUPON_UNIT_COST_IN_EUR, Coupon } from '@/services/api/members';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { PropType } from 'vue';

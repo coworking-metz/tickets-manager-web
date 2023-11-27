@@ -1,4 +1,5 @@
 import { LOCALE_STORAGE_KEY } from '@/store/settings';
+import { createI18nMessage } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar.js';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
@@ -82,4 +83,10 @@ export const i18nInstance = createI18n({
   // messages: { [initialLocale]: messages },
   datetimeFormats,
   numberFormats,
+});
+
+// @see https://vuelidate-next.netlify.app/advanced_usage.html#i18n-support
+export const withAppI18nMessage = createI18nMessage({
+  // had to fix it this way, I'm sorry
+  t: i18nInstance.global.t.bind(i18nInstance) as () => string,
 });

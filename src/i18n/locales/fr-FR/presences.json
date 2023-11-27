@@ -1,0 +1,30 @@
+{
+  "detail": {
+    "amount": {
+      "label": "Durée",
+      "value": {
+        "FULL": "Journée complète",
+        "HALF": "Demi-journée",
+        "NONE": "Absent"
+      }
+    },
+    "description": "",
+    "head": {
+      "title": "@:coupons.detail.title"
+    },
+    "title": "Présence du {date}",
+    "type": {
+      "label": "Type de consommation",
+      "value": {
+        "SUBSCRIPTION": {
+          "description": "Sous réserve d'un abonnement actif à cette date.",
+          "label": "Abonnement"
+        },
+        "TICKET": {
+          "description": "Impacte le solde de tickets.",
+          "label": "Ticket"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "detail": {
+    "description": "Commandé le {purchasedDate} à {purchasedTime}",
+    "ended": {
+      "label": "Terminant le"
+    },
+    "head": {
+      "title": "@:subscription.detail.title"
+    },
+    "purchased": {
+      "label": "Date de la commande"
+    },
+    "started": {
+      "label": "Débutant le"
+    },
+    "title": "Abonnement du {startDate}"
+  }
+}

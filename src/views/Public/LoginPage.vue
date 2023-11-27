@@ -84,7 +84,6 @@ import monoLogo from '@/assets/logo-mono.png';
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import HTTP from '@/services/http';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';

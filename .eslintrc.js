@@ -77,7 +77,7 @@ module.exports = {
     'no-unused-vars': OFF,
     '@typescript-eslint/no-unused-vars': OFF,
     'prettier/prettier': [
-      'error',
+      ERROR,
       {
         arrowParens: 'always',
         bracketSameLine: true,
@@ -90,12 +90,18 @@ module.exports = {
       },
     ],
     'import/order': [
-      'error',
+      ERROR,
       {
         alphabetize: {
           order: 'asc',
         },
         groups: ['index', 'sibling', 'parent', 'internal', 'external', 'builtin', 'object', 'type'],
+      },
+    ],
+    'tailwindcss/no-custom-classname': [
+      WARNING,
+      {
+        whitelist: ['(app\\-).*'],
       },
     ],
   },

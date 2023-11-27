@@ -14,8 +14,6 @@
 
 <script setup lang="ts">
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import SvgIcon from '@jamescoyle/vue-icon';
-
 defineProps({
   loading: {
     type: Boolean,

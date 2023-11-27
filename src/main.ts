@@ -8,6 +8,7 @@ import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { useSettingsStore } from './store/settings';
+import SvgIcon from '@jamescoyle/vue-icon';
 import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { createHead } from '@unhead/vue';
 import { createApp } from 'vue';
@@ -23,6 +24,7 @@ app.use(router);
 app.use(head);
 app.component('DotLottiePlayer', DotLottiePlayer);
 app.component('AnimatedCounter', Vue3Autocounter);
+app.component('SvgIcon', SvgIcon);
 
 createHttpInterceptors(HTTP);
 

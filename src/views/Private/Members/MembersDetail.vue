@@ -1,5 +1,5 @@
 <template>
-  <article class="mx-auto flex min-h-screen w-full max-w-7xl flex-col sm:px-6 lg:px-8">
+  <article class="mx-auto flex min-h-full w-full max-w-7xl flex-col sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <template v-else-if="state.member">
       <Head>
@@ -184,6 +184,20 @@
         </template>
       </SectionRow>
     </template>
+
+    <SideDialog
+      :model-value="
+        [
+          ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+        ].includes($route.name as string)
+      "
+      @close="$router.push({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
+      <div class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+        <RouterView :loading="state.isFetchingMember" :member="state.member" />
+      </div>
+    </SideDialog>
   </article>
 </template>
 
@@ -194,7 +208,9 @@ import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsPanel from './Detail/SubscriptionsPanel.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
+import { ROUTE_NAMES } from '@/router/names';
 import {
   COUPON_UNIT_COST_IN_EUR,
   Member,
@@ -211,12 +227,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  ticketId: {
+    type: String,
+    default: null,
+  },
+  subscriptionId: {
+    type: String,
+    default: null,
+  },
 });
 
 const state = reactive({
   isFetchingMember: false,
   member: null as Member | null,
   fetchMemberErrorMessage: null as string | null,
+  isCouponsDialogVisible: true as boolean,
 });
 const ordersRowElement = ref(null);
 const totalCounter = ref(null);

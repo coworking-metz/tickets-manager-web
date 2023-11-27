@@ -1,0 +1,6 @@
+{
+  "email": "Ça ne ressemble pas à un email",
+  "macAddress": "Ça ne ressemble pas à une addresse MAC",
+  "numeric": "Ça ne ressemble pas à un nombre entier",
+  "required": "Cette information est requise"
+}

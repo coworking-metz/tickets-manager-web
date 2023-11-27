@@ -8,7 +8,7 @@
         "suffix": "day | single day | days",
         "value": "{amount} out of the last 30 days"
       },
-      "title": "Presence"
+      "title": "Attendance"
     },
     "header": {
       "description": "Present for the last time on {date}"

@@ -6,18 +6,24 @@
           id="first-name"
           v-model="state.firstname"
           autocomplete="given-name"
-          class="grow"
+          class="min-w-[12rem] shrink grow basis-0"
+          :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.firstname.label')"
           name="first-name"
-          type="text" />
+          required
+          type="text"
+          @blur="vuelidate.firstname.$touch()" />
         <AppTextField
           id="last-name"
           v-model="state.lastname"
           autocomplete="family-name"
-          class="grow"
+          class="min-w-[12rem] shrink grow basis-0"
+          :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.lastname.label')"
           name="last-name"
-          type="text" />
+          required
+          type="text"
+          @blur="vuelidate.lastname.$touch()" />
       </div>
 
       <div class="flex flex-row flex-wrap gap-x-6">
@@ -25,26 +31,27 @@
           id="email"
           v-model="state.email"
           autocomplete="email"
-          class="min-w-[12rem] grow basis-0"
+          class="min-w-[12rem] shrink grow basis-0"
           :errors="vuelidate.email.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.email.label')"
           name="email"
+          required
           type="email"
           @blur="vuelidate.email.$touch()" />
         <AppTextField
           id="phone"
           v-model="state.phone"
           autocomplete="tel"
-          class="min-w-[12rem] grow basis-0"
+          class="min-w-[12rem] shrink grow basis-0"
           :label="$t('members.detail.profile.phone.label')"
           name="phone"
           type="tel" />
       </div>
 
-      <div class="flex flex-col">
-        <p class="block text-sm font-medium text-gray-700">
+      <fieldset class="flex flex-col">
+        <legend class="block text-sm font-medium text-gray-700">
           {{ $t('members.detail.profile.macAddresses.label', { count: state.devices.length }) }}
-        </p>
+        </legend>
         <i18n-t
           class="block text-gray-500"
           keypath="members.detail.profile.macAddresses.description.text"
@@ -64,49 +71,52 @@
               type="mdi" />
           </template>
         </i18n-t>
-        <ul class="mt-1 flex flex-col gap-6">
+        <ul class="mt-1 flex flex-col">
           <li
             v-for="(device, index) in state.devices"
             :key="`device-${device.id}`"
-            class="flex rounded-md shadow-sm">
-            <div class="relative flex grow items-stretch focus-within:z-10">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="h-5 w-5 text-gray-400"
-                  :path="mdiLaptop"
-                  type="mdi" />
-              </div>
-              <input
-                v-model="state.devices[index].macAddress"
-                class="block w-full rounded-none rounded-l-md border-gray-300 pl-10 uppercase focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                placeholder="A0:B1:C2:D3:E4:F5"
-                type="text" />
+            class="flex flex-col">
+            <AppTextField
+              :id="`mac-address-${index}`"
+              v-model="state.devices[index].macAddress"
+              class="app-mac-address"
+              :errors="vuelidate.devices.$each.$message[index]"
+              placeholder="A0:B1:C2:D3:E4:F5"
+              :prepend-icon="mdiLaptop"
+              required
+              @blur="vuelidate.email.$touch()">
+              <template #append>
+                <a
+                  v-if="
+                    state.devices[index].macAddress &&
+                    !vuelidate.devices.$each.$response.$data[index].macAddress.$error
+                  "
+                  class="absolute inset-y-0 right-0 z-20 flex items-center pr-3 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden"
+                  :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
+                  target="_blank">
+                  {{ $t('members.detail.profile.macAddresses.check') }}
+                  <SvgIcon
+                    aria-hidden="true"
+                    class="ml-1 inline-block h-5 w-5"
+                    :path="mdiOpenInNew"
+                    type="mdi" />
+                </a>
+              </template>
 
-              <a
-                v-if="state.devices[index].macAddress"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden"
-                :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
-                target="_blank">
-                {{ $t('members.detail.profile.macAddresses.check') }}
-                <SvgIcon
-                  aria-hidden="true"
-                  class="ml-1 inline-block h-5 w-5"
-                  :path="mdiOpenInNew"
-                  type="mdi" />
-              </a>
-            </div>
-            <button
-              class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              type="button"
-              @click="() => onRemoveMacAddress(index)">
-              <SvgIcon
-                aria-hidden="true"
-                class="h-5 w-5 text-gray-400"
-                :path="mdiClose"
-                type="mdi" />
-              <span>{{ $t('members.detail.profile.macAddresses.remove') }}</span>
-            </button>
+              <template #after>
+                <button
+                  class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  type="button"
+                  @click="() => onRemoveMacAddress(index)">
+                  <SvgIcon
+                    aria-hidden="true"
+                    class="h-5 w-5 text-gray-400"
+                    :path="mdiClose"
+                    type="mdi" />
+                  <span>{{ $t('members.detail.profile.macAddresses.remove') }}</span>
+                </button>
+              </template>
+            </AppTextField>
           </li>
           <li>
             <button
@@ -118,7 +128,7 @@
             </button>
           </li>
         </ul>
-      </div>
+      </fieldset>
 
       <hr class="mt-6 border-gray-200" />
 
@@ -182,14 +192,16 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import { scrollToFirstError } from '@/helpers/errors';
+import { withAppI18nMessage } from '@/i18n';
 import { Device, Member } from '@/services/api/members';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiClose, mdiLaptop, mdiCheckAll, mdiPlus, mdiOpenInNew } from '@mdi/js';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
-import { watch } from 'vue';
-import { PropType, reactive } from 'vue';
+import { required, email, helpers, macAddress } from '@vuelidate/validators';
+import { computed, watch } from 'vue';
+import { PropType, reactive, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   member: {
@@ -198,6 +210,7 @@ const props = defineProps({
   },
 });
 
+const i18n = useI18n();
 const state = reactive({
   firstname: null as string | null,
   lastname: null as string | null,
@@ -208,11 +221,22 @@ const state = reactive({
   hasParkingAccess: false as boolean,
 });
 
-const rules = {
-  firstname: { required },
-  lastname: { required },
-  email: { required, email },
-};
+const rules = computed(() => ({
+  firstname: { required: withAppI18nMessage(required) },
+  lastname: { required: withAppI18nMessage(required) },
+  email: { required: withAppI18nMessage(required), email: withAppI18nMessage(email) },
+  devices: {
+    $each: helpers.forEach({
+      macAddress: {
+        required: helpers.withMessage(i18n.t('validations.required') as string, required),
+        macAddress: helpers.withMessage(
+          i18n.t('validations.macAddress') as string,
+          macAddress(':'),
+        ),
+      },
+    }),
+  },
+}));
 
 const vuelidate = useVuelidate(rules, state);
 
@@ -224,8 +248,13 @@ const onRemoveMacAddress = (index: number) => {
   state.devices.splice(index, 1);
 };
 
-const onSubmit = () => {
-  // TODO: vuelidate and call the API
+const onSubmit = async () => {
+  const isValid = await vuelidate.value.$validate();
+  if (!isValid) {
+    nextTick(scrollToFirstError);
+    return;
+  }
+  // TODO: post to the API
 };
 
 watch(
@@ -236,9 +265,15 @@ watch(
       state.lastname = member.lastname || null;
       state.email = member.email || null;
       state.phone = member.phone || null;
-      state.devices = member.devices || null;
+      state.devices = member.devices || [];
     }
   },
   { immediate: true },
 );
 </script>
+
+<style scoped>
+.app-mac-address:deep(input) {
+  text-transform: uppercase;
+}
+</style>

@@ -47,7 +47,6 @@ import monoLogo from '@/assets/logo-mono-inverted.svg';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiAccountGroup, mdiFinance } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
