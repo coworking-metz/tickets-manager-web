@@ -5,7 +5,7 @@
       "label": "Terminant le"
     },
     "head": {
-      "title": "@:subscription.detail.title"
+      "title": "@:subscriptions.detail.title"
     },
     "purchased": {
       "label": "Date de la commande"

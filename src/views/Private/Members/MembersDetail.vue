@@ -2,11 +2,8 @@
   <article class="mx-auto flex min-h-full w-full max-w-7xl flex-col sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <template v-else-if="state.member">
-      <Head>
-        <title>
-          {{ [state.member.firstname, state.member.lastname].filter(Boolean).join(' ') }}
-        </title>
-      </Head>
+      <!-- trick to trigger useHead.titleTemplate -->
+      <Head><title></title></Head>
       <SectionRow class="px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
           <div class="flex flex-row items-center space-x-5">
@@ -41,7 +38,7 @@
       </SectionRow>
 
       <SectionRow class="mt-12">
-        <PresenceGraph
+        <PresencesGraph
           class="bg-white px-6 pb-6 shadow sm:overflow-hidden sm:rounded-md"
           :member="state.member" />
         <template #title>
@@ -203,7 +200,7 @@
 
 <script setup lang="ts">
 import CouponsPanel from './Detail/CouponsPanel.vue';
-import PresenceGraph from './Detail/PresenceGraph.vue';
+import PresencesGraph from './Detail/PresencesGraph.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsPanel from './Detail/SubscriptionsPanel.vue';
@@ -217,10 +214,12 @@ import {
   SUBSCRIPTION_UNIT_COST_IN_EUR,
   getMember,
 } from '@/services/api/members';
+import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { useIntersectionObserver } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   id: {
@@ -237,6 +236,7 @@ const props = defineProps({
   },
 });
 
+const i18n = useI18n();
 const state = reactive({
   isFetchingMember: false,
   member: null as Member | null,
@@ -245,6 +245,17 @@ const state = reactive({
 });
 const ordersRowElement = ref(null);
 const totalCounter = ref(null);
+
+useHead({
+  titleTemplate: (title?: string) =>
+    [
+      title,
+      [state.member?.firstname, state.member?.lastname].filter(Boolean).join(' '),
+      i18n.t('head.title'),
+    ]
+      .filter(Boolean)
+      .join(' - '),
+});
 
 useIntersectionObserver(ordersRowElement, ([{ isIntersecting }]) => {
   if (isIntersecting) {

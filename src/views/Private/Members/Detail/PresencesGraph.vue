@@ -12,6 +12,7 @@
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
 import { theme } from '@/styles/colors';
+import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import { HeatmapChart } from 'echarts/charts.js';
@@ -23,7 +24,7 @@ import {
 } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
-import { PropType, computed, ref } from 'vue';
+import { PropType, computed, reactive, ref } from 'vue';
 import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -55,6 +56,11 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { width } = useWindowSize();
+const state = reactive({
+  shouldHideTooltip: false, // https://github.com/apache/echarts/issues/16454
+});
 const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 
 const options = computed<
@@ -66,9 +72,9 @@ const options = computed<
     | HeatmapSeriesOption
   >
 >(() => ({
-  locale: 'ZH',
   tooltip: {
     position: 'top',
+    show: !state.shouldHideTooltip,
     formatter: ({ data }: any) => {
       const [date, amount] = data as [string, number];
       return i18n.t('members.detail.attendance.graph.tooltip', {
@@ -124,13 +130,23 @@ const onSelectPresence = ({ data }: any) => {
     (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
   );
   if (selectedPresence) {
-    router.push({
-      name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-      params: {
-        presenceId: selectedPresence.id,
-        id: router.currentRoute.value.params.id,
-      },
-    });
+    if (width.value < 840) {
+      state.shouldHideTooltip = true;
+    }
+
+    router
+      .push({
+        name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+        params: {
+          presenceId: selectedPresence.id,
+          id: router.currentRoute.value.params.id,
+        },
+      })
+      .finally(() => {
+        if (width.value < 840) {
+          state.shouldHideTooltip = false;
+        }
+      });
   }
 };
 </script>
