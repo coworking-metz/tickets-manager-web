@@ -35,7 +35,7 @@
         <title>
           {{
             $t('presences.detail.head.title', {
-              startDate: dayjs(selectedPresence.date).format('LL'),
+              date: dayjs(selectedPresence.date).format('LL'),
             })
           }}
         </title>

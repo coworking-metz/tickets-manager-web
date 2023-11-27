@@ -10,7 +10,7 @@
     },
     "description": "",
     "head": {
-      "title": "@:coupons.detail.title"
+      "title": "@:presences.detail.title"
     },
     "title": "Présence du {date}",
     "type": {

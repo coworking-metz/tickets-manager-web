@@ -5,7 +5,7 @@
       ['max-sm:overflow-y-hidden']: state.isMenuOpen,
     }">
     <header
-      class="fixed top-0 z-20 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-[75%] shadow-sm backdrop-blur sm:hidden">
+      class="fixed top-0 z-40 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-[75%] shadow-sm backdrop-blur sm:hidden">
       <button
         class="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
         type="button"
