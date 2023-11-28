@@ -43,11 +43,11 @@ export const routes: RouteRecordRaw[] = [
             }),
             children: [
               {
-                path: 'coupons/:couponId',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/CouponsDetail.vue'),
+                path: 'tickets/:ticketId',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
+                component: () => import('@/views/Private/Members/Detail/TicketsDetail.vue'),
                 props: (route) => ({
-                  id: route.params.couponId,
+                  id: route.params.ticketId,
                 }),
               },
               {

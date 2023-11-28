@@ -1,9 +1,9 @@
 import HTTP from '../http';
 
-export const COUPON_UNIT_COST_IN_EUR = 6 as const;
+export const TICKET_UNIT_COST_IN_EUR = 6 as const;
 export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;
 
-export interface Coupon {
+export interface Ticket {
   id: string;
   purchaseDate: string;
   tickets: number;
@@ -50,7 +50,7 @@ export interface MemberListItem {
 
 export interface Member extends MemberListItem {
   created: string;
-  tickets: Coupon[];
+  tickets: Ticket[];
   presences: Attendance[];
   subscriptions: Subscription[];
   devices: Device[];

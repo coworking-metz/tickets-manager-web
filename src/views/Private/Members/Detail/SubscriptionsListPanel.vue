@@ -4,7 +4,12 @@
     <div class="flex flex-row flex-wrap items-center justify-between gap-1 px-4 py-5 sm:p-6">
       <h4 class="text-lg font-medium">{{ $t('members.detail.orders.subscriptions.title') }}</h4>
       <span
-        class="rounded-full bg-indigo-500/10 px-3 py-1 text-sm leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+        :class="[
+          'rounded-full px-3 py-1 text-sm leading-6 ring-1 ring-inset',
+          active
+            ? 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20'
+            : 'bg-gray-500/10 text-gray-400 ring-gray-500/20',
+        ]">
         {{ $t('members.detail.orders.subscriptions.active', { count: +active }) }}
       </span>
     </div>
@@ -55,7 +60,7 @@
             :datetime="dayjs(subscription.purchased).toISOString()">
             {{
               $t('members.detail.orders.subscriptions.purchased', {
-                date: dayjs(subscription.purchased).format('LLL'),
+                date: dayjs(subscription.purchased).format('dddd LL'),
               })
             }}
           </time>

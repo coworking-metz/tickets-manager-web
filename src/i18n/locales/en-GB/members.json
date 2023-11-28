@@ -14,13 +14,6 @@
       "description": "Present for the last time on {date}"
     },
     "orders": {
-      "coupons": {
-        "add": "Add tickets",
-        "amount": "{count} ticket | {count} single ticket | {count} tickets",
-        "purchased": "Ordered on {date}",
-        "remaining": "None available | More than one | {count} remaining",
-        "title": "Individual Tickets"
-      },
       "description": "All orders placed by this member, along with their amounts.\nOrders for coffee and other goodies like donations are excluded.",
       "spent": {
         "monthly": {
@@ -39,6 +32,13 @@
         "period": "from {startDate} to {endDate}",
         "purchased": "Ordered on {date}",
         "title": "Subscriptions"
+      },
+      "tickets": {
+        "add": "Add tickets",
+        "amount": "{count} ticket | {count} single ticket | {count} tickets",
+        "purchased": "Ordered on {date}",
+        "remaining": "None available | More than one | {count} remaining",
+        "title": "Individual Tickets"
       },
       "title": "Order History"
     },

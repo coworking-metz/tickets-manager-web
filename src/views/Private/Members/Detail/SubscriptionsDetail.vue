@@ -61,14 +61,6 @@
         required
         type="date" />
 
-      <AppTextField
-        id="subscription-purchased"
-        v-model.number="state.purchased"
-        :label="$t('subscriptions.detail.purchased.label')"
-        :prepend-icon="mdiCalendarBlankOutline"
-        required
-        type="datetime-local" />
-
       <AppButton class="mt-1 self-start" :icon="mdiCheck" type="submit">
         {{ $t('action.apply') }}
       </AppButton>
@@ -85,13 +77,7 @@ import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member, Subscription } from '@/services/api/members';
 import { DialogTitle } from '@headlessui/vue';
-import {
-  mdiCalendarBlankOutline,
-  mdiCalendarEndOutline,
-  mdiCalendarStartOutline,
-  mdiCheck,
-  mdiClose,
-} from '@mdi/js';
+import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiCheck, mdiClose } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -116,7 +102,6 @@ const props = defineProps({
 const state = reactive({
   started: null as string | null,
   ended: null as string | null,
-  purchased: null as string | null,
 });
 
 const selectedSubscription = computed<Subscription | null>(() => {
@@ -126,7 +111,6 @@ const selectedSubscription = computed<Subscription | null>(() => {
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
   ended: { required: withAppI18nMessage(required) },
-  purchased: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -146,7 +130,6 @@ watch(
     if (subscription) {
       state.started = dayjs(subscription.startDate).format('YYYY-MM-DD');
       state.ended = dayjs(subscription.endDate).format('YYYY-MM-DD');
-      state.purchased = dayjs(subscription.purchased).format('YYYY-MM-DDTHH:mm');
     }
   },
   { immediate: true },

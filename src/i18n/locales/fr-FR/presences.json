@@ -12,6 +12,10 @@
     "head": {
       "title": "@:presences.detail.title"
     },
+    "reason": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de ce changement"
+    },
     "title": "Présence du {date}",
     "type": {
       "label": "Type de consommation",

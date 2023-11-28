@@ -123,11 +123,11 @@
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
         <div class="flex flex-row flex-wrap items-stretch gap-3">
-          <CouponsPanel
+          <TicketsListPanel
             class="min-w-[16rem] shrink grow basis-0"
-            :coupons="state.member.tickets"
-            :remaining="state.member.balance" />
-          <SubscriptionsPanel
+            :remaining="state.member.balance"
+            :tickets="state.member.tickets" />
+          <SubscriptionsListPanel
             class="min-w-[16rem] shrink grow basis-0"
             :subscriptions="state.member.subscriptions" />
         </div>
@@ -186,7 +186,7 @@
       :model-value="
         [
           ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-          ROUTE_NAMES.MEMBERS.DETAIL.COUPONS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
         ].includes($route.name as string)
       "
@@ -199,17 +199,17 @@
 </template>
 
 <script setup lang="ts">
-import CouponsPanel from './Detail/CouponsPanel.vue';
 import PresencesGraph from './Detail/PresencesGraph.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
-import SubscriptionsPanel from './Detail/SubscriptionsPanel.vue';
+import SubscriptionsListPanel from './Detail/SubscriptionsListPanel.vue';
+import TicketsListPanel from './Detail/TicketsListPanel.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {
-  COUPON_UNIT_COST_IN_EUR,
+  TICKET_UNIT_COST_IN_EUR,
   Member,
   SUBSCRIPTION_UNIT_COST_IN_EUR,
   getMember,
@@ -241,7 +241,7 @@ const state = reactive({
   isFetchingMember: false,
   member: null as Member | null,
   fetchMemberErrorMessage: null as string | null,
-  isCouponsDialogVisible: true as boolean,
+  isTicketsDialogVisible: true as boolean,
 });
 const ordersRowElement = ref(null);
 const totalCounter = ref(null);
@@ -264,15 +264,15 @@ useIntersectionObserver(ordersRowElement, ([{ isIntersecting }]) => {
 });
 
 const totalAmountSpent = computed<number>(() => {
-  const totalCoupons =
-    state.member?.tickets.reduce((total, coupon) => {
-      return total + coupon.tickets;
+  const totalTickets =
+    state.member?.tickets.reduce((total, ticket) => {
+      return total + ticket.tickets;
     }, 0) ?? 0;
-  const totalCouponsAmount = totalCoupons * COUPON_UNIT_COST_IN_EUR;
+  const totalTicketsAmount = totalTickets * TICKET_UNIT_COST_IN_EUR;
   const totalSubscriptionsAmount =
     (state.member?.subscriptions.length ?? 0) * SUBSCRIPTION_UNIT_COST_IN_EUR;
 
-  return totalCouponsAmount + totalSubscriptionsAmount;
+  return totalTicketsAmount + totalSubscriptionsAmount;
 });
 
 const monthlyAmountSpent = computed<number>(() => {
