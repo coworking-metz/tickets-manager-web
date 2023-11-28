@@ -8,9 +8,12 @@
     "head": {
       "title": "@:tickets.detail.title"
     },
-    "purchased": {
-      "label": "Commandé le | Commandé le | Commandés le"
-    },
     "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
+  },
+  "new": {
+    "head": {
+      "title": "@:subscriptions.new.title"
+    },
+    "title": "Nouvelle commande de tickets"
   }
 }

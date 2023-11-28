@@ -7,12 +7,15 @@
     "head": {
       "title": "@:subscriptions.detail.title"
     },
-    "purchased": {
-      "label": "Date de la commande"
-    },
     "started": {
       "label": "Débutant le"
     },
     "title": "Abonnement du {startDate}"
+  },
+  "new": {
+    "head": {
+      "title": "@:subscriptions.new.title"
+    },
+    "title": "Nouvel abonnement"
   }
 }

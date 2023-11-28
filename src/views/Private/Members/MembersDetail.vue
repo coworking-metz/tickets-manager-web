@@ -185,14 +185,16 @@
     <SideDialog
       :model-value="
         [
-          ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
         ].includes($route.name as string)
       "
       @close="$router.push({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
       <div class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
-        <RouterView :loading="state.isFetchingMember" :member="state.member" />
+        <RouterView :loading="state.isFetchingMember" :member="state.member" :member-id="id" />
       </div>
     </SideDialog>
   </article>
@@ -202,8 +204,8 @@
 import PresencesGraph from './Detail/PresencesGraph.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
-import SubscriptionsListPanel from './Detail/SubscriptionsListPanel.vue';
-import TicketsListPanel from './Detail/TicketsListPanel.vue';
+import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
+import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';

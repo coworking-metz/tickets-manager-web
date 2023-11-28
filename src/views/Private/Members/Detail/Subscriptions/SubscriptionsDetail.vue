@@ -48,6 +48,7 @@
       <AppTextField
         id="subscription-started"
         v-model.number="state.started"
+        :errors="vuelidate.started.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.started.label')"
         :prepend-icon="mdiCalendarStartOutline"
         required
@@ -56,13 +57,14 @@
       <AppTextField
         id="subscription-ended"
         v-model.number="state.ended"
+        :errors="vuelidate.ended.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.ended.label')"
         :prepend-icon="mdiCalendarEndOutline"
         required
         type="date" />
 
       <AppButton class="mt-1 self-start" :icon="mdiCheck" type="submit">
-        {{ $t('action.apply') }}
+        {{ $t('action.edit') }}
       </AppButton>
     </form>
   </div>

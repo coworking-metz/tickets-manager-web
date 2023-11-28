@@ -124,7 +124,7 @@
               class="inline-flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               type="button"
               @click="onAddMacAddress">
-              <SvgIcon aria-hidden="true" class="mr-3 h-5 w-5" :path="mdiPlus" type="mdi" />
+              <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
               {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
             </button>
           </li>

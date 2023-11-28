@@ -87,7 +87,7 @@
               v-slot="{ checked, active }">
               <div
                 :class="[
-                  checked ? 'border-transparent' : 'border-gray-300',
+                  checked ? 'border-transparent' : 'border-gray-300 hover:border-gray-400',
                   active ? 'border-indigo-500 ring-2 ring-indigo-500' : '',
                   'relative flex flex-1 cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
                 ]">

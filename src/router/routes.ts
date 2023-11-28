@@ -43,17 +43,29 @@ export const routes: RouteRecordRaw[] = [
             }),
             children: [
               {
+                path: 'tickets/new',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW,
+                component: () => import('@/views/Private/Members/Detail/Tickets/TicketsNew.vue'),
+              },
+              {
                 path: 'tickets/:ticketId',
                 name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/TicketsDetail.vue'),
+                component: () => import('@/views/Private/Members/Detail/Tickets/TicketsDetail.vue'),
                 props: (route) => ({
                   id: route.params.ticketId,
                 }),
               },
               {
+                path: 'subscriptions/new',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
+                component: () =>
+                  import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsNew.vue'),
+              },
+              {
                 path: 'subscriptions/:subscriptionId',
                 name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/SubscriptionsDetail.vue'),
+                component: () =>
+                  import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsDetail.vue'),
                 props: (route) => ({
                   id: route.params.subscriptionId,
                 }),
@@ -66,7 +78,6 @@ export const routes: RouteRecordRaw[] = [
                   id: route.params.presenceId,
                 }),
               },
-
               { path: ':catchAll(.*)', redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX } },
             ],
           },
