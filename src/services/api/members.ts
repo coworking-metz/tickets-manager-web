@@ -40,7 +40,7 @@ export interface MemberListItem {
   id: number;
   picture: string;
   email: string;
-  phone: string;
+  birthdate: string;
   firstname: string;
   lastname: string;
   lastSeen: string;

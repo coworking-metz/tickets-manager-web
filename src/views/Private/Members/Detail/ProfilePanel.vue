@@ -39,13 +39,14 @@
           type="email"
           @blur="vuelidate.email.$touch()" />
         <AppTextField
-          id="phone"
-          v-model="state.phone"
-          autocomplete="tel"
+          id="birthdate"
+          v-model="state.birthdate"
+          autocomplete="bday"
           class="min-w-[12rem] shrink grow basis-0"
-          :label="$t('members.detail.profile.phone.label')"
-          name="phone"
-          type="tel" />
+          :label="$t('members.detail.profile.birthdate.label')"
+          name="birthdate"
+          :prepend-icon="mdiCakeVariantOutline"
+          type="date" />
       </div>
 
       <fieldset class="flex flex-col">
@@ -196,7 +197,14 @@ import { scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { Device, Member } from '@/services/api/members';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
-import { mdiClose, mdiLaptop, mdiCheckAll, mdiPlus, mdiOpenInNew } from '@mdi/js';
+import {
+  mdiClose,
+  mdiLaptop,
+  mdiCheckAll,
+  mdiPlus,
+  mdiOpenInNew,
+  mdiCakeVariantOutline,
+} from '@mdi/js';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, helpers, macAddress } from '@vuelidate/validators';
 import { computed, watch } from 'vue';
@@ -215,7 +223,7 @@ const state = reactive({
   firstname: null as string | null,
   lastname: null as string | null,
   email: null as string | null,
-  phone: null as string | null,
+  birthdate: null as string | null,
   devices: [] as Device[],
   isManager: false as boolean,
   hasParkingAccess: false as boolean,
@@ -264,7 +272,7 @@ watch(
       state.firstname = member.firstname || null;
       state.lastname = member.lastname || null;
       state.email = member.email || null;
-      state.phone = member.phone || null;
+      state.birthdate = member.birthdate || null;
       state.devices = member.devices || [];
     }
   },
