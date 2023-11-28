@@ -7,5 +7,5 @@ export { default as user } from './user.json';
 export { default as login } from './login.json';
 export { default as validations } from './validations.json';
 export { default as subscriptions } from './subscriptions.json';
-export { default as coupons } from './coupons.json';
+export { default as tickets } from './tickets.json';
 export { default as presences } from './presences.json';

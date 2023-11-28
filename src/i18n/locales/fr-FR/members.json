@@ -22,13 +22,6 @@
       "description": "Présent pour la dernière fois {date}"
     },
     "orders": {
-      "coupons": {
-        "add": "Ajouter des tickets",
-        "amount": "{count} ticket | {count} seul ticket | {count} tickets",
-        "purchased": "Commandé le {date}",
-        "remaining": "Aucun disponible | Plus qu'un | {count} restants",
-        "title": "Tickets à l'unité"
-      },
       "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autre joyeusetés comme les dons sont exclues.",
       "spent": {
         "monthly": {
@@ -47,6 +40,14 @@
         "period": "du {startDate} au {endDate}",
         "purchased": "Commandé le {date}",
         "title": "Abonnements"
+      },
+      "tickets": {
+        "add": "Ajouter des tickets",
+        "amount": "{count} ticket | {count} seul ticket | {count} tickets",
+        "overconsumed": "1 surconsommé | {count} surconsommés",
+        "purchased": "Commandé le {date} | Commandé le {date} | Commandés le {date}",
+        "remaining": "Aucun disponible | Plus qu'un | {count} restants",
+        "title": "Tickets à l'unité"
       },
       "title": "Historique des commandes"
     },

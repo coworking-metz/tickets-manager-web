@@ -6,7 +6,7 @@
     },
     "description": "Passée le {purchasedDate} à {purchasedTime}",
     "head": {
-      "title": "@:coupons.detail.title"
+      "title": "@:tickets.detail.title"
     },
     "purchased": {
       "label": "Commandé le | Commandé le | Commandés le"
