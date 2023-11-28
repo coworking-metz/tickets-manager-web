@@ -52,6 +52,9 @@
       "title": "Historique des commandes"
     },
     "profile": {
+      "birthdate": {
+        "label": "Date de naissance"
+      },
       "description": "Les informations de contact et autres données personnelles de ce membre.\nCes informations ne sont pas publiques.",
       "email": {
         "label": "Adresse email"
@@ -81,9 +84,6 @@
         },
         "label": "Appareil | Appareil | Appareils",
         "remove": "Retirer"
-      },
-      "phone": {
-        "label": "Téléphone"
       },
       "since": {
         "label": "Membre depuis"

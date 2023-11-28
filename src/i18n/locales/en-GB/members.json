@@ -43,6 +43,9 @@
       "title": "Order History"
     },
     "profile": {
+      "birthdate": {
+        "label": "Birthdate"
+      },
       "description": "Contact information and other personal data of this member.\nThis information is not public.",
       "email": {
         "label": "Email Address"
@@ -72,9 +75,6 @@
         },
         "label": "Device | Device | Devices",
         "remove": "Remove"
-      },
-      "phone": {
-        "label": "Phone"
       },
       "since": {
         "label": "Member since"
