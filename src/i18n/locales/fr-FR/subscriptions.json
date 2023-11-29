@@ -10,7 +10,7 @@
   "detail": {
     "description": "Commandé le {purchasedDate} à {purchasedTime}",
     "empty": {
-      "description": "Assurez-vous que l'abonnement est bien rattaché à ce membre.",
+      "description": "Assurez-vous que l'abonnement est bien rattaché à ce coworkeur.",
       "title": "Abonnement introuvable"
     },
     "ended": {

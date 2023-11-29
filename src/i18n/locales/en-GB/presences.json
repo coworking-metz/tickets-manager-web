@@ -1,0 +1,41 @@
+{
+  "detail": {
+    "amount": {
+      "label": "Duration",
+      "value": {
+        "FULL": "Full day",
+        "HALF": "Half day",
+        "NONE": "Absent"
+      }
+    },
+    "description": "",
+    "empty": {
+      "description": "No attendance has been recorded for this date.",
+      "title": "Attendance Not Found"
+    },
+    "head": {
+      "title": "@:presences.detail.title"
+    },
+    "onFail": {
+      "message": "Unable to update attendance"
+    },
+    "reason": {
+      "label": "Reason",
+      "placeholder": "Explain the reason for this change"
+    },
+    "title": "Attendance on {date}",
+    "type": {
+      "label": "Consumption Type",
+      "value": {
+        "SUBSCRIPTION": {
+          "description": "Subject to an active subscription on this date.",
+          "label": "Subscription"
+        },
+        "TICKET": {
+          "description": "Affects the ticket balance.",
+          "label": "Ticket"
+        }
+      }
+    }
+  }
+}

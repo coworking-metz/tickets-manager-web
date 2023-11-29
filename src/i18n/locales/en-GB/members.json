@@ -2,6 +2,14 @@
   "detail": {
     "attendance": {
       "description": "Member's presence over the last 6 months.\nAttendance is automatically recorded when the member connects to the coworking's wifi network.",
+      "graph": {
+        "tooltip": "{date}: {amount}",
+        "value": {
+          "FULL": "full day",
+          "HALF": "half day",
+          "NONE": "absent"
+        }
+      },
       "last30days": {
         "empty": "Absent",
         "label": "Present",
@@ -12,6 +20,9 @@
     },
     "header": {
       "description": "Present for the last time on {date}"
+    },
+    "onFetch": {
+      "fail": "Unable to load the member's details"
     },
     "orders": {
       "description": "All orders placed by this member, along with their amounts.\nOrders for coffee and other goodies like donations are excluded.",
@@ -29,6 +40,7 @@
         "active": "Active | Inactive",
         "add": "Add a subscription",
         "days": "{count} day | {count} single day | {count} days",
+        "more": "More",
         "period": "from {startDate} to {endDate}",
         "purchased": "Ordered on {date}",
         "title": "Subscriptions"
@@ -36,6 +48,8 @@
       "tickets": {
         "add": "Add tickets",
         "amount": "{count} ticket | {count} single ticket | {count} tickets",
+        "more": "More",
+        "overconsumed": "1 overconsumed | {count} overconsumed",
         "purchased": "Ordered on {date}",
         "remaining": "None available | More than one | {count} remaining",
         "title": "Individual Tickets"
@@ -76,6 +90,10 @@
         "label": "Device | Device | Devices",
         "remove": "Remove"
       },
+      "onUpdate": {
+        "fail": "Unable to update {name}",
+        "success": "{name} updated"
+      },
       "since": {
         "label": "Member since"
       },
@@ -83,8 +101,15 @@
     }
   },
   "list": {
+    "empty": {
+      "title": "No coworker found"
+    },
     "head": {
       "title": "@:members.list.title"
+    },
+    "lastSeen": "Last seen on {date}",
+    "onFetch": {
+      "fail": "Unable to fetch coworkers list"
     },
     "search": {
       "label": "Search for a coworker",

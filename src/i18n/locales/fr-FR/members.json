@@ -3,7 +3,7 @@
     "attendance": {
       "description": "Les présences de ce membre au cours des 6 derniers mois.\nLes présences sont enregistrées automatiquement lorsque le membre se connecte au réseau wifi du coworking.",
       "graph": {
-        "tooltip": "{date}: {amount}",
+        "tooltip": "{date} : {amount}",
         "value": {
           "FULL": "journée complète",
           "HALF": "demi-journée",
@@ -101,17 +101,17 @@
   },
   "list": {
     "empty": {
-      "title": "Aucun membre trouvé"
+      "title": "Aucun coworkeur trouvé"
     },
     "head": {
       "title": "@:members.list.title"
     },
     "lastSeen": "Présent pour la dernière fois {date}",
     "onFetch": {
-      "fail": "Impossible de récupérer la liste des coworkers"
+      "fail": "Impossible de récupérer la liste des coworkeurs"
     },
     "search": {
-      "label": "Rechercher un coworker",
+      "label": "Rechercher un coworkeur",
       "placeholder": "@:members.list.search.label"
     },
     "tabs": {
@@ -119,6 +119,6 @@
       "all": "Tous",
       "present": "Présent | Présents"
     },
-    "title": "Coworkers"
+    "title": "Coworkeurs"
   }
 }
