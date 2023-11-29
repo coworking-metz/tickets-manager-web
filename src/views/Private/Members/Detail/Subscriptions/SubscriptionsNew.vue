@@ -38,7 +38,7 @@
         type="date" />
 
       <AppButton
-        class="mt-1 self-start"
+        class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
         :icon="mdiPlus"
         :loading="state.isSubmitting"
         type="submit">

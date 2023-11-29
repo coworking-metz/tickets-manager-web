@@ -63,34 +63,58 @@
         required
         type="date" />
 
-      <AppButton
-        class="mt-1 self-start"
-        :icon="mdiCheck"
-        :loading="state.isSubmitting"
-        type="submit">
-        {{ $t('action.edit') }}
-      </AppButton>
+      <div class="mt-1 flex flex-row justify-between gap-3">
+        <AppButton
+          class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+          :icon="mdiCheck"
+          :loading="state.isSubmitting"
+          type="submit">
+          {{ $t('action.edit') }}
+        </AppButton>
+
+        <AppButton
+          class="border border-red-300 bg-white text-red-500 shadow-sm hover:bg-red-50 focus:!ring-red-500"
+          :icon="mdiDeleteOutline"
+          @click.prevent="state.isDeleteDialogVisible = true">
+          {{ $t('action.delete') }}
+        </AppButton>
+      </div>
+
+      <SubscriptionsDeleteDialog
+        v-model="state.isDeleteDialogVisible"
+        :member-id="props.member.id"
+        :subscription-id="props.id"
+        @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
+import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Member, Subscription } from '@/services/api/members';
+import { Member } from '@/services/api/members';
+import { Subscription, updateMemberSubscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiCheck, mdiClose } from '@mdi/js';
+import {
+  mdiCalendarEndOutline,
+  mdiCalendarStartOutline,
+  mdiCheck,
+  mdiClose,
+  mdiDeleteOutline,
+} from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   loading: {
@@ -107,12 +131,14 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   started: null as string | null,
   ended: null as string | null,
   isSubmitting: false as boolean,
+  isDeleteDialogVisible: false as boolean,
 });
 
 const selectedSubscription = computed<Subscription | null>(() => {
@@ -134,10 +160,21 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  Promise.reject(new Error('Not implemented yet'))
+  updateMemberSubscription(props.member.id, props.id, {
+    startDate: state.started,
+    endDate: state.ended,
+  } as Subscription)
+    .then(() => {
+      notificationsStore.addNotification({
+        type: 'success',
+        message: i18n.t('subscriptions.detail.onUpdate.success'),
+        timeout: 3_000,
+      });
+      return router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+    })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.detail.onFail.message'));
+      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.detail.onUpdate.fail'));
       return Promise.reject(error);
     })
     .finally(() => {

@@ -120,13 +120,12 @@
             </AppTextField>
           </li>
           <li>
-            <button
-              class="inline-flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              type="button"
+            <AppButton
+              class="border border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400"
               @click="onAddMacAddress">
               <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
               {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
-            </button>
+            </AppButton>
           </li>
         </ul>
       </fieldset>
@@ -183,7 +182,11 @@
       </ul>
     </div>
     <div class="flex flex-row border-t-[1px] border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-      <AppButton :icon="mdiCheckAll" :loading="state.isSubmitting" type="submit">
+      <AppButton
+        class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+        :icon="mdiCheckAll"
+        :loading="state.isSubmitting"
+        type="submit">
         {{ $t('action.apply') }}
       </AppButton>
     </div>

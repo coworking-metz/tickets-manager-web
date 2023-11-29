@@ -1,19 +1,12 @@
+import { Subscription } from './subscriptions';
 import HTTP from '../http';
 
 export const TICKET_UNIT_COST_IN_EUR = 6 as const;
-export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;
 
 export interface Ticket {
   id: string;
   purchaseDate: string;
   tickets: number;
-}
-
-export interface Subscription {
-  id: string;
-  startDate: string;
-  endDate: string;
-  purchased: string;
 }
 
 export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';

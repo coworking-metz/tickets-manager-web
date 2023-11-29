@@ -3,7 +3,7 @@
     <VueECharts
       ref="chart"
       :option="options"
-      style="height: 144px; width: 640px"
+      style="height: 172px; width: 640px"
       @click="onSelectPresence" />
   </section>
 </template>
@@ -103,10 +103,10 @@ const options = computed<
   },
   calendar: {
     locale: 'fr-FR',
-    top: 48,
-    left: 30,
-    right: 30,
-    cellSize: ['auto', 'auto'],
+    top: 20,
+    left: 48,
+    // right: 40,
+    cellSize: 20,
     range: [dayjs().format('YYYY-MM-DD'), dayjs().subtract(6, 'month').format('YYYY-MM-DD')],
     itemStyle: {
       borderWidth: 0.5,
