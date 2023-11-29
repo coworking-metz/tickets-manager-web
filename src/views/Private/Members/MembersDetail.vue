@@ -6,7 +6,7 @@
       <Head><title></title></Head>
       <SectionRow class="px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
-          <div class="flex flex-row items-center space-x-5">
+          <div class="ml-4 flex flex-row items-center space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
                 <img alt="" class="h-16 w-16 rounded-full" :src="state.member.picture" />
@@ -37,10 +37,8 @@
         </header>
       </SectionRow>
 
-      <SectionRow class="mt-12">
-        <PresencesGraph
-          class="bg-white px-6 pb-6 shadow sm:overflow-hidden sm:rounded-md"
-          :member="state.member" />
+      <SectionRow class="mt-8">
+        <PresencesGraph class="sm:overflow-visible sm:rounded-md" :member="state.member" />
         <template #title>
           <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
             {{ $t('members.detail.attendance.title') }}
@@ -208,12 +206,8 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  TICKET_UNIT_COST_IN_EUR,
-  Member,
-  SUBSCRIPTION_UNIT_COST_IN_EUR,
-  getMember,
-} from '@/services/api/members';
+import { TICKET_UNIT_COST_IN_EUR, Member, getMember } from '@/services/api/members';
+import { SUBSCRIPTION_UNIT_COST_IN_EUR } from '@/services/api/subscriptions';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { useIntersectionObserver } from '@vueuse/core';

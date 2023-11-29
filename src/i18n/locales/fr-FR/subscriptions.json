@@ -1,4 +1,12 @@
 {
+  "delete": {
+    "description": "Êtes-vous sûr de vouloir supprimer cet abonnement ? Vous ne pourrez pas revenir en arrière.",
+    "onDelete": {
+      "fail": "Impossible de supprimer cet abonnement",
+      "success": "Abonnement supprimé"
+    },
+    "title": "Suppression de l'abonnement"
+  },
   "detail": {
     "description": "Commandé le {purchasedDate} à {purchasedTime}",
     "ended": {
@@ -7,8 +15,9 @@
     "head": {
       "title": "@:subscriptions.detail.title"
     },
-    "onFail": {
-      "message": "Impossible d'éditer cet abonnement"
+    "onUpdate": {
+      "fail": "Impossible de modifier cet abonnement",
+      "success": "Abonnement modifié"
     },
     "started": {
       "label": "Débutant le"
@@ -19,8 +28,9 @@
     "head": {
       "title": "@:subscriptions.new.title"
     },
-    "onFail": {
-      "message": "Impossible d'ajouter l'abonnement"
+    "onAdd": {
+      "fail": "Impossible d'ajouter l'abonnement",
+      "success": "Abonnement ajouté"
     },
     "title": "Nouvel abonnement"
   }

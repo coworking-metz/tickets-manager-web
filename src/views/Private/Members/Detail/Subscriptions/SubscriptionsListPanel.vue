@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/members';
+import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/subscriptions';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
