@@ -1,12 +1,9 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
+  <div class="flex h-full flex-col">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle
-          :class="[
-            'shrink whitespace-nowrap text-lg font-medium text-white',
-            loading && 'animate-pulse',
-          ]">
+          :class="['shrink truncate text-lg font-medium text-white', loading && 'animate-pulse']">
           <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
           <span v-else-if="selectedPresence">
             {{
@@ -174,7 +171,11 @@
           :placeholder="$t('presences.detail.reason.placeholder')"
           required />
 
-        <AppButton class="mt-1 self-start" :icon="mdiCheck" type="submit">
+        <AppButton
+          class="mt-1 self-start"
+          :icon="mdiCheck"
+          :loading="state.isSubmitting"
+          type="submit">
           {{ $t('action.edit') }}
         </AppButton>
       </form>
@@ -186,10 +187,11 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { scrollToFirstError } from '@/helpers/errors';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Attendance, AttendanceType, Member } from '@/services/api/members';
+import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import {
   RadioGroup,
@@ -203,6 +205,7 @@ import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 enum PresenceDayAmount {
   'NONE' = 0,
@@ -210,6 +213,8 @@ enum PresenceDayAmount {
   'FULL' = 1,
 }
 
+const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -229,6 +234,7 @@ const state = reactive({
   type: 'TICKET' as AttendanceType,
   amount: PresenceDayAmount.NONE as PresenceDayAmount,
   reason: null as string | null,
+  isSubmitting: false as boolean,
 });
 
 const selectedPresence = computed<Attendance | null>(() => {
@@ -263,7 +269,17 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-  // TODO
+
+  state.isSubmitting = true;
+  Promise.reject(new Error('Not implemented yet'))
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('presences.detail.onFail.message'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isSubmitting = false;
+    });
 };
 
 watch(

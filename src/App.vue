@@ -5,9 +5,11 @@
   </Head>
   <LoadingSpinner v-if="state.isLoading" class="m-auto h-16 w-16" />
   <router-view v-else />
+  <NotificationToast />
 </template>
 
 <script lang="ts" setup>
+import NotificationToast from './components/NotificationToast.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';

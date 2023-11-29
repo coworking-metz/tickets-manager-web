@@ -37,7 +37,7 @@ export interface Device {
 }
 
 export interface MemberListItem {
-  id: number;
+  id: string;
   picture: string;
   email: string;
   birthdate: string;

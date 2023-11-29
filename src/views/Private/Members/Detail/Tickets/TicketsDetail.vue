@@ -51,7 +51,11 @@
         </template>
       </AppTextField>
 
-      <AppButton class="mt-1 self-start" :icon="mdiCheck" type="submit">
+      <AppButton
+        class="mt-1 self-start"
+        :icon="mdiCheck"
+        :loading="state.isSubmitting"
+        type="submit">
         {{ $t('action.edit') }}
       </AppButton>
     </form>
@@ -62,10 +66,11 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { scrollToFirstError } from '@/helpers/errors';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Ticket, Member } from '@/services/api/members';
+import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiTicket } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
@@ -74,6 +79,7 @@ import { numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { nextTick, reactive } from 'vue';
 import { PropType, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   loading: {
@@ -90,8 +96,11 @@ const props = defineProps({
   },
 });
 
+const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const state = reactive({
   count: null as null | number,
+  isSubmitting: false as boolean,
 });
 
 const selectedTicket = computed<Ticket | null>(() => {
@@ -110,7 +119,17 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-  // TODO
+
+  state.isSubmitting = true;
+  Promise.reject(new Error('Not implemented yet'))
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('tickets.detail.onFail.message'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isSubmitting = false;
+    });
 };
 
 watch(

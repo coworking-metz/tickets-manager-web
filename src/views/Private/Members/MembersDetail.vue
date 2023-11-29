@@ -193,9 +193,7 @@
         ].includes($route.name as string)
       "
       @close="$router.push({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
-      <div class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
-        <RouterView :loading="state.isFetchingMember" :member="state.member" :member-id="id" />
-      </div>
+      <RouterView :loading="state.isFetchingMember" :member="state.member" :member-id="id" />
     </SideDialog>
   </article>
 </template>

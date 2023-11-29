@@ -7,6 +7,9 @@
     "head": {
       "title": "@:subscriptions.detail.title"
     },
+    "onFail": {
+      "message": "Impossible d'éditer cet abonnement"
+    },
     "started": {
       "label": "Débutant le"
     },
@@ -15,6 +18,9 @@
   "new": {
     "head": {
       "title": "@:subscriptions.new.title"
+    },
+    "onFail": {
+      "message": "Impossible d'ajouter l'abonnement"
     },
     "title": "Nouvel abonnement"
   }

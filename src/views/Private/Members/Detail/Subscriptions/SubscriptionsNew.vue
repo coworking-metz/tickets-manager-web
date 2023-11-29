@@ -37,7 +37,11 @@
         required
         type="date" />
 
-      <AppButton class="mt-1 self-start" :icon="mdiPlus" type="submit">
+      <AppButton
+        class="mt-1 self-start"
+        :icon="mdiPlus"
+        :loading="state.isSubmitting"
+        type="submit">
         {{ $t('action.add') }}
       </AppButton>
     </form>
@@ -47,15 +51,17 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { scrollToFirstError } from '@/helpers/errors';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
+import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiPlus, mdiClose } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { computed, nextTick, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 defineProps({
   memberId: {
@@ -64,9 +70,12 @@ defineProps({
   },
 });
 
+const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const state = reactive({
   started: null as string | null,
   ended: null as string | null,
+  isSubmitting: false as boolean,
 });
 
 const rules = computed(() => ({
@@ -82,6 +91,16 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-  // TODO
+
+  state.isSubmitting = true;
+  Promise.reject(new Error('Not implemented yet'))
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.new.onFail.message'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isSubmitting = false;
+    });
 };
 </script>

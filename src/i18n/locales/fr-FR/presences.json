@@ -12,6 +12,9 @@
     "head": {
       "title": "@:presences.detail.title"
     },
+    "onFail": {
+      "message": "Impossible de mettre à jour la présence"
+    },
     "reason": {
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"
