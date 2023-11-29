@@ -1,0 +1,22 @@
+name: Check code
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check for lint and typescript error
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - run: yarn
+      - run: yarn check
