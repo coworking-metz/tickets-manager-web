@@ -70,15 +70,15 @@
       v-bind="containerProps"
       class="min-h-[320px] grow basis-0 overflow-hidden bg-white shadow sm:rounded-md">
       <ul v-bind="wrapperProps" class="divide-y divide-gray-200" role="list">
-        <ul
-          v-if="state.isFetching"
-          v-bind="wrapperProps"
-          class="divide-y divide-gray-200"
-          role="list">
+        <template v-if="state.isFetching">
           <li v-for="index in 10" :key="`loading-member-card-${index}`">
             <MembersListCard loading />
           </li>
-        </ul>
+        </template>
+        <EmptyState
+          v-else-if="!list.length"
+          class="m-auto py-6"
+          :title="$t('members.list.empty.title')" />
         <li v-else v-for="{ data: member } in list" :key="`member-${member.id}`">
           <RouterLink
             class="block hover:bg-gray-50"
@@ -93,11 +93,13 @@
 
 <script setup lang="ts">
 import MembersListCard from './MembersListCard.vue';
+import EmptyState from '@/components/EmptyState.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { handleSilentError, parseErrorText } from '@/helpers/errors';
+import { handleSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { MemberListItem, getAllMembers } from '@/services/api/members';
+import { useNotificationsStore } from '@/store/notifications';
 import { mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { useVirtualList } from '@vueuse/core';
@@ -122,11 +124,11 @@ const props = defineProps({
 });
 
 const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const state = reactive({
   isFetching: false,
   members: [] as MemberListItem[],
   search: null as string | null,
-  errorMessage: null as string | null,
 });
 
 const filteredList = computed(() =>
@@ -184,8 +186,8 @@ const fetchMembers = () => {
       state.members = members;
     })
     .catch(handleSilentError)
-    .catch(async (error) => {
-      state.errorMessage = await parseErrorText(error);
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('members.list.onFetch.fail'));
       return Promise.reject(error);
     })
     .finally(() => {

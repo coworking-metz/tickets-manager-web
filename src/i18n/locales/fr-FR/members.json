@@ -21,6 +21,9 @@
     "header": {
       "description": "Présent pour la dernière fois {date}"
     },
+    "onFetch": {
+      "fail": "Impossible de récupérer\nles informations du membre"
+    },
     "orders": {
       "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autre joyeusetés comme les dons sont exclues.",
       "spent": {
@@ -37,6 +40,7 @@
         "active": "Actif | Inactif",
         "add": "Ajouter un abonnement",
         "days": "{count} jour | {count} seul jour | {count} jours",
+        "more": "Plus",
         "period": "du {startDate} au {endDate}",
         "purchased": "Commandé le {date}",
         "title": "Abonnements"
@@ -85,11 +89,9 @@
         "label": "Appareil | Appareil | Appareils",
         "remove": "Retirer"
       },
-      "onFail": {
-        "message": "Impossible de mettre à jour {name}"
-      },
       "onUpdate": {
-        "message": "{name} mis à jour"
+        "fail": "Impossible de mettre à jour {name}",
+        "success": "{name} mis à jour"
       },
       "since": {
         "label": "Membre depuis"
@@ -98,10 +100,16 @@
     }
   },
   "list": {
+    "empty": {
+      "title": "Aucun membre trouvé"
+    },
     "head": {
       "title": "@:members.list.title"
     },
     "lastSeen": "Présent pour la dernière fois {date}",
+    "onFetch": {
+      "fail": "Impossible de récupérer la liste des coworkers"
+    },
     "search": {
       "label": "Rechercher un coworker",
       "placeholder": "@:members.list.search.label"

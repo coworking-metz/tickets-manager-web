@@ -4,9 +4,12 @@
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white', loading && 'animate-pulse']">
           <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
-          <span v-else-if="selectedTicket">
+          <template v-else-if="!selectedTicket">
+            {{ $t('tickets.detail.empty.title') }}
+          </template>
+          <template v-else>
             {{ $t('tickets.detail.title', { count: selectedTicket.tickets }) }}
-          </span>
+          </template>
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
@@ -28,6 +31,11 @@
       </p>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+    <EmptyState
+      v-else-if="!selectedTicket"
+      class="m-auto"
+      :description="$t('tickets.detail.empty.description')"
+      :title="$t('tickets.detail.empty.title')" />
     <form
       v-else-if="selectedTicket"
       class="flex h-full flex-col px-4 py-6 sm:px-6"
@@ -63,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

@@ -9,6 +9,10 @@
   },
   "detail": {
     "description": "Commandé le {purchasedDate} à {purchasedTime}",
+    "empty": {
+      "description": "Assurez-vous que l'abonnement est bien rattaché à ce membre.",
+      "title": "Abonnement introuvable"
+    },
     "ended": {
       "label": "Terminant le"
     },

@@ -1,12 +1,17 @@
 <template>
   <article class="mx-auto flex min-h-full w-full max-w-7xl flex-col sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
+    <ErrorState
+      v-else-if="state.fetchMemberErrorMessage"
+      class="m-auto"
+      :description="state.fetchMemberErrorMessage"
+      :title="$t('members.detail.onFetch.fail')" />
     <template v-else-if="state.member">
       <!-- trick to trigger useHead.titleTemplate -->
       <Head><title></title></Head>
       <SectionRow class="px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
-          <div class="ml-4 flex flex-row items-center space-x-5 sm:ml-8">
+          <div class="flex flex-row items-center space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
                 <img alt="" class="h-16 w-16 rounded-full" :src="state.member.picture" />
@@ -38,7 +43,7 @@
       </SectionRow>
 
       <SectionRow class="mt-8">
-        <PresencesGraph class="sm:overflow-visible sm:rounded-md" :member="state.member" />
+        <PresencesGraph class="sm:rounded-md" :member="state.member" />
         <template #title>
           <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
             {{ $t('members.detail.attendance.title') }}
@@ -202,6 +207,7 @@ import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
@@ -284,6 +290,7 @@ const attendanceLast30Days = computed<number>(() => {
 
 const fetchMember = (memberId: string) => {
   state.isFetchingMember = true;
+  state.fetchMemberErrorMessage = null;
   getMember(memberId)
     .then((member) => {
       state.member = member;

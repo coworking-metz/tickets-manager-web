@@ -5,13 +5,16 @@
         <DialogTitle
           :class="['shrink truncate text-lg font-medium text-white', loading && 'animate-pulse']">
           <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
-          <span v-else-if="selectedPresence">
+          <template v-else-if="!selectedPresence">
+            {{ $t('presences.detail.empty.title') }}
+          </template>
+          <template v-else-if="selectedPresence">
             {{
               $t('presences.detail.title', {
                 date: dayjs(selectedPresence.date).format('dddd LL'),
               })
             }}
-          </span>
+          </template>
         </DialogTitle>
         <div class="flex h-7 shrink-0 items-center">
           <RouterLink
@@ -28,7 +31,12 @@
       </p>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
-    <div v-else-if="selectedPresence" class="flex flex-col px-4 py-6 sm:px-6">
+    <EmptyState
+      v-else-if="!selectedPresence"
+      class="m-auto"
+      :description="$t('presences.detail.empty.description')"
+      :title="$t('presences.detail.empty.title')" />
+    <div v-else class="flex flex-col px-4 py-6 sm:px-6">
       <nav class="flex flex-row">
         <RouterLink
           v-if="previousPresence"
@@ -184,6 +192,7 @@
 </template>
 
 <script setup lang="ts">
+import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

@@ -9,6 +9,10 @@
       }
     },
     "description": "",
+    "empty": {
+      "description": "Aucune présence n'a été enregistrée\npour cette date.",
+      "title": "Présence introuvable"
+    },
     "head": {
       "title": "@:presences.detail.title"
     },

@@ -281,7 +281,7 @@ const onSubmit = async () => {
     .then((updatedMember) => {
       emit('update:member', updatedMember);
       notificationsStore.addNotification({
-        message: i18n.t('members.detail.profile.onUpdate.message', {
+        message: i18n.t('members.detail.profile.onUpdate.success', {
           name: [state.firstname, state.lastname].join(' '),
         }),
         type: 'success',
@@ -292,7 +292,7 @@ const onSubmit = async () => {
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('members.detail.profile.onFail.message', {
+        i18n.t('members.detail.profile.onUpdate.fail', {
           name: [props.member.firstname, props.member.lastname].join(' '),
         }),
       );
