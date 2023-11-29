@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vue-tsc && vite build",
+    "check": "eslint --ext .js,.vue src && vue-tsc --noEmit",
     "clean": "rm -rf node_modules/ && yarn",
     "dev": "vite",
-    "lint": "eslint --ext .js,.vue src && vue-tsc --noEmit",
     "postinstall": "patch-package",
     "preview": "vite preview",
     "serve": "docker run --rm --name tickets-manager-web-nginx -v $(pwd)/dist:/usr/share/nginx/html:ro -p9090:80 nginx"
