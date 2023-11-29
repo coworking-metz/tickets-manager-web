@@ -32,6 +32,7 @@
           :name="name"
           :placeholder="placeholder"
           :required="required"
+          :tabindex="tabindex"
           :type="type"
           :value="$attrs.modelValue"
           @blur="(event) => $emit('blur', event)"
@@ -70,11 +71,11 @@ const props = defineProps({
   },
   id: {
     type: String,
-    default: '',
+    default: null,
   },
   autocomplete: {
     type: String,
-    default: '',
+    default: null,
   },
   required: {
     type: Boolean,
@@ -82,7 +83,7 @@ const props = defineProps({
   },
   name: {
     type: String,
-    default: '',
+    default: null,
   },
   type: {
     type: String,
@@ -90,7 +91,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '',
+    default: null,
   },
   errors: {
     type: Array as PropType<String[]>,
@@ -115,6 +116,10 @@ const props = defineProps({
   horizontal: {
     type: Boolean,
     default: false,
+  },
+  tabindex: {
+    type: String,
+    default: null,
   },
 });
 

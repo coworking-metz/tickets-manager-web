@@ -19,7 +19,7 @@
       "title": "Attendance"
     },
     "header": {
-      "description": "Present for the last time on {date}"
+      "description": "Present for the last time {date}"
     },
     "onFetch": {
       "fail": "Unable to load the member's details"
@@ -102,7 +102,7 @@
   },
   "list": {
     "empty": {
-      "title": "No coworker found"
+      "title": "It's empty around here"
     },
     "head": {
       "title": "@:members.list.title"
@@ -114,6 +114,14 @@
     "search": {
       "label": "Search for a coworker",
       "placeholder": "@:members.list.search.label"
+    },
+    "sort": {
+      "label": "Sort {suffix}",
+      "value": {
+        "created": "By creation date",
+        "lastSeen": "By last seen date",
+        "name": "By name"
+      }
     },
     "tabs": {
       "active": "Active | Actives",

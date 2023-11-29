@@ -9,7 +9,7 @@
       :icon="mdiRefresh"
       :loading="state.isReloading"
       @click="onReload">
-      {{ $t('action.refresh') }}
+      {{ $t('action.reload') }}
     </AppButton>
   </EmptyState>
 </template>

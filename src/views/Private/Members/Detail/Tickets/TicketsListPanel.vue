@@ -65,7 +65,7 @@
       </li>
       <button
         v-if="!state.shouldScroll && tickets.length > 8"
-        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-30% pb-4 pt-8 text-gray-500 transition hover:text-gray-700"
+        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
         @click="state.shouldScroll = true">
         <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiChevronDoubleDown" type="mdi" />
         {{ $t('members.detail.orders.tickets.more') }}

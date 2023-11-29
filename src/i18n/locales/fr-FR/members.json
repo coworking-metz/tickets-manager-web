@@ -48,6 +48,7 @@
       "tickets": {
         "add": "Ajouter des tickets",
         "amount": "{count} ticket | {count} seul ticket | {count} tickets",
+        "more": "Plus",
         "overconsumed": "1 surconsommé | {count} surconsommés",
         "purchased": "Commandé le {date} | Commandé le {date} | Commandés le {date}",
         "remaining": "Aucun disponible | Plus qu'un | {count} restants",
@@ -101,7 +102,7 @@
   },
   "list": {
     "empty": {
-      "title": "Aucun coworkeur trouvé"
+      "title": "C'est vide par ici"
     },
     "head": {
       "title": "@:members.list.title"
@@ -113,6 +114,14 @@
     "search": {
       "label": "Rechercher un coworkeur",
       "placeholder": "@:members.list.search.label"
+    },
+    "sort": {
+      "label": "Trier {suffix}",
+      "value": {
+        "created": "Par date d'inscription",
+        "lastSeen": "Par présence",
+        "name": "Par nom"
+      }
     },
     "tabs": {
       "active": "Actif | Actifs",

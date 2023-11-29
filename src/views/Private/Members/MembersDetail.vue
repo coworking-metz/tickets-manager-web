@@ -1,5 +1,5 @@
 <template>
-  <article class="mx-auto flex min-h-full w-full max-w-7xl flex-col sm:px-6 lg:px-8">
+  <article class="mx-auto mb-12 flex min-h-full w-full max-w-7xl flex-col sm:mb-24 sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <ErrorState
       v-else-if="state.fetchMemberErrorMessage"
@@ -122,7 +122,7 @@
 
       <SectionRow
         ref="ordersRowElement"
-        class="mb-12 px-3 sm:mb-24 sm:px-0"
+        class="px-3 sm:px-0"
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
         <div class="flex flex-row flex-wrap items-stretch gap-3">

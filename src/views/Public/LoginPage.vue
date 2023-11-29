@@ -65,14 +65,14 @@
     <section
       class="relative overflow-hidden bg-gray-50 max-sm:max-h-[320px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
       <img
-        :alt="$t('login.picture.background.alt')"
+        :alt="$t('login.background.label')"
         class="aspect-auto h-full object-cover grayscale-[100%] lg:w-full"
         :src="state.selectedPhoto" />
       <i
         class="pointer-events-none absolute inset-0 mix-blend-screen"
         style="background-color: rgb(243, 175, 16, 0.6)" />
       <img
-        :alt="$t('login.picture.logo.alt')"
+        :alt="$t('login.logo.label')"
         class="pointer-events-none absolute inset-0 m-auto h-full max-h-[320px] w-full max-w-[320px] object-contain"
         :src="typoLePoulailler" />
     </section>

@@ -32,17 +32,18 @@ export interface Device {
 export interface MemberListItem {
   id: string;
   picture: string;
-  email: string;
-  birthdate: string;
   firstname: string;
   lastname: string;
+  email: string;
+  birthdate: string;
+  created: string;
   lastSeen: string;
+  active: boolean;
   balance: number;
   subscription: Subscription;
 }
 
 export interface Member extends MemberListItem {
-  created: string;
   tickets: Ticket[];
   presences: Attendance[];
   subscriptions: Subscription[];

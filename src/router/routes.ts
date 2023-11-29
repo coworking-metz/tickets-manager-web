@@ -32,6 +32,8 @@ export const routes: RouteRecordRaw[] = [
             component: () => import('@/views/Private/Members/MembersList.vue'),
             props: (route) => ({
               tab: route.hash.replace('#', ''),
+              search: route.query.search,
+              sort: route.query.sort,
             }),
           },
           {
