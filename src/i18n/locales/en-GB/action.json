@@ -8,5 +8,6 @@
   "login": "Login",
   "logout": "Logout",
   "refresh": "Refresh",
-  "sort": "Sort"
+  "sort": "Sort",
+  "add": "Add"
 }

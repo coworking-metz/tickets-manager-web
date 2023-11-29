@@ -1,0 +1,29 @@
+{
+  "detail": {
+    "count": {
+      "label": "Number of tickets",
+      "unit": "ticket | ticket | tickets"
+    },
+    "description": "Placed on {purchasedDate} at {purchasedTime}",
+    "empty": {
+      "description": "Make sure the order is correctly linked to this coworker.",
+      "title": "Order Not Found"
+    },
+    "head": {
+      "title": "@:tickets.detail.title"
+    },
+    "onFail": {
+      "message": "Unable to edit this ticket order"
+    },
+    "title": "Order for {count} ticket | Order for one ticket | Order for {count} tickets"
+  },
+  "new": {
+    "head": {
+      "title": "@:subscriptions.new.title"
+    },
+    "onFail": {
+      "message": "Unable to add the ticket order"
+    },
+    "title": "New Ticket Order"
+  }
+}
