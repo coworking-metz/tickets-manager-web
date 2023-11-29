@@ -7,12 +7,21 @@
     "head": {
       "title": "@:subscriptions.detail.title"
     },
-    "purchased": {
-      "label": "Date de la commande"
+    "onFail": {
+      "message": "Impossible d'éditer cet abonnement"
     },
     "started": {
       "label": "Débutant le"
     },
     "title": "Abonnement du {startDate}"
+  },
+  "new": {
+    "head": {
+      "title": "@:subscriptions.new.title"
+    },
+    "onFail": {
+      "message": "Impossible d'ajouter l'abonnement"
+    },
+    "title": "Nouvel abonnement"
   }
 }

@@ -57,13 +57,12 @@
       </li>
     </ul>
     <div class="mt-auto flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
-      <button
+      <RouterLink
         class="flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        type="button"
-        @click="onAddTickets">
-        <SvgIcon aria-hidden="true" class="mr-3 h-5 w-5" :path="mdiPlus" type="mdi" />
+        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW }">
+        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
         {{ $t('members.detail.orders.tickets.add') }}
-      </button>
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -85,8 +84,4 @@ defineProps({
     default: 0,
   },
 });
-
-const onAddTickets = () => {
-  // TODO?
-};
 </script>

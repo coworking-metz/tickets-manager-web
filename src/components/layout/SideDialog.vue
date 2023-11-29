@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot as="template" :show="modelValue">
-    <Dialog as="div" class="relative z-50" @close="$emit('update:model-value', false)">
+    <Dialog as="div" class="relative z-40" @close="$emit('update:model-value', false)">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -20,7 +20,8 @@
           leave="transform transition ease-in-out duration-500"
           leave-from="translate-x-0"
           leave-to="translate-x-full">
-          <DialogPanel class="pointer-events-auto w-screen max-w-md">
+          <DialogPanel
+            class="pointer-events-auto min-h-screen w-screen max-w-md bg-white max-sm:overflow-x-hidden">
             <slot />
           </DialogPanel>
         </TransitionChild>

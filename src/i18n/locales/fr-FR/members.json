@@ -85,6 +85,12 @@
         "label": "Appareil | Appareil | Appareils",
         "remove": "Retirer"
       },
+      "onFail": {
+        "message": "Impossible de mettre à jour {name}"
+      },
+      "onUpdate": {
+        "message": "{name} mis à jour"
+      },
       "since": {
         "label": "Membre depuis"
       },

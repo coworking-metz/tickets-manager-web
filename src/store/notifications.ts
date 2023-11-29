@@ -1,15 +1,22 @@
 import { parseErrorText } from '@/helpers/errors';
+import { i18nInstance } from '@/i18n';
 import { mdiAlertCircle } from '@mdi/js';
 import { AxiosError } from 'axios';
 import { isNil } from 'lodash';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
+export type NotificationAction = {
+  label: string;
+  onClick: () => void;
+};
+
 export type AppNotification = {
   message: string;
-  action?: unknown;
+  description?: string;
+  actions?: NotificationAction[];
   icon?: string;
-  iconColor?: string;
+  type: 'info' | 'success' | 'warning' | 'error';
   timeout?: number;
 };
 
@@ -47,14 +54,13 @@ export const useNotificationsStore = defineStore('notifications', {
       this.history.push(storeNotification);
       return storeNotification;
     },
-    async addErrorNotification(error: AxiosError | Error) {
-      const message = await parseErrorText(error);
-      const errorNotification = {
-        icon: mdiAlertCircle,
-        iconColor: 'error darken-1',
-        message,
-      };
-      return this.addNotification(errorNotification);
+    async addErrorNotification(error: AxiosError | Error, message?: string) {
+      const errorText = await parseErrorText(error);
+      return this.addNotification({
+        type: 'error',
+        message: message || i18nInstance.global.t(''),
+        description: errorText,
+      });
     },
     removeNotification(notificationId: string) {
       this.history = this.history.filter(({ id }) => id !== notificationId);

@@ -48,6 +48,7 @@
       <AppTextField
         id="subscription-started"
         v-model.number="state.started"
+        :errors="vuelidate.started.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.started.label')"
         :prepend-icon="mdiCalendarStartOutline"
         required
@@ -56,13 +57,18 @@
       <AppTextField
         id="subscription-ended"
         v-model.number="state.ended"
+        :errors="vuelidate.ended.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.ended.label')"
         :prepend-icon="mdiCalendarEndOutline"
         required
         type="date" />
 
-      <AppButton class="mt-1 self-start" :icon="mdiCheck" type="submit">
-        {{ $t('action.apply') }}
+      <AppButton
+        class="mt-1 self-start"
+        :icon="mdiCheck"
+        :loading="state.isSubmitting"
+        type="submit">
+        {{ $t('action.edit') }}
       </AppButton>
     </form>
   </div>
@@ -72,10 +78,11 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { scrollToFirstError } from '@/helpers/errors';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member, Subscription } from '@/services/api/members';
+import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiCheck, mdiClose } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
@@ -83,6 +90,7 @@ import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   loading: {
@@ -99,9 +107,12 @@ const props = defineProps({
   },
 });
 
+const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const state = reactive({
   started: null as string | null,
   ended: null as string | null,
+  isSubmitting: false as boolean,
 });
 
 const selectedSubscription = computed<Subscription | null>(() => {
@@ -121,7 +132,17 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-  // TODO
+
+  state.isSubmitting = true;
+  Promise.reject(new Error('Not implemented yet'))
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.detail.onFail.message'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isSubmitting = false;
+    });
 };
 
 watch(

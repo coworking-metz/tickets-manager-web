@@ -124,7 +124,7 @@
               class="inline-flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               type="button"
               @click="onAddMacAddress">
-              <SvgIcon aria-hidden="true" class="mr-3 h-5 w-5" :path="mdiPlus" type="mdi" />
+              <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
               {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
             </button>
           </li>
@@ -183,7 +183,7 @@
       </ul>
     </div>
     <div class="flex flex-row border-t-[1px] border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-      <AppButton :icon="mdiCheckAll" type="submit">
+      <AppButton :icon="mdiCheckAll" :loading="state.isSubmitting" type="submit">
         {{ $t('action.apply') }}
       </AppButton>
     </div>
@@ -193,9 +193,10 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { scrollToFirstError } from '@/helpers/errors';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { Device, Member } from '@/services/api/members';
+import { Device, Member, updateMember } from '@/services/api/members';
+import { useNotificationsStore } from '@/store/notifications';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import {
   mdiClose,
@@ -211,6 +212,7 @@ import { computed, watch } from 'vue';
 import { PropType, reactive, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+const emit = defineEmits(['update:member']);
 const props = defineProps({
   member: {
     type: Object as PropType<Member>,
@@ -218,6 +220,7 @@ const props = defineProps({
   },
 });
 
+const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   firstname: null as string | null,
@@ -227,6 +230,7 @@ const state = reactive({
   devices: [] as Device[],
   isManager: false as boolean,
   hasParkingAccess: false as boolean,
+  isSubmitting: false as boolean,
 });
 
 const rules = computed(() => ({
@@ -262,7 +266,38 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-  // TODO: post to the API
+
+  state.isSubmitting = true;
+  updateMember(props.member.id, {
+    firstname: state.firstname,
+    lastname: state.lastname,
+    email: state.email,
+    birthdate: state.birthdate,
+    devices: state.devices,
+  } as Member)
+    .then((updatedMember) => {
+      emit('update:member', updatedMember);
+      notificationsStore.addNotification({
+        message: i18n.t('members.detail.profile.onUpdate.message', {
+          name: [state.firstname, state.lastname].join(' '),
+        }),
+        type: 'success',
+        timeout: 3_000,
+      });
+    })
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.profile.onFail.message', {
+          name: [props.member.firstname, props.member.lastname].join(' '),
+        }),
+      );
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isSubmitting = false;
+    });
 };
 
 watch(

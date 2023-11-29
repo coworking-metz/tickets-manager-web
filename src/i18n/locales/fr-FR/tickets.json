@@ -8,9 +8,18 @@
     "head": {
       "title": "@:tickets.detail.title"
     },
-    "purchased": {
-      "label": "Commandé le | Commandé le | Commandés le"
+    "onFail": {
+      "message": "Impossible d'éditer cette commande de tickets"
     },
     "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
+  },
+  "new": {
+    "head": {
+      "title": "@:subscriptions.new.title"
+    },
+    "onFail": {
+      "message": "Impossible d'ajouter la commande de tickets"
+    },
+    "title": "Nouvelle commande de tickets"
   }
 }
