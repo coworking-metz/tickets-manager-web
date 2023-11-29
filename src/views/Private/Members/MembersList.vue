@@ -146,13 +146,13 @@ const listTabs = computed<Tab[]>(() =>
       labelKey: 'members.list.tabs.active',
       to: { hash: '#active' },
       active: props.tab === 'active',
-      filter: (member: MemberListItem) => member.id > 100000,
+      filter: (member: MemberListItem) => parseInt(member.id) > 100000,
     },
     {
       labelKey: 'members.list.tabs.present',
       to: { hash: '#present' },
       active: props.tab === 'present',
-      filter: (member: MemberListItem) => member.id < 100000,
+      filter: (member: MemberListItem) => parseInt(member.id) < 100000,
     },
   ].map((t) => {
     const count = t.filter ? filteredList.value.filter(t.filter).length : filteredList.value.length;
