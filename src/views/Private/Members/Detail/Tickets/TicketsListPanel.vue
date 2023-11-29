@@ -17,8 +17,16 @@
         }}
       </span>
     </div>
-    <ul class="max-h-[40rem] shrink grow divide-y divide-gray-200 overflow-y-auto" role="list">
-      <li v-for="ticket in tickets" :key="`ticket-${ticket.tickets}-${ticket.purchaseDate}`">
+    <ul
+      :class="[
+        'relative max-h-[40rem] shrink grow',
+        state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
+      ]"
+      role="list">
+      <li
+        v-for="ticket in tickets"
+        :key="`ticket-${ticket.tickets}-${ticket.purchaseDate}`"
+        class="border-b-[1px] border-gray-200">
         <RouterLink
           :class="{
             ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
@@ -55,6 +63,13 @@
           </time>
         </RouterLink>
       </li>
+      <button
+        v-if="!state.shouldScroll && tickets.length > 8"
+        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-30% pb-4 pt-8 text-gray-500 transition hover:text-gray-700"
+        @click="state.shouldScroll = true">
+        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiChevronDoubleDown" type="mdi" />
+        {{ $t('members.detail.orders.tickets.more') }}
+      </button>
     </ul>
     <div class="mt-auto flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
       <RouterLink
@@ -70,9 +85,9 @@
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { TICKET_UNIT_COST_IN_EUR, Ticket } from '@/services/api/members';
-import { mdiPlus } from '@mdi/js';
+import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { PropType } from 'vue';
+import { PropType, reactive } from 'vue';
 
 defineProps({
   tickets: {
@@ -83,5 +98,9 @@ defineProps({
     type: Number,
     default: 0,
   },
+});
+
+const state = reactive({
+  shouldScroll: false,
 });
 </script>

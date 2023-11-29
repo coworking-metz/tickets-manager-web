@@ -1,5 +1,5 @@
 <template>
-  <section class="overflow-y-auto">
+  <section class="overflow-y-visible max-sm:overflow-x-auto">
     <VueECharts
       ref="chart"
       :option="options"

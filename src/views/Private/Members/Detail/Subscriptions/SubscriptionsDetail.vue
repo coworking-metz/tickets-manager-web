@@ -4,13 +4,16 @@
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white', loading && 'animate-pulse']">
           <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
-          <span v-else-if="selectedSubscription">
+          <template v-else-if="!selectedSubscription">
+            {{ $t('subscriptions.detail.empty.title') }}
+          </template>
+          <template v-else>
             {{
               $t('subscriptions.detail.title', {
                 startDate: dayjs(selectedSubscription.startDate).format('LL'),
               })
             }}
-          </span>
+          </template>
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
@@ -32,10 +35,12 @@
       </p>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
-    <form
-      v-else-if="selectedSubscription"
-      class="flex h-full flex-col px-4 py-6 sm:px-6"
-      @submit.prevent="onSubmit">
+    <EmptyState
+      v-else-if="!selectedSubscription"
+      class="m-auto"
+      :description="$t('subscriptions.detail.empty.description')"
+      :title="$t('subscriptions.detail.empty.title')" />
+    <form v-else class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
       <Head>
         <title>
           {{
@@ -91,6 +96,7 @@
 
 <script setup lang="ts">
 import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
+import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

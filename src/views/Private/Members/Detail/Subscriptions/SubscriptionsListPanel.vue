@@ -13,10 +13,16 @@
         {{ $t('members.detail.orders.subscriptions.active', { count: +active }) }}
       </span>
     </div>
-    <ul class="max-h-[40rem] shrink grow divide-y divide-gray-200 overflow-y-auto" role="list">
+    <ul
+      :class="[
+        'relative max-h-[40rem] shrink grow',
+        state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
+      ]"
+      role="list">
       <li
         v-for="subscription in subscriptions"
-        :key="`subscription-${subscription.startDate}-${subscription.endDate}`">
+        :key="`subscription-${subscription.startDate}-${subscription.endDate}`"
+        class="border-b-[1px] border-gray-200">
         <RouterLink
           :class="{
             ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
@@ -66,6 +72,13 @@
           </time>
         </RouterLink>
       </li>
+      <button
+        v-if="!state.shouldScroll && subscriptions.length > 5"
+        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-30% pb-4 pt-8 text-gray-500 transition hover:text-gray-700"
+        @click="state.shouldScroll = true">
+        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiChevronDoubleDown" type="mdi" />
+        {{ $t('members.detail.orders.subscriptions.more') }}
+      </button>
     </ul>
     <div class="mt-auto flex shrink-0 flex-row bg-gray-50 px-4 py-3 sm:px-6">
       <RouterLink
@@ -82,9 +95,9 @@ import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/subscriptions';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiPlus } from '@mdi/js';
+import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { PropType } from 'vue';
+import { PropType, reactive } from 'vue';
 
 defineProps({
   subscriptions: {
@@ -95,5 +108,9 @@ defineProps({
     type: Boolean,
     default: false,
   },
+});
+
+const state = reactive({
+  shouldScroll: false,
 });
 </script>
