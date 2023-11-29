@@ -31,7 +31,9 @@
                 type="mdi" />
               <div class="ml-3 w-0 flex-1 pt-0.5">
                 <p class="text-sm font-medium text-gray-900">{{ notification.message }}</p>
-                <p v-if="notification.description" class="mt-1 text-sm text-gray-500">
+                <p
+                  v-if="notification.description"
+                  class="mt-1 whitespace-pre-line text-sm text-gray-500">
                   {{ notification.description }}
                 </p>
                 <div v-if="notification.actions?.length" class="mt-3 flex space-x-7">
@@ -52,11 +54,11 @@
               </div>
               <button
                 :id="`notification-${notification.id}-close`"
-                class="ml-4 inline-flex shrink-0 rounded-md bg-white text-gray-400 transition-opacity hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                class="ml-4 inline-flex shrink-0 rounded-md bg-white text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 type="button"
                 @click="notificationsStore.dismissNotification(notification.id)">
                 <span class="sr-only">{{ $t('action.close') }}</span>
-                <SvgIcon aria-hidden="true" class="h-5 w-5" :path="mdiClose" type="mdi" />
+                <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
               </button>
             </div>
           </div>

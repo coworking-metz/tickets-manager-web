@@ -6,8 +6,8 @@
   "contact": "Demander de l'aide",
   "delete": "Supprimer",
   "edit": "Modifier",
+  "help": "J'ai besoin d'aide",
   "login": "Me connecter",
   "logout": "Me déconnecter",
-  "refresh": "Rafraîchir",
-  "sort": "Trier"
+  "reload": "Recharger"
 }

@@ -257,6 +257,7 @@ const vuelidate = useVuelidate(rules, state);
 
 const onAddMacAddress = () => {
   state.devices.push({ id: '', macAddress: '' });
+  nextTick(() => document.getElementById(`mac-address-${state.devices.length - 1}`)?.focus());
 };
 
 const onRemoveMacAddress = (index: number) => {

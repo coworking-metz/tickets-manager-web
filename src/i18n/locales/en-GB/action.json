@@ -1,13 +1,13 @@
 {
+  "add": "Add",
   "apply": "Apply",
   "backToHome": "Go home",
   "close": "Close",
   "contact": "Ask for help",
   "delete": "Delete",
   "edit": "Edit",
+  "help": "I need help",
   "login": "Login",
   "logout": "Logout",
-  "refresh": "Refresh",
-  "sort": "Sort",
-  "add": "Add"
+  "reload": "Reload"
 }

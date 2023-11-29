@@ -25,17 +25,21 @@
       <img alt="Le Poulailler - Coworking Metz" class="h-full w-auto p-3" :src="typoLePoulailler" />
     </header>
     <NavigationDrawer
-      :class="{
-        ['top-0 z-10 h-screen shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky']: true,
-        ['max-sm:max-w-[7rem]']: state.isMenuOpen,
-      }" />
+      :class="[
+        'top-0 z-[1] h-screen shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky',
+        state.isMenuOpen && 'max-sm:max-w-[7rem]',
+      ]" />
 
     <div
       :class="{
         ['h-screen w-full max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
         ['max-w-[7rem]']: state.isMenuOpen,
       }" />
-    <main class="flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16">
+    <main
+      :class="[
+        'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16',
+        state.isMenuOpen && 'z-[2] shadow-2xl',
+      ]">
       <router-view />
     </main>
   </div>

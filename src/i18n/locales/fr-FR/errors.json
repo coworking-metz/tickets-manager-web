@@ -1,0 +1,6 @@
+{
+  "onImport": {
+    "description": "Il est possible que cette page soit temporairement indisponible.\nVous pouvez essayer de recharger la page sans cache pour de meilleurs résultats.",
+    "message": "Impossible de charger la page"
+  }
+}
