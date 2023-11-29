@@ -1,6 +1,5 @@
 import { parseErrorText } from '@/helpers/errors';
 import { i18nInstance } from '@/i18n';
-import { mdiAlertCircle } from '@mdi/js';
 import { AxiosError } from 'axios';
 import { isNil } from 'lodash';
 import { defineStore } from 'pinia';
