@@ -50,14 +50,14 @@
       </div>
 
       <fieldset class="flex flex-col">
-        <legend class="block text-sm font-medium text-gray-700">
+        <legend class="block font-medium text-gray-900 sm:text-sm">
           {{ $t('members.detail.profile.macAddresses.label', { count: state.devices.length }) }}
         </legend>
         <i18n-t
-          class="block text-gray-500"
+          class="block text-sm text-gray-500"
           keypath="members.detail.profile.macAddresses.description.text"
           scope="global"
-          tag="small">
+          tag="span">
           <template #link>
             <a
               class="font-medium text-blue-600 hover:underline dark:text-blue-500"
@@ -92,7 +92,7 @@
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center pr-3 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden"
+                  class="absolute inset-y-0 right-0 z-20 flex items-center pr-3 font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden sm:text-sm"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.check') }}
@@ -106,7 +106,7 @@
 
               <template #after>
                 <button
-                  class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                   type="button"
                   @click="() => onRemoveMacAddress(index)">
                   <SvgIcon
@@ -135,7 +135,7 @@
       <ul class="flex flex-col py-2">
         <SwitchGroup as="li" class="flex items-center justify-between py-2">
           <div class="flex flex-col">
-            <SwitchLabel as="p" class="text-sm font-medium text-gray-900" passive>
+            <SwitchLabel as="p" class="font-medium text-gray-900 sm:text-sm" passive>
               {{ $t('members.detail.profile.features.manager.label') }}
             </SwitchLabel>
             <SwitchDescription class="text-sm text-gray-500">
@@ -158,7 +158,7 @@
         </SwitchGroup>
         <SwitchGroup as="li" class="flex items-center justify-between py-2">
           <div class="flex flex-col">
-            <SwitchLabel as="p" class="text-sm font-medium text-gray-900" passive>
+            <SwitchLabel as="p" class="font-medium text-gray-900 sm:text-sm" passive>
               {{ $t('members.detail.profile.features.parking.label') }}
             </SwitchLabel>
             <SwitchDescription class="text-sm text-gray-500">

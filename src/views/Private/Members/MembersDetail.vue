@@ -15,7 +15,9 @@
             <div class="shrink-0">
               <div class="relative">
                 <img alt="" class="h-16 w-16 rounded-full" :src="state.member.picture" />
-                <span aria-hidden="true" class="absolute inset-0 rounded-full shadow-inner" />
+                <span
+                  v-if="dayjs().isSame(state.member.lastSeen, 'day')"
+                  class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
             <div>
@@ -50,7 +52,7 @@
           </h2>
         </template>
         <template #description>
-          <p class="mt-1 whitespace-pre-line px-3 text-sm text-gray-600 sm:px-0">
+          <p class="mt-1 whitespace-pre-line px-3 text-sm text-gray-500 sm:px-0">
             {{ $t('members.detail.attendance.description') }}
           </p>
         </template>
@@ -58,7 +60,7 @@
           <dl class="sticky top-3 flex flex-col gap-3 px-3 sm:px-0">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <template v-if="!!attendanceLast30Days">
-                <dt class="truncate text-sm font-medium text-gray-500">
+                <dt class="truncate font-medium text-gray-500 sm:text-sm">
                   {{ $t('members.detail.attendance.last30days.label') }}
                 </dt>
                 <i18n-t
@@ -107,7 +109,7 @@
         <template #append>
           <dl class="sticky top-3 flex flex-col gap-3">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
@@ -138,7 +140,7 @@
         <template #append>
           <dl class="sticky top-3 flex flex-col gap-3">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.orders.spent.monthly.label') }}
               </dt>
               <i18n-t
@@ -158,7 +160,7 @@
               </i18n-t>
             </div>
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.orders.spent.total.label') }}
               </dt>
               <i18n-t

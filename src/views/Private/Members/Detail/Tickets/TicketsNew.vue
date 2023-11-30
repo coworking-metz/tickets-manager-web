@@ -29,7 +29,7 @@
         type="number">
         <template #append>
           <span
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-sm text-gray-400">
+            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>

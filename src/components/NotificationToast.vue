@@ -36,25 +36,25 @@
                   class="mt-1 whitespace-pre-line text-sm text-gray-500">
                   {{ notification.description }}
                 </p>
-                <div v-if="notification.actions?.length" class="mt-3 flex space-x-7">
-                  <button
+                <div v-if="notification.actions?.length" class="-ml-2 mt-3 flex flex-row gap-6">
+                  <AppButton
                     v-for="(action, index) in notification.actions"
                     :key="`notification-${notification.id}-action-${action.label}`"
                     :class="[
-                      'rounded-md bg-white text-sm font-medium  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+                      'whitespace-nowrap !px-2 !py-1 ',
                       index === 0
-                        ? 'text-indigo-600 hover:text-indigo-500'
-                        : 'text-gray-700 hover:text-gray-500',
+                        ? 'text-indigo-600 hover:bg-indigo-50 hover:text-indigo-500 focus:ring-indigo-500'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-500 focus:ring-gray-500',
                     ]"
                     type="button"
                     @click="action.onClick">
                     {{ action.label }}
-                  </button>
+                  </AppButton>
                 </div>
               </div>
               <button
                 :id="`notification-${notification.id}-close`"
-                class="ml-4 inline-flex shrink-0 rounded-md bg-white text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                class="ml-4 inline-flex shrink-0 rounded-md bg-white p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 type="button"
                 @click="notificationsStore.dismissNotification(notification.id)">
                 <span class="sr-only">{{ $t('action.close') }}</span>
@@ -69,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import AppButton from './form/AppButton.vue';
 import { AppNotification, StoreNotification, useNotificationsStore } from '@/store/notifications';
 import {
   mdiAlert,

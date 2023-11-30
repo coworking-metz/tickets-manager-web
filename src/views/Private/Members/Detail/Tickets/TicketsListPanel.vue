@@ -5,7 +5,7 @@
       <h4 class="text-lg font-medium">{{ $t('members.detail.orders.tickets.title') }}</h4>
       <span
         :class="[
-          'rounded-full px-3 py-1 text-sm leading-6 ring-1 ring-inset',
+          'rounded-full px-3 py-1 leading-6 ring-1 ring-inset sm:text-sm',
           remaining >= 0
             ? 'bg-indigo-500/10 text-indigo-400 ring-indigo-500/20'
             : 'bg-red-500/10 text-red-400 ring-red-500/20',
@@ -53,7 +53,9 @@
             </p>
           </div>
 
-          <time class="text-sm text-gray-400" :datetime="dayjs(ticket.purchaseDate).toISOString()">
+          <time
+            class="text-gray-500 sm:text-sm"
+            :datetime="dayjs(ticket.purchaseDate).toISOString()">
             {{
               $t('members.detail.orders.tickets.purchased', {
                 count: ticket.tickets,
@@ -73,7 +75,7 @@
     </ul>
     <div class="mt-auto flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
       <RouterLink
-        class="flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        class="flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
         :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW }">
         <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
         {{ $t('members.detail.orders.tickets.add') }}
