@@ -13,7 +13,7 @@
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
-            class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selectedTicket" class="text-sm text-indigo-300">
+      <p v-else-if="selectedTicket" class="text-indigo-300 sm:text-sm">
         {{
           $t('tickets.detail.description', {
             purchasedDate: dayjs(selectedTicket.purchaseDate).format('LL'),
@@ -53,7 +53,7 @@
         type="number">
         <template #append>
           <span
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-sm text-gray-400">
+            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>

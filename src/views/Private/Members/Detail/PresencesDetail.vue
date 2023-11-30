@@ -18,7 +18,7 @@
         </DialogTitle>
         <div class="flex h-7 shrink-0 items-center">
           <RouterLink
-            class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
@@ -40,7 +40,7 @@
       <nav class="flex flex-row">
         <RouterLink
           v-if="previousPresence"
-          class="mr-auto inline-flex items-center rounded-md p-2 text-sm font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="mr-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
             params: { presenceId: previousPresence.id },
@@ -54,7 +54,7 @@
         </RouterLink>
         <RouterLink
           v-if="nextPresence"
-          class="ml-auto inline-flex items-center rounded-md p-2 text-sm font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="ml-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
             params: { presenceId: nextPresence.id },
@@ -79,7 +79,7 @@
         </Head>
 
         <RadioGroup v-model="state.type">
-          <RadioGroupLabel class="text-sm font-medium text-gray-700">
+          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
             {{ $t('presences.detail.type.label') }}
           </RadioGroupLabel>
 
@@ -98,7 +98,7 @@
                 ]">
                 <span class="flex flex-1">
                   <span class="flex flex-col">
-                    <RadioGroupLabel as="span" class="block text-sm font-medium text-gray-900">
+                    <RadioGroupLabel as="span" class="block font-medium text-gray-900 sm:text-sm">
                       {{ $t(`presences.detail.type.value.${presenceType}.label`) }}
                     </RadioGroupLabel>
                     <RadioGroupDescription
@@ -134,7 +134,7 @@
         </ul>
 
         <RadioGroup v-model="state.amount">
-          <RadioGroupLabel class="text-sm font-medium text-gray-700">
+          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
             {{ $t('presences.detail.amount.label') }}
           </RadioGroupLabel>
           <div class="mt-1 flex flex-row gap-3">
@@ -155,7 +155,7 @@
                   checked
                     ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
                     : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                  'flex flex-1 items-center justify-center rounded-md border p-3 text-sm font-medium',
+                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm',
                 ]">
                 <RadioGroupLabel as="span">{{ amountOption.label }}</RadioGroupLabel>
               </div>

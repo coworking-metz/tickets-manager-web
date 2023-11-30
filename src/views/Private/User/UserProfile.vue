@@ -38,7 +38,7 @@
                   checked ? 'z-10 border-orange-200 bg-orange-50' : 'border-gray-200',
                   'relative flex cursor-pointer flex-col border p-4 focus:outline-none md:grid md:grid-cols-3 md:pl-4 md:pr-6',
                 ]">
-                <span class="flex items-center text-sm">
+                <span class="flex items-center sm:text-sm">
                   <span
                     aria-hidden="true"
                     :class="[
@@ -58,12 +58,11 @@
         </RadioGroup>
 
         <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-          <button
-            class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            type="button"
+          <AppButton
+            class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
             @click="onLogout">
             {{ $t('action.logout') }}
-          </button>
+          </AppButton>
         </div>
       </div>
     </section>
@@ -72,6 +71,7 @@
 
 <script lang="ts" setup>
 import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
+import AppButton from '@/components/form/AppButton.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';

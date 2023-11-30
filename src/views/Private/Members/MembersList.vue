@@ -53,7 +53,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex items-start rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                 tabindex="1">
                 <SvgIcon
                   aria-hidden="true"
@@ -92,7 +92,7 @@
                       <RouterLink
                         :class="[
                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'flex w-full flex-row justify-between gap-3 px-4 py-2 text-sm',
+                          'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
                         replace
                         :to="{

@@ -7,7 +7,7 @@
         </h2>
       </slot>
       <slot name="description">
-        <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-600">
+        <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-500">
           {{ description }}
         </p>
       </slot>

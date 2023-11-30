@@ -12,4 +12,5 @@
   ],
   "i18n-ally.sourceLanguage": "fr-FR",
   "i18n-ally.keystyle": "nested",
+  "i18n-ally.extract.autoDetect": false,
 }

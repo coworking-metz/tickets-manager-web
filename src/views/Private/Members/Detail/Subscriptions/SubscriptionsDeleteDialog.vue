@@ -40,7 +40,7 @@
                       {{ $t('subscriptions.delete.title') }}
                     </DialogTitle>
                     <div class="mt-2">
-                      <p class="text-sm text-gray-500">
+                      <p class="text-gray-500 sm:text-sm">
                         {{ $t('subscriptions.delete.description') }}
                       </p>
                     </div>
