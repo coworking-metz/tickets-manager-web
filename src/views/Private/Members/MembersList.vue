@@ -134,7 +134,7 @@
           :title="$t('members.list.empty.title')" />
         <li v-else v-for="{ data: member } in list" :key="`member-${member.id}`">
           <RouterLink
-            class="block hover:bg-gray-50"
+            class="block h-20 overflow-y-hidden hover:bg-gray-50"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX, params: { id: member.id } }">
             <MembersListCard :member="member" />
           </RouterLink>
