@@ -26,13 +26,13 @@
     </header>
     <NavigationDrawer
       :class="[
-        'top-0 z-[1] h-screen shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky',
+        'top-0 z-[1] h-full shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky sm:h-screen',
         state.isMenuOpen && 'max-sm:max-w-[7rem]',
       ]" />
 
     <div
       :class="{
-        ['h-screen w-full max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
+        ['h-full w-screen max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
         ['max-w-[7rem]']: state.isMenuOpen,
       }" />
     <main

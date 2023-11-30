@@ -21,7 +21,7 @@
           leave-from="translate-x-0"
           leave-to="translate-x-full">
           <DialogPanel
-            class="pointer-events-auto min-h-screen w-screen max-w-md overflow-y-auto bg-white shadow-xl max-sm:overflow-x-hidden">
+            class="pointer-events-auto min-h-full w-screen max-w-md overflow-y-auto bg-white shadow-xl max-sm:overflow-x-hidden">
             <slot />
           </DialogPanel>
         </TransitionChild>
