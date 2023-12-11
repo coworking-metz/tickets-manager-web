@@ -1,4 +1,7 @@
 {
+  "onDisconnect": {
+    "message": "Vous avez été déconnecté pour des raisons de sécurité"
+  },
   "onImport": {
     "description": "Il est possible que cette page soit temporairement indisponible.\nVous pouvez essayer de recharger la page sans cache pour de meilleurs résultats.",
     "message": "Impossible de charger la page"

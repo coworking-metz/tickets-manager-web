@@ -23,16 +23,17 @@ export interface AppError extends Error {
 
 export type AnyError = AppError | AxiosError<ApiError> | Error;
 
+export const isSilentError = (error: AnyError): boolean =>
+  [AppErrorCode.DISCONNECTED, AppErrorCode.CANCELED].includes((error as AppError)?.code) ||
+  [ApiErrorCode.EXPIRED_ACCESS_TOKEN].includes(
+    ((error as AxiosError).response?.data as ApiError)?.code,
+  );
+
 /**
  * Silence some errors that don't need to be handled in the UI.
  */
 export const handleSilentError = async (error: AnyError): Promise<void> => {
-  if (
-    [AppErrorCode.DISCONNECTED, AppErrorCode.CANCELED].includes((error as AppError)?.code) ||
-    [ApiErrorCode.EXPIRED_ACCESS_TOKEN].includes(
-      ((error as AxiosError).response?.data as ApiError)?.code,
-    )
-  ) {
+  if (isSilentError(error)) {
     return Promise.resolve();
   }
   return Promise.reject(error);

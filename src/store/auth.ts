@@ -59,14 +59,9 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = null;
       this.user = null;
       localStorage.clear();
-      // TODO: clear other resources in other stores (settings, history, etc.)
-      // return logout().finally(() => {
-      // whatever happens, everything should be reset at the end
-      // even if the user has cancelled the logout
       const http = useHttpStore();
       http.cancelAllRequests();
       http.$reset();
-      // });
     },
   },
 });
