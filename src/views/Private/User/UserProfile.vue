@@ -17,8 +17,44 @@
           </p>
         </div>
 
+        <div class="mt-6 flex flex-col gap-6 sm:ml-6">
+          {{ JSON.stringify(authStore.user) }}
+          <AppTextField
+            id="name"
+            class="min-w-[12rem] shrink grow basis-0"
+            disabled
+            hide-details
+            :label="$t('user.profile.name.label')"
+            :model-value="authStore.user?.name"
+            name="name"
+            type="text" />
+          <AppTextField
+            id="email"
+            class="min-w-[12rem] shrink grow basis-0"
+            disabled
+            hide-details
+            :label="$t('user.profile.email.label')"
+            :model-value="authStore.user?.email"
+            name="email"
+            type="email" />
+
+          <div class="flex flex-col gap-1">
+            <p class="block font-medium text-gray-900 sm:text-sm">
+              {{ $t('user.profile.roles.label') }}
+            </p>
+            <ul>
+              <li
+                v-for="role in authStore.user?.roles"
+                :key="`user-role-${role}`"
+                class="inline-flex items-center rounded-md bg-indigo-100 px-2.5 py-0.5 text-sm font-medium text-indigo-800">
+                {{ $t(`user.profile.roles.value.${role}`) }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <RadioGroup
-          class="mt-10 sm:pl-6"
+          class="mt-6 sm:pl-6"
           :model-value="$i18n.locale"
           @update:model-value="settingsStore.setLocale">
           <RadioGroupLabel class="font-medium">
@@ -72,6 +108,7 @@
 <script lang="ts" setup>
 import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
 import AppButton from '@/components/form/AppButton.vue';
+import AppTextField from '@/components/form/AppTextField.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';

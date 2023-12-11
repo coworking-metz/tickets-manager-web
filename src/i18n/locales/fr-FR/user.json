@@ -1,6 +1,9 @@
 {
   "profile": {
     "description": "Pas grand chose pour le moment. En cours de réflexion.",
+    "email": {
+      "label": "Email"
+    },
     "head": {
       "title": "@:user.profile.title"
     },
@@ -9,6 +12,15 @@
       "value": {
         "en-GB": "English",
         "fr-FR": "Français"
+      }
+    },
+    "name": {
+      "label": "Nom"
+    },
+    "roles": {
+      "label": "Rôles",
+      "value": {
+        "administrator": "Administrateur"
       }
     },
     "title": "Mon profil"
