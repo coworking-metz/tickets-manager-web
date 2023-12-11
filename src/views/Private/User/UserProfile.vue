@@ -18,7 +18,6 @@
         </div>
 
         <div class="mt-6 flex flex-col gap-6 sm:ml-6">
-          {{ JSON.stringify(authStore.user) }}
           <AppTextField
             id="name"
             class="min-w-[12rem] shrink grow basis-0"
