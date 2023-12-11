@@ -1,6 +1,7 @@
 import { version as appVersion } from '../../package.json';
 import { useAuthStore } from '@/store/auth';
 import { useHttpStore } from '@/store/http';
+import { useNotificationsStore } from '@/store/notifications';
 import axios, {
   AxiosError,
   AxiosHeaders,
@@ -11,6 +12,7 @@ import axios, {
 } from 'axios';
 import axiosRetry from 'axios-retry';
 import { v4 as uuidv4 } from 'uuid';
+import { useI18n } from 'vue-i18n';
 
 export interface AppAxiosRequestConfig<D = unknown> extends InternalAxiosRequestConfig<D> {
   id?: string;
@@ -110,6 +112,10 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         // the user should be properly logged out of the platform
         const authStore = useAuthStore();
         await authStore.logout();
+
+        const notificationsStore = useNotificationsStore();
+        const i18n = useI18n();
+        notificationsStore.addErrorNotification(error, i18n.t('errors.onDisconnect.message'));
 
         return Promise.reject(disconnectedError);
       }

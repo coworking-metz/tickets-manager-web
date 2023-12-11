@@ -1,5 +1,6 @@
 <template>
-  <article class="mx-auto mb-12 flex w-full max-w-7xl grow flex-col sm:mb-24 sm:px-6 lg:px-8">
+  <article
+    class="mx-auto mb-12 flex w-full max-w-7xl flex-col max-sm:grow sm:mb-24 sm:min-h-full sm:px-6 lg:px-8">
     <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
     <ErrorState
       v-else-if="state.fetchMemberErrorMessage"

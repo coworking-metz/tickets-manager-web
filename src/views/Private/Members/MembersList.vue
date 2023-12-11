@@ -123,7 +123,7 @@
       v-bind="containerProps"
       class="min-h-[320px] grow basis-0 overflow-hidden bg-white shadow sm:rounded-md">
       <ul v-bind="wrapperProps" class="divide-y divide-gray-200" role="list">
-        <template v-if="state.isFetching">
+        <template v-if="isPending">
           <li v-for="index in 10" :key="`loading-member-card-${index}`">
             <MembersListCard loading />
           </li>
@@ -136,7 +136,7 @@
           <RouterLink
             class="block h-20 overflow-y-hidden hover:bg-gray-50"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX, params: { id: member.id } }">
-            <MembersListCard :member="member" />
+            <MembersListCard :loading="isFetching" :member="member" />
           </RouterLink>
         </li>
       </ul>
@@ -148,17 +148,18 @@
 import MembersListCard from './MembersListCard.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { handleSilentError } from '@/helpers/errors';
+import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { MemberListItem, getAllMembers } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
+import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import { useVirtualList } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { computed, onMounted, reactive, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -228,15 +229,28 @@ const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
-  isFetching: false,
-  members: [] as MemberListItem[],
+  // isFetching: false,
+  // members: [] as MemberListItem[],
   search: null as string | null,
+});
+
+const {
+  isPending,
+  isFetching,
+  data: members,
+  error,
+} = useQuery({
+  queryKey: ['members'],
+  queryFn: () => getAllMembers(),
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  retry: false,
 });
 
 const selectedTab = computed(() => ALL_TABS.find((t) => t.hash === props.tab));
 
 const filteredList = computed(() => {
-  return state.members
+  return (members.value || [])
     .filter((member) => searchIn(state.search, member.firstname, member.lastname, member.email))
     .sort(ALL_LIST_SORTERS.find((s) => s.key === props.sort)?.sort);
 });
@@ -249,24 +263,6 @@ const { list, containerProps, wrapperProps } = useVirtualList(tabFilteredList, {
   // Keep `itemHeight` in sync with the item's row.
   itemHeight: 80,
 });
-
-const fetchMembers = () => {
-  state.isFetching = true;
-  getAllMembers()
-    .then((members) => {
-      state.members = members;
-    })
-    .catch(handleSilentError)
-    .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('members.list.onFetch.fail'));
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isFetching = false;
-    });
-};
-
-onMounted(fetchMembers);
 
 watch(
   () => props.sort,
@@ -299,5 +295,15 @@ watch(
     }
   },
   { immediate: true },
+);
+
+watch(
+  () => error.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(error, i18n.t('members.list.onFetch.fail'));
+      // TODO: should report to Sentry
+    }
+  },
 );
 </script>

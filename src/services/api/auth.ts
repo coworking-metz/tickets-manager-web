@@ -9,17 +9,13 @@ export interface User {
   picture: string;
 }
 
-export const logout = (): Promise<void> => {
-  return HTTP.get('/auth/logout');
-};
-
 export const refreshTokens = (
   refreshToken: string | null,
   isCancellable = true,
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   return HTTP.post(
     '/auth/tokens',
-    { refresh_token: refreshToken },
+    { refreshToken: refreshToken },
     {
       ...(!isCancellable ? { cancelToken: axios.CancelToken.source().token } : {}),
     },

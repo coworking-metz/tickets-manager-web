@@ -52,13 +52,13 @@ export interface Member extends MemberListItem {
 }
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
-  return HTTP.get('/members').then(({ data }) => data);
+  return HTTP.get('/manager/members').then(({ data }) => data);
 };
 
 export const getMember = (id: string): Promise<Member> => {
-  return HTTP.get(`/members/${id}`).then(({ data }) => data);
+  return HTTP.get(`/manager/members/${id}`).then(({ data }) => data);
 };
 
 export const updateMember = (id: string, member: Member): Promise<Member> => {
-  return HTTP.put(`/members/${id}`, member).then(({ data }) => data);
+  return HTTP.put(`/manager/members/${id}`, member).then(({ data }) => data);
 };
