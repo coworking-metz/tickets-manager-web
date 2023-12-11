@@ -22,19 +22,20 @@
           :aria-invalid="isInvalid"
           :autocomplete="autocomplete"
           :class="{
-            ['block w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm']: true,
+            ['block w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
             ['rounded-none rounded-l-md']: slots.after,
             ['rounded-none rounded-r-md']: slots.before,
             ['pl-10']: slots.prepend || prependIcon,
             ['border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500']:
               isInvalid,
           }"
+          :disabled="disabled"
           :name="name"
           :placeholder="placeholder"
           :required="required"
           :tabindex="tabindex"
           :type="type"
-          :value="$attrs.modelValue"
+          :value="modelValue"
           @blur="(event) => $emit('blur', event)"
           @input="
             (event) => $emit('update:modelValue', (event.currentTarget as HTMLInputElement).value)
@@ -65,6 +66,10 @@ import { useSlots, PropType, computed } from 'vue';
 
 defineEmits(['blur', 'update:modelValue']);
 const props = defineProps({
+  modelValue: {
+    type: [String, Number] as PropType<String | Number | null>,
+    default: null,
+  },
   label: {
     type: String,
     default: null,
@@ -78,6 +83,10 @@ const props = defineProps({
     default: null,
   },
   required: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
     type: Boolean,
     default: false,
   },

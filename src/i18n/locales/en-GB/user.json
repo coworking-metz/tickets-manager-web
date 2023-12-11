@@ -1,6 +1,9 @@
 {
   "profile": {
     "description": "Not much for now. Still in contemplation.",
+    "email": {
+      "label": "Email"
+    },
     "head": {
       "title": "@:user.profile.title"
     },
@@ -9,6 +12,15 @@
       "value": {
         "en-GB": "English",
         "fr-FR": "Français"
+      }
+    },
+    "name": {
+      "label": "Name"
+    },
+    "roles": {
+      "label": "Roles",
+      "value": {
+        "administrator": "Administrator"
       }
     },
     "title": "My Profile"
