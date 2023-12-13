@@ -182,7 +182,7 @@ const ALL_TABS: Tab[] = [
   {
     key: 'present',
     hash: 'present',
-    filter: (member: MemberListItem) => dayjs().isSame(member.lastSeen, 'day'),
+    filter: (member: MemberListItem) => !!member.lastSeen && dayjs().isSame(member.lastSeen, 'day'),
   },
 ];
 
@@ -198,7 +198,8 @@ const ALL_LIST_SORTERS: ListSorter[] = [
       [a.firstname, a.lastname]
         .filter(Boolean)
         .join(' ')
-        .localeCompare([b.firstname, b.lastname].filter(Boolean).join(' ')),
+        .toLocaleLowerCase()
+        .localeCompare([b.firstname, b.lastname].filter(Boolean).join(' ').toLocaleLowerCase()),
   },
   {
     key: 'created',
@@ -206,7 +207,7 @@ const ALL_LIST_SORTERS: ListSorter[] = [
   },
   {
     key: 'lastSeen',
-    sort: (a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime(),
+    sort: (a, b) => (!b.lastSeen ? -1 : !a.lastSeen ? 1 : dayjs(b.lastSeen).diff(a.lastSeen)),
   },
 ];
 
