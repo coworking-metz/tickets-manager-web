@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router/names';
-import { Member } from '@/services/api/members';
+import { Attendance } from '@/services/api/members';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
@@ -51,8 +51,8 @@ dayjs.extend(weekOfYear);
 const i18n = useI18n();
 const router = useRouter();
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  presences: {
+    type: Array as PropType<Attendance[]>,
     required: true,
   },
 });
@@ -96,16 +96,11 @@ const options = computed<
     inRange: {
       color: ['#ffffff', theme.peachYellow, theme.meatBrown], //From smaller to bigger value ->
     },
-    // pieces: [
-    //   { min: 0, max: 0.5, color: 'red' },
-    //   { min: 0.5, max: 1, color: 'green' },
-    // ],
   },
   calendar: {
     locale: 'fr-FR',
     top: 20,
     left: 48,
-    // right: 40,
     cellSize: 20,
     range: [dayjs().format('YYYY-MM-DD'), dayjs().subtract(6, 'month').format('YYYY-MM-DD')],
     itemStyle: {
@@ -117,16 +112,13 @@ const options = computed<
     locale: 'fr-FR',
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.member.presences.map(({ date, amount }) => [
-      dayjs(date).format('YYYY-MM-DD'),
-      amount,
-    ]),
+    data: props.presences.map(({ date, amount }) => [dayjs(date).format('YYYY-MM-DD'), amount]),
   },
 }));
 
 const onSelectPresence = ({ data }: any) => {
   const [date] = data as [string];
-  const selectedPresence = props.member.presences.find(
+  const selectedPresence = props.presences.find(
     (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
   );
   if (selectedPresence) {
