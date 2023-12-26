@@ -1,7 +1,12 @@
 {
   "detail": {
     "attendance": {
-      "description": "Les présences de ce membre au cours des 6 derniers mois.\nLes présences sont enregistrées automatiquement lorsque le membre se connecte au réseau wifi du coworking.",
+      "allTime": {
+        "label": "Consommation",
+        "suffix": "journée | journée | journées",
+        "value": "{amount} depuis son inscription"
+      },
+      "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
       "graph": {
         "tooltip": "{date} : {amount}",
         "value": {
@@ -11,15 +16,22 @@
         }
       },
       "last30days": {
-        "empty": "Absent",
-        "label": "Présent",
+        "empty": "Absent⸱e",
+        "label": "Présent⸱e",
         "suffix": "jour | jour | jours",
         "value": "{amount} sur les 30 derniers jours"
+      },
+      "onFetch": {
+        "fail": "Impossible de récupérer ses présences"
+      },
+      "period": {
+        "allTime": "Toutes",
+        "last6Months": "6 derniers mois"
       },
       "title": "Présence"
     },
     "header": {
-      "description": "Présent pour la dernière fois {date}"
+      "description": "Présent⸱e pour la dernière fois {date}"
     },
     "onFetch": {
       "fail": "Impossible de récupérer\nles informations du membre"
@@ -107,7 +119,7 @@
     "head": {
       "title": "@:members.list.title"
     },
-    "lastSeen": "Présent pour la dernière fois {date}",
+    "lastSeen": "Présent⸱e pour la dernière fois {date}",
     "onFetch": {
       "fail": "Impossible de récupérer la liste des coworkeurs"
     },
@@ -124,9 +136,9 @@
       }
     },
     "tabs": {
-      "active": "Actif | Actifs",
+      "active": "Actif⸱ve | Actif⸱ve⸱s",
       "all": "Tous",
-      "present": "Présent | Présents"
+      "present": "Présent⸱e | Présent⸱e⸱s"
     },
     "title": "Coworkeurs"
   }

@@ -12,7 +12,6 @@ export interface Ticket {
 export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';
 
 export interface Attendance {
-  id: string;
   date: string;
   amount: number;
   type: AttendanceType;
@@ -60,4 +59,8 @@ export const getMember = (id: string): Promise<Member> => {
 
 export const updateMember = (id: string, member: Member): Promise<Member> => {
   return HTTP.put(`/manager/members/${id}`, member).then(({ data }) => data);
+};
+
+export const getMemberPresences = (id: string): Promise<Attendance[]> => {
+  return HTTP.get(`/manager/members/${id}/presences`).then(({ data }) => data);
 };

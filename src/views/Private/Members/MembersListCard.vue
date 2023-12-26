@@ -5,7 +5,7 @@
         <template v-if="member">
           <img alt="" class="h-12 w-12 rounded-full" :src="member.picture" />
           <span
-            v-if="dayjs().isSame(member.lastSeen, 'day')"
+            v-if="!!member.lastSeen && dayjs().isSame(member.lastSeen, 'day')"
             class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
         </template>
         <div v-else-if="loading" class="h-12 w-12 rounded-full bg-slate-200" />

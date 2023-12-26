@@ -12,7 +12,7 @@
         </p>
       </slot>
     </aside>
-    <div class="w-full max-w-2xl shrink-0 grow">
+    <div class="flex w-full max-w-2xl shrink-0 grow flex-col">
       <slot />
     </div>
     <aside class="relative flex min-w-[12rem] shrink grow basis-0 flex-row flex-wrap">
