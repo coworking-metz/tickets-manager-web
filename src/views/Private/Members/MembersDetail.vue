@@ -78,14 +78,14 @@
           "
           :presences="state.presences" />
         <template #title>
-          <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
+          <h2 class="mx-3 text-xl font-medium leading-6 text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
           </h2>
         </template>
         <template #description>
           <RadioGroup
             v-model="state.areAllPresencesVisible"
-            class="my-1 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors">
+            class="mx-3 my-1 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
             <RadioGroupOption
               v-for="option in [false, true]"
               :key="`presence-option-${option}`"
@@ -111,7 +111,7 @@
               </button>
             </RadioGroupOption>
           </RadioGroup>
-          <p class="mt-1 whitespace-pre-line px-3 text-sm text-gray-500 sm:px-0">
+          <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0">
             {{ $t('members.detail.attendance.description') }}
           </p>
         </template>
