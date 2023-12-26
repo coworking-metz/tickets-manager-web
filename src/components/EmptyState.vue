@@ -6,10 +6,11 @@
     ]">
     <dotlottie-player
       autoplay="true"
-      :class="[horizontal ? 'w-auto max-w-[12rem]' : 'mb-6 h-64']"
+      :class="[horizontal ? 'max-h-[12rem] w-auto max-w-[12rem]' : 'mb-6 h-64']"
       :loop="loop"
       :src="animation" />
-    <div :class="['flex flex-col', horizontal ? 'mt-10 items-start' : 'items-center text-center']">
+    <div
+      :class="['flex flex-col', horizontal ? 'my-auto items-start' : 'items-center text-center']">
       <slot name="title">
         <h3 v-if="title" class="whitespace-pre-line text-base font-medium text-gray-900">
           {{ title }}
