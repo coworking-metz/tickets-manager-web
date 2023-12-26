@@ -39,7 +39,7 @@
       "subscriptions": {
         "active": "Active | Inactive",
         "add": "Add a subscription",
-        "days": "{count} day | {count} single day | {count} days",
+        "days": "{count} day | {count} day | {count} days",
         "more": "More",
         "period": "from {startDate} to {endDate}",
         "purchased": "Ordered on {date}",
@@ -47,11 +47,11 @@
       },
       "tickets": {
         "add": "Add tickets",
-        "amount": "{count} ticket | {count} single ticket | {count} tickets",
+        "amount": "{count} ticket | {count} ticket | {count} tickets",
         "more": "More",
         "overconsumed": "1 overconsumed | {count} overconsumed",
         "purchased": "Ordered on {date}",
-        "remaining": "None available | More than one | {count} remaining",
+        "remaining": "None available | {count} remaining | {count} remaining",
         "title": "Individual Tickets"
       },
       "title": "Order History"
