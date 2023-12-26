@@ -1,17 +1,17 @@
 <template>
   <div
     :class="[
-      'flex',
-      horizontal ? 'flex-row items-center' : 'max-w-xs flex-col items-center text-center',
+      'flex gap-2',
+      horizontal ? 'flex-row items-start' : 'max-w-xs flex-col items-center text-center',
     ]">
     <dotlottie-player
       autoplay="true"
-      :class="[horizontal ? 'w-auto max-w-[16rem]' : 'mb-6 h-64']"
+      :class="[horizontal ? 'w-auto max-w-[12rem]' : 'mb-6 h-64']"
       :loop="loop"
       :src="animation" />
-    <div :class="['flex flex-col', horizontal ? 'items-start' : 'items-center text-center']">
+    <div :class="['flex flex-col', horizontal ? 'mt-10 items-start' : 'items-center text-center']">
       <slot name="title">
-        <h3 v-if="title" class="mt-2 whitespace-pre-line text-base font-medium text-gray-900">
+        <h3 v-if="title" class="whitespace-pre-line text-base font-medium text-gray-900">
           {{ title }}
         </h3>
       </slot>

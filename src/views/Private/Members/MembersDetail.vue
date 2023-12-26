@@ -50,7 +50,6 @@
         <LoadingSpinner v-if="state.isFetchingPresences" class="m-auto h-12 w-12" />
         <ErrorState
           v-else-if="state.fetchPresencesErrorMessage"
-          class="h-40"
           :description="state.fetchPresencesErrorMessage"
           horizontal
           :title="$t('members.detail.attendance.onFetch.fail')">
