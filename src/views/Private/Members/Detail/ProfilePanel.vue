@@ -92,7 +92,7 @@
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center pr-3 font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden sm:text-sm"
+                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden sm:text-sm"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.check') }}

@@ -1,9 +1,12 @@
 <template>
-  <section class="overflow-y-visible max-sm:overflow-x-auto">
+  <section class="overflow-visible">
     <VueECharts
       ref="chart"
       :option="options"
-      style="height: 172px; width: 640px"
+      :style="{
+        height: '172px',
+        width: `${20 * dayjs(props.endDate).diff(props.startDate, 'week') + 96}px`,
+      }"
       @click="onSelectPresence" />
   </section>
 </template>
@@ -55,6 +58,14 @@ const props = defineProps({
     type: Array as PropType<Attendance[]>,
     required: true,
   },
+  startDate: {
+    type: String,
+    default: () => dayjs().subtract(6, 'month').format('YYYY-MM-DD'),
+  },
+  endDate: {
+    type: String,
+    default: () => dayjs().format('YYYY-MM-DD'),
+  },
 });
 
 const { width } = useWindowSize();
@@ -102,7 +113,7 @@ const options = computed<
     top: 20,
     left: 48,
     cellSize: 20,
-    range: [dayjs().format('YYYY-MM-DD'), dayjs().subtract(6, 'month').format('YYYY-MM-DD')],
+    range: [props.endDate, props.startDate],
     itemStyle: {
       borderWidth: 0.5,
     },
@@ -117,6 +128,7 @@ const options = computed<
 }));
 
 const onSelectPresence = ({ data }: any) => {
+  console.log(dayjs().diff(props.startDate, 'week'));
   const [date] = data as [string];
   const selectedPresence = props.presences.find(
     (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
@@ -127,10 +139,10 @@ const onSelectPresence = ({ data }: any) => {
     }
 
     router
-      .push({
+      .replace({
         name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
         params: {
-          presenceId: selectedPresence.id,
+          presenceDate: selectedPresence.date,
           id: router.currentRoute.value.params.id,
         },
       })

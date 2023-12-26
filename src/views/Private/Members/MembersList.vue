@@ -252,7 +252,17 @@ const selectedTab = computed(() => ALL_TABS.find((t) => t.hash === props.tab));
 
 const filteredList = computed(() => {
   return (members.value || [])
-    .filter((member) => searchIn(state.search, member.firstname, member.lastname, member.email))
+    .filter((member) =>
+      searchIn(
+        state.search,
+        member.firstname,
+        member.lastname,
+        member.email,
+        dayjs().isSame(member.lastSeen, 'day')
+          ? dayjs(member.lastSeen).fromNow()
+          : dayjs(member.lastSeen).calendar(dayjs()),
+      ),
+    )
     .sort(ALL_LIST_SORTERS.find((s) => s.key === props.sort)?.sort);
 });
 
@@ -260,19 +270,10 @@ const tabFilteredList = computed(() =>
   filteredList.value.filter(selectedTab.value?.filter ?? (() => true)),
 );
 
-const { list, containerProps, wrapperProps } = useVirtualList(tabFilteredList, {
+const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(tabFilteredList, {
   // Keep `itemHeight` in sync with the item's row.
   itemHeight: 80,
 });
-
-watch(
-  () => props.sort,
-  (sort) => {
-    if (sort) {
-    }
-  },
-  { immediate: true },
-);
 
 watch(
   () => props.search,
@@ -307,4 +308,6 @@ watch(
     }
   },
 );
+
+watch([() => props.tab, () => props.search, () => props.sort], () => scrollTo(0));
 </script>

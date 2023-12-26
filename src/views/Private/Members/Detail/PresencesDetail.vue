@@ -19,6 +19,7 @@
         <div class="flex h-7 shrink-0 items-center">
           <RouterLink
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
@@ -41,9 +42,10 @@
         <RouterLink
           v-if="previousPresence"
           class="mr-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          replace
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-            params: { presenceId: previousPresence.id },
+            params: { presenceDate: previousPresence.date },
           }">
           <SvgIcon
             aria-hidden="true"
@@ -55,9 +57,10 @@
         <RouterLink
           v-if="nextPresence"
           class="ml-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          replace
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-            params: { presenceId: nextPresence.id },
+            params: { presenceDate: nextPresence.date },
           }">
           {{ dayjs(nextPresence.date).format('dddd DD/MM') }}
           <SvgIcon
@@ -199,14 +202,14 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, AttendanceType, Member } from '@/services/api/members';
+import { Attendance, AttendanceType } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import { DialogTitle } from '@headlessui/vue';
 import {
+  DialogTitle,
   RadioGroup,
+  RadioGroupDescription,
   RadioGroupLabel,
   RadioGroupOption,
-  RadioGroupDescription,
 } from '@headlessui/vue';
 import { mdiCheck, mdiCheckCircle, mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
@@ -229,11 +232,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  member: {
-    type: Object as PropType<Member>,
-    default: null,
+  presences: {
+    type: Array as PropType<Attendance[]>,
+    default: () => [],
   },
-  id: {
+  date: {
     type: String,
     required: true,
   },
@@ -247,19 +250,19 @@ const state = reactive({
 });
 
 const selectedPresence = computed<Attendance | null>(() => {
-  return props.member?.presences?.find(({ id }) => `${id}` === `${props.id}`) ?? null;
+  return props.presences.find(({ date }) => `${date}` === `${props.date}`) ?? null;
 });
 
 const previousPresence = computed<Attendance | null>(() => {
-  const [latestDate] = props.member?.presences
-    ?.filter(({ date }) => dayjs(date).isBefore(selectedPresence.value?.date))
+  const [latestDate] = props.presences
+    .filter(({ date }) => dayjs(date).isBefore(selectedPresence.value?.date))
     .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
   return latestDate ?? null;
 });
 
 const nextPresence = computed<Attendance | null>(() => {
-  const [earliestDate] = props.member?.presences
-    ?.filter(({ date }) => dayjs(date).isAfter(selectedPresence.value?.date))
+  const [earliestDate] = props.presences
+    .filter(({ date }) => dayjs(date).isAfter(selectedPresence.value?.date))
     .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
   return earliestDate ?? null;
 });

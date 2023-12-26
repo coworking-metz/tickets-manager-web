@@ -9,5 +9,6 @@
   "help": "J'ai besoin d'aide",
   "login": "Me connecter",
   "logout": "Me déconnecter",
-  "reload": "Recharger"
+  "reload": "Recharger",
+  "retry": "Réessayer"
 }

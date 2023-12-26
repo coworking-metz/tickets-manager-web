@@ -4,13 +4,15 @@
       <pre class="mt-6 p-3">{{ $attrs.description }}</pre>
     </template>
 
-    <AppButton
-      class="mt-6 border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
-      :icon="mdiRefresh"
-      :loading="state.isReloading"
-      @click="onReload">
-      {{ $t('action.reload') }}
-    </AppButton>
+    <slot name="action">
+      <AppButton
+        class="mt-6 border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+        :icon="mdiRefresh"
+        :loading="state.isReloading"
+        @click="onReload">
+        {{ $t('action.reload') }}
+      </AppButton>
+    </slot>
   </EmptyState>
 </template>
 

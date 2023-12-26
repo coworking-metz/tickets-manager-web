@@ -1,7 +1,12 @@
 {
   "detail": {
     "attendance": {
-      "description": "Member's presence over the last 6 months.\nAttendance is automatically recorded when the member connects to the coworking's wifi network.",
+      "allTime": {
+        "label": "Consumption",
+        "suffix": "day | day | days",
+        "value": "{amount} since registration"
+      },
+      "description": "Attendance is automatically recorded when the member connects to the coworking's wifi network.",
       "graph": {
         "tooltip": "{date}: {amount}",
         "value": {
@@ -15,6 +20,10 @@
         "label": "Present",
         "suffix": "day | single day | days",
         "value": "{amount} out of the last 30 days"
+      },
+      "period": {
+        "allTime": "All time",
+        "last6Months": "Last 6 months"
       },
       "title": "Attendance"
     },
