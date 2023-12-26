@@ -46,7 +46,7 @@
       </SectionRow>
 
       <SectionRow class="mt-8">
-        <PresencesGraph class="sm:rounded-md" :member="state.member" />
+        <PresencesGraph class="sm:rounded-md" :presences="state.member.presences || []" />
         <template #title>
           <h2 class="px-3 text-xl font-medium leading-6 text-gray-900 sm:px-0">
             {{ $t('members.detail.attendance.title') }}
@@ -268,12 +268,12 @@ useIntersectionObserver(ordersRowElement, ([{ isIntersecting }]) => {
 
 const totalAmountSpent = computed<number>(() => {
   const totalTickets =
-    state.member?.tickets.reduce((total, ticket) => {
+    state.member?.tickets?.reduce((total, ticket) => {
       return total + ticket.tickets;
     }, 0) ?? 0;
   const totalTicketsAmount = totalTickets * TICKET_UNIT_COST_IN_EUR;
   const totalSubscriptionsAmount =
-    (state.member?.subscriptions.length ?? 0) * SUBSCRIPTION_UNIT_COST_IN_EUR;
+    (state.member?.subscriptions?.length ?? 0) * SUBSCRIPTION_UNIT_COST_IN_EUR;
 
   return totalTicketsAmount + totalSubscriptionsAmount;
 });
@@ -286,7 +286,7 @@ const monthlyAmountSpent = computed<number>(() => {
 const attendanceLast30Days = computed<number>(() => {
   return (
     state.member?.presences
-      .filter(({ date }) => dayjs().diff(dayjs(date), 'day') <= 30)
+      ?.filter(({ date }) => dayjs().diff(dayjs(date), 'day') <= 30)
       .reduce((acc, { amount }) => acc + amount, 0) ?? 0
   );
 });

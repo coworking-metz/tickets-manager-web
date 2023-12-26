@@ -247,19 +247,19 @@ const state = reactive({
 });
 
 const selectedPresence = computed<Attendance | null>(() => {
-  return props.member?.presences.find(({ id }) => `${id}` === `${props.id}`) ?? null;
+  return props.member?.presences?.find(({ id }) => `${id}` === `${props.id}`) ?? null;
 });
 
 const previousPresence = computed<Attendance | null>(() => {
-  const [latestDate] = (props.member?.presences || [])
-    .filter(({ date }) => dayjs(date).isBefore(selectedPresence.value?.date))
+  const [latestDate] = props.member?.presences
+    ?.filter(({ date }) => dayjs(date).isBefore(selectedPresence.value?.date))
     .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
   return latestDate ?? null;
 });
 
 const nextPresence = computed<Attendance | null>(() => {
-  const [earliestDate] = (props.member?.presences || [])
-    .filter(({ date }) => dayjs(date).isAfter(selectedPresence.value?.date))
+  const [earliestDate] = props.member?.presences
+    ?.filter(({ date }) => dayjs(date).isAfter(selectedPresence.value?.date))
     .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
   return earliestDate ?? null;
 });

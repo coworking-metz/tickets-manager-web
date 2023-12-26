@@ -42,6 +42,7 @@ export interface MemberListItem {
 }
 
 export interface Member extends MemberListItem {
+  balance: number;
   tickets: Ticket[];
   presences: Attendance[];
   subscriptions: Subscription[];
