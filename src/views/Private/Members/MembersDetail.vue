@@ -17,7 +17,7 @@
               <div class="relative">
                 <img alt="" class="h-16 w-16 rounded-full" :src="state.member.picture" />
                 <span
-                  v-if="!!state.member.lastSeen && dayjs().isSame(state.member.lastSeen, 'day')"
+                  v-if="!!state.member.lastSeen && dayjs().isSame(state.member.lastSeen, 'hour')"
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
@@ -48,25 +48,13 @@
 
       <SectionRow class="mt-8">
         <LoadingSpinner v-if="state.isFetchingPresences" class="m-auto h-12 w-12" />
-        <ErrorState
-          v-else-if="state.fetchPresencesErrorMessage"
-          :description="state.fetchPresencesErrorMessage"
-          horizontal
-          :title="$t('members.detail.attendance.onFetch.fail')">
-          <template #action>
-            <AppButton
-              class="mt-6 border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
-              @click="() => fetchPresences(props.id)">
-              {{ $t('action.retry') }}
-            </AppButton>
-          </template>
-        </ErrorState>
         <PresencesGraph
           v-else
-          :key="`presence-graph-${state.areAllPresencesVisible}`"
+          :key="`presence-graph-${state.shouldRenderAllPresences}`"
           class="max-sm:overflow-x-auto"
           v-bind="
-            state.areAllPresencesVisible && {
+            state.shouldRenderAllPresences &&
+            state.presences.length && {
               class: 'overflow-x-auto',
               endDate: dayjs(
                 Math.max(...state.presences.map(({ date }) => dayjs(date).valueOf())),
@@ -84,7 +72,7 @@
         </template>
         <template #description>
           <RadioGroup
-            v-model="state.areAllPresencesVisible"
+            v-model="state.shouldRenderAllPresences"
             class="mx-3 my-1 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
             <RadioGroupOption
               v-for="option in [false, true]"
@@ -212,14 +200,17 @@
         class="px-3 sm:px-0"
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
-        <div class="flex flex-row flex-wrap items-stretch gap-3">
+        <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
             class="min-w-[16rem] shrink grow basis-0"
+            :loading="state.isFetchingTickets"
             :remaining="state.member.balance"
-            :tickets="state.member.tickets" />
+            :tickets="state.tickets" />
           <SubscriptionsListPanel
+            :active="state.subscriptions.some(({ endDate }) => dayjs().isBefore(endDate))"
             class="min-w-[16rem] shrink grow basis-0"
-            :subscriptions="state.member.subscriptions" />
+            :loading="state.isFetchingSubscriptions"
+            :subscriptions="state.subscriptions" />
         </div>
 
         <template #append>
@@ -256,8 +247,6 @@
                 tag="dd">
                 <template #count>
                   <animated-counter
-                    ref="totalCounter"
-                    :autoinit="false"
                     class="block text-3xl font-semibold tracking-tight text-gray-900"
                     :decimals="Number.isInteger(totalAmountSpent) ? 0 : 2"
                     :duration="1"
@@ -284,10 +273,17 @@
       "
       @close="$router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
       <RouterView
-        :loading="state.isFetchingMember || state.isFetchingPresences"
+        :loading="
+          state.isFetchingMember ||
+          state.isFetchingPresences ||
+          state.isFetchingSubscriptions ||
+          state.isFetchingTickets
+        "
         :member="state.member"
         :member-id="id"
-        :presences="state.presences" />
+        :presences="state.presences"
+        :subscriptions="state.subscriptions"
+        :tickets="state.tickets" />
     </SideDialog>
   </article>
 </template>
@@ -300,22 +296,16 @@ import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPane
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import AppButton from '@/components/form/AppButton.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  TICKET_UNIT_COST_IN_EUR,
-  Member,
-  getMember,
-  getMemberPresences,
-  Attendance,
-} from '@/services/api/members';
-import { SUBSCRIPTION_UNIT_COST_IN_EUR } from '@/services/api/subscriptions';
+import { Attendance, Member, getMember, getMemberPresences } from '@/services/api/members';
+import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
+import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
+import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
-import { useIntersectionObserver } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -335,6 +325,7 @@ const props = defineProps({
   },
 });
 
+const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   isFetchingMember: false,
@@ -343,13 +334,17 @@ const state = reactive({
 
   isFetchingPresences: false,
   presences: [] as Attendance[],
-  fetchPresencesErrorMessage: null as string | null,
 
-  areAllPresencesVisible: false as boolean,
+  isFetchingSubscriptions: false,
+  subscriptions: [] as Subscription[],
+
+  isFetchingTickets: false,
+  tickets: [] as Ticket[],
+
+  shouldRenderAllPresences: false as boolean,
   isTicketsDialogVisible: true as boolean,
 });
 const ordersRowElement = ref(null);
-const totalCounter = ref(null);
 
 useHead({
   titleTemplate: (title?: string) =>
@@ -362,27 +357,37 @@ useHead({
       .join(' - '),
 });
 
-useIntersectionObserver(ordersRowElement, ([{ isIntersecting }]) => {
-  if (isIntersecting) {
-    (totalCounter.value as any).start();
-  }
-});
-
 const totalAmountSpent = computed<number>(() => {
-  const totalTickets =
-    state.member?.tickets?.reduce((total, ticket) => {
-      return total + ticket.tickets;
-    }, 0) ?? 0;
-  const totalTicketsAmount = totalTickets * TICKET_UNIT_COST_IN_EUR;
-  const totalSubscriptionsAmount =
-    (state.member?.subscriptions?.length ?? 0) * SUBSCRIPTION_UNIT_COST_IN_EUR;
+  const totalTicketsAmount = state.tickets.reduce((total, ticket) => {
+    return total + ticket.amount;
+  }, 0);
+  const totalSubscriptionsAmount = state.subscriptions.reduce((total, subscription) => {
+    return total + subscription.amount;
+  }, 0);
 
   return totalTicketsAmount + totalSubscriptionsAmount;
 });
 
 const monthlyAmountSpent = computed<number>(() => {
-  const totalMonths = dayjs().diff(dayjs(state.member?.created), 'month');
-  return totalAmountSpent.value / totalMonths;
+  if (state.member) {
+    const [lastPresence] = state.presences
+      .filter(({ amount }) => amount > 0)
+      .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
+
+    const totalMonths =
+      Math.ceil(
+        Math.abs(
+          dayjs(lastPresence?.date || state.member.lastSeen).diff(
+            state.member.created,
+            'month',
+            true,
+          ),
+        ),
+      ) || 1;
+
+    return totalAmountSpent.value / totalMonths;
+  }
+  return 0;
 });
 
 const attendanceLast30Days = computed<number>(() => {
@@ -414,18 +419,55 @@ const fetchMember = (memberId: string) => {
 
 const fetchPresences = (memberId: string) => {
   state.isFetchingPresences = true;
-  state.fetchPresencesErrorMessage = null;
   getMemberPresences(memberId)
     .then((presences) => {
       state.presences = presences;
     })
     .catch(handleSilentError)
-    .catch(async (error) => {
-      state.fetchPresencesErrorMessage = await parseErrorText(error);
+    .catch((error) => {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.attendance.onFetch.fail'),
+      );
       return Promise.reject(error);
     })
     .finally(() => {
       state.isFetchingPresences = false;
+    });
+};
+
+const fetchSubscriptions = (memberId: string) => {
+  state.isFetchingSubscriptions = true;
+  getAllMemberSubscriptions(memberId)
+    .then((subscriptions) => {
+      state.subscriptions = subscriptions;
+    })
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.subscriptions.onFetch.fail'),
+      );
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isFetchingSubscriptions = false;
+    });
+};
+
+const fetchTickets = (memberId: string) => {
+  state.isFetchingTickets = true;
+  getAllMemberTickets(memberId)
+    .then((tickets) => {
+      state.tickets = tickets;
+    })
+    .catch(handleSilentError)
+    .catch((error) => {
+      notificationsStore.addErrorNotification(error, i18n.t('members.detail.tickets.onFetch.fail'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isFetchingTickets = false;
     });
 };
 
@@ -435,6 +477,8 @@ watch(
     if (memberId) {
       fetchMember(memberId);
       fetchPresences(memberId);
+      fetchSubscriptions(memberId);
+      fetchTickets(memberId);
     }
   },
   { immediate: true },

@@ -17,61 +17,69 @@
         }}
       </span>
     </div>
+
     <ul
       :class="[
-        'relative max-h-[40rem] shrink grow',
+        'relative flex max-h-[40rem] shrink grow flex-col',
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <li
-        v-for="ticket in tickets"
-        :key="`ticket-${ticket.tickets}-${ticket.purchaseDate}`"
-        class="border-b-[1px] border-gray-200">
-        <RouterLink
-          :class="{
-            ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
-            ['bg-slate-50']:
-              $route.params.ticketId === `${ticket.id}` &&
-              $route.name === ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
-          }"
-          :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
-            params: { ticketId: ticket.id },
-          }">
-          <div class="flex flex-row items-end gap-1">
-            <i18n-t
-              keypath="members.detail.orders.tickets.amount"
-              :plural="ticket.tickets"
-              scope="global"
-              tag="span">
-              <template #count>
-                <strong class="text-3xl">{{ ticket.tickets }}</strong>
-              </template>
-            </i18n-t>
-            <p class="ml-auto text-lg">
-              {{ fractionAmount(ticket.tickets * TICKET_UNIT_COST_IN_EUR) }}
-            </p>
-          </div>
+      <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+      <template v-else>
+        <li
+          v-for="ticket in tickets"
+          :key="`ticket-${ticket.purchased}-${ticket.count}`"
+          class="border-b-[1px] border-gray-200">
+          <RouterLink
+            :class="{
+              ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
+              ['bg-slate-50']:
+                $route.params.ticketId === `${ticket.id}` &&
+                $route.name === ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
+            }"
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
+              params: { ticketId: ticket.id },
+            }">
+            <div class="flex flex-row items-end gap-1">
+              <i18n-t
+                keypath="members.detail.orders.tickets.amount"
+                :plural="ticket.count"
+                scope="global"
+                tag="span">
+                <template #count>
+                  <strong class="text-3xl">{{ ticket.count }}</strong>
+                </template>
+              </i18n-t>
+              <p class="ml-auto text-lg">
+                {{ fractionAmount(ticket.amount) }}
+              </p>
+            </div>
 
-          <time
-            class="text-gray-500 sm:text-sm"
-            :datetime="dayjs(ticket.purchaseDate).toISOString()">
-            {{
-              $t('members.detail.orders.tickets.purchased', {
-                count: ticket.tickets,
-                date: dayjs(ticket.purchaseDate).format('dddd LL'),
-              })
-            }}
-          </time>
-        </RouterLink>
-      </li>
-      <button
-        v-if="!state.shouldScroll && tickets.length > 8"
-        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
-        @click="state.shouldScroll = true">
-        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiChevronDoubleDown" type="mdi" />
-        {{ $t('members.detail.orders.tickets.more') }}
-      </button>
+            <time
+              class="text-gray-500 sm:text-sm"
+              :datetime="dayjs(ticket.purchased).toISOString()">
+              {{
+                $t('members.detail.orders.tickets.purchased', {
+                  count: ticket.count,
+                  date: dayjs(ticket.purchased).format('dddd LL'),
+                })
+              }}
+            </time>
+          </RouterLink>
+        </li>
+        <button
+          v-if="!state.shouldScroll && tickets.length > 8"
+          class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
+          @click="state.shouldScroll = true">
+          <SvgIcon
+            aria-hidden="true"
+            class="mr-2 h-5 w-5"
+            :path="mdiChevronDoubleDown"
+            type="mdi" />
+          {{ $t('members.detail.orders.tickets.more') }}
+        </button>
+      </template>
     </ul>
     <div class="mt-auto flex flex-row bg-gray-50 px-4 py-3 sm:px-6">
       <RouterLink
@@ -84,14 +92,19 @@
   </div>
 </template>
 <script setup lang="ts">
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { TICKET_UNIT_COST_IN_EUR, Ticket } from '@/services/api/members';
+import { Ticket } from '@/services/api/tickets';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { PropType, reactive } from 'vue';
 
 defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   tickets: {
     type: Array as PropType<Ticket[]>,
     default: () => [],

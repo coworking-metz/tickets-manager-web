@@ -2,9 +2,9 @@
   "detail": {
     "attendance": {
       "allTime": {
-        "label": "Consommation",
+        "label": "Occupation",
         "suffix": "journée | journée | journées",
-        "value": "{amount} depuis son inscription"
+        "value": "{amount} depuis son arrivée"
       },
       "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
       "graph": {

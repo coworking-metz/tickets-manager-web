@@ -80,7 +80,7 @@ export const numberFormats: IntlNumberFormats = {
 
 // `choiceOptions` relates to the number of options for the specified translation
 // `i18n.tc()` accepts 2 or 3 options, so the code is covering both cases
-// In case of translation having only 2 options, empty and single options will be the same
+// In case of translation having only 2 options, empty and plural options will be the same
 // `choiceOptions` value is the length of options for that translation
 const getOptionsByTranslationChoices = (choiceOptions: number) =>
   choiceOptions === 3
@@ -90,7 +90,7 @@ const getOptionsByTranslationChoices = (choiceOptions: number) =>
         returnAsPlural: 2,
       }
     : {
-        returnAsEmpty: 0,
+        returnAsEmpty: 1,
         returnAsSingle: 0,
         returnAsPlural: 1,
       };

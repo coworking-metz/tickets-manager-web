@@ -15,70 +15,77 @@
     </div>
     <ul
       :class="[
-        'relative max-h-[40rem] shrink grow',
+        'relative flex max-h-[40rem] shrink grow flex-col',
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <li
-        v-for="subscription in subscriptions"
-        :key="`subscription-${subscription.startDate}-${subscription.endDate}`"
-        class="border-b-[1px] border-gray-200">
-        <RouterLink
-          :class="{
-            ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
-            ['bg-slate-50']:
-              $route.params.subscriptionId === `${subscription.id}` &&
-              $route.name === ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
-          }"
-          :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
-            params: { subscriptionId: subscription.id },
-          }">
-          <div class="flex flex-row items-end gap-1">
-            <i18n-t
-              keypath="members.detail.orders.subscriptions.days"
-              :plural="dayjs(subscription.endDate).diff(subscription.startDate, 'day')"
-              scope="global"
-              tag="span">
-              <template #count>
-                <strong class="text-3xl">
-                  {{ dayjs(subscription.endDate).diff(subscription.startDate, 'day') }}
-                </strong>
-              </template>
-            </i18n-t>
-            <p class="ml-auto text-lg">
-              {{ fractionAmount(SUBSCRIPTION_UNIT_COST_IN_EUR) }}
-            </p>
-          </div>
-          <time
-            class="sm:text-sm"
-            :datetime="`P${dayjs(subscription.endDate).diff(subscription.startDate, 'day')}D`">
-            {{
-              $t('members.detail.orders.subscriptions.period', {
-                startDate: dayjs(subscription.startDate).format('L'),
-                endDate: dayjs(subscription.endDate).format('L'),
-              })
-            }}
-          </time>
+      <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+      <template v-else>
+        <li
+          v-for="subscription in subscriptions"
+          :key="`subscription-${subscription.startDate}-${subscription.endDate}`"
+          class="border-b-[1px] border-gray-200">
+          <RouterLink
+            :class="{
+              ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
+              ['bg-slate-50']:
+                $route.params.subscriptionId === `${subscription.id}` &&
+                $route.name === ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+            }"
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+              params: { subscriptionId: subscription.id },
+            }">
+            <div class="flex flex-row items-end gap-1">
+              <i18n-t
+                keypath="members.detail.orders.subscriptions.days"
+                :plural="dayjs(subscription.endDate).diff(subscription.startDate, 'day')"
+                scope="global"
+                tag="span">
+                <template #count>
+                  <strong class="text-3xl">
+                    {{ dayjs(subscription.endDate).diff(subscription.startDate, 'day') }}
+                  </strong>
+                </template>
+              </i18n-t>
+              <p class="ml-auto text-lg">
+                {{ fractionAmount(subscription.amount) }}
+              </p>
+            </div>
+            <time
+              class="sm:text-sm"
+              :datetime="`P${dayjs(subscription.endDate).diff(subscription.startDate, 'day')}D`">
+              {{
+                $t('members.detail.orders.subscriptions.period', {
+                  startDate: dayjs(subscription.startDate).format('L'),
+                  endDate: dayjs(subscription.endDate).format('L'),
+                })
+              }}
+            </time>
 
-          <time
-            class="text-gray-500 sm:text-sm"
-            :datetime="dayjs(subscription.purchased).toISOString()">
-            {{
-              $t('members.detail.orders.subscriptions.purchased', {
-                date: dayjs(subscription.purchased).format('dddd LL'),
-              })
-            }}
-          </time>
-        </RouterLink>
-      </li>
-      <button
-        v-if="!state.shouldScroll && subscriptions.length > 5"
-        class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
-        @click="state.shouldScroll = true">
-        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiChevronDoubleDown" type="mdi" />
-        {{ $t('members.detail.orders.subscriptions.more') }}
-      </button>
+            <time
+              class="text-gray-500 sm:text-sm"
+              :datetime="dayjs(subscription.purchased).toISOString()">
+              {{
+                $t('members.detail.orders.subscriptions.purchased', {
+                  date: dayjs(subscription.purchased).format('dddd LL'),
+                })
+              }}
+            </time>
+          </RouterLink>
+        </li>
+        <button
+          v-if="!state.shouldScroll && subscriptions.length > 5"
+          class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
+          @click="state.shouldScroll = true">
+          <SvgIcon
+            aria-hidden="true"
+            class="mr-2 h-5 w-5"
+            :path="mdiChevronDoubleDown"
+            type="mdi" />
+          {{ $t('members.detail.orders.subscriptions.more') }}
+        </button>
+      </template>
     </ul>
     <div class="mt-auto flex shrink-0 flex-row bg-gray-50 px-4 py-3 sm:px-6">
       <RouterLink
@@ -91,15 +98,20 @@
   </div>
 </template>
 <script setup lang="ts">
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { SUBSCRIPTION_UNIT_COST_IN_EUR, Subscription } from '@/services/api/subscriptions';
+import { Subscription } from '@/services/api/subscriptions';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { PropType, reactive } from 'vue';
 
 defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   subscriptions: {
     type: Array as PropType<Subscription[]>,
     default: () => [],

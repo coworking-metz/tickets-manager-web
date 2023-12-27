@@ -1,13 +1,6 @@
 import { Subscription } from './subscriptions';
+import { Ticket } from './tickets';
 import HTTP from '../http';
-
-export const TICKET_UNIT_COST_IN_EUR = 6 as const;
-
-export interface Ticket {
-  id: string;
-  purchaseDate: string;
-  tickets: number;
-}
 
 export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';
 
@@ -42,9 +35,6 @@ export interface MemberListItem {
 
 export interface Member extends MemberListItem {
   balance: number;
-  tickets: Ticket[];
-  presences: Attendance[];
-  subscriptions: Subscription[];
   devices: Device[];
   memberships: Membership[];
 }
