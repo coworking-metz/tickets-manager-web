@@ -1,5 +1,3 @@
-import { Subscription } from './subscriptions';
-import { Ticket } from './tickets';
 import HTTP from '../http';
 
 export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';

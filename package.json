@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vue-tsc && vite build",
-    "check": "eslint --ext .js,.vue src && vue-tsc --noEmit",
+    "check": "eslint --ext .js,.vue src && vue-tsc",
     "clean": "rm -rf node_modules/ && yarn",
     "dev": "vite",
     "postinstall": "patch-package",
