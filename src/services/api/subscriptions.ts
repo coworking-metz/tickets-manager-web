@@ -1,12 +1,12 @@
 import HTTP from '../http';
 
-export const SUBSCRIPTION_UNIT_COST_IN_EUR = 60 as const;
-
 export interface Subscription {
   id: string;
+  purchased: string;
+  amount: number;
+  currency: 'EUR';
   startDate: string;
   endDate: string;
-  purchased: string;
 }
 
 export const getAllMemberSubscriptions = (memberId: string): Promise<Subscription[]> => {

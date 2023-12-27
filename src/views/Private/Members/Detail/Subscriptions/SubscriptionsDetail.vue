@@ -87,7 +87,7 @@
 
       <SubscriptionsDeleteDialog
         v-model="state.isDeleteDialogVisible"
-        :member-id="props.member.id"
+        :member-id="props.memberId"
         :subscription-id="props.id"
         @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
     </form>
@@ -103,7 +103,6 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Member } from '@/services/api/members';
 import { Subscription, updateMemberSubscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
@@ -123,17 +122,21 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  member: {
-    type: Object as PropType<Member>,
-    default: null,
+  memberId: {
+    type: String,
+    required: true,
   },
   id: {
     type: String,
     required: true,
+  },
+  subscriptions: {
+    type: Array as PropType<Subscription[]>,
+    default: () => [],
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -148,7 +151,7 @@ const state = reactive({
 });
 
 const selectedSubscription = computed<Subscription | null>(() => {
-  return props.member?.subscriptions.find(({ id }) => `${id}` === `${props.id}`) ?? null;
+  return props.subscriptions.find(({ id }) => `${id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({
@@ -166,7 +169,7 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  updateMemberSubscription(props.member.id, props.id, {
+  updateMemberSubscription(props.memberId, props.id, {
     startDate: state.started,
     endDate: state.ended,
   } as Subscription)

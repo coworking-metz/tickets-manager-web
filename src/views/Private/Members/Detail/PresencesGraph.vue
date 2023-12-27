@@ -5,7 +5,7 @@
       :option="options"
       :style="{
         height: '172px',
-        width: `${20 * dayjs(props.endDate).diff(props.startDate, 'week') + 96}px`,
+        width: `${20 * ceil(dayjs(props.endDate).diff(props.startDate, 'week', true)) + 96}px`,
       }"
       @click="onSelectPresence" />
   </section>
@@ -27,6 +27,7 @@ import {
 } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
+import { ceil } from 'lodash';
 import { PropType, computed, reactive, ref } from 'vue';
 import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
@@ -128,7 +129,6 @@ const options = computed<
 }));
 
 const onSelectPresence = ({ data }: any) => {
-  console.log(dayjs().diff(props.startDate, 'week'));
   const [date] = data as [string];
   const selectedPresence = props.presences.find(
     (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,

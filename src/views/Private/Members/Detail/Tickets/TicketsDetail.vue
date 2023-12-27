@@ -8,7 +8,7 @@
             {{ $t('tickets.detail.empty.title') }}
           </template>
           <template v-else>
-            {{ $t('tickets.detail.title', { count: selectedTicket.tickets }) }}
+            {{ $t('tickets.detail.title', { count: selectedTicket.count }) }}
           </template>
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
@@ -24,8 +24,8 @@
       <p v-else-if="selectedTicket" class="text-indigo-300 sm:text-sm">
         {{
           $t('tickets.detail.description', {
-            purchasedDate: dayjs(selectedTicket.purchaseDate).format('LL'),
-            purchasedTime: dayjs(selectedTicket.purchaseDate).format('LT'),
+            purchasedDate: dayjs(selectedTicket.purchased).format('LL'),
+            purchasedTime: dayjs(selectedTicket.purchased).format('LT'),
           })
         }}
       </p>
@@ -41,7 +41,7 @@
       class="flex h-full flex-col px-4 py-6 sm:px-6"
       @submit.prevent="onSubmit">
       <Head>
-        <title>{{ $t('tickets.detail.head.title', { count: selectedTicket.tickets }) }}</title>
+        <title>{{ $t('tickets.detail.head.title', { count: selectedTicket.count }) }}</title>
       </Head>
       <AppTextField
         id="ticket-count"
@@ -78,7 +78,7 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Ticket, Member } from '@/services/api/members';
+import { Ticket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiTicket } from '@mdi/js';
@@ -95,9 +95,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  member: {
-    type: Object as PropType<Member>,
-    default: null,
+  tickets: {
+    type: Array as PropType<Ticket[]>,
+    default: () => [],
   },
   id: {
     type: String,
@@ -113,7 +113,7 @@ const state = reactive({
 });
 
 const selectedTicket = computed<Ticket | null>(() => {
-  return props.member?.tickets.find((ticket) => `${ticket.id}` === `${props.id}`) ?? null;
+  return props.tickets.find((ticket) => `${ticket.id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({
@@ -145,7 +145,7 @@ watch(
   () => selectedTicket.value,
   (ticket) => {
     if (ticket) {
-      state.count = ticket.tickets;
+      state.count = ticket.count;
     }
   },
   { immediate: true },
