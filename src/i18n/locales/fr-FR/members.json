@@ -37,7 +37,7 @@
       "fail": "Impossible de récupérer\nles informations du membre"
     },
     "orders": {
-      "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autre joyeusetés comme les dons sont exclues.",
+      "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autres joyeusetés comme les dons sont exclues.",
       "spent": {
         "monthly": {
           "label": "En moyenne",
@@ -110,6 +110,15 @@
         "label": "Membre depuis"
       },
       "title": "Profil"
+    },
+    "wordpress": {
+      "check": "Consulter le profil",
+      "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets et d'abonnement se mettront à jour.",
+      "onSync": {
+        "fail": "Impossible de synchroniser {name}"
+      },
+      "sync": "Synchroniser",
+      "title": "Synchronisation avec Wordpress"
     }
   },
   "list": {

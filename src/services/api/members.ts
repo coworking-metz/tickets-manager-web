@@ -21,6 +21,7 @@ export interface Device {
 
 export interface MemberListItem {
   id: string;
+  wordpressId: number;
   picture?: string;
   firstname?: string;
   lastname?: string;
@@ -51,4 +52,8 @@ export const updateMember = (id: string, member: Member): Promise<Member> => {
 
 export const getMemberPresences = (id: string): Promise<Attendance[]> => {
   return HTTP.get(`/manager/members/${id}/presences`).then(({ data }) => data);
+};
+
+export const syncMember = (id: string): Promise<Member> => {
+  return HTTP.get(`/manager/members/${id}/sync`).then(({ data }) => data);
 };
