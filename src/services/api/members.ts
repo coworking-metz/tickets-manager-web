@@ -55,5 +55,5 @@ export const getMemberPresences = (id: string): Promise<Attendance[]> => {
 };
 
 export const syncMember = (id: string): Promise<Member> => {
-  return HTTP.get(`/manager/members/${id}/sync`).then(({ data }) => data);
+  return HTTP.post(`/manager/members/${id}/sync`).then(({ data }) => data);
 };
