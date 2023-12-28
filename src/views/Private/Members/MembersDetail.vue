@@ -156,6 +156,8 @@
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" />
+        <WordpressPanel class="mt-3" :member="state.member" @update:member="onUpdateMember" />
+
         <template #append>
           <dl class="sticky top-3 flex flex-col gap-3">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -294,6 +296,7 @@ import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
+import WordpressPanel from './Detail/WordpressPanel.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
@@ -469,6 +472,10 @@ const fetchTickets = (memberId: string) => {
     .finally(() => {
       state.isFetchingTickets = false;
     });
+};
+
+const onUpdateMember = (member: Member) => {
+  state.member = member;
 };
 
 watch(

@@ -7,6 +7,7 @@
           v-model="state.firstname"
           autocomplete="given-name"
           class="min-w-[12rem] shrink grow basis-0"
+          disabled
           :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.firstname.label')"
           name="first-name"
@@ -18,6 +19,7 @@
           v-model="state.lastname"
           autocomplete="family-name"
           class="min-w-[12rem] shrink grow basis-0"
+          disabled
           :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.lastname.label')"
           name="last-name"
@@ -32,6 +34,7 @@
           v-model="state.email"
           autocomplete="email"
           class="min-w-[12rem] shrink grow basis-0"
+          disabled
           :errors="vuelidate.email.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.email.label')"
           name="email"
@@ -43,6 +46,7 @@
           v-model="state.birthdate"
           autocomplete="bday"
           class="min-w-[12rem] shrink grow basis-0"
+          disabled
           :label="$t('members.detail.profile.birthdate.label')"
           name="birthdate"
           :prepend-icon="mdiCakeVariantOutline"
@@ -168,9 +172,11 @@
           <Switch
             v-model="state.hasParkingAccess"
             :class="[
+              'cursor-not-allowed opacity-70',
               state.hasParkingAccess ? 'bg-teal-500' : 'bg-gray-200',
-              'relative ml-4 inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
-            ]">
+              'relative ml-4 inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
+            ]"
+            disabled>
             <span
               aria-hidden="true"
               :class="[
