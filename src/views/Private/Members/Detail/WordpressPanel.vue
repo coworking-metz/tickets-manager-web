@@ -15,7 +15,8 @@
       </AppButton>
       <a
         class="group flex items-center gap-x-3 text-sm font-medium text-indigo-600 hover:text-indigo-900"
-        :href="`https://www.coworking-metz.fr/wp-admin/user-edit.php?user_id=${member.wordpressId}`">
+        :href="`https://www.coworking-metz.fr/wp-admin/user-edit.php?user_id=${member.wordpressId}`"
+        target="_blank">
         <SvgIcon
           aria-hidden="true"
           class="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
