@@ -231,7 +231,7 @@ const props = defineProps({
   },
   sort: {
     type: String,
-    default: null,
+    default: 'lastSeen',
   },
 });
 
