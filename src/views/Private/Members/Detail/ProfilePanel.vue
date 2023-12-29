@@ -210,17 +210,16 @@ import { Device, Member, updateMemberMacAddresses } from '@/services/api/members
 import { useNotificationsStore } from '@/store/notifications';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import {
+  mdiCakeVariantOutline,
+  mdiCheckAll,
   mdiClose,
   mdiLaptop,
-  mdiCheckAll,
-  mdiPlus,
   mdiOpenInNew,
-  mdiCakeVariantOutline,
+  mdiPlus,
 } from '@mdi/js';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, helpers, macAddress } from '@vuelidate/validators';
-import { computed, watch } from 'vue';
-import { PropType, reactive, nextTick } from 'vue';
+import { email, helpers, macAddress, required } from '@vuelidate/validators';
+import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['update:member']);
@@ -245,9 +244,16 @@ const state = reactive({
 });
 
 const rules = computed(() => ({
-  firstname: { required: withAppI18nMessage(required) },
-  lastname: { required: withAppI18nMessage(required) },
-  email: { required: withAppI18nMessage(required), email: withAppI18nMessage(email) },
+  firstname: {
+    // required: withAppI18nMessage(required)
+  },
+  lastname: {
+    // required: withAppI18nMessage(required)
+  },
+  email: {
+    required: withAppI18nMessage(required),
+    email: withAppI18nMessage(email),
+  },
   devices: {
     $each: helpers.forEach({
       macAddress: {
@@ -291,11 +297,11 @@ const onSubmit = async () => {
     props.member._id,
     state.devices.map(({ macAddress }) => macAddress),
   )
-    .then((updatedMember) => {
+    .then(() => {
       // emit('update:member', updatedMember);
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
-          name: [updatedMember.firstName, updatedMember.lastName].filter(Boolean).join(' '),
+          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
