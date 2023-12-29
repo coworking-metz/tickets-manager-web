@@ -4,8 +4,8 @@
       <title>{{ $t('user.profile.head.title') }}</title>
     </Head>
     <section class="my-auto flex w-full flex-col items-start sm:flex-row">
-      <div class="mb-6">
-        <dotlottie-player autoplay="true" class="h-[92px]" loop :src="RollingTumbleweed" />
+      <div class="mb-6 shrink grow basis-0">
+        <dotlottie-player autoplay="true" class="h-24 min-w-40" loop :src="RollingTumbleweed" />
       </div>
       <div class="flex w-full flex-col sm:ml-6">
         <div class="sm:border-l sm:border-gray-200 sm:pl-6">

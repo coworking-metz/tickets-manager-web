@@ -30,6 +30,9 @@
     "header": {
       "description": "Present for the last time {date}"
     },
+    "membership": {
+      "last": "Last membership in {year}"
+    },
     "onFetch": {
       "fail": "Unable to load the member's details"
     },
@@ -145,6 +148,7 @@
     "tabs": {
       "active": "Active | Actives",
       "all": "All",
+      "nonCompliant": "Non compliant",
       "present": "Present | Presents"
     },
     "title": "Coworkers"

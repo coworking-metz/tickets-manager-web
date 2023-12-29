@@ -10,9 +10,10 @@
     <template v-else-if="state.member">
       <!-- trick to trigger useHead.titleTemplate -->
       <Head><title></title></Head>
-      <SectionRow class="px-3 sm:mt-40 sm:px-0">
-        <header class="flex shrink-0 flex-col">
-          <div class="flex flex-row items-center space-x-5 sm:ml-8">
+      <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
+        <div class="min-w-[12rem] shrink grow basis-0" />
+        <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
+          <div class="flex flex-row space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
                 <img
@@ -24,9 +25,12 @@
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
-            <div>
+            <div class="flex flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900">
-                {{ [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') }}
+                {{
+                  [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') ||
+                  state.member.email
+                }}
               </h1>
               <i18n-t
                 v-if="!!state.member.lastSeen"
@@ -44,12 +48,32 @@
                   </time>
                 </template>
               </i18n-t>
+              <div
+                v-if="state.member.balance < 0 || isMembershipNonCompliant(state.member)"
+                class="mt-1 flex flex-row flex-wrap items-center gap-2">
+                <span
+                  v-if="state.member.balance < 0"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+                  {{
+                    $t('members.detail.orders.tickets.overconsumed', {
+                      count: Math.abs(state.member.balance),
+                    })
+                  }}
+                </span>
+                <span
+                  v-if="isMembershipNonCompliant(state.member)"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                  {{ $t('members.detail.membership.last', { year: state.member.lastMembership }) }}
+                </span>
+              </div>
             </div>
           </div>
         </header>
-      </SectionRow>
 
-      <SectionRow class="mt-8">
+        <div class="min-w-[12rem] shrink grow basis-0" />
+      </section>
+
+      <SectionRow class="mt-6">
         <LoadingSpinner v-if="state.isFetchingPresences" class="m-auto h-12 w-12" />
         <PresencesGraph
           v-else
@@ -69,7 +93,7 @@
           "
           :presences="state.presences" />
         <template #title>
-          <h2 class="mx-3 text-xl font-medium leading-6 text-gray-900 sm:mx-0">
+          <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
           </h2>
         </template>
@@ -152,10 +176,8 @@
         </template>
       </SectionRow>
 
-      <hr class="my-6 border-t border-gray-200" />
-
       <SectionRow
-        class="px-3 sm:px-0"
+        class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" @update:member="onUpdateMember" />
@@ -198,11 +220,8 @@
         </template>
       </SectionRow>
 
-      <hr class="my-6 border-t border-gray-200" />
-
       <SectionRow
-        ref="ordersRowElement"
-        class="px-3 sm:px-0"
+        class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
@@ -305,7 +324,13 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, Member, getMember, getMemberPresences } from '@/services/api/members';
+import {
+  Attendance,
+  Member,
+  getMember,
+  getMemberPresences,
+  isMembershipNonCompliant,
+} from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
@@ -313,7 +338,7 @@ import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
@@ -350,7 +375,6 @@ const state = reactive({
   shouldRenderAllPresences: false as boolean,
   isTicketsDialogVisible: true as boolean,
 });
-const ordersRowElement = ref(null);
 
 useHead({
   titleTemplate: (title?: string) =>
