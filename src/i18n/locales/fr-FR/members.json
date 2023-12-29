@@ -121,7 +121,8 @@
       "check": "Consulter le profil",
       "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets et d'abonnement se mettront à jour.",
       "onSync": {
-        "fail": "Impossible de synchroniser {name}"
+        "fail": "Impossible de synchroniser {name}",
+        "success": "{name} synchronisé"
       },
       "sync": "Synchroniser",
       "title": "Synchronisation avec Wordpress"

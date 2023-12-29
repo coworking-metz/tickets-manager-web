@@ -158,7 +158,7 @@
         class="px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
-        <ProfilePanel :member="state.member" />
+        <ProfilePanel :member="state.member" @update:member="onUpdateMember" />
         <WordpressPanel class="mt-3" :member="state.member" @update:member="onUpdateMember" />
 
         <template #append>
