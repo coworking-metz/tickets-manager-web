@@ -15,7 +15,7 @@
       </AppButton>
       <a
         class="group flex flex-row items-center gap-x-3 rounded-md border border-transparent px-4 py-2 font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-        :href="buildMemberWordpressProfileUrl(props.member.id)"
+        :href="buildMemberWordpressProfileUrl(props.member._id)"
         target="_blank">
         <SvgIcon
           aria-hidden="true"
@@ -52,7 +52,7 @@ const state = reactive({
 
 const onSync = () => {
   state.isSyncing = true;
-  syncMember(props.member.id)
+  syncMember(props.member._id)
     .then((member) => {
       emit('update:member', member);
     })

@@ -10,7 +10,7 @@
           <template v-else>
             {{
               $t('subscriptions.detail.title', {
-                startDate: dayjs(selectedSubscription.startDate).format('LL'),
+                startDate: dayjs(selectedSubscription.started).format('LL'),
               })
             }}
           </template>
@@ -45,7 +45,7 @@
         <title>
           {{
             $t('subscriptions.detail.head.title', {
-              startDate: dayjs(selectedSubscription.startDate).format('LL'),
+              startDate: dayjs(selectedSubscription.started).format('LL'),
             })
           }}
         </title>
@@ -151,7 +151,7 @@ const state = reactive({
 });
 
 const selectedSubscription = computed<Subscription | null>(() => {
-  return props.subscriptions.find(({ id }) => `${id}` === `${props.id}`) ?? null;
+  return props.subscriptions.find(({ _id }) => `${_id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({
@@ -170,8 +170,8 @@ const onSubmit = async () => {
 
   state.isSubmitting = true;
   updateMemberSubscription(props.memberId, props.id, {
-    startDate: state.started,
-    endDate: state.ended,
+    started: state.started,
+    ended: state.ended,
   } as Subscription)
     .then(() => {
       notificationsStore.addNotification({
@@ -195,8 +195,8 @@ watch(
   () => selectedSubscription.value,
   (subscription) => {
     if (subscription) {
-      state.started = dayjs(subscription.startDate).format('YYYY-MM-DD');
-      state.ended = dayjs(subscription.endDate).format('YYYY-MM-DD');
+      state.started = dayjs(subscription.started).format('YYYY-MM-DD');
+      state.ended = dayjs(subscription.ended).format('YYYY-MM-DD');
     }
   },
   { immediate: true },

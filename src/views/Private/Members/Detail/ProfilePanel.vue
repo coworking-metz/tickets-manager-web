@@ -288,7 +288,7 @@ const onSubmit = async () => {
   //   macAddresses: state.devices.map(({ macAddress }) => macAddress),
   // } as Member)
   updateMemberMacAddresses(
-    props.member.id,
+    props.member._id,
     state.devices.map(({ macAddress }) => macAddress),
   )
     .then((updatedMember) => {

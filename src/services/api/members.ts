@@ -20,7 +20,7 @@ export interface Device {
 }
 
 export interface MemberListItem {
-  id: string;
+  _id: string;
   picture?: string;
   firstName?: string;
   lastName?: string;

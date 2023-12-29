@@ -1,7 +1,7 @@
 import HTTP from '../http';
 
 export interface Subscription {
-  id: string;
+  _id: string;
   started: string;
   ended: string;
   purchased: string;

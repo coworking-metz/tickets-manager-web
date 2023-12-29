@@ -34,12 +34,12 @@
             :class="{
               ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
               ['bg-slate-50']:
-                $route.params.ticketId === `${ticket.id}` &&
+                $route.params.ticketId === `${ticket._id}` &&
                 $route.name === ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
             }"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
-              params: { ticketId: ticket.id },
+              params: { ticketId: ticket._id },
             }">
             <div class="flex flex-row items-end gap-1">
               <i18n-t

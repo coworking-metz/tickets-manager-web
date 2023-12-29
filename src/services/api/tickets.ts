@@ -1,7 +1,7 @@
 import HTTP from '../http';
 
 export interface Ticket {
-  id: string;
+  _id: string;
   purchased: string;
   amount: number;
   currency: 'EUR';

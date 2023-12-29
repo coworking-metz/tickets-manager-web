@@ -132,12 +132,12 @@
           v-else-if="!list.length"
           class="m-auto py-6"
           :title="$t('members.list.empty.title')" />
-        <li v-else v-for="{ data: member } in list" :key="`member-${member.id}`">
+        <li v-else v-for="{ data: member } in list" :key="`member-${member._id}`">
           <RouterLink
             class="block h-20 overflow-y-hidden hover:bg-gray-50"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: member.id },
+              params: { id: member._id },
             }">
             <MembersListCard :loading="isFetching" :member="member" />
           </RouterLink>
