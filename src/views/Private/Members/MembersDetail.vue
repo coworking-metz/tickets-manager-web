@@ -10,8 +10,9 @@
     <template v-else-if="state.member">
       <!-- trick to trigger useHead.titleTemplate -->
       <Head><title></title></Head>
-      <SectionRow class="px-3 sm:mt-40 sm:px-0">
-        <header class="flex shrink-0 flex-col">
+      <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
+        <div class="min-w-[12rem] shrink grow basis-0" />
+        <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
           <div class="flex flex-row space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
@@ -68,9 +69,11 @@
             </div>
           </div>
         </header>
-      </SectionRow>
 
-      <SectionRow class="mt-8">
+        <div class="min-w-[12rem] shrink grow basis-0" />
+      </section>
+
+      <SectionRow class="mt-6">
         <LoadingSpinner v-if="state.isFetchingPresences" class="m-auto h-12 w-12" />
         <PresencesGraph
           v-else
@@ -90,7 +93,7 @@
           "
           :presences="state.presences" />
         <template #title>
-          <h2 class="mx-3 text-xl font-medium leading-6 text-gray-900 sm:mx-0">
+          <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
           </h2>
         </template>
@@ -173,10 +176,8 @@
         </template>
       </SectionRow>
 
-      <hr class="my-6 border-t border-gray-200" />
-
       <SectionRow
-        class="px-3 sm:px-0"
+        class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" @update:member="onUpdateMember" />
@@ -219,11 +220,8 @@
         </template>
       </SectionRow>
 
-      <hr class="my-6 border-t border-gray-200" />
-
       <SectionRow
-        ref="ordersRowElement"
-        class="px-3 sm:px-0"
+        class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.orders.description')"
         :title="$t('members.detail.orders.title')">
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
@@ -340,7 +338,7 @@ import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
@@ -377,7 +375,6 @@ const state = reactive({
   shouldRenderAllPresences: false as boolean,
   isTicketsDialogVisible: true as boolean,
 });
-const ordersRowElement = ref(null);
 
 useHead({
   titleTemplate: (title?: string) =>
