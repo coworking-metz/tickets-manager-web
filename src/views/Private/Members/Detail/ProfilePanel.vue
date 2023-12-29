@@ -292,7 +292,7 @@ const onSubmit = async () => {
     state.devices.map(({ macAddress }) => macAddress),
   )
     .then((updatedMember) => {
-      emit('update:member', updatedMember);
+      // emit('update:member', updatedMember);
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
           name: [updatedMember.firstName, updatedMember.lastName].filter(Boolean).join(' '),
