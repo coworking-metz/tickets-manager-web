@@ -55,11 +55,20 @@ const onSync = () => {
   syncMember(props.member._id)
     .then((member) => {
       emit('update:member', member);
+      notificationsStore.addNotification({
+        message: i18n.t('members.detail.wordpress.onSync.success', {
+          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+        }),
+        type: 'success',
+        timeout: 3_000,
+      });
     })
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('members.detail.wordpress.onSync.fail'),
+        i18n.t('members.detail.wordpress.onSync.fail', {
+          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+        }),
       );
       return Promise.reject(error);
     })

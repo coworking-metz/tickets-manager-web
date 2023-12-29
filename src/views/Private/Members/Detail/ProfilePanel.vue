@@ -96,7 +96,7 @@
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-blue-600 hover:underline dark:text-blue-500 max-sm:hidden sm:text-sm"
+                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-blue-600 hover:underline max-sm:hidden sm:text-sm dark:text-blue-500"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.check') }}
@@ -295,7 +295,7 @@ const onSubmit = async () => {
       emit('update:member', updatedMember);
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
-          name: [state.firstname, state.lastname].join(' '),
+          name: [updatedMember.firstName, updatedMember.lastName].filter(Boolean).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
@@ -306,7 +306,7 @@ const onSubmit = async () => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.profile.onUpdate.fail', {
-          name: [props.member.firstName, props.member.lastName].join(' '),
+          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
         }),
       );
       return Promise.reject(error);

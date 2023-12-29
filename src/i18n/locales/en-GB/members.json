@@ -112,7 +112,8 @@
       "check": "View Profile",
       "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket and subscription orders will be updated.",
       "onSync": {
-        "fail": "Unable to synchronize {name}"
+        "fail": "Unable to synchronize {name}",
+        "success": "{name} synchronized"
       },
       "sync": "Synchronize",
       "title": "Sync with WordPress"
