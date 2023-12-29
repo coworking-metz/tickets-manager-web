@@ -132,10 +132,13 @@
           v-else-if="!list.length"
           class="m-auto py-6"
           :title="$t('members.list.empty.title')" />
-        <li v-else v-for="{ data: member } in list" :key="`member-${member.id}`">
+        <li v-else v-for="{ data: member } in list" :key="`member-${member._id}`">
           <RouterLink
             class="block h-20 overflow-y-hidden hover:bg-gray-50"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX, params: { id: member.id } }">
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+              params: { id: member._id },
+            }">
             <MembersListCard :loading="isFetching" :member="member" />
           </RouterLink>
         </li>
@@ -196,11 +199,11 @@ const ALL_LIST_SORTERS: ListSorter[] = [
   {
     key: 'name',
     sort: (a, b) =>
-      [a.firstname, a.lastname]
+      [a.firstName, a.lastName]
         .filter(Boolean)
         .join(' ')
         .toLocaleLowerCase()
-        .localeCompare([b.firstname, b.lastname].filter(Boolean).join(' ').toLocaleLowerCase()),
+        .localeCompare([b.firstName, b.lastName].filter(Boolean).join(' ').toLocaleLowerCase()),
   },
   {
     key: 'created',
@@ -256,8 +259,8 @@ const filteredList = computed(() => {
     .filter((member) =>
       searchIn(
         state.search,
-        member.firstname,
-        member.lastname,
+        member.firstName,
+        member.lastName,
         member.email,
         dayjs().isSame(member.lastSeen, 'day')
           ? dayjs(member.lastSeen).fromNow()

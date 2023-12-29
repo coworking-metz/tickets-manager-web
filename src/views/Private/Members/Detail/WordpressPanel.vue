@@ -6,7 +6,7 @@
     <p class="mt-2 max-w-xl whitespace-pre-line text-sm text-gray-500">
       {{ $t('members.detail.wordpress.description') }}
     </p>
-    <div class="mt-5 flex flex-row items-center gap-6">
+    <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
       <AppButton
         class="border border-transparent bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         :loading="state.isSyncing"
@@ -14,12 +14,12 @@
         {{ $t('members.detail.wordpress.sync') }}
       </AppButton>
       <a
-        class="group flex items-center gap-x-3 text-sm font-medium text-indigo-600 hover:text-indigo-900"
-        :href="`https://www.coworking-metz.fr/wp-admin/user-edit.php?user_id=${member.wordpressId}`"
+        class="group flex flex-row items-center gap-x-3 rounded-md border border-transparent px-4 py-2 font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+        :href="buildMemberWordpressProfileUrl(props.member._id)"
         target="_blank">
         <SvgIcon
           aria-hidden="true"
-          class="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
+          class="h-5 w-5 text-indigo-500 group-hover:text-indigo-700"
           :path="mdiOpenInNew"
           type="mdi" />
         <span>{{ $t('members.detail.wordpress.check') }}</span>
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
-import { Member, syncMember } from '@/services/api/members';
+import { Member, buildMemberWordpressProfileUrl, syncMember } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiOpenInNew } from '@mdi/js';
 import { PropType, reactive } from 'vue';
@@ -52,9 +52,8 @@ const state = reactive({
 
 const onSync = () => {
   state.isSyncing = true;
-  syncMember(props.member.id)
+  syncMember(props.member._id)
     .then((member) => {
-      state.isSyncing = false;
       emit('update:member', member);
     })
     .catch((error) => {

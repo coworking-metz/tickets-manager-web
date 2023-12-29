@@ -87,8 +87,7 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
       const content = axiosError.response?.data as any;
       const parsedError =
         typeof content?.text === 'function' ? JSON.parse(await content.text()) : content;
-      // const isTokenExpired = parsedError.reason === 'EXPIRED_ACCESS_TOKEN';
-      const isTokenExpired = parsedError.code === 401 && parsedError.message === 'Unauthorized'; // until the backend send a proper error code
+      const isTokenExpired = parsedError.code === 'EXPIRED_ACCESS_TOKEN';
       if (isTokenExpired) {
         // should fetch another access token and retry
         const authStore = useAuthStore();

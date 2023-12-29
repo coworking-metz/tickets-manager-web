@@ -1,7 +1,7 @@
 import HTTP from '../http';
 
 export interface Ticket {
-  id: string;
+  _id: string;
   purchased: string;
   amount: number;
   currency: 'EUR';
@@ -9,11 +9,11 @@ export interface Ticket {
 }
 
 export const getAllMemberTickets = (memberId: string): Promise<Ticket[]> => {
-  return HTTP.get(`/manager/members/${memberId}/tickets`).then(({ data }) => data);
+  return HTTP.get(`/members/${memberId}/tickets`).then(({ data }) => data);
 };
 
 export const getMemberTicket = (memberId: string, ticketId: string): Promise<Ticket> => {
-  return HTTP.get(`/manager/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
+  return HTTP.get(`/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
 };
 
 export const updateMemberTicket = (
@@ -21,11 +21,9 @@ export const updateMemberTicket = (
   ticketId: string,
   ticket: Ticket,
 ): Promise<Ticket> => {
-  return HTTP.put(`/manager/members/${memberId}/tickets/${ticketId}`, ticket).then(
-    ({ data }) => data,
-  );
+  return HTTP.put(`/members/${memberId}/tickets/${ticketId}`, ticket).then(({ data }) => data);
 };
 
 export const deleteMemberTicket = (memberId: string, ticketId: string): Promise<void> => {
-  return HTTP.delete(`/manager/members/${memberId}/tickets/${ticketId}`);
+  return HTTP.delete(`/members/${memberId}/tickets/${ticketId}`);
 };

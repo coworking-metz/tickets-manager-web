@@ -113,7 +113,7 @@ const state = reactive({
 });
 
 const selectedTicket = computed<Ticket | null>(() => {
-  return props.tickets.find((ticket) => `${ticket.id}` === `${props.id}`) ?? null;
+  return props.tickets.find((ticket) => `${ticket._id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({

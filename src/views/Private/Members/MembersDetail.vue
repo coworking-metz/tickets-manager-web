@@ -15,7 +15,10 @@
           <div class="flex flex-row items-center space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
-                <img alt="" class="h-16 w-16 rounded-full" :src="state.member.picture" />
+                <img
+                  alt=""
+                  class="h-16 w-16 rounded-full bg-gray-200"
+                  :src="state.member.picture" />
                 <span
                   v-if="!!state.member.lastSeen && dayjs().isSame(state.member.lastSeen, 'hour')"
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
@@ -23,7 +26,7 @@
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900">
-                {{ [state.member.firstname, state.member.lastname].filter(Boolean).join(' ') }}
+                {{ [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') }}
               </h1>
               <i18n-t
                 v-if="!!state.member.lastSeen"
@@ -209,7 +212,7 @@
             :remaining="state.member.balance"
             :tickets="state.tickets" />
           <SubscriptionsListPanel
-            :active="state.subscriptions.some(({ endDate }) => dayjs().isBefore(endDate))"
+            :active="state.subscriptions.some(({ ended }) => dayjs().isBefore(ended))"
             class="min-w-[16rem] shrink grow basis-0"
             :loading="state.isFetchingSubscriptions"
             :subscriptions="state.subscriptions" />
@@ -353,7 +356,7 @@ useHead({
   titleTemplate: (title?: string) =>
     [
       title,
-      [state.member?.firstname, state.member?.lastname].filter(Boolean).join(' '),
+      [state.member?.firstName, state.member?.lastName].filter(Boolean).join(' '),
       i18n.t('head.title'),
     ]
       .filter(Boolean)
@@ -449,7 +452,7 @@ const fetchSubscriptions = (memberId: string) => {
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('members.detail.subscriptions.onFetch.fail'),
+        i18n.t('members.detail.orders.subscriptions.onFetch.fail'),
       );
       return Promise.reject(error);
     })
@@ -466,7 +469,10 @@ const fetchTickets = (memberId: string) => {
     })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('members.detail.tickets.onFetch.fail'));
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.orders.tickets.onFetch.fail'),
+      );
       return Promise.reject(error);
     })
     .finally(() => {

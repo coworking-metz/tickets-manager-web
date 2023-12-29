@@ -149,9 +149,11 @@
           <Switch
             v-model="state.isManager"
             :class="[
+              'cursor-not-allowed opacity-70',
               state.isManager ? 'bg-teal-500' : 'bg-gray-200',
-              'relative ml-4 inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
-            ]">
+              'relative ml-4 inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
+            ]"
+            disabled>
             <span
               aria-hidden="true"
               :class="[
@@ -204,7 +206,7 @@ import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { Device, Member, updateMember } from '@/services/api/members';
+import { Device, Member, updateMemberMacAddresses } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import {
@@ -278,13 +280,17 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  updateMember(props.member.id, {
-    firstname: state.firstname,
-    lastname: state.lastname,
-    email: state.email,
-    birthdate: state.birthdate,
-    devices: state.devices,
-  } as Member)
+  // updateMember(props.member.id, {
+  //   firstName: state.firstname,
+  //   lastName: state.lastname,
+  //   email: state.email,
+  //   birthdate: state.birthdate,
+  //   macAddresses: state.devices.map(({ macAddress }) => macAddress),
+  // } as Member)
+  updateMemberMacAddresses(
+    props.member._id,
+    state.devices.map(({ macAddress }) => macAddress),
+  )
     .then((updatedMember) => {
       emit('update:member', updatedMember);
       notificationsStore.addNotification({
@@ -300,7 +306,7 @@ const onSubmit = async () => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.profile.onUpdate.fail', {
-          name: [props.member.firstname, props.member.lastname].join(' '),
+          name: [props.member.firstName, props.member.lastName].join(' '),
         }),
       );
       return Promise.reject(error);
@@ -314,11 +320,12 @@ watch(
   () => props.member,
   (member) => {
     if (member) {
-      state.firstname = member.firstname || null;
-      state.lastname = member.lastname || null;
+      state.firstname = member.firstName || null;
+      state.lastname = member.lastName || null;
       state.email = member.email || null;
       state.birthdate = member.birthdate || null;
-      state.devices = member.devices || [];
+      state.devices =
+        member.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
     }
   },
   { immediate: true },
