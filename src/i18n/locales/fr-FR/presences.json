@@ -27,11 +27,11 @@
     "type": {
       "label": "Type de consommation",
       "value": {
-        "SUBSCRIPTION": {
+        "A": {
           "description": "Sous réserve d'un abonnement actif à cette date.",
           "label": "Abonnement"
         },
-        "TICKET": {
+        "T": {
           "description": "Impacte le solde de tickets.",
           "label": "Ticket"
         }

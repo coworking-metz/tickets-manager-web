@@ -27,11 +27,11 @@
     "type": {
       "label": "Consumption Type",
       "value": {
-        "SUBSCRIPTION": {
+        "A": {
           "description": "Subject to an active subscription on this date.",
           "label": "Subscription"
         },
-        "TICKET": {
+        "T": {
           "description": "Affects the ticket balance.",
           "label": "Ticket"
         }

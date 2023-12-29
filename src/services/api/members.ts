@@ -1,6 +1,6 @@
 import HTTP from '../http';
 
-export type AttendanceType = 'SUBSCRIPTION' | 'TICKET';
+export type AttendanceType = 'A' | 'T'; // 'A' = Abonnement, 'T' = Ticket
 
 export interface Attendance {
   date: string;
@@ -21,10 +21,9 @@ export interface Device {
 
 export interface MemberListItem {
   id: string;
-  wordpressId: number;
   picture?: string;
-  firstname?: string;
-  lastname?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
   birthdate?: string;
   created: string;
@@ -34,26 +33,38 @@ export interface MemberListItem {
 
 export interface Member extends MemberListItem {
   balance: number;
-  devices: Device[];
+  macAddresses: string[];
   memberships: Membership[];
 }
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
-  return HTTP.get('/manager/members').then(({ data }) => data);
+  return HTTP.get('/members').then(({ data }) => data);
 };
 
 export const getMember = (id: string): Promise<Member> => {
-  return HTTP.get(`/manager/members/${id}`).then(({ data }) => data);
+  return HTTP.get(`/members/${id}`).then(({ data }) => data);
 };
 
 export const updateMember = (id: string, member: Member): Promise<Member> => {
-  return HTTP.put(`/manager/members/${id}`, member).then(({ data }) => data);
+  return HTTP.put(`/members/${id}`, member).then(({ data }) => data);
+};
+
+export const updateMemberMacAddresses = (id: string, macAddresses: string[]): Promise<Member> => {
+  return HTTP.put(`/members/${id}/mac-addresses`, macAddresses).then(({ data }) => data);
 };
 
 export const getMemberPresences = (id: string): Promise<Attendance[]> => {
-  return HTTP.get(`/manager/members/${id}/presences`).then(({ data }) => data);
+  return HTTP.get(`/members/${id}/presences`).then(({ data }) => data);
 };
 
 export const syncMember = (id: string): Promise<Member> => {
-  return HTTP.post(`/manager/members/${id}/sync`).then(({ data }) => data);
+  return HTTP.post(`/members/${id}/sync-wordpress`).then(({ data }) => data);
+};
+
+export const buildMemberPictureUrl = (id: string) => {
+  return HTTP.getUri({ url: `/members/${id}/avatar` });
+};
+
+export const buildMemberWordpressProfileUrl = (id: string) => {
+  return HTTP.getUri({ url: `/members/${id}/wordpress-profile` });
 };

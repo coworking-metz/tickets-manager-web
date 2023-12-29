@@ -3,7 +3,7 @@
     <div class="flex min-w-0 flex-1 items-start">
       <div class="relative shrink-0">
         <template v-if="member">
-          <img alt="" class="h-12 w-12 rounded-full" :src="member.picture" />
+          <img alt="" class="h-12 w-12 rounded-full bg-gray-200" :src="member.picture" />
           <span
             v-if="!!member.lastSeen && dayjs().isSame(member.lastSeen, 'hour')"
             class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
@@ -14,7 +14,7 @@
         <div class="flex shrink grow basis-0 flex-col gap-2 overflow-hidden">
           <template v-if="member">
             <p class="truncate font-medium text-indigo-600 sm:text-sm">
-              {{ [member.firstname, member.lastname].filter(Boolean).join(' ') }}
+              {{ [member.firstName, member.lastName].filter(Boolean).join(' ') }}
             </p>
             <p class="flex items-center text-sm text-gray-500">
               <span class="truncate">{{ member.email }}</span>

@@ -53,6 +53,9 @@
         "add": "Ajouter un abonnement",
         "days": "{count} jour | {count} jour | {count} jours",
         "more": "Plus",
+        "onFetch": {
+          "fail": "Impossible de récupérer ses abonnements"
+        },
         "period": "du {startDate} au {endDate}",
         "purchased": "Commandé le {date}",
         "title": "Abonnements"
@@ -61,6 +64,9 @@
         "add": "Ajouter des tickets",
         "amount": "{count} ticket | {count} ticket | {count} tickets",
         "more": "Plus",
+        "onFetch": {
+          "fail": "Impossible de récupérer ses commandes de tickets"
+        },
         "overconsumed": "{count} surconsommé | {count} surconsommés",
         "purchased": "Commandé le {date} | Commandé le {date} | Commandés le {date}",
         "remaining": "Aucun disponible | {count} restant | {count} restants",

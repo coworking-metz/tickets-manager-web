@@ -23,7 +23,7 @@
       <template v-else>
         <li
           v-for="subscription in subscriptions"
-          :key="`subscription-${subscription.startDate}-${subscription.endDate}`"
+          :key="`subscription-${subscription.started}-${subscription.ended}`"
           class="border-b-[1px] border-gray-200">
           <RouterLink
             :class="{
@@ -39,12 +39,12 @@
             <div class="flex flex-row items-end gap-1">
               <i18n-t
                 keypath="members.detail.orders.subscriptions.days"
-                :plural="dayjs(subscription.endDate).diff(subscription.startDate, 'day')"
+                :plural="dayjs(subscription.ended).diff(subscription.started, 'day')"
                 scope="global"
                 tag="span">
                 <template #count>
                   <strong class="text-3xl">
-                    {{ dayjs(subscription.endDate).diff(subscription.startDate, 'day') }}
+                    {{ dayjs(subscription.ended).diff(subscription.started, 'day') }}
                   </strong>
                 </template>
               </i18n-t>
@@ -54,11 +54,11 @@
             </div>
             <time
               class="sm:text-sm"
-              :datetime="`P${dayjs(subscription.endDate).diff(subscription.startDate, 'day')}D`">
+              :datetime="`P${dayjs(subscription.ended).diff(subscription.started, 'day')}D`">
               {{
                 $t('members.detail.orders.subscriptions.period', {
-                  startDate: dayjs(subscription.startDate).format('L'),
-                  endDate: dayjs(subscription.endDate).format('L'),
+                  startDate: dayjs(subscription.started).format('L'),
+                  endDate: dayjs(subscription.ended).format('L'),
                 })
               }}
             </time>

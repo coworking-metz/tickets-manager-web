@@ -88,7 +88,7 @@
 
           <div class="mt-1 flex flex-row gap-3">
             <RadioGroupOption
-              v-for="presenceType in ['TICKET', 'SUBSCRIPTION']"
+              v-for="presenceType in ['T', 'A']"
               :key="`presence-type-${presenceType}`"
               as="template"
               :value="presenceType"
