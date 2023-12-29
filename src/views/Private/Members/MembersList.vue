@@ -9,7 +9,7 @@
     </h1>
     <div
       class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3 border-b border-gray-200">
-      <nav class="flex flex-row gap-x-8 overflow-x-auto px-3 sm:px-0">
+      <nav class="flex flex-row gap-x-3 overflow-x-auto px-3 sm:px-0">
         <router-link
           v-for="listTab in ALL_TABS"
           :key="`list-tab-${listTab.key}`"
@@ -154,7 +154,7 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
-import { MemberListItem, getAllMembers } from '@/services/api/members';
+import { MemberListItem, getAllMembers, isMembershipNonCompliant } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
@@ -176,6 +176,11 @@ const ALL_TABS: Tab[] = [
   {
     key: 'all',
     hash: '',
+  },
+  {
+    key: 'nonCompliant',
+    hash: 'non-compliant',
+    filter: (member: MemberListItem) => member.balance < 0 || isMembershipNonCompliant(member),
   },
   {
     key: 'active',
@@ -234,8 +239,6 @@ const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
-  // isFetching: false,
-  // members: [] as MemberListItem[],
   search: null as string | null,
 });
 
@@ -265,6 +268,12 @@ const filteredList = computed(() => {
         dayjs().isSame(member.lastSeen, 'day')
           ? dayjs(member.lastSeen).fromNow()
           : dayjs(member.lastSeen).calendar(dayjs()),
+        member.balance < 0
+          ? i18n.t('members.detail.orders.tickets.overconsumed', {
+              count: Math.abs(member.balance),
+            })
+          : null,
+        member.membershipOk === false ? i18n.t('members.detail.membership.nonCompliant') : null,
       ),
     )
     .sort(ALL_LIST_SORTERS.find((s) => s.key === props.sort)?.sort);

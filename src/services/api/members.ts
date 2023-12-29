@@ -1,4 +1,5 @@
 import HTTP from '../http';
+import dayjs from 'dayjs';
 
 export type AttendanceType = 'A' | 'T'; // 'A' = Abonnement, 'T' = Ticket
 
@@ -29,13 +30,23 @@ export interface MemberListItem {
   created: string;
   lastSeen?: string;
   active: boolean;
+  balance: number;
+  membershipOk: boolean;
+  lastMembership: number;
 }
 
 export interface Member extends MemberListItem {
-  balance: number;
   macAddresses: string[];
   memberships: Membership[];
 }
+
+export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
+  return Boolean(
+    member.membershipOk === false &&
+      member.lastSeen &&
+      !dayjs(member.lastSeen).isSame(dayjs().year(member.lastMembership), 'year'),
+  );
+};
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
   return HTTP.get('/members').then(({ data }) => data);

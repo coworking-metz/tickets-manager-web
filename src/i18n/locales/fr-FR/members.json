@@ -33,6 +33,9 @@
     "header": {
       "description": "Présent⸱e pour la dernière fois {date}"
     },
+    "membership": {
+      "last": "Dernière adhésion en {year}"
+    },
     "onFetch": {
       "fail": "Impossible de récupérer\nles informations du membre"
     },
@@ -154,6 +157,7 @@
     "tabs": {
       "active": "Actif⸱ve | Actif⸱ve⸱s",
       "all": "Tous",
+      "nonCompliant": "En infraction",
       "present": "Présent⸱e | Présent⸱e⸱s"
     },
     "title": "Coworkeurs"

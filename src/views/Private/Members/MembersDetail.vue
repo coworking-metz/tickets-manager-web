@@ -12,7 +12,7 @@
       <Head><title></title></Head>
       <SectionRow class="px-3 sm:mt-40 sm:px-0">
         <header class="flex shrink-0 flex-col">
-          <div class="flex flex-row items-center space-x-5 sm:ml-8">
+          <div class="flex flex-row space-x-5 sm:ml-8">
             <div class="shrink-0">
               <div class="relative">
                 <img
@@ -24,9 +24,12 @@
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
-            <div>
+            <div class="flex flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900">
-                {{ [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') }}
+                {{
+                  [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') ||
+                  state.member.email
+                }}
               </h1>
               <i18n-t
                 v-if="!!state.member.lastSeen"
@@ -44,6 +47,24 @@
                   </time>
                 </template>
               </i18n-t>
+              <div
+                v-if="state.member.balance < 0 || isMembershipNonCompliant(state.member)"
+                class="mt-1 flex flex-row flex-wrap items-center gap-2">
+                <span
+                  v-if="state.member.balance < 0"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+                  {{
+                    $t('members.detail.orders.tickets.overconsumed', {
+                      count: Math.abs(state.member.balance),
+                    })
+                  }}
+                </span>
+                <span
+                  v-if="isMembershipNonCompliant(state.member)"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                  {{ $t('members.detail.membership.last', { year: state.member.lastMembership }) }}
+                </span>
+              </div>
             </div>
           </div>
         </header>
@@ -305,7 +326,13 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, Member, getMember, getMemberPresences } from '@/services/api/members';
+import {
+  Attendance,
+  Member,
+  getMember,
+  getMemberPresences,
+  isMembershipNonCompliant,
+} from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
