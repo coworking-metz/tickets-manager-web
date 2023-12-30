@@ -16,6 +16,10 @@ export const getMemberTicket = (memberId: string, ticketId: string): Promise<Tic
   return HTTP.get(`/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
 };
 
+export const addMemberTicket = (memberId: string, ticket: Ticket): Promise<Ticket> => {
+  return HTTP.post(`/members/${memberId}/tickets`, ticket).then(({ data }) => data);
+};
+
 export const updateMemberTicket = (
   memberId: string,
   ticketId: string,

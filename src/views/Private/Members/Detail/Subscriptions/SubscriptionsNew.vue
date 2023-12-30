@@ -21,7 +21,7 @@
       </Head>
       <AppTextField
         id="subscription-started"
-        v-model.number="state.started"
+        v-model="state.started"
         :errors="vuelidate.started.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.started.label')"
         :prepend-icon="mdiCalendarStartOutline"
@@ -30,7 +30,7 @@
 
       <AppTextField
         id="subscription-ended"
-        v-model.number="state.ended"
+        v-model="state.ended"
         :errors="vuelidate.ended.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.ended.label')"
         :prepend-icon="mdiCalendarEndOutline"
@@ -54,6 +54,7 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
+import { Subscription, addMemberSubscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiPlus, mdiClose } from '@mdi/js';
@@ -62,14 +63,16 @@ import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { computed, nextTick, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
-defineProps({
+const props = defineProps({
   memberId: {
     type: String,
     required: true,
   },
 });
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -93,10 +96,21 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  Promise.reject(new Error('Not implemented yet'))
+  addMemberSubscription(props.memberId, {
+    started: state.started,
+    ended: state.ended,
+  } as Subscription)
+    .then(() => {
+      notificationsStore.addNotification({
+        type: 'success',
+        message: i18n.t('subscriptions.new.onAdd.success'),
+        timeout: 3_000,
+      });
+      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+    })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.new.onFail.message'));
+      notificationsStore.addErrorNotification(error, i18n.t('subscriptions.new.onAdd.fail'));
       return Promise.reject(error);
     })
     .finally(() => {

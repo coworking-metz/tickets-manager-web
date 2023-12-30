@@ -16,8 +16,9 @@
     "head": {
       "title": "@:presences.detail.title"
     },
-    "onFail": {
-      "message": "Unable to update attendance"
+    "onUpdate": {
+      "fail": "Unable to update attendance on {date}",
+      "success": "Attendance on {date} has been updated"
     },
     "reason": {
       "label": "Reason",

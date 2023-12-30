@@ -1,4 +1,12 @@
 {
+  "delete": {
+    "description": "Êtes-vous sûr de vouloir supprimer cette commande de tickets ? Vous ne pourrez pas revenir en arrière.",
+    "onDelete": {
+      "fail": "Impossible de supprimer cette commande de tickets",
+      "success": "Commande de tickets supprimée"
+    },
+    "title": "Suppression de la commande de tickets"
+  },
   "detail": {
     "count": {
       "label": "Nombre de tickets",
@@ -12,8 +20,9 @@
     "head": {
       "title": "@:tickets.detail.title"
     },
-    "onFail": {
-      "message": "Impossible d'éditer cette commande de tickets"
+    "onUpdate": {
+      "fail": "Impossible de modifier cette commande de tickets",
+      "success": "Commande de tickets modifiée"
     },
     "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
   },
@@ -21,8 +30,9 @@
     "head": {
       "title": "@:subscriptions.new.title"
     },
-    "onFail": {
-      "message": "Impossible d'ajouter la nouvelle commande de tickets"
+    "onAdd": {
+      "fail": "Impossible d'ajouter la commande de tickets",
+      "success": "Commande de tickets ajoutée"
     },
     "title": "Nouvelle commande de tickets"
   }

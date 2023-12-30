@@ -202,7 +202,7 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, AttendanceType } from '@/services/api/members';
+import { Attendance, AttendanceType, updateMemberPresence } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import {
   DialogTitle,
@@ -218,6 +218,7 @@ import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 enum PresenceDayAmount {
   'NONE' = 0,
@@ -225,6 +226,7 @@ enum PresenceDayAmount {
   'FULL' = 1,
 }
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const props = defineProps({
@@ -237,6 +239,10 @@ const props = defineProps({
     default: () => [],
   },
   date: {
+    type: String,
+    required: true,
+  },
+  memberId: {
     type: String,
     required: true,
   },
@@ -283,10 +289,30 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  Promise.reject(new Error('Not implemented yet'))
+  updateMemberPresence(props.memberId, props.date, {
+    type: state.type,
+    amount: state.amount,
+    date: props.date,
+    reason: state.reason as string,
+  })
+    .then(() => {
+      notificationsStore.addNotification({
+        type: 'success',
+        message: i18n.t('presences.detail.onUpdate.success', {
+          date: dayjs(props.date).format('dddd LL'),
+        }),
+        timeout: 3_000,
+      });
+      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+    })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('presences.detail.onFail.message'));
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('presences.detail.onUpdate.fail', {
+          date: dayjs(props.date).format('dddd LL'),
+        }),
+      );
       return Promise.reject(error);
     })
     .finally(() => {

@@ -19,6 +19,13 @@ export const getMemberSubscription = (
   return HTTP.get(`/members/${memberId}/subscriptions/${subscriptionId}`).then(({ data }) => data);
 };
 
+export const addMemberSubscription = (
+  memberId: string,
+  subscription: Subscription,
+): Promise<Subscription> => {
+  return HTTP.post(`/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
+};
+
 export const updateMemberSubscription = (
   memberId: string,
   subscriptionId: string,

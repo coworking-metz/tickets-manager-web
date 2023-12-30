@@ -24,8 +24,10 @@
         v-model.number="state.count"
         :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
         :label="$t('tickets.detail.count.label')"
+        min="0.5"
         :prepend-icon="mdiTicket"
         required
+        step="0.5"
         type="number">
         <template #append>
           <span
@@ -53,14 +55,16 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
+import { Ticket, addMemberTicket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiPlus, mdiClose, mdiTicket } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { numeric, required } from '@vuelidate/validators';
+import { minValue, numeric, required } from '@vuelidate/validators';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   memberId: {
@@ -73,6 +77,7 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -81,7 +86,11 @@ const state = reactive({
 });
 
 const rules = computed(() => ({
-  count: { required: withAppI18nMessage(required), decimal: withAppI18nMessage(numeric) },
+  count: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0.5)),
+  },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -94,10 +103,18 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  Promise.reject(new Error('Not implemented yet'))
+  addMemberTicket(props.memberId, { count: state.count } as Ticket)
+    .then(() => {
+      notificationsStore.addNotification({
+        type: 'success',
+        message: i18n.t('subscriptions.new.onAdd.success'),
+        timeout: 3_000,
+      });
+      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+    })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('tickets.new.onFail.message'));
+      notificationsStore.addErrorNotification(error, i18n.t('tickets.new.onAdd.fail'));
       return Promise.reject(error);
     })
     .finally(() => {
