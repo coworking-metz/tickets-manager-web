@@ -14,7 +14,8 @@ export interface ApiError {
 
 export enum AppErrorCode {
   DISCONNECTED = 'DISCONNECTED', // when user is logged out
-  CANCELED = 'ERR_CANCELED', // error code when cancelling Axios requests
+  CANCELED = 'ERR_CANCELED', // error code when cancelling Axios requests,
+  FORBIDDEN = 'FORBIDDEN', // when user is not allowed to access
 }
 
 export interface AppError extends Error {

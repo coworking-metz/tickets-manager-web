@@ -30,7 +30,7 @@
                 :path="notification.icon || getIconFromType(notification.type)"
                 type="mdi" />
               <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-medium text-gray-900">{{ notification.message }}</p>
+                <p class="text-sm font-medium text-gray-900">{{ getMessage(notification) }}</p>
                 <p
                   v-if="notification.description"
                   class="mt-1 whitespace-pre-line text-sm text-gray-500">
@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import AppButton from './form/AppButton.vue';
+import { AppErrorCode } from '@/helpers/errors';
 import { AppNotification, StoreNotification, useNotificationsStore } from '@/store/notifications';
 import {
   mdiAlert,
@@ -79,7 +80,9 @@ import {
   mdiHelpCircle,
   mdiInformation,
 } from '@mdi/js';
+import { useI18n } from 'vue-i18n';
 
+const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 
 const getIconFromType = (type: AppNotification['type']) => {
@@ -115,6 +118,23 @@ const getIconColorFromType = (type: AppNotification['type']) => {
 const onTimeoutAnimationEnd = (notification: StoreNotification) => {
   if (!!notification.timeout && !notification.dismissed) {
     notificationsStore.dismissNotification(notification.id);
+  }
+};
+
+const getMessage = (notification: AppNotification) => {
+  if (notification.message) {
+    return notification.message;
+  }
+
+  if (notification.type === 'error') {
+    switch (notification.errorCode) {
+      case AppErrorCode.DISCONNECTED:
+        return i18n.t('errors.onDisconnect.message');
+      case AppErrorCode.FORBIDDEN:
+        return i18n.t('errors.onForbidden.message');
+      default:
+        return i18n.t('errors.onUnknown.message');
+    }
   }
 };
 </script>

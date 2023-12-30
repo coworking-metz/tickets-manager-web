@@ -7,12 +7,14 @@ import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
+import { useNotificationsStore } from './store/notifications';
 import { useSettingsStore } from './store/settings';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue';
 import { createApp } from 'vue';
+import * as VueI18n from 'vue-i18n';
 import Vue3Autocounter from 'vue3-autocounter';
 import '@/styles/main.css';
 import 'typeface-inter';
@@ -33,6 +35,7 @@ createHttpInterceptors(HTTP);
 router.beforeEach(async (to, from, next) => {
   const httpStore = useHttpStore();
   const authStore = useAuthStore();
+  const notificationsStore = useNotificationsStore();
 
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
@@ -43,42 +46,41 @@ router.beforeEach(async (to, from, next) => {
 
   const { refreshToken, accessToken, redirect, ...otherQueryParams } = to.query;
 
-  // retrieve tokens from query params
-  if (refreshToken) {
-    authStore.setRefreshToken(refreshToken as string);
-  }
-
-  if (accessToken) {
-    authStore.setAccessToken(accessToken as string);
-  }
-
-  if (!to.meta.allowAnonymous) {
-    // fetch an access token if it's not present
-    // on fail, redirect to login page
-    if (!authStore.accessToken) {
-      return authStore
-        .fetchTokens()
-        .then(() => next())
-        .catch(() => {
-          // When user has invalid session,
-          // set redirectPath to allow loging page to redirect user on desired page afterwards
-          return next({
-            name: ROUTE_NAMES.LOGIN,
-            query: { ...otherQueryParams, redirect: to.path },
-          });
-        });
+  await (async () => {
+    // retrieve tokens from query params
+    if (accessToken) {
+      await authStore.setAccessToken(accessToken as string);
     }
-  }
 
-  if (redirect && to.name !== ROUTE_NAMES.LOGIN) {
-    const targetRoute = router.resolve({ path: redirect as string });
-    if (targetRoute) return next({ path: targetRoute.path, query: otherQueryParams });
-  }
+    if (refreshToken) {
+      authStore.setRefreshToken(refreshToken as string);
+    }
 
-  return next();
+    if (!to.meta.allowAnonymous) {
+      // fetch an access token if it's not present
+      // on fail, redirect to login page
+      if (!authStore.accessToken) {
+        await authStore.fetchTokens();
+      }
+    }
+
+    if (redirect && to.name !== ROUTE_NAMES.LOGIN) {
+      const targetRoute = router.resolve({ path: redirect as string });
+      if (targetRoute) return next({ path: targetRoute.path, query: otherQueryParams });
+    }
+
+    next();
+  })().catch((error) => {
+    notificationsStore.addErrorNotification(error);
+    // When user has invalid session,
+    // set redirectPath to allow loging page to redirect user on desired page afterwards
+    next({
+      name: ROUTE_NAMES.LOGIN,
+      query: { ...otherQueryParams, redirect: to.path },
+    });
+  });
 });
 
-// set i18n locale from the one stored in settings
 app.use(i18nInstance);
 useSettingsStore()
   .setLocale(i18nInstance.global.locale.value)

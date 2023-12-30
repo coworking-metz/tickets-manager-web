@@ -1,5 +1,4 @@
-import { parseErrorText } from '@/helpers/errors';
-import { i18nInstance } from '@/i18n';
+import { AppErrorCode, parseErrorText } from '@/helpers/errors';
 import { AxiosError } from 'axios';
 import { isNil } from 'lodash';
 import { defineStore } from 'pinia';
@@ -11,12 +10,13 @@ export type NotificationAction = {
 };
 
 export type AppNotification = {
-  message: string;
+  message?: string;
   description?: string;
   actions?: NotificationAction[];
   icon?: string;
   type: 'info' | 'success' | 'warning' | 'error';
   timeout?: number;
+  errorCode?: string | AppErrorCode;
 };
 
 export type StoreNotification = AppNotification & {
@@ -53,12 +53,16 @@ export const useNotificationsStore = defineStore('notifications', {
       this.history.push(storeNotification);
       return storeNotification;
     },
-    async addErrorNotification(error: AxiosError | Error, message?: string) {
+    async addErrorNotification(
+      error: AxiosError | (Error & { code?: AppErrorCode }),
+      message?: string,
+    ) {
       const errorText = await parseErrorText(error);
       return this.addNotification({
         type: 'error',
-        message: message || i18nInstance.global.t(''),
+        message: message,
         description: errorText,
+        errorCode: error.code,
       });
     },
     removeNotification(notificationId: string) {

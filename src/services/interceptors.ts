@@ -111,7 +111,7 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
 
         // the user should be properly logged out of the platform
         const authStore = useAuthStore();
-        await authStore.logout();
+        await authStore.disconnect();
 
         const notificationsStore = useNotificationsStore();
         const i18n = useI18n();
