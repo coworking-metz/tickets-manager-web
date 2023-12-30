@@ -21,6 +21,9 @@
         "suffix": "day | single day | days",
         "value": "{amount} out of the last 30 days"
       },
+      "onFetch": {
+        "fail": "Unable to fetch member's attendance"
+      },
       "period": {
         "allTime": "All time",
         "last6Months": "Last 6 months"
@@ -53,6 +56,9 @@
         "add": "Add a subscription",
         "days": "{count} day | {count} day | {count} days",
         "more": "More",
+        "onFetch": {
+          "fail": "Unable to fetch member's subscriptions"
+        },
         "period": "from {startDate} to {endDate}",
         "purchased": "Ordered on {date}",
         "title": "Subscriptions"
@@ -61,6 +67,9 @@
         "add": "Add tickets",
         "amount": "{count} ticket | {count} ticket | {count} tickets",
         "more": "More",
+        "onFetch": {
+          "fail": "Unable to fetch member's ticket orders"
+        },
         "overconsumed": "1 overconsumed | {count} overconsumed",
         "purchased": "Ordered on {date}",
         "remaining": "None available | {count} remaining | {count} remaining",
