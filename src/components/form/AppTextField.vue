@@ -30,9 +30,12 @@
               isInvalid,
           }"
           :disabled="disabled"
+          :max="max"
+          :min="min"
           :name="name"
           :placeholder="placeholder"
           :required="required"
+          :step="step"
           :tabindex="tabindex"
           :type="type"
           :value="modelValue"
@@ -128,6 +131,18 @@ const props = defineProps({
   },
   tabindex: {
     type: String,
+    default: null,
+  },
+  step: {
+    type: [String, Number],
+    default: null,
+  },
+  min: {
+    type: [String, Number],
+    default: null,
+  },
+  max: {
+    type: [String, Number],
     default: null,
   },
 });

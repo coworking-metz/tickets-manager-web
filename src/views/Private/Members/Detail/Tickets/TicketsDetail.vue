@@ -59,18 +59,34 @@
         </template>
       </AppTextField>
 
-      <AppButton
-        class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
-        :icon="mdiCheck"
-        :loading="state.isSubmitting"
-        type="submit">
-        {{ $t('action.edit') }}
-      </AppButton>
+      <div class="mt-1 flex flex-row justify-between gap-3">
+        <AppButton
+          class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+          :icon="mdiCheck"
+          :loading="state.isSubmitting"
+          type="submit">
+          {{ $t('action.edit') }}
+        </AppButton>
+
+        <AppButton
+          class="border border-red-300 bg-white text-red-500 shadow-sm hover:bg-red-50 focus:!ring-red-500"
+          :icon="mdiDeleteOutline"
+          @click.prevent="state.isDeleteDialogVisible = true">
+          {{ $t('action.delete') }}
+        </AppButton>
+      </div>
+
+      <TicketsDeleteDialog
+        v-model="state.isDeleteDialogVisible"
+        :member-id="props.memberId"
+        :ticket-id="props.id"
+        @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
+import TicketsDeleteDialog from './TicketsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
@@ -81,7 +97,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { Ticket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiCheck, mdiClose, mdiTicket } from '@mdi/js';
+import { mdiCheck, mdiClose, mdiDeleteOutline, mdiTicket } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { numeric, required } from '@vuelidate/validators';
@@ -91,6 +107,10 @@ import { PropType, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
+  memberId: {
+    type: String,
+    required: true,
+  },
   loading: {
     type: Boolean,
     default: false,
@@ -110,6 +130,7 @@ const notificationsStore = useNotificationsStore();
 const state = reactive({
   count: null as null | number,
   isSubmitting: false as boolean,
+  isDeleteDialogVisible: false as boolean,
 });
 
 const selectedTicket = computed<Ticket | null>(() => {

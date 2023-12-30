@@ -1,4 +1,12 @@
 {
+  "delete": {
+    "description": "Are you sure you want to delete this ticket order? You won't be able to undo this action.",
+    "onDelete": {
+      "fail": "Unable to delete this ticket order",
+      "success": "Ticket order deleted"
+    },
+    "title": "Deleting ticket order"
+  },
   "detail": {
     "count": {
       "label": "Number of tickets",
@@ -12,8 +20,9 @@
     "head": {
       "title": "@:tickets.detail.title"
     },
-    "onFail": {
-      "message": "Unable to edit this ticket order"
+    "onUpdate": {
+      "fail": "Unable to edit this ticket order",
+      "success": "Ticket order updated"
     },
     "title": "Order for {count} ticket | Order for one ticket | Order for {count} tickets"
   },
@@ -21,8 +30,9 @@
     "head": {
       "title": "@:subscriptions.new.title"
     },
-    "onFail": {
-      "message": "Unable to add the ticket order"
+    "onAdd": {
+      "fail": "Unable to add the ticket order",
+      "success": "Ticket order added"
     },
     "title": "New Ticket Order"
   }

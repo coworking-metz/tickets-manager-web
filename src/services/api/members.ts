@@ -68,6 +68,14 @@ export const getMemberPresences = (id: string): Promise<Attendance[]> => {
   return HTTP.get(`/members/${id}/presences`).then(({ data }) => data);
 };
 
+export const updateMemberPresence = (
+  id: string,
+  presenceId: string,
+  presence: Attendance & { reason: string },
+): Promise<Attendance> => {
+  return HTTP.put(`/members/${id}/presences/${presenceId}`, presence).then(({ data }) => data);
+};
+
 export const syncMember = (id: string): Promise<Member> => {
   return HTTP.post(`/members/${id}/sync-wordpress`).then(({ data }) => data);
 };

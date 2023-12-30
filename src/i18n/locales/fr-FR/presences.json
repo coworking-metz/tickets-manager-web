@@ -16,8 +16,9 @@
     "head": {
       "title": "@:presences.detail.title"
     },
-    "onFail": {
-      "message": "Impossible de mettre à jour la présence"
+    "onUpdate": {
+      "fail": "Impossible de mettre à jour la présence du {date}",
+      "success": "Présence du {date} modifiée"
     },
     "reason": {
       "label": "Motif",
