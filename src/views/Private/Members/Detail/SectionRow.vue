@@ -8,7 +8,7 @@
 
     <hr class="my-3 w-full border-t border-gray-200" />
 
-    <div class="flex flex-row flex-wrap gap-3">
+    <div class="flex w-full flex-row flex-wrap gap-3">
       <aside class="flex min-w-[12rem] shrink grow basis-0 flex-col">
         <slot name="description">
           <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-500">

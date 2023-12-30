@@ -52,19 +52,24 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
+import { Member } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiPlus, mdiClose, mdiTicket } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { numeric, required } from '@vuelidate/validators';
-import { computed, nextTick, reactive } from 'vue';
+import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-defineProps({
+const props = defineProps({
   memberId: {
     type: String,
     required: true,
+  },
+  member: {
+    type: Object as PropType<Member>,
+    default: null,
   },
 });
 
@@ -99,4 +104,14 @@ const onSubmit = async () => {
       state.isSubmitting = false;
     });
 };
+
+watch(
+  () => props.member,
+  (member) => {
+    if (member?.balance < 0) {
+      state.count = Math.abs(member.balance);
+    }
+  },
+  { immediate: true },
+);
 </script>

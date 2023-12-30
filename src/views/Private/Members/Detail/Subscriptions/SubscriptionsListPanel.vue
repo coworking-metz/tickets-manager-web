@@ -15,7 +15,7 @@
     </div>
     <ul
       :class="[
-        'relative flex max-h-[40rem] shrink grow flex-col',
+        'relative flex shrink grow flex-col',
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
