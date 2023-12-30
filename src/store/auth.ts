@@ -1,4 +1,5 @@
 import { useHttpStore } from './http';
+import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, refreshTokens } from '@/services/api/auth';
 import { defineStore } from 'pinia';
 
@@ -36,18 +37,25 @@ export const useAuthStore = defineStore('auth', {
     setRefreshToken(refreshToken: string) {
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
-    setAccessToken(accessToken: string) {
+    async setAccessToken(accessToken: string) {
+      const user = parseJwt(accessToken) || null;
+      if (!user || !user.roles.includes('administrator')) {
+        const error = new Error('Missing administrator role') as AppError;
+        error.code = AppErrorCode.FORBIDDEN;
+        throw error;
+      }
+
+      this.user = user;
       this.accessToken = accessToken || null;
-      this.user = parseJwt(accessToken) || null;
     },
     fetchTokens() {
       if (!refreshPromise) {
         const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
 
         refreshPromise = refreshTokens(refreshToken, false)
-          .then(({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
+          .then(async ({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
+            await this.setAccessToken(newAccessToken);
             this.setRefreshToken(newRefresToken);
-            this.setAccessToken(newAccessToken);
           })
           .finally(() => {
             refreshPromise = null;
@@ -55,13 +63,17 @@ export const useAuthStore = defineStore('auth', {
       }
       return refreshPromise;
     },
-    logout() {
+    disconnect() {
       this.accessToken = null;
       this.user = null;
-      localStorage.clear();
+      localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
       const http = useHttpStore();
       http.cancelAllRequests();
       http.$reset();
+    },
+    logout() {
+      this.disconnect();
+      localStorage.clear();
     },
   },
 });

@@ -4,7 +4,6 @@ export interface Ticket {
   _id: string;
   purchased: string;
   amount: number;
-  currency: 'EUR';
   count: number;
 }
 
