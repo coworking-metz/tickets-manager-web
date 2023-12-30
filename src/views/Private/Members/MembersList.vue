@@ -273,7 +273,9 @@ const filteredList = computed(() => {
               count: Math.abs(member.balance),
             })
           : null,
-        member.membershipOk === false ? i18n.t('members.detail.membership.nonCompliant') : null,
+        member.membershipOk === false
+          ? i18n.t('members.detail.membership.last', { year: member.lastMembership })
+          : null,
       ),
     )
     .sort(ALL_LIST_SORTERS.find((s) => s.key === props.sort)?.sort);

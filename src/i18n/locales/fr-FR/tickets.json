@@ -22,7 +22,7 @@
       "title": "@:subscriptions.new.title"
     },
     "onFail": {
-      "message": "Impossible d'ajouter la commande de tickets"
+      "message": "Impossible d'ajouter la nouvelle commande de tickets"
     },
     "title": "Nouvelle commande de tickets"
   }

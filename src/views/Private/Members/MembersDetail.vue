@@ -226,13 +226,13 @@
         :title="$t('members.detail.orders.title')">
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
-            class="min-w-[16rem] shrink grow basis-0"
+            class="max-h-[40rem] min-w-[16rem] shrink grow basis-0"
             :loading="state.isFetchingTickets"
             :remaining="state.member.balance"
             :tickets="state.tickets" />
           <SubscriptionsListPanel
             :active="state.subscriptions.some(({ ended }) => dayjs().isBefore(ended))"
-            class="min-w-[16rem] shrink grow basis-0"
+            class="max-h-[40rem] min-w-[16rem] shrink grow basis-0"
             :loading="state.isFetchingSubscriptions"
             :subscriptions="state.subscriptions" />
         </div>
