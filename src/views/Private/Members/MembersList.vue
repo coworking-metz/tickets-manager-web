@@ -60,7 +60,7 @@
                   class="h-5 w-5 shrink-0 text-gray-400"
                   :path="mdiSort"
                   type="mdi" />
-                <span class="ml-2 whitespace-nowrap">
+                <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('members.list.sort.label', {
                       ...(sort && {

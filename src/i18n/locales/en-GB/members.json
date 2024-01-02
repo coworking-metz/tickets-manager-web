@@ -34,6 +34,7 @@
       "description": "Present for the last time {date}"
     },
     "membership": {
+      "current": "{year} membership ongoing",
       "last": "Last membership in {year}"
     },
     "onFetch": {

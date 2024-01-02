@@ -5,36 +5,41 @@
         <template v-if="member">
           <img alt="" class="h-12 w-12 rounded-full bg-gray-200" :src="member.picture" />
           <span
-            v-if="!!member.lastSeen && dayjs().isSame(member.lastSeen, 'hour')"
+            v-if="!!member.lastSeen && dayjs().diff(member.lastSeen, 'hour', true) < 1"
             class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
         </template>
         <div v-else-if="loading" class="h-12 w-12 rounded-full bg-slate-200" />
       </div>
-      <div class="flex min-w-0 flex-1 flex-row gap-4 px-4">
-        <div class="flex shrink grow basis-0 flex-col overflow-hidden">
+      <div class="flex min-w-0 flex-1 flex-row gap-3 pl-4">
+        <div class="flex shrink grow basis-0 flex-col items-start overflow-hidden">
           <template v-if="member">
             <p class="shrink-0 truncate font-medium text-indigo-600 sm:text-sm">
-              {{ [member.firstName, member.lastName].filter(Boolean).join(' ') }}
+              {{ fullname }}
             </p>
 
-            <div class="flex min-h-7 flex-row gap-1">
-              <p class="flex items-center text-sm text-gray-500">
+            <div :class="['flex min-h-7 w-full flex-row gap-1', !fullname && 'flex-wrap']">
+              <p
+                class="flex max-w-max shrink grow basis-0 items-center overflow-hidden text-sm text-gray-500">
                 <span class="truncate">{{ member.email }}</span>
               </p>
-              <span
-                v-if="member.balance < 0"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
-                {{
-                  $t('members.detail.orders.tickets.overconsumed', {
-                    count: Math.abs(member.balance),
-                  })
-                }}
-              </span>
-              <span
-                v-if="isMembershipNonCompliant(member)"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
-                {{ $t('members.detail.membership.last', { year: member.lastMembership }) }}
-              </span>
+              <div
+                v-if="member.balance < 0 || isMembershipNonCompliant(member)"
+                class="flex shrink flex-row items-center gap-1">
+                <span
+                  v-if="member.balance < 0"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+                  {{
+                    $t('members.detail.orders.tickets.overconsumed', {
+                      count: Math.abs(member.balance),
+                    })
+                  }}
+                </span>
+                <span
+                  v-if="isMembershipNonCompliant(member)"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                  {{ $t('members.detail.membership.last', { year: member.lastMembership }) }}
+                </span>
+              </div>
             </div>
           </template>
           <template v-else-if="loading">
@@ -67,9 +72,9 @@
 <script setup lang="ts">
 import { MemberListItem, isMembershipNonCompliant } from '@/services/api/members';
 import dayjs from 'dayjs';
-import { PropType } from 'vue';
+import { PropType, computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   member: {
     type: Object as PropType<MemberListItem>,
     default: null,
@@ -79,4 +84,8 @@ defineProps({
     default: false,
   },
 });
+
+const fullname = computed<string>(() =>
+  [props.member?.firstName, props.member?.lastName].filter(Boolean).join(' '),
+);
 </script>
