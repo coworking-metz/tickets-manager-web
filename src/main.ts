@@ -14,7 +14,6 @@ import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue';
 import { createApp } from 'vue';
-import * as VueI18n from 'vue-i18n';
 import Vue3Autocounter from 'vue3-autocounter';
 import '@/styles/main.css';
 import 'typeface-inter';
