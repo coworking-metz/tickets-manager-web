@@ -49,7 +49,10 @@ router.beforeEach(async (to, from, next) => {
   await (async () => {
     // retrieve tokens from query params
     if (accessToken) {
-      await authStore.setAccessToken(accessToken as string);
+      await authStore.setAccessToken(accessToken as string).catch((error) => {
+        notificationsStore.addErrorNotification(error);
+        return Promise.reject(error);
+      });
     }
 
     if (refreshToken) {
@@ -70,8 +73,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     next();
-  })().catch((error) => {
-    notificationsStore.addErrorNotification(error);
+  })().catch(() => {
     // When user has invalid session,
     // set redirectPath to allow loging page to redirect user on desired page afterwards
     next({

@@ -21,7 +21,9 @@
                   class="h-16 w-16 rounded-full bg-gray-200"
                   :src="state.member.picture" />
                 <span
-                  v-if="!!state.member.lastSeen && dayjs().isSame(state.member.lastSeen, 'hour')"
+                  v-if="
+                    !!state.member.lastSeen && dayjs().diff(state.member.lastSeen, 'hour', true) < 1
+                  "
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
@@ -48,9 +50,7 @@
                   </time>
                 </template>
               </i18n-t>
-              <div
-                v-if="state.member.balance < 0 || isMembershipNonCompliant(state.member)"
-                class="mt-1 flex flex-row flex-wrap items-center gap-2">
+              <div class="mt-1 flex flex-row flex-wrap items-center gap-2">
                 <span
                   v-if="state.member.balance < 0"
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
@@ -61,7 +61,14 @@
                   }}
                 </span>
                 <span
-                  v-if="isMembershipNonCompliant(state.member)"
+                  v-if="state.member.membershipOk"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                  {{
+                    $t('members.detail.membership.current', { year: state.member.lastMembership })
+                  }}
+                </span>
+                <span
+                  v-else
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
                   {{ $t('members.detail.membership.last', { year: state.member.lastMembership }) }}
                 </span>
@@ -324,13 +331,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  Attendance,
-  Member,
-  getMember,
-  getMemberPresences,
-  isMembershipNonCompliant,
-} from '@/services/api/members';
+import { Attendance, Member, getMember, getMemberPresences } from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
