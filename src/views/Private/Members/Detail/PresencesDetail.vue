@@ -91,13 +91,14 @@
               v-for="presenceType in ['T', 'A']"
               :key="`presence-type-${presenceType}`"
               as="template"
+              disabled
               :value="presenceType"
               v-slot="{ checked, active }">
               <div
                 :class="[
-                  checked ? 'border-transparent' : 'border-gray-300 hover:border-gray-400',
+                  checked ? 'border-transparent' : 'border-gray-300 ',
                   active ? 'border-indigo-500 ring-2 ring-indigo-500' : '',
-                  'relative flex flex-1 cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
+                  'relative flex flex-1 rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
                 ]">
                 <span class="flex flex-1">
                   <span class="flex flex-col">

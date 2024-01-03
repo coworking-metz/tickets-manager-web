@@ -41,7 +41,10 @@
                 scope="global"
                 tag="p">
                 <template #date>
-                  <time class="lowercase text-gray-900" :datetime="state.member.lastSeen">
+                  <time
+                    class="lowercase text-gray-900"
+                    :datetime="state.member.lastSeen"
+                    :title="dayjs(state.member.lastSeen).format('llll')">
                     {{
                       dayjs().isSame(state.member.lastSeen, 'day')
                         ? dayjs(state.member.lastSeen).fromNow()
