@@ -329,7 +329,7 @@ watch(
       state.firstname = member.firstName || null;
       state.lastname = member.lastName || null;
       state.email = member.email || null;
-      state.birthdate = member.birthdate || null;
+      state.birthdate = member.birthDate || null;
       state.devices =
         member.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
     }

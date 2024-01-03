@@ -26,7 +26,7 @@ export interface MemberListItem {
   firstName?: string;
   lastName?: string;
   email?: string;
-  birthdate?: string;
+  birthDate?: string;
   created: string;
   lastSeen?: string;
   active: boolean;
