@@ -1,6 +1,7 @@
 {
   "detail": {
-    "amount": {
+    "description": "",
+    "duration": {
       "label": "Durée",
       "value": {
         "FULL": "Journée complète",
@@ -8,13 +9,12 @@
         "NONE": "Absent"
       }
     },
-    "description": "",
     "empty": {
       "description": "Aucune présence n'a été enregistrée\npour cette date.",
       "title": "Présence introuvable"
     },
     "head": {
-      "title": "@:presences.detail.title"
+      "title": "@:activity.detail.title"
     },
     "onUpdate": {
       "fail": "Impossible de mettre à jour la présence du {date}",
@@ -28,11 +28,11 @@
     "type": {
       "label": "Type de consommation",
       "value": {
-        "A": {
+        "subscription": {
           "description": "Sous réserve d'un abonnement actif à cette date.",
           "label": "Abonnement"
         },
-        "T": {
+        "ticket": {
           "description": "Impacte le solde de tickets.",
           "label": "Ticket"
         }

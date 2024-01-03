@@ -7,7 +7,7 @@
         height: '172px',
         width: `${20 * ceil(dayjs(props.endDate).diff(props.startDate, 'week', true)) + 96}px`,
       }"
-      @click="onSelectPresence" />
+      @click="onSelect" />
   </section>
 </template>
 
@@ -55,7 +55,7 @@ dayjs.extend(weekOfYear);
 const i18n = useI18n();
 const router = useRouter();
 const props = defineProps({
-  presences: {
+  activity: {
     type: Array as PropType<Attendance[]>,
     required: true,
   },
@@ -124,25 +124,25 @@ const options = computed<
     locale: 'fr-FR',
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.presences.map(({ date, amount }) => [dayjs(date).format('YYYY-MM-DD'), amount]),
+    data: props.activity.map(({ date, value }) => [dayjs(date).format('YYYY-MM-DD'), value]),
   },
 }));
 
-const onSelectPresence = ({ data }: any) => {
+const onSelect = ({ data }: any) => {
   const [date] = data as [string];
-  const selectedPresence = props.presences.find(
-    (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
+  const selected = props.activity.find(
+    (activity) => dayjs(activity.date).format('YYYY-MM-DD') === date,
   );
-  if (selectedPresence) {
+  if (selected) {
     if (width.value < 840) {
       state.shouldHideTooltip = true;
     }
 
     router
       .replace({
-        name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+        name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         params: {
-          presenceDate: selectedPresence.date,
+          date: selected.date,
           id: router.currentRoute.value.params.id,
         },
       })
