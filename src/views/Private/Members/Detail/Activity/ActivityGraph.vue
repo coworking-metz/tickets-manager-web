@@ -7,7 +7,7 @@
         height: '172px',
         width: `${20 * ceil(dayjs(props.endDate).diff(props.startDate, 'week', true)) + 96}px`,
       }"
-      @click="onSelectPresence" />
+      @click="onSelect" />
   </section>
 </template>
 
@@ -19,12 +19,7 @@ import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import { HeatmapChart } from 'echarts/charts.js';
-import {
-  CalendarComponent,
-  TitleComponent,
-  TooltipComponent,
-  VisualMapComponent,
-} from 'echarts/components.js';
+import { CalendarComponent, TooltipComponent, VisualMapComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { ceil } from 'lodash';
@@ -35,27 +30,19 @@ import { useRouter } from 'vue-router';
 import type { HeatmapSeriesOption } from 'echarts/charts.js';
 import type {
   CalendarComponentOption,
-  TitleComponentOption,
   TooltipComponentOption,
   VisualMapComponentOption,
 } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
-use([
-  TitleComponent,
-  TooltipComponent,
-  VisualMapComponent,
-  CalendarComponent,
-  HeatmapChart,
-  CanvasRenderer,
-]);
+use([TooltipComponent, VisualMapComponent, CalendarComponent, HeatmapChart, CanvasRenderer]);
 
 dayjs.extend(weekOfYear);
 
 const i18n = useI18n();
 const router = useRouter();
 const props = defineProps({
-  presences: {
+  activity: {
     type: Array as PropType<Attendance[]>,
     required: true,
   },
@@ -77,7 +64,6 @@ const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 
 const options = computed<
   ComposeOption<
-    | TitleComponentOption
     | TooltipComponentOption
     | VisualMapComponentOption
     | CalendarComponentOption
@@ -124,25 +110,25 @@ const options = computed<
     locale: 'fr-FR',
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.presences.map(({ date, amount }) => [dayjs(date).format('YYYY-MM-DD'), amount]),
+    data: props.activity.map(({ date, value }) => [dayjs(date).format('YYYY-MM-DD'), value]),
   },
 }));
 
-const onSelectPresence = ({ data }: any) => {
+const onSelect = ({ data }: any) => {
   const [date] = data as [string];
-  const selectedPresence = props.presences.find(
-    (presence) => dayjs(presence.date).format('YYYY-MM-DD') === date,
+  const selected = props.activity.find(
+    (activity) => dayjs(activity.date).format('YYYY-MM-DD') === date,
   );
-  if (selectedPresence) {
+  if (selected) {
     if (width.value < 840) {
       state.shouldHideTooltip = true;
     }
 
     router
       .replace({
-        name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+        name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         params: {
-          presenceDate: selectedPresence.date,
+          date: selected.date,
           id: router.currentRoute.value.params.id,
         },
       })

@@ -1,6 +1,7 @@
 {
   "detail": {
-    "amount": {
+    "description": "",
+    "duration": {
       "label": "Duration",
       "value": {
         "FULL": "Full day",
@@ -8,13 +9,12 @@
         "NONE": "Absent"
       }
     },
-    "description": "",
     "empty": {
       "description": "No attendance has been recorded for this date.",
       "title": "Attendance Not Found"
     },
     "head": {
-      "title": "@:presences.detail.title"
+      "title": "@:activity.detail.title"
     },
     "onUpdate": {
       "fail": "Unable to update attendance on {date}",
@@ -28,11 +28,11 @@
     "type": {
       "label": "Consumption Type",
       "value": {
-        "A": {
+        "subscription": {
           "description": "Subject to an active subscription on this date.",
           "label": "Subscription"
         },
-        "T": {
+        "ticket": {
           "description": "Affects the ticket balance.",
           "label": "Ticket"
         }

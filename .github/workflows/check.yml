@@ -19,4 +19,4 @@ jobs:
           cache: 'yarn'
 
       - run: yarn
-      - run: yarn check
+      - run: yarn run check

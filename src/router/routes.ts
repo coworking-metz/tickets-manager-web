@@ -73,11 +73,12 @@ export const routes: RouteRecordRaw[] = [
                 }),
               },
               {
-                path: 'presences/:presenceDate',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/PresencesDetail.vue'),
+                path: 'activity/:date',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+                component: () =>
+                  import('@/views/Private/Members/Detail/Activity/ActivityDetail.vue'),
                 props: (route) => ({
-                  date: route.params.presenceDate,
+                  date: route.params.date,
                 }),
               },
               { path: ':catchAll(.*)', redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX } },

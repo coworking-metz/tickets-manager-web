@@ -8,5 +8,5 @@ export { default as login } from './login.json';
 export { default as validations } from './validations.json';
 export { default as subscriptions } from './subscriptions.json';
 export { default as tickets } from './tickets.json';
-export { default as presences } from './presences.json';
+export { default as activity } from './activity.json';
 export { default as errors } from './errors.json';

@@ -18,7 +18,7 @@
               <div class="relative">
                 <img
                   alt=""
-                  class="h-16 w-16 rounded-full bg-gray-200"
+                  class="h-16 w-16 rounded-full bg-gray-200 object-cover object-top"
                   :src="state.member.picture" />
                 <span
                   v-if="
@@ -84,24 +84,24 @@
       </section>
 
       <SectionRow class="mt-6">
-        <LoadingSpinner v-if="state.isFetchingPresences" class="m-auto h-12 w-12" />
-        <PresencesGraph
+        <LoadingSpinner v-if="state.isFetchingActivity" class="m-auto h-12 w-12" />
+        <ActivityGraph
           v-else
-          :key="`presence-graph-${state.shouldRenderAllPresences}`"
-          class="max-sm:overflow-x-auto"
+          :key="`activity-graph-${state.shouldRenderAllActivity}`"
           v-bind="
-            state.shouldRenderAllPresences &&
-            state.presences.length && {
+            state.shouldRenderAllActivity &&
+            state.activity.length && {
               class: 'overflow-x-auto',
               endDate: dayjs(
-                Math.max(...state.presences.map(({ date }) => dayjs(date).valueOf())),
+                Math.max(...state.activity.map(({ date }) => dayjs(date).valueOf())),
               ).format('YYYY-MM-DD'),
               startDate: dayjs(
-                Math.min(...state.presences.map(({ date }) => dayjs(date).valueOf())),
+                Math.min(...state.activity.map(({ date }) => dayjs(date).valueOf())),
               ).format('YYYY-MM-DD'),
             }
           "
-          :presences="state.presences" />
+          :activity="state.activity"
+          class="max-sm:overflow-x-auto" />
         <template #title>
           <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
@@ -109,11 +109,11 @@
         </template>
         <template #description>
           <RadioGroup
-            v-model="state.shouldRenderAllPresences"
+            v-model="state.shouldRenderAllActivity"
             class="mx-3 my-1 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
             <RadioGroupOption
               v-for="option in [false, true]"
-              :key="`presence-option-${option}`"
+              :key="`activity-option-${option}`"
               as="template"
               :value="option"
               v-slot="{ checked }">
@@ -174,7 +174,7 @@
                 tag="dd">
                 <template #amount>
                   <div
-                    v-if="state.isFetchingPresences"
+                    v-if="state.isFetchingActivity"
                     class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
                   <span v-else class="block text-3xl font-semibold tracking-tight text-gray-900">
                     {{ $t('members.detail.attendance.last30days.empty') }}
@@ -302,20 +302,20 @@
           ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
-          ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         ].includes($route.name as string)
       "
       @close="$router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
       <RouterView
+        :activity="state.activity"
         :loading="
           state.isFetchingMember ||
-          state.isFetchingPresences ||
+          state.isFetchingActivity ||
           state.isFetchingSubscriptions ||
           state.isFetchingTickets
         "
         :member="state.member"
         :member-id="id"
-        :presences="state.presences"
         :subscriptions="state.subscriptions"
         :tickets="state.tickets" />
     </SideDialog>
@@ -323,7 +323,7 @@
 </template>
 
 <script setup lang="ts">
-import PresencesGraph from './Detail/PresencesGraph.vue';
+import ActivityGraph from './Detail/Activity/ActivityGraph.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
@@ -334,7 +334,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, Member, getMember, getMemberPresences } from '@/services/api/members';
+import { Attendance, Member, getMember, getMemberActivity } from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
@@ -367,8 +367,8 @@ const state = reactive({
   member: null as Member | null,
   fetchMemberErrorMessage: null as string | null,
 
-  isFetchingPresences: false,
-  presences: [] as Attendance[],
+  isFetchingActivity: false,
+  activity: [] as Attendance[],
 
   isFetchingSubscriptions: false,
   subscriptions: [] as Subscription[],
@@ -376,7 +376,7 @@ const state = reactive({
   isFetchingTickets: false,
   tickets: [] as Ticket[],
 
-  shouldRenderAllPresences: false as boolean,
+  shouldRenderAllActivity: false as boolean,
   isTicketsDialogVisible: true as boolean,
 });
 
@@ -404,14 +404,14 @@ const totalAmountSpent = computed<number>(() => {
 
 const monthlyAmountSpent = computed<number>(() => {
   if (state.member) {
-    const [lastPresence] = state.presences
-      .filter(({ amount }) => amount > 0)
+    const [lastActivity] = state.activity
+      .filter(({ value }) => value > 0)
       .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
 
     const totalMonths =
       Math.ceil(
         Math.abs(
-          dayjs(lastPresence?.date || state.member.lastSeen).diff(
+          dayjs(lastActivity?.date || state.member.lastSeen).diff(
             state.member.created,
             'month',
             true,
@@ -425,13 +425,13 @@ const monthlyAmountSpent = computed<number>(() => {
 });
 
 const attendanceLast30Days = computed<number>(() => {
-  return state.presences
+  return state.activity
     .filter(({ date }) => dayjs().diff(dayjs(date), 'day') <= 30)
-    .reduce((acc, { amount }) => acc + amount, 0);
+    .reduce((acc, { value }) => acc + value, 0);
 });
 
 const totalAttendance = computed<number>(() => {
-  return state.presences.reduce((acc, { amount }) => acc + amount, 0);
+  return state.activity.reduce((acc, { value }) => acc + value, 0);
 });
 
 const fetchMember = (memberId: string) => {
@@ -451,11 +451,11 @@ const fetchMember = (memberId: string) => {
     });
 };
 
-const fetchPresences = (memberId: string) => {
-  state.isFetchingPresences = true;
-  getMemberPresences(memberId)
-    .then((presences) => {
-      state.presences = presences;
+const fetchActivity = (memberId: string) => {
+  state.isFetchingActivity = true;
+  getMemberActivity(memberId)
+    .then((activity) => {
+      state.activity = activity;
     })
     .catch(handleSilentError)
     .catch((error) => {
@@ -466,7 +466,7 @@ const fetchPresences = (memberId: string) => {
       return Promise.reject(error);
     })
     .finally(() => {
-      state.isFetchingPresences = false;
+      state.isFetchingActivity = false;
     });
 };
 
@@ -517,7 +517,7 @@ watch(
   (memberId) => {
     if (memberId) {
       fetchMember(memberId);
-      fetchPresences(memberId);
+      fetchActivity(memberId);
       fetchSubscriptions(memberId);
       fetchTickets(memberId);
     }

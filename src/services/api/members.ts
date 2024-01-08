@@ -1,11 +1,11 @@
 import HTTP from '../http';
 import dayjs from 'dayjs';
 
-export type AttendanceType = 'A' | 'T'; // 'A' = Abonnement, 'T' = Ticket
+export type AttendanceType = 'subscription' | 'ticket';
 
 export interface Attendance {
   date: string;
-  amount: number;
+  value: number;
   type: AttendanceType;
 }
 
@@ -64,16 +64,16 @@ export const updateMemberMacAddresses = (id: string, macAddresses: string[]): Pr
   return HTTP.put(`/members/${id}/mac-addresses`, macAddresses).then(({ data }) => data);
 };
 
-export const getMemberPresences = (id: string): Promise<Attendance[]> => {
-  return HTTP.get(`/members/${id}/presences`).then(({ data }) => data);
+export const getMemberActivity = (id: string): Promise<Attendance[]> => {
+  return HTTP.get(`/members/${id}/activity`).then(({ data }) => data);
 };
 
-export const updateMemberPresence = (
-  id: string,
-  presenceId: string,
-  presence: Attendance & { reason: string },
+export const updateMemberActivity = (
+  memberId: string,
+  activityId: string,
+  activity: Attendance & { reason: string },
 ): Promise<Attendance> => {
-  return HTTP.put(`/members/${id}/presences/${presenceId}`, presence).then(({ data }) => data);
+  return HTTP.put(`/members/${memberId}/activity/${activityId}`, activity).then(({ data }) => data);
 };
 
 export const syncMember = (id: string): Promise<Member> => {

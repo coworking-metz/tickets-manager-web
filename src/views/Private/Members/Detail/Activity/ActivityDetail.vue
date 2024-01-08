@@ -5,13 +5,13 @@
         <DialogTitle
           :class="['shrink truncate text-lg font-medium text-white', loading && 'animate-pulse']">
           <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
-          <template v-else-if="!selectedPresence">
-            {{ $t('presences.detail.empty.title') }}
+          <template v-else-if="!selected">
+            {{ $t('activity.detail.empty.title') }}
           </template>
-          <template v-else-if="selectedPresence">
+          <template v-else-if="selected">
             {{
-              $t('presences.detail.title', {
-                date: dayjs(selectedPresence.date).format('dddd LL'),
+              $t('activity.detail.title', {
+                date: dayjs(selected.date).format('dddd LL'),
               })
             }}
           </template>
@@ -27,42 +27,42 @@
         </div>
       </div>
       <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selectedPresence" class="text-sm text-indigo-300">
-        {{ $t('presences.detail.description') }}
+      <p v-else-if="selected" class="text-sm text-indigo-300">
+        {{ $t('activity.detail.description') }}
       </p>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
     <EmptyState
-      v-else-if="!selectedPresence"
+      v-else-if="!selected"
       class="m-auto"
-      :description="$t('presences.detail.empty.description')"
-      :title="$t('presences.detail.empty.title')" />
+      :description="$t('activity.detail.empty.description')"
+      :title="$t('activity.detail.empty.title')" />
     <div v-else class="flex flex-col px-4 py-6 sm:px-6">
       <nav class="flex flex-row">
         <RouterLink
-          v-if="previousPresence"
+          v-if="previous"
           class="mr-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
           replace
           :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-            params: { presenceDate: previousPresence.date },
+            name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+            params: { date: previous.date },
           }">
           <SvgIcon
             aria-hidden="true"
             class="mr-1 h-5 w-5 text-gray-400"
             :path="mdiChevronLeft"
             type="mdi" />
-          {{ dayjs(previousPresence.date).format('dddd DD/MM') }}
+          {{ dayjs(previous.date).format('dddd DD/MM') }}
         </RouterLink>
         <RouterLink
-          v-if="nextPresence"
+          v-if="next"
           class="ml-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
           replace
           :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.PRESENCES.DETAIL,
-            params: { presenceDate: nextPresence.date },
+            name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+            params: { date: next.date },
           }">
-          {{ dayjs(nextPresence.date).format('dddd DD/MM') }}
+          {{ dayjs(next.date).format('dddd DD/MM') }}
           <SvgIcon
             aria-hidden="true"
             class="ml-1 h-5 w-5 text-gray-400"
@@ -74,25 +74,30 @@
         <Head>
           <title>
             {{
-              $t('presences.detail.head.title', {
-                date: dayjs(selectedPresence.date).format('LL'),
+              $t('activity.detail.head.title', {
+                date: dayjs(selected.date).format('LL'),
               })
             }}
           </title>
         </Head>
 
+        <!-- <p class="font-medium text-gray-900 sm:text-sm">
+          {{ $t('activity.detail.daily.label') }}
+        </p>
+        <DailyActivityGraph class="mb-4" /> -->
+
         <RadioGroup v-model="state.type">
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
-            {{ $t('presences.detail.type.label') }}
+            {{ $t('activity.detail.type.label') }}
           </RadioGroupLabel>
 
           <div class="mt-1 flex flex-row gap-3">
             <RadioGroupOption
-              v-for="presenceType in ['T', 'A']"
-              :key="`presence-type-${presenceType}`"
+              v-for="typeOption in ['subscription', 'ticket'] as AttendanceType[]"
+              :key="`attendance-type-${typeOption}`"
               as="template"
               disabled
-              :value="presenceType"
+              :value="typeOption"
               v-slot="{ checked, active }">
               <div
                 :class="[
@@ -103,12 +108,12 @@
                 <span class="flex flex-1">
                   <span class="flex flex-col">
                     <RadioGroupLabel as="span" class="block font-medium text-gray-900 sm:text-sm">
-                      {{ $t(`presences.detail.type.value.${presenceType}.label`) }}
+                      {{ $t(`activity.detail.type.value.${typeOption}.label`) }}
                     </RadioGroupLabel>
                     <RadioGroupDescription
                       as="span"
                       class="mt-1 flex items-center text-sm text-gray-500">
-                      {{ $t(`presences.detail.type.value.${presenceType}.description`) }}
+                      {{ $t(`activity.detail.type.value.${typeOption}.description`) }}
                     </RadioGroupDescription>
                   </span>
                 </span>
@@ -137,20 +142,20 @@
           </li>
         </ul>
 
-        <RadioGroup v-model="state.amount">
+        <RadioGroup v-model="state.duration">
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
-            {{ $t('presences.detail.amount.label') }}
+            {{ $t('activity.detail.duration.label') }}
           </RadioGroupLabel>
           <div class="mt-1 flex flex-row gap-3">
             <RadioGroupOption
-              v-for="amountOption in [
-                { label: $t('presences.detail.amount.value.NONE'), value: PresenceDayAmount.NONE },
-                { label: $t('presences.detail.amount.value.HALF'), value: PresenceDayAmount.HALF },
-                { label: $t('presences.detail.amount.value.FULL'), value: PresenceDayAmount.FULL },
+              v-for="durationOption in [
+                { label: $t('activity.detail.duration.value.NONE'), value: ActivityDuration.NONE },
+                { label: $t('activity.detail.duration.value.HALF'), value: ActivityDuration.HALF },
+                { label: $t('activity.detail.duration.value.FULL'), value: ActivityDuration.FULL },
               ]"
-              :key="amountOption.label"
+              :key="durationOption.label"
               as="template"
-              :value="amountOption.value"
+              :value="durationOption.value"
               v-slot="{ active, checked }">
               <div
                 :class="[
@@ -161,14 +166,14 @@
                     : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
                   'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm',
                 ]">
-                <RadioGroupLabel as="span">{{ amountOption.label }}</RadioGroupLabel>
+                <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
               </div>
             </RadioGroupOption>
           </div>
         </RadioGroup>
         <ul class="min-h-[1.4rem] px-3 text-xs">
           <li
-            v-for="error in vuelidate.amount.$errors.map(({ $message }) => $message)"
+            v-for="error in vuelidate.duration.$errors.map(({ $message }) => $message)"
             :key="`error-${error}`"
             class="text-red-600">
             {{ error }}
@@ -179,8 +184,8 @@
           id="reason"
           v-model.number="state.reason"
           :errors="vuelidate.reason.$errors.map(({ $message }) => $message as string)"
-          :label="$t('presences.detail.reason.label')"
-          :placeholder="$t('presences.detail.reason.placeholder')"
+          :label="$t('activity.detail.reason.label')"
+          :placeholder="$t('activity.detail.reason.placeholder')"
           required />
 
         <AppButton
@@ -196,6 +201,7 @@
 </template>
 
 <script setup lang="ts">
+// import DailyActivityGraph from './DailyActivityGraph.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
@@ -203,7 +209,7 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, AttendanceType, updateMemberPresence } from '@/services/api/members';
+import { Attendance, AttendanceType, updateMemberActivity } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import {
   DialogTitle,
@@ -221,7 +227,7 @@ import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-enum PresenceDayAmount {
+enum ActivityDuration {
   'NONE' = 0,
   'HALF' = 0.5,
   'FULL' = 1,
@@ -235,7 +241,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  presences: {
+  activity: {
     type: Array as PropType<Attendance[]>,
     default: () => [],
   },
@@ -251,32 +257,32 @@ const props = defineProps({
 
 const state = reactive({
   type: 'TICKET' as AttendanceType,
-  amount: PresenceDayAmount.NONE as PresenceDayAmount,
+  duration: ActivityDuration.NONE as ActivityDuration,
   reason: null as string | null,
   isSubmitting: false as boolean,
 });
 
-const selectedPresence = computed<Attendance | null>(() => {
-  return props.presences.find(({ date }) => `${date}` === `${props.date}`) ?? null;
+const selected = computed<Attendance | null>(() => {
+  return props.activity.find(({ date }) => `${date}` === `${props.date}`) ?? null;
 });
 
-const previousPresence = computed<Attendance | null>(() => {
-  const [latestDate] = props.presences
-    .filter(({ date }) => dayjs(date).isBefore(selectedPresence.value?.date))
+const previous = computed<Attendance | null>(() => {
+  const [latestDate] = props.activity
+    .filter(({ date }) => dayjs(date).isBefore(selected.value?.date))
     .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
   return latestDate ?? null;
 });
 
-const nextPresence = computed<Attendance | null>(() => {
-  const [earliestDate] = props.presences
-    .filter(({ date }) => dayjs(date).isAfter(selectedPresence.value?.date))
+const next = computed<Attendance | null>(() => {
+  const [earliestDate] = props.activity
+    .filter(({ date }) => dayjs(date).isAfter(selected.value?.date))
     .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
   return earliestDate ?? null;
 });
 
 const rules = computed(() => ({
   type: { required: withAppI18nMessage(required) },
-  amount: { required: withAppI18nMessage(required) },
+  duration: { required: withAppI18nMessage(required) },
   reason: { required: withAppI18nMessage(required) },
 }));
 
@@ -290,16 +296,16 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  updateMemberPresence(props.memberId, props.date, {
+  updateMemberActivity(props.memberId, props.date, {
     type: state.type,
-    amount: state.amount,
+    value: state.duration,
     date: props.date,
     reason: state.reason as string,
   })
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('presences.detail.onUpdate.success', {
+        message: i18n.t('activity.detail.onUpdate.success', {
           date: dayjs(props.date).format('dddd LL'),
         }),
         timeout: 3_000,
@@ -310,7 +316,7 @@ const onSubmit = async () => {
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('presences.detail.onUpdate.fail', {
+        i18n.t('activity.detail.onUpdate.fail', {
           date: dayjs(props.date).format('dddd LL'),
         }),
       );
@@ -322,16 +328,16 @@ const onSubmit = async () => {
 };
 
 watch(
-  () => selectedPresence.value,
-  (presence) => {
-    if (presence) {
-      state.type = presence.type;
-      state.amount =
-        presence.amount === 1
-          ? PresenceDayAmount.FULL
-          : presence.amount === 0.5
-            ? PresenceDayAmount.HALF
-            : PresenceDayAmount.NONE;
+  () => selected.value,
+  (activity) => {
+    if (activity) {
+      state.type = activity.type;
+      state.duration =
+        activity.value === 1
+          ? ActivityDuration.FULL
+          : activity.value === 0.5
+            ? ActivityDuration.HALF
+            : ActivityDuration.NONE;
       state.reason = null;
     }
   },
