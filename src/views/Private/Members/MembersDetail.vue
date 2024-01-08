@@ -18,7 +18,7 @@
               <div class="relative">
                 <img
                   alt=""
-                  class="h-16 w-16 rounded-full bg-gray-200"
+                  class="h-16 w-16 rounded-full bg-gray-200 object-cover object-top"
                   :src="state.member.picture" />
                 <span
                   v-if="
@@ -323,7 +323,7 @@
 </template>
 
 <script setup lang="ts">
-import ActivityGraph from './Detail/ActivityGraph.vue';
+import ActivityGraph from './Detail/Activity/ActivityGraph.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';

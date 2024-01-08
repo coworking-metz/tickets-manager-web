@@ -81,6 +81,11 @@
           </title>
         </Head>
 
+        <!-- <p class="font-medium text-gray-900 sm:text-sm">
+          {{ $t('activity.detail.daily.label') }}
+        </p>
+        <DailyActivityGraph class="mb-4" /> -->
+
         <RadioGroup v-model="state.type">
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
             {{ $t('activity.detail.type.label') }}
@@ -196,6 +201,7 @@
 </template>
 
 <script setup lang="ts">
+// import DailyActivityGraph from './DailyActivityGraph.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';

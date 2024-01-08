@@ -75,7 +75,8 @@ export const routes: RouteRecordRaw[] = [
               {
                 path: 'activity/:date',
                 name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/ActivityDetail.vue'),
+                component: () =>
+                  import('@/views/Private/Members/Detail/Activity/ActivityDetail.vue'),
                 props: (route) => ({
                   date: route.params.date,
                 }),

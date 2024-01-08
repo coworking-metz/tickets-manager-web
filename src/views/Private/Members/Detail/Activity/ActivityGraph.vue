@@ -19,12 +19,7 @@ import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import { HeatmapChart } from 'echarts/charts.js';
-import {
-  CalendarComponent,
-  TitleComponent,
-  TooltipComponent,
-  VisualMapComponent,
-} from 'echarts/components.js';
+import { CalendarComponent, TooltipComponent, VisualMapComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { ceil } from 'lodash';
@@ -35,20 +30,12 @@ import { useRouter } from 'vue-router';
 import type { HeatmapSeriesOption } from 'echarts/charts.js';
 import type {
   CalendarComponentOption,
-  TitleComponentOption,
   TooltipComponentOption,
   VisualMapComponentOption,
 } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
-use([
-  TitleComponent,
-  TooltipComponent,
-  VisualMapComponent,
-  CalendarComponent,
-  HeatmapChart,
-  CanvasRenderer,
-]);
+use([TooltipComponent, VisualMapComponent, CalendarComponent, HeatmapChart, CanvasRenderer]);
 
 dayjs.extend(weekOfYear);
 
@@ -77,7 +64,6 @@ const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 
 const options = computed<
   ComposeOption<
-    | TitleComponentOption
     | TooltipComponentOption
     | VisualMapComponentOption
     | CalendarComponentOption
