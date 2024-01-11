@@ -41,7 +41,7 @@
             <p class="block font-medium text-gray-900 sm:text-sm">
               {{ $t('user.profile.roles.label') }}
             </p>
-            <ul>
+            <ul class="flex flex-row flex-wrap gap-2">
               <li
                 v-for="role in authStore.user?.roles"
                 :key="`user-role-${role}`"

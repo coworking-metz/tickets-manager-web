@@ -38,9 +38,9 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
     async setAccessToken(accessToken: string) {
-      const user = parseJwt(accessToken) || null;
-      if (!user || !user.roles.includes('administrator')) {
-        const error = new Error('Missing administrator role') as AppError;
+      const user: User | null = parseJwt(accessToken) || null;
+      if (!user || !user.roles.includes('admin')) {
+        const error = new Error('Missing admin role') as AppError;
         error.code = AppErrorCode.FORBIDDEN;
         throw error;
       }

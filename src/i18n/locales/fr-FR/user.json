@@ -20,7 +20,10 @@
     "roles": {
       "label": "Rôles",
       "value": {
-        "administrator": "Administrateur"
+        "admin": "Administrateur",
+        "coworker": "Coworkeur",
+        "external": "Externe",
+        "guest": "Visiteur"
       }
     },
     "title": "Mon profil"

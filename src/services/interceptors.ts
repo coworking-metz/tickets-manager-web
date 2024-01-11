@@ -110,7 +110,6 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         httpStore.cancelAllRequests(disconnectedError.message);
 
         // the user should be properly logged out of the platform
-        const authStore = useAuthStore();
         await authStore.disconnect();
 
         const notificationsStore = useNotificationsStore();
