@@ -5,7 +5,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  roles: string[];
+  roles: ('admin' | 'coworker' | 'guest' | 'external')[];
   picture: string;
 }
 
@@ -20,8 +20,4 @@ export const refreshTokens = (
       ...(!isCancellable ? { cancelToken: axios.CancelToken.source().token } : {}),
     },
   ).then(({ data }) => data);
-};
-
-export const getProfile = (): Promise<User> => {
-  return HTTP.get('/auth/me').then(({ data }) => data);
 };
