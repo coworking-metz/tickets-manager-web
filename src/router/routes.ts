@@ -88,8 +88,51 @@ export const routes: RouteRecordRaw[] = [
       },
       {
         path: 'stats',
-        name: ROUTE_NAMES.STATS,
         component: () => import('@/views/Private/Stats/StatsPage.vue'),
+        children: [
+          {
+            path: '',
+            name: ROUTE_NAMES.STATS.INDEX,
+            redirect: { name: ROUTE_NAMES.STATS.INCOMES.INDEX },
+          },
+          {
+            path: 'incomes',
+            component: () => import('@/views/Private/Stats/Incomes/StatsIncomes.vue'),
+            props: (route) => ({
+              from: route.query.from,
+              to: route.query.to,
+            }),
+            children: [
+              {
+                path: '',
+                name: ROUTE_NAMES.STATS.INCOMES.INDEX,
+                redirect: {
+                  name: ROUTE_NAMES.STATS.INCOMES.DAILY,
+                },
+              },
+              {
+                path: 'daily',
+                name: ROUTE_NAMES.STATS.INCOMES.DAILY,
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesDaily.vue'),
+              },
+              {
+                path: 'weekly',
+                name: ROUTE_NAMES.STATS.INCOMES.WEEKLY,
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesWeekly.vue'),
+              },
+              {
+                path: 'monthly',
+                name: ROUTE_NAMES.STATS.INCOMES.MONTHLY,
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesMonthly.vue'),
+              },
+              {
+                path: 'yearly',
+                name: ROUTE_NAMES.STATS.INCOMES.YEARLY,
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesYearly.vue'),
+              },
+            ],
+          },
+        ],
       },
       {
         path: 'profile',

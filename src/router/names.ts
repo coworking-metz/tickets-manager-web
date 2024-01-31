@@ -3,7 +3,16 @@ import { flatMapDeep, isEqual } from 'lodash';
 // order matters as it will determine transition direction in ./helpers#isRouteAfter()
 const RAW_ROUTE_NAMES = {
   LOGIN: 'LOGIN',
-  STATS: 'STATS',
+  STATS: {
+    INDEX: 'STATS.INDEX',
+    INCOMES: {
+      INDEX: 'STATS.INCOMES.INDEX',
+      YEARLY: 'STATS.INCOMES.YEARLY',
+      MONTHLY: 'STATS.INCOMES.MONTHLY',
+      WEEKLY: 'STATS.INCOMES.WEEKLY',
+      DAILY: 'STATS.INCOMES.DAILY',
+    },
+  },
   MEMBERS: {
     LIST: 'MEMBERS.LIST',
     DETAIL: {

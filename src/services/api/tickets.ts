@@ -8,15 +8,15 @@ export interface Ticket {
 }
 
 export const getAllMemberTickets = (memberId: string): Promise<Ticket[]> => {
-  return HTTP.get(`/members/${memberId}/tickets`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${memberId}/tickets`).then(({ data }) => data);
 };
 
 export const getMemberTicket = (memberId: string, ticketId: string): Promise<Ticket> => {
-  return HTTP.get(`/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
 };
 
 export const addMemberTicket = (memberId: string, ticket: Ticket): Promise<Ticket> => {
-  return HTTP.post(`/members/${memberId}/tickets`, ticket).then(({ data }) => data);
+  return HTTP.post(`/api/members/${memberId}/tickets`, ticket).then(({ data }) => data);
 };
 
 export const updateMemberTicket = (
@@ -24,9 +24,9 @@ export const updateMemberTicket = (
   ticketId: string,
   ticket: Ticket,
 ): Promise<Ticket> => {
-  return HTTP.put(`/members/${memberId}/tickets/${ticketId}`, ticket).then(({ data }) => data);
+  return HTTP.put(`/api/members/${memberId}/tickets/${ticketId}`, ticket).then(({ data }) => data);
 };
 
 export const deleteMemberTicket = (memberId: string, ticketId: string): Promise<void> => {
-  return HTTP.delete(`/members/${memberId}/tickets/${ticketId}`);
+  return HTTP.delete(`/api/members/${memberId}/tickets/${ticketId}`);
 };

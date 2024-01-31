@@ -5,7 +5,7 @@
       :option="options"
       :style="{
         height: '96px',
-        width: `100%`,
+        width: '100%',
       }" />
   </section>
 </template>

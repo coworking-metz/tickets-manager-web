@@ -52,7 +52,7 @@
             <div class="mt-10 flex items-center gap-x-6">
               <a
                 class="flex flex-row items-center gap-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                :href="HTTP.getUri({ url: '/auth/login', params: $route.query })"
+                :href="HTTP.getUri({ url: '/api/auth/login', params: $route.query })"
                 @click="state.isLoggingIn = true">
                 <LoadingSpinner v-if="state.isLoggingIn" class="h-5 w-5" />
                 {{ $t('action.login') }}

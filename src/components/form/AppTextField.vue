@@ -22,7 +22,7 @@
           :aria-invalid="isInvalid"
           :autocomplete="autocomplete"
           :class="{
-            ['block w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
+            ['block h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
             ['rounded-none rounded-l-md']: slots.after,
             ['rounded-none rounded-r-md']: slots.before,
             ['pl-10']: slots.prepend || prependIcon,
@@ -34,6 +34,7 @@
           :min="min"
           :name="name"
           :placeholder="placeholder"
+          :readonly="readonly"
           :required="required"
           :step="step"
           :tabindex="tabindex"
@@ -144,6 +145,10 @@ const props = defineProps({
   max: {
     type: [String, Number],
     default: null,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 });
 

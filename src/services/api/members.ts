@@ -49,23 +49,23 @@ export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
 };
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
-  return HTTP.get('/members').then(({ data }) => data);
+  return HTTP.get('/api/members').then(({ data }) => data);
 };
 
 export const getMember = (id: string): Promise<Member> => {
-  return HTTP.get(`/members/${id}`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${id}`).then(({ data }) => data);
 };
 
 export const updateMember = (id: string, member: Member): Promise<Member> => {
-  return HTTP.put(`/members/${id}`, member).then(({ data }) => data);
+  return HTTP.put(`/api/members/${id}`, member).then(({ data }) => data);
 };
 
 export const updateMemberMacAddresses = (id: string, macAddresses: string[]): Promise<Member> => {
-  return HTTP.put(`/members/${id}/mac-addresses`, macAddresses).then(({ data }) => data);
+  return HTTP.put(`/api/members/${id}/mac-addresses`, macAddresses).then(({ data }) => data);
 };
 
 export const getMemberActivity = (id: string): Promise<Attendance[]> => {
-  return HTTP.get(`/members/${id}/activity`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${id}/activity`).then(({ data }) => data);
 };
 
 export const updateMemberActivity = (
@@ -73,17 +73,19 @@ export const updateMemberActivity = (
   activityId: string,
   activity: Attendance & { reason: string },
 ): Promise<Attendance> => {
-  return HTTP.put(`/members/${memberId}/activity/${activityId}`, activity).then(({ data }) => data);
+  return HTTP.put(`/api/members/${memberId}/activity/${activityId}`, activity).then(
+    ({ data }) => data,
+  );
 };
 
 export const syncMember = (id: string): Promise<Member> => {
-  return HTTP.post(`/members/${id}/sync-wordpress`).then(({ data }) => data);
+  return HTTP.post(`/api/members/${id}/sync-wordpress`).then(({ data }) => data);
 };
 
 export const buildMemberPictureUrl = (id: string) => {
-  return HTTP.getUri({ url: `/members/${id}/avatar` });
+  return HTTP.getUri({ url: `/api/members/${id}/avatar` });
 };
 
 export const buildMemberWordpressProfileUrl = (id: string) => {
-  return HTTP.getUri({ url: `/members/${id}/wordpress-profile` });
+  return HTTP.getUri({ url: `/api/members/${id}/wordpress-profile` });
 };
