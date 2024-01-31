@@ -35,7 +35,8 @@
     },
     "membership": {
       "current": "Adhésion {year} en cours",
-      "last": "Dernière adhésion en {year}"
+      "last": "Dernière adhésion en {year}",
+      "none": "Aucune adhésion"
     },
     "onFetch": {
       "fail": "Impossible de récupérer\nles informations du membre"

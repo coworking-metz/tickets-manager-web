@@ -35,7 +35,8 @@
     },
     "membership": {
       "current": "{year} membership ongoing",
-      "last": "Last membership in {year}"
+      "last": "Last membership in {year}",
+      "none": "No membership"
     },
     "onFetch": {
       "fail": "Unable to load the member's details"

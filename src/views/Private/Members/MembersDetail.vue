@@ -73,7 +73,11 @@
                 <span
                   v-else
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
-                  {{ $t('members.detail.membership.last', { year: state.member.lastMembership }) }}
+                  {{
+                    state.member.lastMembership
+                      ? $t('members.detail.membership.last', { year: state.member.lastMembership })
+                      : $t('members.detail.membership.none')
+                  }}
                 </span>
               </div>
             </div>
