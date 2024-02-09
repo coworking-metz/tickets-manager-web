@@ -9,21 +9,23 @@ export interface Subscription {
 }
 
 export const getAllMemberSubscriptions = (memberId: string): Promise<Subscription[]> => {
-  return HTTP.get(`/members/${memberId}/subscriptions`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${memberId}/subscriptions`).then(({ data }) => data);
 };
 
 export const getMemberSubscription = (
   memberId: string,
   subscriptionId: string,
 ): Promise<Subscription> => {
-  return HTTP.get(`/members/${memberId}/subscriptions/${subscriptionId}`).then(({ data }) => data);
+  return HTTP.get(`/api/members/${memberId}/subscriptions/${subscriptionId}`).then(
+    ({ data }) => data,
+  );
 };
 
 export const addMemberSubscription = (
   memberId: string,
   subscription: Subscription,
 ): Promise<Subscription> => {
-  return HTTP.post(`/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
+  return HTTP.post(`/api/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
 };
 
 export const updateMemberSubscription = (
@@ -31,7 +33,7 @@ export const updateMemberSubscription = (
   subscriptionId: string,
   subscription: Subscription,
 ): Promise<Subscription> => {
-  return HTTP.put(`/members/${memberId}/subscriptions/${subscriptionId}`, subscription).then(
+  return HTTP.put(`/api/members/${memberId}/subscriptions/${subscriptionId}`, subscription).then(
     ({ data }) => data,
   );
 };
@@ -40,5 +42,5 @@ export const deleteMemberSubscription = (
   memberId: string,
   subscriptionId: string,
 ): Promise<void> => {
-  return HTTP.delete(`/members/${memberId}/subscriptions/${subscriptionId}`);
+  return HTTP.delete(`/api/members/${memberId}/subscriptions/${subscriptionId}`);
 };

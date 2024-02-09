@@ -1,39 +1,83 @@
 <template>
-  <article class="mx-auto flex max-h-[840px] w-full max-w-3xl grow flex-col px-6 py-12 lg:px-8">
+  <main class="flex flex-1 overflow-hidden">
     <Head>
       <title>{{ $t('stats.head.title') }}</title>
     </Head>
-    <section class="my-auto flex w-full flex-col items-start sm:flex-row">
-      <div class="mb-6 shrink grow basis-0">
-        <dotlottie-player autoplay="true" class="h-24 min-w-40" loop :src="RollingTumbleweed" />
-      </div>
-      <div class="flex w-full flex-col sm:ml-6">
-        <div class="sm:border-l sm:border-gray-200 sm:pl-6">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            {{ $t('stats.title') }}
-          </h1>
-          <p class="mt-1 text-base text-gray-500">
-            {{ $t('stats.description') }}
-          </p>
-        </div>
-        <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-          <RouterLink
-            class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-            to="/">
-            {{ $t('action.backToHome') }}
-          </RouterLink>
+    <div class="flex flex-1 flex-col overflow-y-auto xl:overflow-hidden">
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" class="border-b border-gray-200 bg-white xl:hidden">
+        <div class="mx-auto flex max-w-3xl items-start px-4 py-3 sm:px-6 lg:px-8">
           <a
-            class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-            href="mailto:contact@coworking-metz.fr">
-            {{ $t('action.contact') }}
+            class="-ml-1 inline-flex items-center space-x-3 text-sm font-medium text-gray-900"
+            href="#">
+            <!-- <ChevronLeftIcon aria-hidden="true" class="h-5 w-5 text-gray-400" /> -->
+            <span>{{ $t('stats.title') }}</span>
           </a>
         </div>
+      </nav>
+
+      <div class="flex flex-1 xl:overflow-hidden">
+        <!-- Secondary sidebar -->
+        <nav
+          aria-label="Sections"
+          class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col">
+          <div class="flex h-16 shrink-0 items-center border-b border-gray-200 px-6">
+            <p class="text-lg font-medium text-gray-900">{{ $t('stats.title') }}</p>
+          </div>
+          <div class="min-h-0 flex-1 overflow-y-auto">
+            <router-link
+              v-for="tab in tabs"
+              :key="tab.label"
+              :aria-current="tab.active ? 'page' : undefined"
+              :class="[
+                tab.active
+                  ? 'bg-indigo-50 bg-opacity-[50%]'
+                  : 'hover:bg-indigo-50 hover:bg-opacity-[50%]',
+                'flex border-b border-gray-200 p-6',
+              ]"
+              :to="tab.to">
+              <SvgIcon
+                aria-hidden="true"
+                class="-mt-0.5 h-6 w-6 shrink-0 text-indigo-400"
+                :path="tab.icon"
+                type="mdi" />
+              <div class="ml-3 text-sm">
+                <p class="font-medium text-gray-900">{{ tab.label }}</p>
+                <p class="mt-1 text-gray-500">{{ tab.description }}</p>
+              </div>
+            </router-link>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <div class="flex flex-1 flex-col xl:overflow-y-auto">
+          <RouterView />
+        </div>
       </div>
-    </section>
-  </article>
+    </div>
+  </main>
 </template>
 
 <script lang="ts" setup>
-import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
+import { doesRouteBelongsTo } from '@/router/helpers';
+import { ROUTE_NAMES } from '@/router/names';
+import { mdiCashMultiple } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const i18n = useI18n();
+const tabs = computed(() => [
+  {
+    label: i18n.t('stats.incomes.title'),
+    description: i18n.t('stats.incomes.description'),
+    to: {
+      name: ROUTE_NAMES.STATS.INCOMES.INDEX,
+    },
+    icon: mdiCashMultiple,
+    active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.INCOMES),
+  },
+]);
 </script>

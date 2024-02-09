@@ -74,7 +74,7 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
   {
     label: i18n.t('navigation.stats'),
     to: {
-      name: ROUTE_NAMES.STATS,
+      name: ROUTE_NAMES.STATS.INDEX,
     },
     icon: mdiFinance,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS),

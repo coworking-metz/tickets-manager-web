@@ -14,7 +14,7 @@ export const refreshTokens = (
   isCancellable = true,
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   return HTTP.post(
-    '/auth/tokens',
+    '/api/auth/tokens',
     { refreshToken: refreshToken },
     {
       ...(!isCancellable ? { cancelToken: axios.CancelToken.source().token } : {}),
