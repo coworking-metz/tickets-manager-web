@@ -14,8 +14,9 @@
         {{ $t('members.detail.wordpress.sync') }}
       </AppButton>
       <a
+        v-if="!isNil(props.member.wpUserId)"
         class="group flex flex-row items-center gap-x-3 rounded-md border border-transparent px-4 py-2 font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-        :href="buildMemberWordpressProfileUrl(props.member._id)"
+        :href="buildMemberWordpressProfileUrl(props.member.wpUserId)"
         target="_blank">
         <SvgIcon
           aria-hidden="true"
@@ -33,6 +34,7 @@ import AppButton from '@/components/form/AppButton.vue';
 import { Member, buildMemberWordpressProfileUrl, syncMember } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiOpenInNew } from '@mdi/js';
+import { isNil } from 'lodash';
 import { PropType, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
