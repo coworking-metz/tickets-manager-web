@@ -1,21 +1,24 @@
 <template>
   <main class="flex flex-1 overflow-hidden">
-    <Head>
-      <title>{{ $t('stats.head.title') }}</title>
-    </Head>
     <div class="flex flex-1 flex-col overflow-y-auto xl:overflow-hidden">
       <!-- Mobile navigation -->
       <Menu as="nav" class="relative inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200">
-          <span class="flex w-full items-center justify-between">
-            <p class="min-w-0 text-lg font-medium text-gray-900">
-              {{ tabs.find(({ active }) => active)?.label }}
-            </p>
+          class="group w-full border-b border-gray-200 bg-white px-6 py-4 text-gray-700 hover:bg-gray-200">
+          <span class="flex w-full flex-row items-start justify-between">
+            <SvgIcon
+              aria-hidden="true"
+              class="h-6 w-6 shrink-0 text-indigo-400"
+              :path="activeTab?.icon"
+              type="mdi" />
+            <div class="mx-3 text-left text-sm">
+              <p class="text-base font-medium text-gray-900">{{ activeTab?.label }}</p>
+              <p class="mt-1 text-gray-500">{{ activeTab?.description }}</p>
+            </div>
 
             <SvgIcon
               aria-hidden="true"
-              class="h-5 w-5 shrink-0 text-gray-400 group-hover:text-gray-500"
+              class="ml-auto h-6 w-6 shrink-0 self-center text-gray-400 group-hover:text-gray-500"
               :path="mdiUnfoldMoreHorizontal"
               type="mdi" />
           </span>
@@ -30,16 +33,29 @@
           <MenuItems
             class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none">
             <div class="py-1">
-              <MenuItem v-for="tab in tabs" :key="tab.label" v-slot="{ close }">
+              <MenuItem
+                v-for="tab in tabs.filter(({ active }) => !active)"
+                :key="tab.label"
+                v-slot="{ close }">
                 <router-link
                   :aria-current="tab.active ? 'page' : undefined"
                   :class="[
                     tab.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm',
+                    'flex px-6 py-2',
                   ]"
                   :to="tab.to"
                   @click.capture="close">
-                  {{ tab.label }}
+                  <SvgIcon
+                    aria-hidden="true"
+                    class="h-6 w-6 shrink-0 text-indigo-400"
+                    :path="tab.icon"
+                    type="mdi" />
+                  <div class="ml-3 overflow-hidden text-left text-sm">
+                    <p class="font-medium text-gray-900">{{ tab.label }}</p>
+                    <p class="mt-1 truncate text-gray-500">
+                      {{ tab.description }}
+                    </p>
+                  </div>
                 </router-link>
               </MenuItem>
             </div>
@@ -64,7 +80,7 @@
                 tab.active
                   ? 'bg-indigo-50 bg-opacity-[50%]'
                   : 'hover:bg-indigo-50 hover:bg-opacity-[50%]',
-                'flex border-b border-gray-200 p-6',
+                'group flex border-b border-gray-200 p-6 pr-3',
               ]"
               :to="tab.to">
               <SvgIcon
@@ -76,6 +92,14 @@
                 <p class="font-medium text-gray-900">{{ tab.label }}</p>
                 <p class="mt-1 text-gray-500">{{ tab.description }}</p>
               </div>
+              <SvgIcon
+                aria-hidden="true"
+                :class="[
+                  'h-6 w-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:!opacity-100',
+                  tab.active ? 'opacity-80' : 'opacity-0',
+                ]"
+                :path="mdiChevronRight"
+                type="mdi" />
             </router-link>
           </div>
         </nav>
@@ -93,8 +117,12 @@
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { mdiCashMultiple, mdiHomeAnalytics, mdiUnfoldMoreHorizontal } from '@mdi/js';
-import { Head } from '@unhead/vue/components';
+import {
+  mdiCashMultiple,
+  mdiChevronRight,
+  mdiHomeAnalytics,
+  mdiUnfoldMoreHorizontal,
+} from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -121,4 +149,6 @@ const tabs = computed(() => [
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.ACTIVITY),
   },
 ]);
+
+const activeTab = computed(() => tabs.value.find((tab) => tab.active));
 </script>
