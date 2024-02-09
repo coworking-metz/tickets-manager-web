@@ -33,6 +33,7 @@ export interface MemberListItem {
   balance: number;
   membershipOk: boolean;
   lastMembership: number;
+  wpUserId?: number;
 }
 
 export interface Member extends MemberListItem {
@@ -86,6 +87,9 @@ export const buildMemberPictureUrl = (id: string) => {
   return HTTP.getUri({ url: `/api/members/${id}/avatar` });
 };
 
-export const buildMemberWordpressProfileUrl = (id: string) => {
-  return HTTP.getUri({ url: `/api/members/${id}/wordpress-profile` });
+export const buildMemberWordpressProfileUrl = (wordpressId: number) => {
+  return new URL(
+    `/wp-admin/user-edit.php?user_id=${wordpressId}`,
+    import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
+  ).toString();
 };
