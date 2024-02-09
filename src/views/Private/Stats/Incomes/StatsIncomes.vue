@@ -1,5 +1,5 @@
 <template>
-  <article class="flex max-h-[1280px] grow flex-col xl:py-12">
+  <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
     <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-3">
       <div class="mx-6 w-full max-w-xs lg:mx-8">
         <!-- @vue-ignore -->
