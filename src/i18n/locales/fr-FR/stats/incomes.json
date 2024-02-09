@@ -1,0 +1,166 @@
+{
+  "daily": {
+    "graph": {
+      "threshold": "Charges\nfixes\njournalières\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Déficite"
+        },
+        "profit": {
+          "label": "Bénéfice"
+        },
+        "subscriptions": {
+          "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+        },
+        "tickets": {
+          "label": "Aucun ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Revenus journaliers"
+    },
+    "summary": {
+      "average": {
+        "label": "Revenu moyen journalier",
+        "threshold": "sur {amount} de charges fixes journalières"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "description": "Visualisez les revenus par jour, semaine, mois ou année ainsi que les bénéfices ou pertes.",
+  "empty": {
+    "description": "Précisez la période pour visualiser les revenus.",
+    "title": "Rien à afficher"
+  },
+  "frequency": {
+    "label": "Visualiser par",
+    "value": {
+      "daily": "Jour",
+      "monthly": "Mois",
+      "weekly": "Semaine",
+      "yearly": "Année"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nmensuelles\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Déficite"
+        },
+        "profit": {
+          "label": "Bénéfice"
+        },
+        "subscriptions": {
+          "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+        },
+        "tickets": {
+          "label": "Aucun ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Revenus mensuels"
+    },
+    "summary": {
+      "average": {
+        "label": "Revenu moyen mensuel",
+        "threshold": "sur {amount} de charges fixes mensuelles"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "period": {
+    "label": "Période",
+    "placeholder": "Choissisez une période",
+    "shortcuts": {
+      "currentMonth": "Ce mois",
+      "currentWeek": "Cette semaine",
+      "currentYear": "Cette année",
+      "last30days": "30 derniers jours",
+      "last6Months": "6 derniers mois",
+      "sinceFirstDay": "Depuis le premier jour",
+      "sinceYearStart": "Depuis le début de l'année"
+    },
+    "value": "Du {start} au {end}"
+  },
+  "title": "Revenus",
+  "weekly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nhebdomadaires\n{amount}",
+      "tooltip": {
+        "date": {
+          "label": "Du {start} au {end}"
+        },
+        "deficit": {
+          "label": "Déficite"
+        },
+        "profit": {
+          "label": "Bénéfice"
+        },
+        "subscriptions": {
+          "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+        },
+        "tickets": {
+          "label": "Aucun ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Revenus hebdomadaires"
+    },
+    "summary": {
+      "average": {
+        "label": "Revenu moyen hebdomadaire",
+        "threshold": "sur {amount} de charges fixes hebdomadaires"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "yearly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nannuelles\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Déficite"
+        },
+        "profit": {
+          "label": "Bénéfice"
+        },
+        "subscriptions": {
+          "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+        },
+        "tickets": {
+          "label": "Aucun ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Revenus annuels"
+    },
+    "summary": {
+      "average": {
+        "label": "Revenu moyen annuel",
+        "threshold": "sur {amount} de charges fixes annuelles"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  }
+}

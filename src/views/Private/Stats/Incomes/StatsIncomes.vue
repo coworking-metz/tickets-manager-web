@@ -1,9 +1,5 @@
 <template>
-  <article class="flex max-h-[1280px] grow flex-col py-12">
-    <Head>
-      <title>{{ $t('stats.head.title') }}</title>
-    </Head>
-
+  <article class="flex max-h-[1280px] grow flex-col xl:py-12">
     <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-3">
       <div class="mx-6 w-full max-w-xs lg:mx-8">
         <!-- @vue-ignore -->
@@ -100,7 +96,6 @@ import { DATE_FORMAT } from './dates';
 import AppTextField from '@/components/form/AppTextField.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
 import { ROUTE_NAMES } from '@/router/names';
-import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
