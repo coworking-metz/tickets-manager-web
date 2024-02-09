@@ -1,0 +1,166 @@
+{
+  "daily": {
+    "graph": {
+      "threshold": "Daily\nfixed\ncharges\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Deficit"
+        },
+        "profit": {
+          "label": "Profit"
+        },
+        "subscriptions": {
+          "label": "No subscription | {count} subscription | {count} subscriptions"
+        },
+        "tickets": {
+          "label": "No ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Daily Revenue"
+    },
+    "summary": {
+      "average": {
+        "label": "Average Daily Revenue",
+        "threshold": "on {amount} of daily fixed charges"
+      },
+      "label": "In a few figures",
+      "total": {
+        "label": "Total",
+        "threshold": "on {amount} of fixed charges"
+      }
+    }
+  },
+  "description": "Visualize revenue per day, week, month, or year as well as profit or loss.",
+  "empty": {
+    "description": "Specify the period to visualize revenue.",
+    "title": "Nothing to display"
+  },
+  "frequency": {
+    "label": "View by",
+    "value": {
+      "daily": "Day",
+      "monthly": "Month",
+      "weekly": "Week",
+      "yearly": "Year"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "threshold": "Monthly\nfixed\ncharges\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Deficit"
+        },
+        "profit": {
+          "label": "Profit"
+        },
+        "subscriptions": {
+          "label": "No subscription | {count} subscription | {count} subscriptions"
+        },
+        "tickets": {
+          "label": "No ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Monthly Revenue"
+    },
+    "summary": {
+      "average": {
+        "label": "Average Monthly Revenue",
+        "threshold": "on {amount} of monthly fixed charges"
+      },
+      "label": "In a few figures",
+      "total": {
+        "label": "Total",
+        "threshold": "on {amount} of fixed charges"
+      }
+    }
+  },
+  "period": {
+    "label": "Period",
+    "placeholder": "Choose a period",
+    "shortcuts": {
+      "currentMonth": "This month",
+      "currentWeek": "This week",
+      "currentYear": "This year",
+      "last30days": "Last 30 days",
+      "last6Months": "Last 6 months",
+      "sinceFirstDay": "Since the first day",
+      "sinceYearStart": "Since year start"
+    },
+    "value": "From {start} to {end}"
+  },
+  "title": "Revenue",
+  "weekly": {
+    "graph": {
+      "threshold": "Weekly\nfixed\ncharges\n{amount}",
+      "tooltip": {
+        "date": {
+          "label": "From {start} to {end}"
+        },
+        "deficit": {
+          "label": "Deficit"
+        },
+        "profit": {
+          "label": "Profit"
+        },
+        "subscriptions": {
+          "label": "No subscription | {count} subscription | {count} subscriptions"
+        },
+        "tickets": {
+          "label": "No ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Weekly Revenue"
+    },
+    "summary": {
+      "average": {
+        "label": "Average Weekly Revenue",
+        "threshold": "on {amount} of weekly fixed charges"
+      },
+      "label": "In a few figures",
+      "total": {
+        "label": "Total",
+        "threshold": "on {amount} of fixed charges"
+      }
+    }
+  },
+  "yearly": {
+    "graph": {
+      "threshold": "Yearly\nfixed\ncharges\n{amount}",
+      "tooltip": {
+        "deficit": {
+          "label": "Deficit"
+        },
+        "profit": {
+          "label": "Profit"
+        },
+        "subscriptions": {
+          "label": "No subscription | {count} subscription | {count} subscriptions"
+        },
+        "tickets": {
+          "label": "No ticket | {count} ticket | {count} tickets"
+        }
+      }
+    },
+    "head": {
+      "title": "Yearly Revenue"
+    },
+    "summary": {
+      "average": {
+        "label": "Average Yearly Revenue",
+        "threshold": "on {amount} of yearly fixed charges"
+      },
+      "label": "In a few figures",
+      "total": {
+        "label": "Total",
+        "threshold": "on {amount} of fixed charges"
+      }
+    }
+  }
+}

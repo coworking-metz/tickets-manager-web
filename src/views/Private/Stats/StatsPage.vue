@@ -4,20 +4,51 @@
       <title>{{ $t('stats.head.title') }}</title>
     </Head>
     <div class="flex flex-1 flex-col overflow-y-auto xl:overflow-hidden">
-      <!-- Breadcrumb -->
-      <nav aria-label="Breadcrumb" class="border-b border-gray-200 bg-white xl:hidden">
-        <div class="mx-auto flex max-w-3xl items-start px-4 py-3 sm:px-6 lg:px-8">
-          <a
-            class="-ml-1 inline-flex items-center space-x-3 text-sm font-medium text-gray-900"
-            href="#">
-            <!-- <ChevronLeftIcon aria-hidden="true" class="h-5 w-5 text-gray-400" /> -->
-            <span>{{ $t('stats.title') }}</span>
-          </a>
-        </div>
-      </nav>
+      <!-- Mobile navigation -->
+      <Menu as="nav" class="relative inline-block text-left xl:hidden">
+        <MenuButton
+          class="group w-full border-b border-gray-200 bg-white px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200">
+          <span class="flex w-full items-center justify-between">
+            <p class="min-w-0 text-lg font-medium text-gray-900">
+              {{ tabs.find(({ active }) => active)?.label }}
+            </p>
 
+            <SvgIcon
+              aria-hidden="true"
+              class="h-5 w-5 shrink-0 text-gray-400 group-hover:text-gray-500"
+              :path="mdiUnfoldMoreHorizontal"
+              type="mdi" />
+          </span>
+        </MenuButton>
+        <transition
+          enter-active-class="transition ease-out duration-100"
+          enter-from-class="transform opacity-0 scale-95"
+          enter-to-class="transform opacity-100 scale-100"
+          leave-active-class="transition ease-in duration-75"
+          leave-from-class="transform opacity-100 scale-100"
+          leave-to-class="transform opacity-0 scale-95">
+          <MenuItems
+            class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none">
+            <div class="py-1">
+              <MenuItem v-for="tab in tabs" :key="tab.label" v-slot="{ close }">
+                <router-link
+                  :aria-current="tab.active ? 'page' : undefined"
+                  :class="[
+                    tab.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm',
+                  ]"
+                  :to="tab.to"
+                  @click.capture="close">
+                  {{ tab.label }}
+                </router-link>
+              </MenuItem>
+            </div>
+          </MenuItems>
+        </transition>
+      </Menu>
+
+      <!-- Sidebar -->
       <div class="flex flex-1 xl:overflow-hidden">
-        <!-- Secondary sidebar -->
         <nav
           aria-label="Sections"
           class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col">
@@ -61,7 +92,8 @@
 <script lang="ts" setup>
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
-import { mdiCashMultiple } from '@mdi/js';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
+import { mdiCashMultiple, mdiHomeAnalytics, mdiUnfoldMoreHorizontal } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -78,6 +110,15 @@ const tabs = computed(() => [
     },
     icon: mdiCashMultiple,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.INCOMES),
+  },
+  {
+    label: i18n.t('stats.activity.title'),
+    description: i18n.t('stats.activity.description'),
+    to: {
+      name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
+    },
+    icon: mdiHomeAnalytics,
+    active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.ACTIVITY),
   },
 ]);
 </script>

@@ -132,6 +132,11 @@ export const routes: RouteRecordRaw[] = [
               },
             ],
           },
+          {
+            path: 'activity',
+            name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
+            component: () => import('@/views/Private/Stats/Activity/StatsActivity.vue'),
+          },
         ],
       },
       {

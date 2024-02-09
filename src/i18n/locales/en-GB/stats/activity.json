@@ -1,7 +1,7 @@
 {
   "description": "It's empty for now. Come back later!",
   "head": {
-    "title": "@:stats.title"
+    "title": "@:stats.activity.title"
   },
-  "title": "Statistics"
+  "title": "Activity"
 }

@@ -1,4 +1,4 @@
-export { default as stats } from './stats.json';
+export { default as stats } from './stats';
 export { default as head } from './head.json';
 export { default as members } from './members.json';
 export { default as navigation } from './navigation.json';

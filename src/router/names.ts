@@ -12,6 +12,9 @@ const RAW_ROUTE_NAMES = {
       WEEKLY: 'STATS.INCOMES.WEEKLY',
       DAILY: 'STATS.INCOMES.DAILY',
     },
+    ACTIVITY: {
+      INDEX: 'STATS.ACTIVITY.INDEX',
+    },
   },
   MEMBERS: {
     LIST: 'MEMBERS.LIST',
