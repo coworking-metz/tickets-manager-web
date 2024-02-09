@@ -314,11 +314,15 @@ const options = computed<
 
 const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
   const { date } = state.incomes[dataIndex];
+  const start = dayjs(date).startOf('month');
+  const end = dayjs(date).endOf('month');
+  const from = start.isBefore(props.from) ? props.from : start.format(DATE_FORMAT);
+  const to = end.isAfter(props.to) ? props.to : end.format(DATE_FORMAT);
   router.push({
     name: ROUTE_NAMES.STATS.INCOMES.WEEKLY,
     query: {
-      from: dayjs(date).startOf('month').format(DATE_FORMAT),
-      to: dayjs(date).endOf('month').format(DATE_FORMAT),
+      from,
+      to,
     },
   });
 };
