@@ -23,8 +23,9 @@
           :autocomplete="autocomplete"
           :class="{
             ['block h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
-            ['rounded-none rounded-l-md']: slots.after,
-            ['rounded-none rounded-r-md']: slots.before,
+            ['rounded-none']: slots.after || slots.before,
+            ['rounded-l-md']: !slots.before,
+            ['rounded-r-md']: !slots.after,
             ['pl-10']: slots.prepend || prependIcon,
             ['border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500']:
               isInvalid,
