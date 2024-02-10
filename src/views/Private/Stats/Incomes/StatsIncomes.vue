@@ -1,16 +1,23 @@
 <template>
   <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
-    <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-3">
-      <div class="mx-6 w-full max-w-xs lg:mx-8">
+    <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6">
+      <div class="mx-3 w-full max-w-lg sm:mx-6 sm:max-w-sm lg:mx-8">
         <!-- @vue-ignore -->
         <vue-tailwind-datepicker
           id="incomes-period"
           v-model="state.period"
+          :as-single="width < 640"
           :formatter="{
             date: DATE_FORMAT,
             month: 'MMM',
           }"
           :i18n="i18n.locale.value.substring(0, 2)"
+          :options="{
+            footer: {
+              apply: $t('action.apply'),
+              cancel: $t('action.cancel'),
+            },
+          }"
           :shortcuts="shortcuts"
           v-slot="{}"
           use-range>
@@ -21,34 +28,52 @@
             :model-value="
               state.period.start && state.period.end
                 ? $t('stats.incomes.period.value', {
-                    start: dayjs(state.period.start).format('LL'),
-                    end: dayjs(state.period.end).format('LL'),
+                    start: dayjs(state.period.start).format('ll'),
+                    end: dayjs(state.period.end).format('ll'),
                   })
                 : ''
             "
             :placeholder="$t('stats.incomes.period.placeholder')"
             readonly>
-            <!-- <template #after>
-              <button
-                class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                type="button"
-                @click="clear">
+            <template #before v-if="previousPeriod">
+              <RouterLink
+                class="relative -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                :to="{
+                  ...$route,
+                  query: { from: previousPeriod.start, to: previousPeriod.end },
+                }">
                 <SvgIcon
                   aria-hidden="true"
-                  class="h-5 w-5 text-gray-400"
-                  :path="mdiClose"
+                  class="h-6 w-6 text-gray-400"
+                  :path="mdiChevronLeft"
                   type="mdi" />
-              </button>
-            </template> -->
+              </RouterLink>
+            </template>
+            <template #after v-if="nextPeriod">
+              <RouterLink
+                class="relative -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                :to="{
+                  ...$route,
+                  query: { from: nextPeriod.start, to: nextPeriod.end },
+                }">
+                <SvgIcon
+                  aria-hidden="true"
+                  class="h-6 w-6 text-gray-400"
+                  :path="mdiChevronRight"
+                  type="mdi" />
+              </RouterLink>
+            </template>
           </AppTextField>
         </vue-tailwind-datepicker>
       </div>
 
       <div class="flex flex-col gap-1">
-        <p class="mx-6 block font-medium text-gray-900 sm:text-sm lg:mx-8">
+        <p class="mx-3 block font-medium text-gray-900 sm:mx-6 sm:text-sm lg:mx-8">
           {{ $t('stats.incomes.frequency.label') }}
         </p>
-        <nav aria-label="Breadcrumb" class="flex overflow-x-auto px-6 max-sm:w-screen lg:px-8">
+        <nav
+          aria-label="Breadcrumb"
+          class="flex overflow-x-auto px-3 max-sm:w-screen sm:px-6 lg:px-8">
           <ol
             class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm"
             role="list">
@@ -96,6 +121,8 @@ import { DATE_FORMAT } from './dates';
 import AppTextField from '@/components/form/AppTextField.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
 import { ROUTE_NAMES } from '@/router/names';
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -113,6 +140,7 @@ const props = defineProps({
   },
 });
 
+const { width } = useWindowSize();
 const i18n = useI18n();
 const router = useRouter();
 const route = useRoute();
@@ -206,6 +234,30 @@ watch(
   },
   { immediate: true },
 );
+
+const previousPeriod = computed(() => {
+  if (state.period.start && state.period.end) {
+    const from = dayjs(state.period.start);
+    const to = dayjs(state.period.end);
+    return {
+      start: from.subtract(1, 'day').subtract(to.diff(from, 'day'), 'day').format(DATE_FORMAT),
+      end: from.subtract(1, 'day').format(DATE_FORMAT),
+    };
+  }
+  return null;
+});
+
+const nextPeriod = computed(() => {
+  if (state.period.start && state.period.end) {
+    const from = dayjs(state.period.start);
+    const to = dayjs(state.period.end);
+    return {
+      start: to.add(1, 'day').format(DATE_FORMAT),
+      end: to.add(1, 'day').add(to.diff(from, 'day'), 'day').format(DATE_FORMAT),
+    };
+  }
+  return null;
+});
 
 watch(
   () => state.period,

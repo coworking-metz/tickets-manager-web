@@ -4,7 +4,7 @@
       <!-- Mobile navigation -->
       <Menu as="nav" class="relative inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-6 py-4 text-gray-700 hover:bg-gray-200">
+          class="group w-full border-b border-gray-200 bg-white px-3 py-4 text-gray-700 hover:bg-gray-200 sm:px-6">
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"
@@ -41,7 +41,7 @@
                   :aria-current="tab.active ? 'page' : undefined"
                   :class="[
                     tab.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex px-6 py-2',
+                    'flex px-3 py-2 sm:px-6',
                   ]"
                   :to="tab.to"
                   @click.capture="close">
@@ -68,7 +68,7 @@
         <nav
           aria-label="Sections"
           class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col">
-          <div class="flex h-16 shrink-0 items-center border-b border-gray-200 px-6">
+          <div class="flex h-16 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6">
             <p class="text-lg font-medium text-gray-900">{{ $t('stats.title') }}</p>
           </div>
           <div class="min-h-0 flex-1 overflow-y-auto">

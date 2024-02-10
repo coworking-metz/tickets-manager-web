@@ -11,10 +11,15 @@
         class="m-auto py-8"
         :description="$t('stats.incomes.empty.description')"
         :title="$t('stats.incomes.empty.title')" />
-      <VueECharts v-else class="h-full w-full" :option="options" @click="onBarSelect" />
+      <VueECharts
+        v-else
+        :key="`echarts-${width}-${height}`"
+        class="h-full w-full"
+        :option="options"
+        @click="onBarSelect" />
     </section>
 
-    <section class="mx-6 lg:mx-8">
+    <section class="mx-3 sm:mx-6">
       <h3 class="text-lg font-medium leading-6 text-gray-900">
         {{ $t('stats.incomes.yearly.summary.label') }}
       </h3>
@@ -59,8 +64,9 @@
                   : 'bg-red-100 text-red-800',
               ]">
               {{
-                `${averageIncome > MINIMUM_INCOME ? '+' : ''}${fractionAmount(
-                  averageIncome - MINIMUM_INCOME,
+                `${averageIncome > MINIMUM_INCOME ? '+' : ''}${fractionPercentage(
+                  (averageIncome - MINIMUM_INCOME) / MINIMUM_INCOME,
+                  $i18n.locale,
                 )}`
               }}
             </div>
@@ -93,21 +99,22 @@
               <span class="shrink grow basis-0 truncate font-normal text-gray-500">
                 {{
                   $t('stats.incomes.yearly.summary.total.threshold', {
-                    amount: fractionAmount(MINIMUM_INCOME * state.incomes.length),
+                    amount: fractionAmount(totalMinimumIncome),
                   })
                 }}
               </span>
               <div
                 :class="[
                   'rounded-full px-2.5 py-0.5 font-medium',
-                  totalIncome > MINIMUM_INCOME * state.incomes.length
+                  totalIncome > totalMinimumIncome
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800',
                 ]">
                 {{
-                  `${
-                    totalIncome > MINIMUM_INCOME * state.incomes.length ? '+' : ''
-                  }${fractionAmount(totalIncome - MINIMUM_INCOME * state.incomes.length)}`
+                  `${totalIncome > totalMinimumIncome ? '+' : ''}${fractionPercentage(
+                    ((totalIncome - totalMinimumIncome) / MINIMUM_INCOME) * state.incomes.length,
+                    $i18n.locale,
+                  )}`
                 }}
               </div>
             </div>
@@ -123,7 +130,7 @@ import { DATE_FORMAT } from './dates';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import { fractionAmount } from '@/helpers/currency';
+import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {
@@ -136,6 +143,7 @@ import {
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
+import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { BarChart } from 'echarts/charts.js';
 import { GridComponent, TooltipComponent, MarkLineComponent } from 'echarts/components.js';
@@ -171,6 +179,7 @@ const props = defineProps({
   },
 });
 
+const { height, width } = useWindowSize();
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
@@ -189,6 +198,8 @@ const averageIncome = computed(() => {
 const totalIncome = computed(() =>
   state.incomes.map(({ data }) => data.incomes).reduce((acc, income) => acc + income, 0),
 );
+
+const totalMinimumIncome = computed(() => MINIMUM_INCOME * state.incomes.length);
 
 const options = computed<
   ComposeOption<GridComponentOption | TooltipComponentOption | MarkLineComponentOption>

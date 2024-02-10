@@ -32,3 +32,18 @@ export const fractionAmount = (
     ...args,
   );
 };
+
+export const fractionPercentage = (
+  value: number,
+  locale: string = DEFAULT_LOCALE,
+  options?: Intl.NumberFormatOptions,
+): string => {
+  const shouldFraction = Boolean(value % 1);
+  const decimals = shouldFraction ? 2 : 0;
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    ...options,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value);
+};
