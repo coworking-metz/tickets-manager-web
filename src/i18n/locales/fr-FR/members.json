@@ -117,6 +117,9 @@
         "fail": "Impossible de mettre à jour {name}",
         "success": "{name} mis à jour"
       },
+      "picture": {
+        "label": "Photo de profil"
+      },
       "since": {
         "label": "Membre depuis"
       },

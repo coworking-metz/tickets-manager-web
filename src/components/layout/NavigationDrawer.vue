@@ -33,9 +33,10 @@
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <img
-          alt=""
+          v-if="authStore.user?.wpUserId"
+          :alt="`${$t('members.detail.profile.picture.label')} - ${authStore.user?.name}`"
           class="inline-block h-12 w-12 rounded-full object-cover object-top"
-          :src="authStore.user?.picture" />
+          :src="buildMemberPictureUrl(authStore.user?.wpUserId)" />
         <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
       </router-link>
     </nav>
@@ -46,6 +47,7 @@
 import monoLogo from '@/assets/logo-mono-inverted.svg';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
+import { buildMemberPictureUrl } from '@/services/api/members';
 import { useAuthStore } from '@/store/auth';
 import { mdiAccountGroup, mdiFinance } from '@mdi/js';
 import { computed } from 'vue';

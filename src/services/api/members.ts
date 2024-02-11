@@ -83,13 +83,16 @@ export const syncMember = (id: string): Promise<Member> => {
   return HTTP.post(`/api/members/${id}/sync-wordpress`).then(({ data }) => data);
 };
 
-export const buildMemberPictureUrl = (id: string) => {
-  return HTTP.getUri({ url: `/api/members/${id}/avatar` });
+export const buildMemberPictureUrl = (wordpressUserId: number) => {
+  return new URL(
+    `/polaroid/${wordpressUserId}-raw-small.jpg`,
+    import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
+  ).toString();
 };
 
-export const buildMemberWordpressProfileUrl = (wordpressId: number) => {
+export const buildMemberWordpressProfileUrl = (wordpressUserId: number) => {
   return new URL(
-    `/wp-admin/user-edit.php?user_id=${wordpressId}`,
+    `/wp-admin/user-edit.php?user_id=${wordpressUserId}`,
     import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
   ).toString();
 };

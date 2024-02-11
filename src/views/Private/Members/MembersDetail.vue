@@ -15,11 +15,12 @@
         <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
           <div class="flex flex-row space-x-5 sm:ml-8">
             <div class="shrink-0">
-              <div class="relative">
+              <div class="relative h-16 w-16 rounded-full bg-gray-200">
                 <img
-                  alt=""
-                  class="h-16 w-16 rounded-full bg-gray-200 object-cover object-top"
-                  :src="state.member.picture" />
+                  v-if="state.member.wpUserId"
+                  :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
+                  class="h-full w-full rounded-full object-cover object-top"
+                  :src="buildMemberPictureUrl(state.member.wpUserId)" />
                 <span
                   v-if="
                     !!state.member.lastSeen && dayjs().diff(state.member.lastSeen, 'hour', true) < 1
@@ -29,10 +30,7 @@
             </div>
             <div class="flex flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900">
-                {{
-                  [state.member.firstName, state.member.lastName].filter(Boolean).join(' ') ||
-                  state.member.email
-                }}
+                {{ fullname || state.member.email }}
               </h1>
               <i18n-t
                 v-if="!!state.member.lastSeen"
@@ -338,7 +336,13 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, Member, getMember, getMemberActivity } from '@/services/api/members';
+import {
+  Attendance,
+  Member,
+  buildMemberPictureUrl,
+  getMember,
+  getMemberActivity,
+} from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
@@ -394,6 +398,10 @@ useHead({
       .filter(Boolean)
       .join(' - '),
 });
+
+const fullname = computed<string>(() =>
+  [state.member?.firstName, state.member?.lastName].filter(Boolean).join(' '),
+);
 
 const totalAmountSpent = computed<number>(() => {
   const totalTicketsAmount = state.tickets.reduce((total, ticket) => {
