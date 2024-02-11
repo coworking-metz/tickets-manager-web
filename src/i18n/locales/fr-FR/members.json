@@ -1,11 +1,6 @@
 {
   "detail": {
     "attendance": {
-      "allTime": {
-        "label": "Occupation",
-        "suffix": "journée | journée | journées",
-        "value": "{amount} depuis son arrivée"
-      },
       "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
       "graph": {
         "tooltip": "{date} : {amount}",
@@ -15,18 +10,19 @@
           "NONE": "absent"
         }
       },
-      "last30days": {
-        "empty": "Absent⸱e",
-        "label": "Présent⸱e",
-        "suffix": "jour | jour | jours",
-        "value": "{amount} sur les 30 derniers jours"
-      },
       "onFetch": {
         "fail": "Impossible de récupérer ses présences"
       },
       "period": {
         "allTime": "Toutes",
         "last6Months": "6 derniers mois"
+      },
+      "summary": {
+        "allTime": "{amount} depuis son arrivée",
+        "empty": "Absent⸱e",
+        "label": "Occupation",
+        "last6Months": "{amount} sur les 6 derniers mois",
+        "value": "journée | journée | journées"
       },
       "title": "Présence"
     },
@@ -145,10 +141,10 @@
     },
     "lastSeen": "Présent⸱e pour la dernière fois {date}",
     "onFetch": {
-      "fail": "Impossible de récupérer la liste des coworkeurs"
+      "fail": "Impossible de récupérer la liste des membres"
     },
     "search": {
-      "label": "Rechercher un coworkeur",
+      "label": "Rechercher un membre",
       "placeholder": "@:members.list.search.label"
     },
     "sort": {
@@ -165,6 +161,6 @@
       "nonCompliant": "Irrégularité | Irrégularités",
       "present": "Présent⸱e | Présent⸱e⸱s"
     },
-    "title": "Coworkeurs"
+    "title": "Membres"
   }
 }

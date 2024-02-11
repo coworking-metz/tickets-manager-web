@@ -14,7 +14,7 @@
     },
     "description": "Placed on {purchasedDate} at {purchasedTime}",
     "empty": {
-      "description": "Make sure the order is correctly linked to this coworker.",
+      "description": "Make sure the order is correctly linked to this member.",
       "title": "Order Not Found"
     },
     "head": {

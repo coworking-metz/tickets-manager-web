@@ -10,7 +10,7 @@
   "detail": {
     "description": "Ordered on {purchasedDate} at {purchasedTime}",
     "empty": {
-      "description": "Make sure the subscription is correctly linked to this coworker.",
+      "description": "Make sure the subscription is correctly linked to this member.",
       "title": "Subscription Not Found"
     },
     "ended": {
