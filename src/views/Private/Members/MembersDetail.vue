@@ -145,42 +145,38 @@
         <template #append>
           <dl class="sticky top-3 flex flex-col gap-3 px-3 sm:px-0">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <template v-if="!!attendanceLast30Days">
-                <dt class="truncate font-medium text-gray-500 sm:text-sm">
-                  {{ $t('members.detail.attendance.last30days.label') }}
-                </dt>
-                <i18n-t
-                  class="mt-1"
-                  keypath="members.detail.attendance.last30days.value"
-                  scope="global"
-                  tag="dd">
-                  <template #amount>
-                    <animated-counter
-                      class="block text-3xl font-semibold tracking-tight text-gray-900"
-                      :decimals="Number(!Number.isInteger(attendanceLast30Days))"
-                      :duration="1"
-                      :end-amount="attendanceLast30Days"
-                      separator=" "
-                      :suffix="`
-                      ${$t('members.detail.attendance.last30days.suffix', {
-                        count: attendanceLast30Days,
-                      })}`" />
-                  </template>
-                </i18n-t>
-              </template>
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+                {{ $t('members.detail.attendance.summary.label') }}
+              </dt>
               <i18n-t
-                v-else
                 class="mt-1"
-                keypath="members.detail.attendance.last30days.value"
+                :keypath="
+                  state.shouldRenderAllActivity
+                    ? 'members.detail.attendance.summary.allTime'
+                    : 'members.detail.attendance.summary.last6Months'
+                "
                 scope="global"
                 tag="dd">
                 <template #amount>
                   <div
                     v-if="state.isFetchingActivity"
                     class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
-                  <span v-else class="block text-3xl font-semibold tracking-tight text-gray-900">
-                    {{ $t('members.detail.attendance.last30days.empty') }}
+                  <span
+                    v-else-if="!periodAttendance"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900">
+                    {{ $t('members.detail.attendance.summary.empty') }}
                   </span>
+                  <animated-counter
+                    v-else
+                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    :decimals="Number(!Number.isInteger(periodAttendance))"
+                    :duration="1"
+                    :end-amount="periodAttendance"
+                    separator=" "
+                    :suffix="`
+                      ${$t('members.detail.attendance.summary.value', {
+                        count: periodAttendance,
+                      })}`" />
                 </template>
               </i18n-t>
             </div>
@@ -204,29 +200,6 @@
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                 {{ dayjs(state.member.created).format('YYYY') }}
               </dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
-                {{ $t('members.detail.attendance.allTime.label') }}
-              </dt>
-              <i18n-t
-                class="mt-1"
-                keypath="members.detail.attendance.allTime.value"
-                scope="global"
-                tag="dd">
-                <template #amount>
-                  <animated-counter
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :decimals="Number(!Number.isInteger(totalAttendance))"
-                    :duration="1"
-                    :end-amount="totalAttendance"
-                    separator=" "
-                    :suffix="`
-                      ${$t('members.detail.attendance.allTime.suffix', {
-                        count: totalAttendance,
-                      })}`" />
-                </template>
-              </i18n-t>
             </div>
           </dl>
         </template>
@@ -436,14 +409,10 @@ const monthlyAmountSpent = computed<number>(() => {
   return 0;
 });
 
-const attendanceLast30Days = computed<number>(() => {
+const periodAttendance = computed<number>(() => {
   return state.activity
-    .filter(({ date }) => dayjs().diff(dayjs(date), 'day') <= 30)
+    .filter(({ date }) => state.shouldRenderAllActivity || dayjs().diff(dayjs(date), 'month') <= 6)
     .reduce((acc, { value }) => acc + value, 0);
-});
-
-const totalAttendance = computed<number>(() => {
-  return state.activity.reduce((acc, { value }) => acc + value, 0);
 });
 
 const fetchMember = (memberId: string) => {

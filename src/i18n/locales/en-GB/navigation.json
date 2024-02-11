@@ -1,6 +1,6 @@
 {
   "close": "Close menu",
-  "members": "Coworkers",
+  "members": "@:members.list.title",
   "open": "Open menu",
-  "stats": "Statistics"
+  "stats": "@:stats.title"
 }

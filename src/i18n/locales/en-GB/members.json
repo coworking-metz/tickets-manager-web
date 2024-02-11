@@ -1,11 +1,6 @@
 {
   "detail": {
     "attendance": {
-      "allTime": {
-        "label": "Occupation",
-        "suffix": "day | day | days",
-        "value": "{amount} since arrival"
-      },
       "description": "Attendance is automatically recorded when the member connects to the coworking's wifi network.",
       "graph": {
         "tooltip": "{date}: {amount}",
@@ -15,18 +10,19 @@
           "NONE": "absent"
         }
       },
-      "last30days": {
-        "empty": "Absent",
-        "label": "Present",
-        "suffix": "day | single day | days",
-        "value": "{amount} out of the last 30 days"
-      },
       "onFetch": {
         "fail": "Unable to fetch member's attendance"
       },
       "period": {
         "allTime": "All time",
         "last6Months": "Last 6 months"
+      },
+      "summary": {
+        "allTime": "{amount} since arrival",
+        "empty": "Absent",
+        "label": "Occupation",
+        "last6Months": "{amount} out of the last 6 months",
+        "value": "day | day | days"
       },
       "title": "Attendance"
     },
@@ -145,10 +141,10 @@
     },
     "lastSeen": "Last seen on {date}",
     "onFetch": {
-      "fail": "Unable to fetch coworkers list"
+      "fail": "Unable to fetch members list"
     },
     "search": {
-      "label": "Search for a coworker",
+      "label": "Search for a member",
       "placeholder": "@:members.list.search.label"
     },
     "sort": {
@@ -165,6 +161,6 @@
       "nonCompliant": "Non compliant",
       "present": "Present | Presents"
     },
-    "title": "Coworkers"
+    "title": "Members"
   }
 }
