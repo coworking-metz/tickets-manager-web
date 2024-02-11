@@ -7,6 +7,7 @@ export interface User {
   email: string;
   roles: ('admin' | 'coworker' | 'guest' | 'external')[];
   picture: string;
+  wpUserId?: number;
 }
 
 export const refreshTokens = (

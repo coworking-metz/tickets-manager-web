@@ -1,17 +1,17 @@
 <template>
   <div :class="['flex items-center p-4 sm:px-6', loading && 'animate-pulse']">
     <div class="flex min-w-0 flex-1 items-start">
-      <div class="relative shrink-0">
+      <div :class="['relative h-12 w-12 shrink-0 rounded-full bg-slate-200']">
         <template v-if="member">
           <img
-            alt=""
-            class="h-12 w-12 rounded-full bg-gray-200 object-cover object-top"
-            :src="member.picture" />
+            v-if="member.wpUserId"
+            :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
+            class="h-full w-full rounded-full object-cover object-top"
+            :src="buildMemberPictureUrl(member.wpUserId)" />
           <span
             v-if="!!member.lastSeen && dayjs().diff(member.lastSeen, 'hour', true) < 1"
             class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
         </template>
-        <div v-else-if="loading" class="h-12 w-12 rounded-full bg-slate-200" />
       </div>
       <div class="flex min-w-0 flex-1 flex-row gap-3 pl-4">
         <div class="flex shrink grow basis-0 flex-col items-start overflow-hidden">
@@ -77,7 +77,11 @@
 </template>
 
 <script setup lang="ts">
-import { MemberListItem, isMembershipNonCompliant } from '@/services/api/members';
+import {
+  MemberListItem,
+  buildMemberPictureUrl,
+  isMembershipNonCompliant,
+} from '@/services/api/members';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';
 
