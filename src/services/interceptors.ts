@@ -23,8 +23,8 @@ const MAX_REQUEST_RETRIES = 2;
 
 // to avoid dependency cycle @see https://stackoverflow.com/a/51048400/15183871
 const createHttpInterceptors = (httpInstance: AxiosInstance) => {
-  httpInstance.interceptors.request.use((config: AppAxiosRequestConfig) => {
-    const { accessToken } = useAuthStore();
+  httpInstance.interceptors.request.use(async (config: AppAxiosRequestConfig) => {
+    const accessToken = await useAuthStore().getOrRefreshAccessToken();
     const headers = {
       ...config.headers,
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
@@ -94,6 +94,7 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         await authStore.fetchTokens();
         return true;
       }
+
       return false;
     },
   });

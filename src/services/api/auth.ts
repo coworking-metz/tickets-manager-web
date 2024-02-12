@@ -1,6 +1,5 @@
-import HTTP from '../http';
+import { version as appVersion } from '../../../package.json';
 import axios from 'axios';
-
 export interface User {
   id: string;
   name: string;
@@ -12,13 +11,20 @@ export interface User {
 
 export const refreshTokens = (
   refreshToken: string | null,
-  isCancellable = true,
 ): Promise<{ accessToken: string; refreshToken: string }> => {
-  return HTTP.post(
-    '/api/auth/tokens',
-    { refreshToken: refreshToken },
-    {
-      ...(!isCancellable ? { cancelToken: axios.CancelToken.source().token } : {}),
-    },
-  ).then(({ data }) => data);
+  // refreshing tokens should have its own axios config
+  // and should not be cancelled
+  return axios
+    .post(
+      '/api/auth/tokens',
+      { refreshToken: refreshToken },
+      {
+        baseURL: import.meta.env.VUE_APP_API_URL,
+        timeout: 10_000,
+        headers: {
+          ...(appVersion ? { 'X-APP-VERSION': appVersion } : {}),
+        },
+      },
+    )
+    .then(({ data }) => data);
 };

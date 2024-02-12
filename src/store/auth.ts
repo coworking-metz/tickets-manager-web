@@ -1,6 +1,7 @@
 import { useHttpStore } from './http';
 import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, refreshTokens } from '@/services/api/auth';
+import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
 
 const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
@@ -48,11 +49,20 @@ export const useAuthStore = defineStore('auth', {
       this.user = user;
       this.accessToken = accessToken || null;
     },
+    async getOrRefreshAccessToken() {
+      if (this.accessToken) {
+        const { exp } = parseJwt(this.accessToken);
+        if (exp && dayjs().isAfter(dayjs.unix(exp))) {
+          await this.fetchTokens();
+        }
+      }
+
+      return this.accessToken;
+    },
     fetchTokens() {
       if (!refreshPromise) {
         const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
-
-        refreshPromise = refreshTokens(refreshToken, false)
+        refreshPromise = refreshTokens(refreshToken)
           .then(async ({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
             await this.setAccessToken(newAccessToken);
             this.setRefreshToken(newRefresToken);
@@ -61,6 +71,7 @@ export const useAuthStore = defineStore('auth', {
             refreshPromise = null;
           });
       }
+
       return refreshPromise;
     },
     disconnect() {
