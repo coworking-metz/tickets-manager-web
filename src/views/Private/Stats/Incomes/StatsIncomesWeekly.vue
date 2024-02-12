@@ -13,7 +13,7 @@
         :title="$t('stats.incomes.empty.title')" />
       <VueECharts
         v-else
-        :key="`echarts-${width}-${height}`"
+        :key="`echarts-${width}`"
         class="h-full w-full"
         :option="options"
         @click="onBarSelect" />
@@ -178,7 +178,7 @@ const props = defineProps({
   },
 });
 
-const { height, width } = useWindowSize();
+const { width } = useWindowSize();
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
