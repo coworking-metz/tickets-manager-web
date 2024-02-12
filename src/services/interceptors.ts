@@ -1,4 +1,3 @@
-import { version as appVersion } from '../../package.json';
 import { useAuthStore } from '@/store/auth';
 import { useHttpStore } from '@/store/http';
 import { useNotificationsStore } from '@/store/notifications';
@@ -28,7 +27,6 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
     const headers = {
       ...config.headers,
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      ...(appVersion ? { 'X-APP-VERSION': appVersion } : {}),
     } as AxiosHeaders;
 
     return {
