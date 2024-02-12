@@ -1,6 +1,6 @@
 import { useHttpStore } from './http';
 import { AppError, AppErrorCode } from '@/helpers/errors';
-import { User, refreshTokens } from '@/services/api/auth';
+import { User, decodeToken, refreshTokens } from '@/services/api/auth';
 import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
 
@@ -12,23 +12,6 @@ const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
  */
 let refreshPromise: Promise<void> | null = null;
 
-// https://stackoverflow.com/a/38552302
-const parseJwt = (token: string) => {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join(''),
-  );
-
-  return JSON.parse(jsonPayload);
-};
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     accessToken: null as string | null,
@@ -39,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
     async setAccessToken(accessToken: string) {
-      const user: User | null = parseJwt(accessToken) || null;
+      const user = decodeToken(accessToken);
       if (!user || !user.roles.includes('admin')) {
         const error = new Error('Missing admin role') as AppError;
         error.code = AppErrorCode.FORBIDDEN;
@@ -51,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async getOrRefreshAccessToken() {
       if (this.accessToken) {
-        const { exp } = parseJwt(this.accessToken);
+        const { exp } = decodeToken(this.accessToken);
         if (exp && dayjs().isAfter(dayjs.unix(exp))) {
           await this.fetchTokens();
         }
