@@ -11,11 +11,7 @@
         class="m-auto py-8"
         :description="$t('stats.incomes.empty.description')"
         :title="$t('stats.incomes.empty.title')" />
-      <VueECharts
-        v-else
-        :key="`echarts-${width}-${height}`"
-        class="h-full w-full"
-        :option="options" />
+      <VueECharts v-else :key="`echarts-${width}`" class="h-full w-full" :option="options" />
     </section>
 
     <section class="mx-3 sm:mx-6">
@@ -174,7 +170,7 @@ const props = defineProps({
   },
 });
 
-const { height, width } = useWindowSize();
+const { width } = useWindowSize();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({

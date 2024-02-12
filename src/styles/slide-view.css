@@ -86,3 +86,11 @@
     transition: none;
   }
 }
+
+/* disable transition on mobile to avoid playing the effect when swiping back */
+@media screen and (max-width: 640px) {
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    transition: none;
+  }
+}
