@@ -22,9 +22,7 @@
                   class="h-full w-full rounded-full object-cover object-top"
                   :src="buildMemberPictureUrl(state.member.wpUserId)" />
                 <span
-                  v-if="
-                    !!state.member.lastSeen && dayjs().diff(state.member.lastSeen, 'hour', true) < 1
-                  "
+                  v-if="state.member.attending"
                   class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
@@ -44,7 +42,7 @@
                     :datetime="state.member.lastSeen"
                     :title="dayjs(state.member.lastSeen).format('llll')">
                     {{
-                      dayjs().isSame(state.member.lastSeen, 'day')
+                      dayjs().diff(state.member.lastSeen, 'hour') < 1
                         ? dayjs(state.member.lastSeen).fromNow()
                         : dayjs(state.member.lastSeen).calendar(dayjs())
                     }}

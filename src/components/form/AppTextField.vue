@@ -22,7 +22,7 @@
           :aria-invalid="isInvalid"
           :autocomplete="autocomplete"
           :class="{
-            ['block h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
+            ['block min-h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
             ['rounded-none']: slots.after || slots.before,
             ['rounded-l-md']: !slots.before,
             ['rounded-r-md']: !slots.after,

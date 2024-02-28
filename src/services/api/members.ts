@@ -33,6 +33,7 @@ export interface MemberListItem {
   balance: number;
   membershipOk: boolean;
   lastMembership: number;
+  attending: boolean;
   wpUserId?: number;
 }
 
