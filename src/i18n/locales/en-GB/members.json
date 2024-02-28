@@ -158,8 +158,8 @@
     "tabs": {
       "active": "Active | Actives",
       "all": "All",
-      "nonCompliant": "Non compliant",
-      "present": "Present | Presents"
+      "attending": "Attending",
+      "nonCompliant": "Non compliant"
     },
     "title": "Members"
   }

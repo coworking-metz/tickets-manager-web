@@ -158,8 +158,8 @@
     "tabs": {
       "active": "Actif⸱ve | Actif⸱ve⸱s",
       "all": "Tous",
-      "nonCompliant": "Irrégularité | Irrégularités",
-      "present": "Présent⸱e | Présent⸱e⸱s"
+      "attending": "Présent⸱e | Présent⸱e⸱s",
+      "nonCompliant": "Irrégularité | Irrégularités"
     },
     "title": "Membres"
   }
