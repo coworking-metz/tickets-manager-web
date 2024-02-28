@@ -188,10 +188,9 @@ const ALL_TABS: Tab[] = [
     filter: (member: MemberListItem) => member.active,
   },
   {
-    key: 'present',
-    hash: 'present',
-    filter: (member: MemberListItem) =>
-      !!member.lastSeen && dayjs().isSame(member.lastSeen, 'hour'),
+    key: 'attending',
+    hash: 'attending',
+    filter: (member: MemberListItem) => member.attending,
   },
 ];
 
