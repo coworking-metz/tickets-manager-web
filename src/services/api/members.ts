@@ -46,9 +46,10 @@ export interface Member extends MemberListItem {
 
 export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
   return Boolean(
-    member.membershipOk === false &&
+    !member.membershipOk &&
       member.lastSeen &&
-      !dayjs(member.lastSeen).isSame(dayjs().year(member.lastMembership), 'year'),
+      (!member.lastMembership ||
+        !dayjs(member.lastSeen).isSame(dayjs().year(member.lastMembership), 'year')),
   );
 };
 
