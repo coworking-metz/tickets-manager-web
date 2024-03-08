@@ -38,6 +38,8 @@ export interface MemberListItem {
 }
 
 export interface Member extends MemberListItem {
+  activity: number;
+  totalActivity: number;
   macAddresses: string[];
   memberships: Membership[];
 }

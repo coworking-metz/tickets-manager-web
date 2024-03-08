@@ -374,6 +374,12 @@ const fullname = computed<string>(() =>
   [state.member?.firstName, state.member?.lastName].filter(Boolean).join(' '),
 );
 
+const periodAttendance = computed<number>(() => {
+  return (
+    (state.shouldRenderAllActivity ? state.member?.totalActivity : state.member?.activity) || 0
+  );
+});
+
 const totalAmountSpent = computed<number>(() => {
   const totalTicketsAmount = state.tickets.reduce((total, ticket) => {
     return total + ticket.amount;
@@ -405,12 +411,6 @@ const monthlyAmountSpent = computed<number>(() => {
     return totalAmountSpent.value / totalMonths;
   }
   return 0;
-});
-
-const periodAttendance = computed<number>(() => {
-  return state.activity
-    .filter(({ date }) => state.shouldRenderAllActivity || dayjs().diff(dayjs(date), 'month') <= 6)
-    .reduce((acc, { value }) => acc + value, 0);
 });
 
 const fetchMember = (memberId: string) => {
