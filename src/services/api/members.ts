@@ -56,6 +56,10 @@ export const getAllMembers = (): Promise<MemberListItem[]> => {
   return HTTP.get('/api/members').then(({ data }) => data);
 };
 
+export const getVotingMembers = (): Promise<MemberListItem[]> => {
+  return HTTP.get('/api/voting-members').then(({ data }) => data);
+};
+
 export const getMember = (id: string): Promise<Member> => {
   return HTTP.get(`/api/members/${id}`).then(({ data }) => data);
 };

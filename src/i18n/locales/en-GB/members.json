@@ -143,6 +143,9 @@
     "onFetch": {
       "fail": "Unable to fetch members list"
     },
+    "onFetchVotingMembers": {
+      "fail": "Unable to fetch voting members list"
+    },
     "search": {
       "label": "Search for a member",
       "placeholder": "@:members.list.search.label"

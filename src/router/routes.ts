@@ -34,6 +34,7 @@ export const routes: RouteRecordRaw[] = [
               tab: route.hash.replace('#', ''),
               search: route.query.search,
               sort: route.query.sort,
+              slice: route.query.slice,
             }),
           },
           {
