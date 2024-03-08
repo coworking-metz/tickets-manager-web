@@ -35,7 +35,7 @@
         <img
           v-if="authStore.user?.wpUserId"
           :alt="`${$t('members.detail.profile.picture.label')} - ${authStore.user?.name}`"
-          class="inline-block h-12 w-12 rounded-full object-cover object-top"
+          class="inline-block h-12 w-12 rounded-full bg-slate-200 object-cover object-top text-black"
           :src="buildMemberPictureUrl(authStore.user?.wpUserId)" />
         <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
       </router-link>

@@ -21,20 +21,23 @@
             'whitespace-nowrap border-b-2 px-1 pb-4 pt-2.5 text-sm font-medium',
           ]"
           replace
-          :to="{ ...$route, hash: listTab.hash ? `#${listTab.hash}` : '' }">
+          :to="{
+            ...$route,
+            query: { ...$route.query, slice: undefined },
+            hash: listTab.hash ? `#${listTab.hash}` : '',
+          }">
           {{
             $t(`members.list.tabs.${listTab.key}`, {
-              count: listTab.filter
-                ? filteredList.filter(listTab.filter).length
-                : filteredList.length,
+              count: listTab.count || 0,
             })
           }}
           <span
+            v-if="!isNil(listTab.count)"
             :class="[
               listTab.hash === tab ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-900',
               'ml-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium',
             ]">
-            {{ listTab.filter ? filteredList.filter(listTab.filter).length : filteredList.length }}
+            {{ listTab.count }}
           </span>
         </router-link>
       </nav>
@@ -119,31 +122,27 @@
       </div>
     </div>
 
-    <div
-      v-bind="containerProps"
-      class="min-h-[320px] grow basis-0 overflow-hidden bg-white shadow sm:rounded-md">
-      <ul v-bind="wrapperProps" class="divide-y divide-gray-200" role="list">
-        <template v-if="isPending">
-          <li v-for="index in 10" :key="`loading-member-card-${index}`">
-            <MembersListCard loading />
-          </li>
-        </template>
-        <EmptyState
-          v-else-if="!list.length"
-          class="m-auto py-6"
-          :title="$t('members.list.empty.title')" />
-        <li v-else v-for="{ data: member } in list" :key="`member-${member._id}`">
-          <RouterLink
-            class="block h-20 overflow-y-hidden hover:bg-gray-50"
-            :to="{
-              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: member._id },
-            }">
-            <MembersListCard :loading="isFetching" :member="member" />
-          </RouterLink>
+    <ul class="grow divide-y divide-gray-200 bg-white shadow sm:rounded-md" role="list">
+      <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
+        <li v-for="index in 10" :key="`loading-member-card-${index}`">
+          <MembersListCard loading />
         </li>
-      </ul>
-    </div>
+      </template>
+      <EmptyState
+        v-else-if="!slicedList.length"
+        class="m-auto py-6"
+        :title="$t('members.list.empty.title')" />
+      <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
+        <RouterLink
+          class="block hover:bg-gray-50"
+          :to="{
+            name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+            params: { id: member._id },
+          }">
+          <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
+        </RouterLink>
+      </li>
+    </ul>
   </article>
 </template>
 
@@ -154,15 +153,21 @@ import AppTextField from '@/components/form/AppTextField.vue';
 import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
-import { MemberListItem, getAllMembers, isMembershipNonCompliant } from '@/services/api/members';
+import {
+  MemberListItem,
+  getAllMembers,
+  getVotingMembers,
+  isMembershipNonCompliant,
+} from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
-import { useVirtualList } from '@vueuse/core';
+import { useInfiniteScroll } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { computed, reactive, watch } from 'vue';
+import { isNil } from 'lodash';
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -170,36 +175,15 @@ interface Tab {
   key: string;
   hash: string;
   filter?: (m: MemberListItem) => boolean;
+  count?: number;
 }
-
-const ALL_TABS: Tab[] = [
-  {
-    key: 'all',
-    hash: '',
-  },
-  {
-    key: 'nonCompliant',
-    hash: 'non-compliant',
-    filter: (member: MemberListItem) => member.balance < 0 || isMembershipNonCompliant(member),
-  },
-  {
-    key: 'active',
-    hash: 'active',
-    filter: (member: MemberListItem) => member.active,
-  },
-  {
-    key: 'attending',
-    hash: 'attending',
-    filter: (member: MemberListItem) => member.attending,
-  },
-];
 
 interface ListSorter {
   key: string;
   sort: (a: MemberListItem, b: MemberListItem) => number;
 }
 
-const ALL_LIST_SORTERS: ListSorter[] = [
+const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'name',
     sort: (a, b) =>
@@ -217,7 +201,9 @@ const ALL_LIST_SORTERS: ListSorter[] = [
     key: 'lastSeen',
     sort: (a, b) => (!b.lastSeen ? -1 : !a.lastSeen ? 1 : dayjs(b.lastSeen).diff(a.lastSeen)),
   },
-];
+]);
+
+const SLICE_STEP = 16;
 
 const props = defineProps({
   tab: {
@@ -232,6 +218,10 @@ const props = defineProps({
     type: String,
     default: 'lastSeen',
   },
+  slice: {
+    type: [String, Number],
+    default: SLICE_STEP, // eslint-disable-line vue/valid-define-props
+  },
 });
 
 const router = useRouter();
@@ -239,9 +229,11 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   search: null as string | null,
+  slice: Number(props.slice) as number,
 });
 
 const {
+  isSuccess,
   isPending,
   isFetching,
   data: members,
@@ -254,7 +246,19 @@ const {
   retry: false,
 });
 
-const selectedTab = computed(() => ALL_TABS.find((t) => t.hash === props.tab));
+const {
+  isPending: isPendingVotingMembers,
+  isFetching: isFetchingVotingMembers,
+  data: votingMembers,
+  error: votingMembersError,
+} = useQuery({
+  queryKey: ['voting-members'],
+  queryFn: () => getVotingMembers(),
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  retry: false,
+  enabled: computed(() => props.tab === 'voting'),
+});
 
 const filteredList = computed(() => {
   return (members.value || [])
@@ -272,27 +276,85 @@ const filteredList = computed(() => {
               count: Math.abs(member.balance),
             })
           : null,
-        member.membershipOk === false
-          ? i18n.t('members.detail.membership.last', { year: member.lastMembership })
+        isMembershipNonCompliant(member)
+          ? member.lastMembership
+            ? i18n.t('members.detail.membership.last', { year: member.lastMembership })
+            : i18n.t('members.detail.membership.none')
           : null,
       ),
     )
-    .sort(ALL_LIST_SORTERS.find((s) => s.key === props.sort)?.sort);
+    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
 });
+
+const ALL_TABS = computed<Tab[]>(() => [
+  {
+    key: 'all',
+    hash: '',
+    count: filteredList.value.length,
+  },
+  {
+    key: 'nonCompliant',
+    hash: 'non-compliant',
+    filter: (member: MemberListItem) => member.balance < 0 || isMembershipNonCompliant(member),
+    count: filteredList.value.filter(
+      (member) => member.balance < 0 || isMembershipNonCompliant(member),
+    ).length,
+  },
+  {
+    key: 'voting',
+    hash: 'voting',
+    filter: (member: MemberListItem) =>
+      votingMembers.value?.some(({ email }) => member.email === email) || false,
+    count: isPendingVotingMembers.value
+      ? undefined
+      : filteredList.value.filter(
+          (member) => votingMembers.value?.some(({ email }) => member.email === email) || false,
+        ).length,
+  },
+  {
+    key: 'attending',
+    hash: 'attending',
+    filter: (member: MemberListItem) => member.attending,
+    count: filteredList.value.filter((member) => member.attending).length,
+  },
+]);
+
+const selectedTab = computed(() => ALL_TABS.value.find((t) => t.hash === props.tab));
 
 const tabFilteredList = computed(() =>
   filteredList.value.filter(selectedTab.value?.filter ?? (() => true)),
 );
 
-const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(tabFilteredList, {
-  // Keep `itemHeight` in sync with the item's row.
-  itemHeight: 80,
-});
+const slicedList = computed(() => tabFilteredList.value.slice(0, state.slice));
+
+const documentElement = ref<Document>();
+useInfiniteScroll(
+  documentElement,
+  () => {
+    // load more
+    if (tabFilteredList.value.length && state.slice < tabFilteredList.value.length) {
+      state.slice += SLICE_STEP;
+    }
+  },
+  { distance: 100 },
+);
+
+onMounted(() => (documentElement.value = document));
 
 watch(
   () => props.search,
   (search) => {
     state.search = search;
+  },
+  { immediate: true },
+);
+
+watch(
+  () => props.slice,
+  (slice) => {
+    if (!isNil(slice)) {
+      state.slice = Number(slice);
+    }
   },
   { immediate: true },
 );
@@ -323,5 +385,44 @@ watch(
   },
 );
 
-watch([() => props.tab, () => props.search, () => props.sort], () => scrollTo(0));
+watch(
+  () => votingMembersError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.list.onFetchVotingMembers.fail'),
+      );
+      // TODO: should report to Sentry
+    }
+  },
+);
+
+watch(
+  () => state.slice,
+  () => {
+    router.replace({
+      ...router.currentRoute.value,
+      query: {
+        ...router.currentRoute.value.query,
+        slice: state.slice,
+      },
+    });
+  },
+);
+
+watch(
+  () => isSuccess.value,
+  (success) => {
+    if (success) {
+      const top = (router.options.history.state.scroll as { top: number; left: number } | null)
+        ?.top;
+      if (top && props.slice) {
+        nextTick(() => {
+          scrollTo({ top, behavior: 'smooth' });
+        });
+      }
+    }
+  },
+);
 </script>

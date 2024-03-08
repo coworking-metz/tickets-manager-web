@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      ['flex min-h-full grow flex-row items-start max-sm:overflow-x-hidden']: true,
+      ['flex min-h-full grow flex-row items-start']: true,
       ['max-sm:overflow-y-hidden']: state.isMenuOpen,
     }">
     <header
@@ -26,7 +26,7 @@
     </header>
     <NavigationDrawer
       :class="[
-        'top-0 z-[1] h-full shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:sticky sm:h-screen',
+        'top-0 z-[1] h-full shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:fixed sm:h-screen',
         state.isMenuOpen && 'max-sm:max-w-[7rem]',
       ]" />
 
@@ -37,7 +37,7 @@
       }" />
     <main
       :class="[
-        'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16',
+        'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16 sm:pl-28',
         state.isMenuOpen && 'z-[2] shadow-2xl',
       ]">
       <router-view />

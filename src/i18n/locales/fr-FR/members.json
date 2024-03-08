@@ -143,6 +143,9 @@
     "onFetch": {
       "fail": "Impossible de récupérer la liste des membres"
     },
+    "onFetchVotingMembers": {
+      "fail": "Impossible de récupérer la liste des membres électeurs"
+    },
     "search": {
       "label": "Rechercher un membre",
       "placeholder": "@:members.list.search.label"
@@ -156,10 +159,10 @@
       }
     },
     "tabs": {
-      "active": "Actif⸱ve | Actif⸱ve⸱s",
       "all": "Tous",
       "attending": "Présent⸱e | Présent⸱e⸱s",
-      "nonCompliant": "Irrégularité | Irrégularités"
+      "nonCompliant": "Irrégularité | Irrégularités",
+      "voting": "Électeur⸱rice | Électeur⸱rice⸱s"
     },
     "title": "Membres"
   }
