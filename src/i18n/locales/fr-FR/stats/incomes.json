@@ -3,12 +3,6 @@
     "graph": {
       "threshold": "Charges\nfixes\njournalières\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Déficite"
-        },
-        "profit": {
-          "label": "Bénéfice"
-        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
@@ -50,12 +44,6 @@
     "graph": {
       "threshold": "Charges\nfixes\nmensuelles\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Déficite"
-        },
-        "profit": {
-          "label": "Bénéfice"
-        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
@@ -101,12 +89,6 @@
         "date": {
           "label": "Du {start} au {end}"
         },
-        "deficit": {
-          "label": "Déficite"
-        },
-        "profit": {
-          "label": "Bénéfice"
-        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
@@ -134,12 +116,6 @@
     "graph": {
       "threshold": "Charges\nfixes\nannuelles\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Déficite"
-        },
-        "profit": {
-          "label": "Bénéfice"
-        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },

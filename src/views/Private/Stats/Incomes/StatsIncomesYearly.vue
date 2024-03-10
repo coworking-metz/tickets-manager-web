@@ -50,20 +50,20 @@
             <span class="shrink grow basis-0 truncate font-normal text-gray-500">
               {{
                 $t('stats.incomes.yearly.summary.average.threshold', {
-                  amount: fractionAmount(MINIMUM_INCOME),
+                  amount: fractionAmount(averageCharges),
                 })
               }}
             </span>
             <div
               :class="[
                 'rounded-full px-2.5 py-0.5 font-medium',
-                averageIncome > MINIMUM_INCOME
+                averageIncome > averageCharges
                   ? 'bg-green-100 text-green-800'
                   : 'bg-red-100 text-red-800',
               ]">
               {{
-                `${averageIncome > MINIMUM_INCOME ? '+' : ''}${fractionPercentage(
-                  (averageIncome - MINIMUM_INCOME) / MINIMUM_INCOME,
+                `${averageIncome > averageCharges ? '+' : ''}${fractionPercentage(
+                  (averageIncome - averageCharges) / averageCharges,
                   $i18n.locale,
                 )}`
               }}
@@ -95,21 +95,20 @@
               <span class="shrink grow basis-0 truncate font-normal text-gray-500">
                 {{
                   $t('stats.incomes.yearly.summary.total.threshold', {
-                    amount: fractionAmount(totalMinimumIncome),
+                    amount: fractionAmount(totalCharges),
                   })
                 }}
               </span>
               <div
                 :class="[
                   'rounded-full px-2.5 py-0.5 font-medium',
-                  totalIncome > totalMinimumIncome
+                  totalIncome > totalCharges
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800',
                 ]">
                 {{
-                  `${totalIncome > totalMinimumIncome ? '+' : ''}${fractionPercentage(
-                    ((totalIncome - totalMinimumIncome) / MINIMUM_INCOME) * state.incomes.length,
-                    $i18n.locale,
+                  `${totalIncome > totalCharges ? '+' : ''}${fractionAmount(
+                    totalIncome - totalCharges,
                   )}`
                 }}
               </div>
@@ -132,8 +131,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import {
   INCOME_PER_SUBSCRIPTION_DAY,
   INCOME_PER_TICKET,
-  IncomePeriod,
-  MONTHLY_MINIMUM_INCOME,
+  IncomePeriodWithCharges,
   getIncomesPerYear,
 } from '@/services/api/stats';
 import { useNotificationsStore } from '@/store/notifications';
@@ -141,7 +139,7 @@ import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { BarChart } from 'echarts/charts.js';
+import { BarChart, LineChart } from 'echarts/charts.js';
 import { GridComponent, TooltipComponent, MarkLineComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
@@ -156,13 +154,10 @@ import type {
 } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
-use([MarkLineComponent, TooltipComponent, GridComponent, BarChart, CanvasRenderer]);
-
 /**
  * @see https://echarts.apache.org/en/cheat-sheet.html
  */
-
-const MINIMUM_INCOME = MONTHLY_MINIMUM_INCOME * 12;
+use([MarkLineComponent, TooltipComponent, GridComponent, BarChart, LineChart, CanvasRenderer]);
 
 const props = defineProps({
   from: {
@@ -181,21 +176,24 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   isFetchingIncomes: false,
-  incomes: [] as IncomePeriod<'year'>[],
-});
-
-const averageIncome = computed(() => {
-  return (
-    state.incomes.map(({ data }) => data.incomes).reduce((acc, income) => acc + income, 0) /
-      state.incomes.length || 0
-  );
+  incomes: [] as IncomePeriodWithCharges<'year'>[],
 });
 
 const totalIncome = computed(() =>
   state.incomes.map(({ data }) => data.incomes).reduce((acc, income) => acc + income, 0),
 );
 
-const totalMinimumIncome = computed(() => MINIMUM_INCOME * state.incomes.length);
+const totalCharges = computed(() => {
+  return state.incomes.map(({ data }) => data.charges).reduce((acc, charges) => acc + charges, 0);
+});
+
+const averageIncome = computed(() => {
+  return totalIncome.value / state.incomes.length || 0;
+});
+
+const averageCharges = computed(() => {
+  return totalCharges.value / state.incomes.length || 0;
+});
 
 const options = computed<
   ComposeOption<GridComponentOption | TooltipComponentOption | MarkLineComponentOption>
@@ -207,7 +205,7 @@ const options = computed<
     },
     formatter: (params) => {
       const {
-        data: { incomes, usedTickets, daysAbo },
+        data: { incomes, usedTickets, daysAbo, charges },
         date, // @ts-ignore
       } = state.incomes[params[0].dataIndex];
       return `
@@ -226,7 +224,7 @@ const options = computed<
               })}
             </dt>
             <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
-              usedTickets * 6,
+              usedTickets * INCOME_PER_TICKET,
             )}</dd>
           </div>
           <div class="flex flex-row justify-between place-items-end">
@@ -238,17 +236,29 @@ const options = computed<
                 count: daysAbo,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(daysAbo * 2)}</dd>
+            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
+              daysAbo * INCOME_PER_SUBSCRIPTION_DAY,
+            )}</dd>
           </div>
 
           <dd class="ml-auto text-3xl font-semibold text-gray-900">
             ${fractionAmount(incomes)}
           </dd>
 
+          <div class="flex flex-row justify-between place-items-end">
+            <dt class="flex flex-row gap-1 items-center text-base font-normal">
+              <span class="block h-3 w-3 rounded-full" style="background-color: ${
+                theme.charlestonGreen
+              };"></span>
+              ${i18n.t('stats.incomes.yearly.graph.threshold')}
+            </dt>
+            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(-charges)}</dd>
+          </div>
+
           <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
-            incomes > MINIMUM_INCOME ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            incomes > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
-            ${incomes > MINIMUM_INCOME ? '+' : ''}${fractionAmount(incomes - MINIMUM_INCOME)}
+            ${incomes > charges ? '+' : ''}${fractionAmount(incomes - charges)}
           </div>
         </dl>
       `;
@@ -291,17 +301,39 @@ const options = computed<
       })),
       type: 'bar',
       stack: 'incomes',
+    },
+    {
+      type: 'line',
+      smooth: true,
+      symbol: 'none',
+      lineStyle: {
+        color: theme.charlestonGreen,
+        width: 2,
+      },
+      data: state.incomes.map(({ data }) => ({ value: data.charges || '-' })),
       markLine: {
         silent: true,
         symbol: 'none',
         lineStyle: {
           type: 'solid',
-          color: theme.charlestonGreen,
+          // color: theme.charlestonGreen,
+          color: 'transparent',
           width: 2,
           cap: 'round',
         },
         data: [
           {
+            yAxis: state.incomes.map(({ data }) => data.charges).shift(),
+            label: {
+              position: 'start',
+              show: true,
+              formatter: ({ value }: { value: number }) => fractionAmount(value),
+              overflow: 'break',
+              lineHeight: 16,
+            },
+          },
+          {
+            yAxis: state.incomes.map(({ data }) => data.charges).pop(),
             label: {
               show: true,
               formatter: ({ value }: { value: number }) =>
@@ -311,7 +343,6 @@ const options = computed<
               overflow: 'break',
               lineHeight: 16,
             },
-            yAxis: MINIMUM_INCOME,
           },
         ],
       },
