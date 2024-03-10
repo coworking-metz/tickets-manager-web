@@ -4,18 +4,17 @@
       <title>{{ $t('stats.incomes.weekly.head.title') }}</title>
     </Head>
     <section class="flex min-h-[320px] grow flex-col">
-      <LoadingSpinner v-if="state.isFetchingIncomes" class="m-auto h-16 w-16" />
-      <EmptyState
-        v-else-if="!state.incomes.length"
-        :animation="AnalyticsGraph"
-        class="m-auto py-8"
-        :description="$t('stats.incomes.empty.description')"
-        :title="$t('stats.incomes.empty.title')" />
-      <VueECharts
-        v-else
-        :key="`echarts-${width}`"
-        class="h-full w-full"
-        :option="options"
+      <StatsIncomesPeriodGraph
+        :incomes="state.incomes"
+        :loading="state.isFetchingIncomes"
+        :options="options"
+        :threshold-formatter="
+          ({ value }) =>
+            $t('stats.incomes.weekly.graph.threshold', {
+              amount: fractionAmount(value),
+            })
+        "
+        :waterfall="net"
         @click="onBarSelect" />
     </section>
 
@@ -121,10 +120,8 @@
 </template>
 
 <script lang="ts" setup>
+import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
 import { DATE_FORMAT } from './dates';
-import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
-import EmptyState from '@/components/EmptyState.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
@@ -137,27 +134,12 @@ import {
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
-import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { BarChart, LineChart } from 'echarts/charts.js';
-import { GridComponent, TooltipComponent, MarkLineComponent } from 'echarts/components.js';
-import { use } from 'echarts/core.js';
-import { CanvasRenderer } from 'echarts/renderers.js';
 import { computed, reactive, watch } from 'vue';
-import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import type {
-  GridComponentOption,
-  MarkLineComponentOption,
-  TooltipComponentOption,
-} from 'echarts/components.js';
+import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
-
-/**
- * @see https://echarts.apache.org/en/cheat-sheet.html
- */
-use([MarkLineComponent, TooltipComponent, GridComponent, BarChart, LineChart, CanvasRenderer]);
 
 const props = defineProps({
   from: {
@@ -168,9 +150,15 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  /**
+   * Whether to display the net income
+   */
+  net: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const { width } = useWindowSize();
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
@@ -195,14 +183,8 @@ const averageCharges = computed(() => {
   return totalCharges.value / state.incomes.length || 0;
 });
 
-const options = computed<
-  ComposeOption<GridComponentOption | TooltipComponentOption | MarkLineComponentOption>
->(() => ({
+const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow',
-    },
     formatter: (params) => {
       const {
         data: { incomes, usedTickets, daysAbo, charges },
@@ -268,89 +250,11 @@ const options = computed<
     },
   },
   xAxis: {
-    type: 'category',
-    data: state.incomes.map(({ date }) => date),
     axisLabel: {
       formatter: (value: string) => dayjs(value).format('ll').slice(0, -4),
       align: 'center',
     },
   },
-  yAxis: {
-    type: 'value',
-    axisLabel: {
-      formatter: (value: number) => fractionAmount(value),
-      align: 'right',
-    },
-  },
-  series: [
-    {
-      name: 'subscriptions',
-      data: state.incomes.map(({ data }) => ({
-        value: data.daysAbo * INCOME_PER_SUBSCRIPTION_DAY,
-        itemStyle: {
-          color: theme.peachYellow,
-        },
-      })),
-      type: 'bar',
-      stack: 'incomes',
-    },
-    {
-      name: 'tickets',
-      data: state.incomes.map(({ data }) => ({
-        value: data.usedTickets * INCOME_PER_TICKET,
-        itemStyle: {
-          color: theme.babyBlueEyes,
-        },
-      })),
-      type: 'bar',
-      stack: 'incomes',
-    },
-    {
-      type: 'line',
-      smooth: true,
-      symbol: 'none',
-      lineStyle: {
-        color: theme.charlestonGreen,
-        width: 2,
-      },
-      data: state.incomes.map(({ data }) => ({ value: data.charges || '-' })),
-      markLine: {
-        silent: true,
-        symbol: 'none',
-        lineStyle: {
-          type: 'solid',
-          // color: theme.charlestonGreen,
-          color: 'transparent',
-          width: 2,
-          cap: 'round',
-        },
-        data: [
-          {
-            yAxis: state.incomes.map(({ data }) => data.charges).shift(),
-            label: {
-              position: 'start',
-              show: true,
-              formatter: ({ value }: { value: number }) => fractionAmount(value),
-              overflow: 'break',
-              lineHeight: 16,
-            },
-          },
-          {
-            yAxis: state.incomes.map(({ data }) => data.charges).pop(),
-            label: {
-              show: true,
-              formatter: ({ value }: { value: number }) =>
-                i18n.t('stats.incomes.weekly.graph.threshold', {
-                  amount: fractionAmount(value),
-                }),
-              overflow: 'break',
-              lineHeight: 16,
-            },
-          },
-        ],
-      },
-    },
-  ],
 }));
 
 const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {

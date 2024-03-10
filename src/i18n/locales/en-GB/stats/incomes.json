@@ -46,6 +46,11 @@
       "yearly": "Year"
     }
   },
+  "mode": {
+    "waterfall": {
+      "label": "Net Revenue"
+    }
+  },
   "monthly": {
     "graph": {
       "threshold": "Monthly\nfixed\ncharges\n{amount}",
@@ -88,6 +93,7 @@
       "currentYear": "This year",
       "last30days": "Last 30 days",
       "last6Months": "Last 6 months",
+      "lastYear": "Last year",
       "sinceFirstDay": "Since the first day",
       "sinceYearStart": "Since year start"
     },

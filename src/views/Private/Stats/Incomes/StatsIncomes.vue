@@ -1,7 +1,8 @@
 <template>
   <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
-    <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6">
-      <div class="mx-3 w-full max-w-lg sm:mx-6 sm:max-w-sm lg:mx-8">
+    <div
+      class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6 sm:px-6 lg:px-8">
+      <div class="mx-3">
         <!-- @vue-ignore -->
         <vue-tailwind-datepicker
           id="incomes-period"
@@ -40,7 +41,7 @@
                 class="relative -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                 :to="{
                   ...$route,
-                  query: { from: previousPeriod.start, to: previousPeriod.end },
+                  query: { ...$route.query, from: previousPeriod.start, to: previousPeriod.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
@@ -54,7 +55,7 @@
                 class="relative -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                 :to="{
                   ...$route,
-                  query: { from: nextPeriod.start, to: nextPeriod.end },
+                  query: { ...$route.query, from: nextPeriod.start, to: nextPeriod.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
@@ -68,12 +69,10 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <p class="mx-3 block font-medium text-gray-900 sm:mx-6 sm:text-sm lg:mx-8">
+        <p class="mx-3 block font-medium text-gray-900 sm:text-sm">
           {{ $t('stats.incomes.frequency.label') }}
         </p>
-        <nav
-          aria-label="Breadcrumb"
-          class="flex overflow-x-auto px-3 max-sm:w-screen sm:px-6 lg:px-8">
+        <nav aria-label="Breadcrumb" class="flex overflow-x-auto px-3 max-sm:w-screen">
           <ol
             class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm"
             role="list">
@@ -110,9 +109,29 @@
           </ol>
         </nav>
       </div>
+
+      <RouterLink
+        :class="[
+          'mx-3 flex h-10 items-center justify-center rounded-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium transition-colors focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+          net ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'text-gray-700 hover:bg-gray-100',
+        ]"
+        :to="{
+          ...$route,
+          query: { ...$route.query, net: `${!net}` },
+        }">
+        <SvgIcon
+          aria-hidden="true"
+          :class="['h-6 w-6', net ? 'text-current' : 'text-gray-400']"
+          :path="mdiChartWaterfall"
+          type="mdi" />
+
+        <span class="ml-2 sm:text-sm">
+          {{ $t('stats.incomes.mode.waterfall.label') }}
+        </span>
+      </RouterLink>
     </div>
 
-    <RouterViewSlideTransition :from="state.period.start" :to="state.period.end" />
+    <RouterViewSlideTransition :from="state.period.start" :net="net" :to="state.period.end" />
   </article>
 </template>
 
@@ -121,7 +140,7 @@ import { DATE_FORMAT } from './dates';
 import AppTextField from '@/components/form/AppTextField.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
 import { ROUTE_NAMES } from '@/router/names';
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
@@ -137,6 +156,10 @@ const props = defineProps({
   to: {
     type: String,
     default: null,
+  },
+  net: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -204,6 +227,16 @@ const shortcuts = computed(() => () => [
     },
   },
   {
+    label: i18n.t('stats.incomes.period.shortcuts.lastYear'),
+    atClick: () => {
+      const lastYear = dayjs().subtract(1, 'year');
+      return [
+        lastYear.startOf('year').format(DATE_FORMAT),
+        lastYear.endOf('year').format(DATE_FORMAT),
+      ];
+    },
+  },
+  {
     label: i18n.t('stats.incomes.period.shortcuts.sinceYearStart'),
     atClick: () => {
       const now = dayjs();
@@ -266,6 +299,7 @@ watch(
     const to = dayjs(period.end);
     router.replace({
       query: {
+        ...router.currentRoute.value.query,
         ...(from.isValid() ? { from: from.format(DATE_FORMAT) } : null),
         ...(to.isValid() ? { to: to.format(DATE_FORMAT) } : null),
       },
