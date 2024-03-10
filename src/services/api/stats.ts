@@ -5,7 +5,6 @@ export const MONTHLY_MINIMUM_INCOME = 1500 as const;
 export const CHARGES_PER_YEAR_IN_EUR = {
   2014: 3_240.73,
   2015: 9_877.77,
-  // 2016: ?
   2017: 9_795.03,
   2018: 10_772.51,
   2019: 12_052.23,
@@ -13,14 +12,22 @@ export const CHARGES_PER_YEAR_IN_EUR = {
   2021: 18_509.5,
   2022: 18_769.51,
 
+  // estimations
+  2016: 9_877.77,
   2023:
     1_384.8 * 12 + // rent
     208.35 + // insurance
-    70 * 12, // internet
+    60 * 12 + // internet
+    700 + // transactions fees
+    100 + // bank fees
+    2_000, // other
   2024:
     1_645.3 * 12 + // rent
     208.35 + // insurance
-    70 * 12, // internet
+    60 * 12 + // internet
+    700 + // transactions fees
+    100 + // bank fees
+    2_000, // other
 };
 
 export const INCOME_PER_TICKET = 6 as const;
