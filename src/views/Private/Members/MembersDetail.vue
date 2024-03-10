@@ -164,17 +164,26 @@
                     class="block text-3xl font-semibold tracking-tight text-gray-900">
                     {{ $t('members.detail.attendance.summary.empty') }}
                   </span>
-                  <animated-counter
+                  <i18n-t
                     v-else
                     class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :decimals="Number(!Number.isInteger(periodAttendance))"
-                    :duration="1"
-                    :end-amount="periodAttendance"
-                    separator=" "
-                    :suffix="`
-                      ${$t('members.detail.attendance.summary.value', {
-                        count: periodAttendance,
-                      })}`" />
+                    keypath="members.detail.attendance.summary.value"
+                    :plural="periodAttendance"
+                    scope="global"
+                    tag="span">
+                    <template #count>
+                      <AnimatedCounter
+                        :duration="1"
+                        :format="
+                          (amount: number) =>
+                            formatAmount(amount, {
+                              maximumFractionDigits: 1,
+                              style: 'decimal',
+                            })
+                        "
+                        :to="periodAttendance" />
+                    </template>
+                  </i18n-t>
                 </template>
               </i18n-t>
             </div>
@@ -232,13 +241,11 @@
                 scope="global"
                 tag="dd">
                 <template #amount>
-                  <animated-counter
+                  <AnimatedCounter
                     class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :decimals="Number.isInteger(monthlyAmountSpent) ? 0 : 2"
                     :duration="1"
-                    :end-amount="monthlyAmountSpent"
-                    separator=" "
-                    suffix=" €" />
+                    :format="fractionAmount"
+                    :to="monthlyAmountSpent" />
                 </template>
               </i18n-t>
             </div>
@@ -253,13 +260,11 @@
                 scope="global"
                 tag="dd">
                 <template #count>
-                  <animated-counter
+                  <AnimatedCounter
                     class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :decimals="Number.isInteger(totalAmountSpent) ? 0 : 2"
                     :duration="1"
-                    :end-amount="totalAmountSpent"
-                    separator=" "
-                    suffix=" €" />
+                    :format="fractionAmount"
+                    :to="totalAmountSpent" />
                 </template>
               </i18n-t>
             </div>
@@ -305,6 +310,7 @@ import WordpressPanel from './Detail/WordpressPanel.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
+import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {

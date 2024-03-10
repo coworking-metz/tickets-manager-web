@@ -22,7 +22,7 @@
         "empty": "Absent",
         "label": "Occupation",
         "last6Months": "{amount} out of the last 6 months",
-        "value": "day | day | days"
+        "value": "{count} day | {count} day | {count} days"
       },
       "title": "Attendance"
     },

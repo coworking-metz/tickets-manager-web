@@ -9,3 +9,4 @@ declare module '*.vue' {
 
 declare module '@jamescoyle/vue-icon';
 declare module '*.lottie';
+declare module 'vue-number-animation';
