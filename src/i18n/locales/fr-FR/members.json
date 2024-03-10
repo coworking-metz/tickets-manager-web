@@ -22,7 +22,7 @@
         "empty": "Absent⸱e",
         "label": "Occupation",
         "last6Months": "{amount} sur les 6 derniers mois",
-        "value": "journée | journée | journées"
+        "value": "{count} journée | {count} journée | {count} journées"
       },
       "title": "Présence"
     },

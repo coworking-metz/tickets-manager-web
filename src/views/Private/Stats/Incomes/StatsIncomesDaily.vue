@@ -28,14 +28,12 @@
             <div
               v-if="state.isFetchingIncomes"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
-            <animated-counter
+            <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900"
-              :decimals="Number.isInteger(averageIncome) ? 0 : 2"
               :duration="1"
-              :end-amount="averageIncome"
-              separator=" "
-              suffix=" €" />
+              :format="fractionAmount"
+              :to="averageIncome" />
           </dd>
 
           <div
@@ -76,14 +74,12 @@
             <div
               v-if="state.isFetchingIncomes"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
-            <animated-counter
+            <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900"
-              :decimals="Number.isInteger(totalIncome) ? 0 : 2"
               :duration="1"
-              :end-amount="totalIncome"
-              separator=" "
-              suffix=" €" />
+              :format="fractionAmount"
+              :to="totalIncome" />
 
             <div
               v-if="state.isFetchingIncomes"
