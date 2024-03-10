@@ -102,6 +102,7 @@ export const routes: RouteRecordRaw[] = [
             props: (route) => ({
               from: route.query.from,
               to: route.query.to,
+              net: Boolean(route.query.net === 'true'),
             }),
             children: [
               {
