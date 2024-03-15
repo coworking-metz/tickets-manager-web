@@ -36,33 +36,43 @@
             "
             :placeholder="$t('stats.incomes.period.placeholder')"
             readonly>
-            <template #before v-if="previousPeriod">
-              <RouterLink
-                class="relative -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            <template #before>
+              <component
+                :is="previousPeriod ? 'RouterLink' : 'button'"
+                :class="[
+                  'relative -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                  previousPeriod && 'hover:bg-gray-100',
+                ]"
+                :disabled="!previousPeriod"
                 :to="{
                   ...$route,
-                  query: { ...$route.query, from: previousPeriod.start, to: previousPeriod.end },
+                  query: { ...$route.query, from: previousPeriod?.start, to: previousPeriod?.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
                   class="h-6 w-6 text-gray-400"
                   :path="mdiChevronLeft"
                   type="mdi" />
-              </RouterLink>
+              </component>
             </template>
-            <template #after v-if="nextPeriod">
-              <RouterLink
-                class="relative -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            <template #after>
+              <component
+                :is="nextPeriod ? 'RouterLink' : 'button'"
+                :class="[
+                  'relative -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                  nextPeriod && 'hover:bg-gray-100',
+                ]"
+                :disabled="!nextPeriod"
                 :to="{
                   ...$route,
-                  query: { ...$route.query, from: nextPeriod.start, to: nextPeriod.end },
+                  query: { ...$route.query, from: nextPeriod?.start, to: nextPeriod?.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
                   class="h-6 w-6 text-gray-400"
                   :path="mdiChevronRight"
                   type="mdi" />
-              </RouterLink>
+              </component>
             </template>
           </AppTextField>
         </vue-tailwind-datepicker>
