@@ -118,23 +118,55 @@ import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
+  mdiAccountClockOutline,
   mdiCashMultiple,
   mdiChevronRight,
-  mdiHomeAnalytics,
   mdiUnfoldMoreHorizontal,
 } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { RouteRecordName, useRoute } from 'vue-router';
 
 const route = useRoute();
 const i18n = useI18n();
+
+const getIncomesRouteFromActivity = (activityRouteName?: RouteRecordName | null) => {
+  switch (activityRouteName) {
+    case ROUTE_NAMES.STATS.ACTIVITY.DAILY:
+      return ROUTE_NAMES.STATS.INCOMES.DAILY;
+    case ROUTE_NAMES.STATS.ACTIVITY.WEEKLY:
+      return ROUTE_NAMES.STATS.INCOMES.WEEKLY;
+    case ROUTE_NAMES.STATS.ACTIVITY.MONTHLY:
+      return ROUTE_NAMES.STATS.INCOMES.MONTHLY;
+    case ROUTE_NAMES.STATS.ACTIVITY.YEARLY:
+      return ROUTE_NAMES.STATS.INCOMES.YEARLY;
+    default:
+      return ROUTE_NAMES.STATS.INCOMES.INDEX;
+  }
+};
+
+const getActivityRouteFromIncomes = (incomesRouteName?: RouteRecordName | null) => {
+  switch (incomesRouteName) {
+    case ROUTE_NAMES.STATS.INCOMES.DAILY:
+      return ROUTE_NAMES.STATS.ACTIVITY.DAILY;
+    case ROUTE_NAMES.STATS.INCOMES.WEEKLY:
+      return ROUTE_NAMES.STATS.ACTIVITY.WEEKLY;
+    case ROUTE_NAMES.STATS.INCOMES.MONTHLY:
+      return ROUTE_NAMES.STATS.ACTIVITY.MONTHLY;
+    case ROUTE_NAMES.STATS.INCOMES.YEARLY:
+      return ROUTE_NAMES.STATS.ACTIVITY.YEARLY;
+    default:
+      return ROUTE_NAMES.STATS.ACTIVITY.INDEX;
+  }
+};
+
 const tabs = computed(() => [
   {
     label: i18n.t('stats.incomes.title'),
     description: i18n.t('stats.incomes.description'),
     to: {
-      name: ROUTE_NAMES.STATS.INCOMES.INDEX,
+      name: getIncomesRouteFromActivity(route.name),
+      query: route.query,
     },
     icon: mdiCashMultiple,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.INCOMES),
@@ -143,9 +175,10 @@ const tabs = computed(() => [
     label: i18n.t('stats.activity.title'),
     description: i18n.t('stats.activity.description'),
     to: {
-      name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
+      name: getActivityRouteFromIncomes(route.name),
+      query: route.query,
     },
-    icon: mdiHomeAnalytics,
+    icon: mdiAccountClockOutline,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS.ACTIVITY),
   },
 ]);

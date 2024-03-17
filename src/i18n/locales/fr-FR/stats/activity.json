@@ -1,7 +1,191 @@
 {
-  "description": "C'est vide pour le moment. Revenez plus tard !",
-  "head": {
-    "title": "@:stats.activity.title"
+  "daily": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+        },
+        "members": {
+          "label": "0 membre | {count} membre | {count} membres"
+        },
+        "newMembers": {
+          "label": "0 nouveau | {count} nouveau | {count} nouveaux"
+        },
+        "total": "Personne | seule personne | personnes dont"
+      }
+    },
+    "head": {
+      "title": "Fréquentation quotidienne"
+    },
+    "onFetch": {
+      "empty": "Aucune fréquentation quotidienne pour cette période",
+      "fail": "Impossible de récupérer la fréquentation quotidienne"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "du temps sur une journée",
+          "label": "Une personne reste en moyenne"
+        },
+        "people": {
+          "format": "Jamais personne 😢 |{' '}personne |{' '}personnes",
+          "label": "Occupation moyenne journalière",
+          "threshold": "sur {threshold} postes disponibles"
+        }
+      },
+      "label": "En quelques chiffres"
+    },
+    "weekDays": {
+      "label": "Jours de la semaine"
+    }
   },
-  "title": "Activité"
+  "description": "Un horizon des allers et venues des membres.",
+  "empty": {
+    "description": "Précisez la période pour visualiser la fréquentation.",
+    "title": "Rien à afficher"
+  },
+  "frequency": {
+    "label": "Visualiser par",
+    "value": {
+      "daily": "Jour",
+      "monthly": "Mois",
+      "weekly": "Semaine",
+      "yearly": "Année"
+    }
+  },
+  "mode": {
+    "waterfall": {
+      "label": "Résultat net"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+        },
+        "members": {
+          "label": "0 membre | {count} membre | {count} membres"
+        },
+        "newMembers": {
+          "label": "0 nouveau | {count} nouveau | {count} nouveaux"
+        },
+        "total": "Personne | seule personne | personnes dont"
+      }
+    },
+    "head": {
+      "title": "Fréquentation mensuelle"
+    },
+    "onFetch": {
+      "empty": "Aucune fréquentation mensuelle pour cette période",
+      "fail": "Impossible de récupérer la fréquentation mensuelle"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "au coworking par mois",
+          "format": "{' '}journée | {' '}journée | {' '}journées",
+          "label": "Une personne passe en moyenne"
+        },
+        "people": {
+          "format": "Jamais personne 😢 |{' '}personne |{' '}personnes",
+          "label": "Occupation moyenne par mois"
+        }
+      },
+      "label": "En quelques chiffres"
+    }
+  },
+  "period": {
+    "label": "Période",
+    "placeholder": "Choissisez une période",
+    "shortcuts": {
+      "currentMonth": "Ce mois",
+      "currentWeek": "Cette semaine",
+      "currentYear": "Cette année",
+      "last30days": "30 derniers jours",
+      "last6Months": "6 derniers mois",
+      "lastYear": "L'année dernière",
+      "sinceFirstDay": "Depuis le premier jour",
+      "sinceYearStart": "Depuis le début de l'année"
+    },
+    "value": "Du {start} au {end}"
+  },
+  "title": "Fréquentation",
+  "weekly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+        },
+        "date": {
+          "label": "Du {start} au {end}"
+        },
+        "members": {
+          "label": "0 membre | {count} membre | {count} membres"
+        },
+        "newMembers": {
+          "label": "0 nouveau | {count} nouveau | {count} nouveaux"
+        },
+        "total": "Personne | seule personne | personnes dont"
+      }
+    },
+    "head": {
+      "title": "Fréquentation hebdomadaire"
+    },
+    "onFetch": {
+      "empty": "Aucune fréquentation hebdomadaire pour cette période",
+      "fail": "Impossible de récupérer la fréquentation hebdomadaire"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "au coworking par semaine",
+          "format": "{' '}journée | {' '}journée | {' '}journées",
+          "label": "Une personne passe en moyenne"
+        },
+        "people": {
+          "format": "Jamais personne 😢 |{' '}personne |{' '}personnes",
+          "label": "Occupation moyenne par semaine"
+        }
+      },
+      "label": "En quelques chiffres"
+    }
+  },
+  "yearly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+        },
+        "members": {
+          "label": "0 membre | {count} membre | {count} membres"
+        },
+        "newMembers": {
+          "label": "0 nouveau | {count} nouveau | {count} nouveaux"
+        },
+        "total": "Personne | seule personne | personnes dont"
+      }
+    },
+    "head": {
+      "title": "Fréquentation hebdomadaire"
+    },
+    "onFetch": {
+      "empty": "Aucune fréquentation annuelle pour cette période",
+      "fail": "Impossible de récupérer la fréquentation annuelle"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "au coworking par an",
+          "format": "{' '}journée | {' '}journée | {' '}journées",
+          "label": "Une personne passe en moyenne"
+        },
+        "people": {
+          "format": "Jamais personne 😢 |{' '}personne |{' '}personnes",
+          "label": "Occupation moyenne par an"
+        }
+      },
+      "label": "En quelques chiffres"
+    }
+  }
 }

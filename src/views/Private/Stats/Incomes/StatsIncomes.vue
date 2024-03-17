@@ -1,7 +1,7 @@
 <template>
   <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
     <div
-      class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6 sm:px-6 lg:px-8">
+      class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6 sm:px-3">
       <div class="mx-3">
         <!-- @vue-ignore -->
         <vue-tailwind-datepicker
@@ -146,9 +146,9 @@
 </template>
 
 <script lang="ts" setup>
-import { DATE_FORMAT } from './dates';
 import AppTextField from '@/components/form/AppTextField.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
+import { DATE_FORMAT } from '@/helpers/dates';
 import { ROUTE_NAMES } from '@/router/names';
 import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { useWindowSize } from '@vueuse/core';

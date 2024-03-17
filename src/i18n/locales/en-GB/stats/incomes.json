@@ -20,6 +20,9 @@
     "head": {
       "title": "Daily Revenue"
     },
+    "onFetch": {
+      "fail": "Failed to fetch daily revenue"
+    },
     "summary": {
       "average": {
         "label": "Average Daily Revenue",
@@ -71,6 +74,9 @@
     },
     "head": {
       "title": "Monthly Revenue"
+    },
+    "onFetch": {
+      "fail": "Failed to fetch monthly revenue"
     },
     "summary": {
       "average": {
@@ -124,6 +130,9 @@
     "head": {
       "title": "Weekly Revenue"
     },
+    "onFetch": {
+      "fail": "Failed to fetch weekly revenue"
+    },
     "summary": {
       "average": {
         "label": "Average Weekly Revenue",
@@ -156,6 +165,9 @@
     },
     "head": {
       "title": "Yearly Revenue"
+    },
+    "onFetch": {
+      "fail": "Failed to fetch yearly revenue"
     },
     "summary": {
       "average": {

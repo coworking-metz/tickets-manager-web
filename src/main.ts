@@ -38,7 +38,7 @@ router.beforeEach(async (to, from, next) => {
 
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
-  // don't it on hash change
+  // do not on hash change
   if (from.name !== to.name) {
     httpStore.cancelAllRequests('Route has changed');
   }
