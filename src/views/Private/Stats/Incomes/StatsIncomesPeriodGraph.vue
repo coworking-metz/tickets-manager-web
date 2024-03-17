@@ -24,7 +24,7 @@ import {
   INCOME_PER_SUBSCRIPTION_DAY,
   INCOME_PER_TICKET,
   IncomePeriodWithCharges,
-} from '@/services/api/stats';
+} from '@/services/api/incomes';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -106,12 +106,9 @@ const options = computed<
           {
             silent: true,
             name: 'transparent',
-            data: props.incomes.map(({ data }) => {
-              const income =
-                data.usedTickets * INCOME_PER_TICKET + data.daysAbo * INCOME_PER_SUBSCRIPTION_DAY;
-              const charges = data.charges || 0;
+            data: props.incomes.map(({ data: { charges, incomes } }) => {
               return {
-                value: income > charges ? charges : income,
+                value: incomes > charges ? charges : incomes,
                 itemStyle: {
                   color: 'transparent',
                 },
@@ -123,14 +120,11 @@ const options = computed<
           {
             silent: true,
             name: 'net',
-            data: props.incomes.map(({ data }) => {
-              const income =
-                data.usedTickets * INCOME_PER_TICKET + data.daysAbo * INCOME_PER_SUBSCRIPTION_DAY;
-              const charges = data.charges || 0;
+            data: props.incomes.map(({ data: { charges, incomes } }) => {
               return {
-                value: income > charges ? income - charges : charges - income,
+                value: incomes > charges ? incomes - charges : charges - incomes,
                 itemStyle: {
-                  color: income > charges ? '#047857' : '#fca5a5',
+                  color: incomes > charges ? '#047857' : '#fca5a5',
                 },
               };
             }),
@@ -238,3 +232,4 @@ const options = computed<
   ],
 }));
 </script>
+@/services/api/incomes

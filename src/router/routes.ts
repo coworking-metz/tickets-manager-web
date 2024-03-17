@@ -136,8 +136,40 @@ export const routes: RouteRecordRaw[] = [
           },
           {
             path: 'activity',
-            name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
             component: () => import('@/views/Private/Stats/Activity/StatsActivity.vue'),
+            props: (route) => ({
+              from: route.query.from,
+              to: route.query.to,
+            }),
+            children: [
+              {
+                path: '',
+                name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
+                redirect: {
+                  name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
+                },
+              },
+              {
+                path: 'daily',
+                name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
+                component: () => import('@/views/Private/Stats/Activity/StatsActivityDaily.vue'),
+              },
+              {
+                path: 'weekly',
+                name: ROUTE_NAMES.STATS.ACTIVITY.WEEKLY,
+                component: () => import('@/views/Private/Stats/Activity/StatsActivityWeekly.vue'),
+              },
+              {
+                path: 'monthly',
+                name: ROUTE_NAMES.STATS.ACTIVITY.MONTHLY,
+                component: () => import('@/views/Private/Stats/Activity/StatsActivityMonthly.vue'),
+              },
+              {
+                path: 'yearly',
+                name: ROUTE_NAMES.STATS.ACTIVITY.YEARLY,
+                component: () => import('@/views/Private/Stats/Activity/StatsActivityYearly.vue'),
+              },
+            ],
           },
         ],
       },

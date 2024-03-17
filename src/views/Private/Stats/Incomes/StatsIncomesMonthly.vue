@@ -108,6 +108,8 @@
                 {{
                   `${totalIncome > totalCharges ? '+' : ''}${fractionAmount(
                     totalIncome - totalCharges,
+                    {},
+                    $i18n.locale,
                   )}`
                 }}
               </div>
@@ -121,8 +123,8 @@
 
 <script lang="ts" setup>
 import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
-import { DATE_FORMAT } from './dates';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
+import { DATE_FORMAT } from '@/helpers/dates';
 import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {
@@ -130,7 +132,7 @@ import {
   INCOME_PER_TICKET,
   IncomePeriodWithCharges,
   getIncomesPerMonth,
-} from '@/services/api/stats';
+} from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -280,7 +282,7 @@ const fetchIncomes = (from: string, to: string) => {
       .catch((error) => {
         notificationsStore.addErrorNotification(
           error,
-          i18n.t('stats.activity.monthly.onFetch.fail'),
+          i18n.t('stats.incomes.monthly.onFetch.fail'),
         );
         return Promise.reject(error);
       }),

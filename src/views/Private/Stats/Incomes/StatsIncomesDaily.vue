@@ -107,6 +107,8 @@
                 {{
                   `${totalIncome > totalCharges ? '+' : ''}${fractionAmount(
                     totalIncome - totalCharges,
+                    {},
+                    $i18n.locale,
                   )}`
                 }}
               </div>
@@ -127,7 +129,7 @@ import {
   INCOME_PER_TICKET,
   IncomePeriodWithCharges,
   getIncomesPerDay,
-} from '@/services/api/stats';
+} from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -258,7 +260,7 @@ const fetchIncomes = (from: string, to: string) => {
       })
       .catch(handleSilentError)
       .catch((error) => {
-        notificationsStore.addErrorNotification(error, i18n.t('stats.activity.daily.onFetch.fail'));
+        notificationsStore.addErrorNotification(error, i18n.t('stats.incomes.daily.onFetch.fail'));
         return Promise.reject(error);
       }),
     // wait at least 500ms

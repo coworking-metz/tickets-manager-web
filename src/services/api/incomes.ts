@@ -1,7 +1,6 @@
 import HTTP from '../http';
 import dayjs from 'dayjs';
 
-export const MONTHLY_MINIMUM_INCOME = 1500 as const;
 export const CHARGES_PER_YEAR_IN_EUR = {
   2014: 3_240.73,
   2015: 9_877.77,

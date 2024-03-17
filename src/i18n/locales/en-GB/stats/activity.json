@@ -1,7 +1,191 @@
 {
-  "description": "It's empty for now. Come back later!",
-  "head": {
-    "title": "@:stats.activity.title"
+  "daily": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 day consumed | {count} day consumed | {count} days consumed"
+        },
+        "members": {
+          "label": "0 member | {count} member | {count} members"
+        },
+        "newMembers": {
+          "label": "0 new | {count} new | {count} new"
+        },
+        "total": "Nobody | Only one person | People whose"
+      }
+    },
+    "head": {
+      "title": "Daily attendance"
+    },
+    "onFetch": {
+      "empty": "No daily attendance for this period",
+      "fail": "Unable to retrieve daily attendance"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "per day",
+          "label": "On average, one person stays"
+        },
+        "people": {
+          "format": "Never anyone 😢 | {' '}person | {' '}people",
+          "label": "Average daily occupation",
+          "threshold": "on {threshold} available seats"
+        }
+      },
+      "label": "In a few figures"
+    },
+    "weekDays": {
+      "label": "Week days"
+    }
   },
-  "title": "Activity"
+  "description": "An overview of the comings and goings of members.",
+  "empty": {
+    "description": "Specify the period to view attendance.",
+    "title": "Nothing to display"
+  },
+  "frequency": {
+    "label": "View by",
+    "value": {
+      "daily": "Day",
+      "monthly": "Month",
+      "weekly": "Week",
+      "yearly": "Year"
+    }
+  },
+  "mode": {
+    "waterfall": {
+      "label": "Net Result"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 day consumed | {count} day consumed | {count} days consumed"
+        },
+        "members": {
+          "label": "0 member | {count} member | {count} members"
+        },
+        "newMembers": {
+          "label": "0 new | {count} new | {count} new"
+        },
+        "total": "Nobody | Only one person | People whose"
+      }
+    },
+    "head": {
+      "title": "Monthly attendance"
+    },
+    "onFetch": {
+      "empty": "No monthly attendance for this period",
+      "fail": "Unable to retrieve monthly attendance"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "at the coworking space per month",
+          "format": "{' '}day | {' '}day | {' '}days",
+          "label": "On average, one person spends"
+        },
+        "people": {
+          "format": "Never anyone 😢 |{' '}person |{' '}people",
+          "label": "Average occupation per month"
+        }
+      },
+      "label": "In a few figures"
+    }
+  },
+  "period": {
+    "label": "Period",
+    "placeholder": "Choose a period",
+    "shortcuts": {
+      "currentMonth": "This month",
+      "currentWeek": "This week",
+      "currentYear": "This year",
+      "last30days": "Last 30 days",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year",
+      "sinceFirstDay": "Since the first day",
+      "sinceYearStart": "Since year start"
+    },
+    "value": "From {start} to {end}"
+  },
+  "title": "Attendance",
+  "weekly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 day consumed | {count} day consumed | {count} days consumed"
+        },
+        "date": {
+          "label": "From {start} to {end}"
+        },
+        "members": {
+          "label": "0 member | {count} member | {count} members"
+        },
+        "newMembers": {
+          "label": "0 new | {count} new | {count} new"
+        },
+        "total": "Nobody | Only one person | People whose"
+      }
+    },
+    "head": {
+      "title": "Weekly attendance"
+    },
+    "onFetch": {
+      "empty": "No weekly attendance for this period",
+      "fail": "Unable to retrieve weekly attendance"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "at the coworking space per week",
+          "format": "{' '}day | {' '}day | {' '}days",
+          "label": "On average, one person spends"
+        },
+        "people": {
+          "format": "Never anyone 😢 |{' '}person |{' '}people",
+          "label": "Average occupation per week"
+        }
+      },
+      "label": "In a few figures"
+    }
+  },
+  "yearly": {
+    "graph": {
+      "tooltip": {
+        "activity": {
+          "label": "0 day consumed | {count} day consumed | {count} days consumed"
+        },
+        "members": {
+          "label": "0 member | {count} member | {count} members"
+        },
+        "newMembers": {
+          "label": "0 new | {count} new | {count} new"
+        },
+        "total": "Nobody | Only one person | People whose"
+      }
+    },
+    "head": {
+      "title": "Yearly attendance"
+    },
+    "onFetch": {
+      "empty": "No yearly attendance for this period",
+      "fail": "Unable to retrieve yearly attendance"
+    },
+    "summary": {
+      "average": {
+        "attendance": {
+          "description": "at the coworking space per year",
+          "format": "{' '}day | {' '}day | {' '}days",
+          "label": "On average, one person spends"
+        },
+        "people": {
+          "format": "Never anyone 😢 |{' '}person |{' '}people",
+          "label": "Average occupation per year"
+        }
+      },
+      "label": "In a few figures"
+    }
+  }
 }
