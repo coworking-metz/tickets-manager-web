@@ -5,21 +5,22 @@
     </Head>
 
     <section class="mx-auto flex w-full grow flex-col min-[1680px]:flex-row">
-      <div class="grow basis-0" />
-      <div class="flex min-h-[320px] w-full max-w-5xl flex-col">
+      <div class="max-h-0 shrink grow basis-0" />
+      <div class="flex min-h-[320px] w-full max-w-5xl grow flex-col">
         <StatsActivityPeriodGraph
           :activities="dailyActivities"
           :loading="state.isFetchingActivities"
           :options="options" />
       </div>
 
-      <div class="flex shrink grow basis-0 flex-col items-start min-[1680px]:overflow-hidden">
-        <fieldset class="mx-auto w-full min-w-12 max-w-5xl px-3 pb-6 sm:px-6">
+      <div class="flex shrink basis-0 flex-col items-start min-[1680px]:grow">
+        <fieldset class="mx-auto w-full min-w-16 max-w-5xl px-3 pb-6 sm:px-6 min-[1680px]:px-0">
           <legend class="sr-only">{{ $t('stats.activity.daily.weekDays.label') }}</legend>
           <p aria-hidden="true" class="block font-medium text-gray-900 sm:text-sm">
             {{ $t('stats.activity.daily.weekDays.label') }}
           </p>
-          <ul class="mt-1 flex flex-row flex-wrap gap-x-4 gap-y-2 min-[1680px]:flex-col">
+          <ul
+            class="mt-1 flex flex-row flex-wrap items-start gap-x-4 gap-y-2 min-[1680px]:flex-col">
             <li
               v-for="weekDay in state.selectedWeekDays"
               :key="`day-${weekDay.index}`"
@@ -219,7 +220,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       const {
         data: { coworkersCount, newCoworkersCount, coworkedDaysAmount },
         date, // @ts-ignore
-      } = state.activities[params[0].dataIndex];
+      } = dailyActivities.value[params[0].dataIndex];
       return `
         <dl class="flex flex-col min-w-48 items-end gap-1">
           <dt class="truncate font-medium text-gray-500 sm:text-sm">
