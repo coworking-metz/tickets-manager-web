@@ -2,7 +2,7 @@
   "background": {
     "label": "Photo du Coworking"
   },
-  "description": "Gérer le fonctionnement du Coworking de Metz à travers une interface agréable et intuitive\n#bs #jenesaispasquoiécrire #jeréfléchis",
+  "description": "Gérer le fonctionnement du Coworking Metz (Présences, paramètres, stats, etc.)",
   "head": {
     "title": "Connexion"
   },
