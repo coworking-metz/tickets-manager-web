@@ -163,10 +163,10 @@
       }
     },
     "tabs": {
-      "active": "Active | Actives",
       "all": "All",
       "attending": "Attending",
-      "nonCompliant": "Non compliant"
+      "nonCompliant": "Non compliant",
+      "voting": "Voting"
     },
     "title": "Members"
   }
