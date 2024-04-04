@@ -1,4 +1,6 @@
 import { ROUTE_NAMES } from './names';
+import { DATE_FORMAT } from '@/helpers/dates';
+import dayjs from 'dayjs';
 import { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
@@ -108,8 +110,21 @@ export const routes: RouteRecordRaw[] = [
               {
                 path: '',
                 name: ROUTE_NAMES.STATS.INCOMES.INDEX,
-                redirect: {
-                  name: ROUTE_NAMES.STATS.INCOMES.DAILY,
+                redirect: (route) => {
+                  let from = route.query.from;
+                  let to = route.query.to;
+                  if (!from && !to) {
+                    const now = dayjs();
+                    from = now.subtract(30, 'day').format(DATE_FORMAT);
+                    to = now.format(DATE_FORMAT);
+                  }
+                  return {
+                    name: ROUTE_NAMES.STATS.INCOMES.DAILY,
+                    query: {
+                      from,
+                      to,
+                    },
+                  };
                 },
               },
               {
@@ -145,8 +160,21 @@ export const routes: RouteRecordRaw[] = [
               {
                 path: '',
                 name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
-                redirect: {
-                  name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
+                redirect: (route) => {
+                  let from = route.query.from;
+                  let to = route.query.to;
+                  if (!from && !to) {
+                    const now = dayjs();
+                    from = now.subtract(30, 'day').format(DATE_FORMAT);
+                    to = now.format(DATE_FORMAT);
+                  }
+                  return {
+                    name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
+                    query: {
+                      from,
+                      to,
+                    },
+                  };
                 },
               },
               {
