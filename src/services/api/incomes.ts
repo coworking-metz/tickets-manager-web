@@ -11,16 +11,9 @@ export const CHARGES_PER_YEAR_IN_EUR = {
   2021: 18_509.5,
   2022: 18_769.51,
 
-  // estimations
-  2016: 9_877.77,
-  2023:
-    1_384.8 * 12 + // rent
-    208.35 + // insurance
-    60 * 12 + // internet
-    700 + // transactions fees
-    100 + // bank fees
-    2_000, // other
-  2024:
+  2016: 9_877.77, // estimation
+  2023: 1_761.73,
+  2024: // estimation
     1_645.3 * 12 + // rent
     208.35 + // insurance
     60 * 12 + // internet
