@@ -85,6 +85,29 @@
           {{ $t('activity.detail.daily.label') }}
         </p>
         <DailyActivityGraph class="mb-4" /> -->
+        <div v-if="isNonCompliant" class="mb-5 flex flex-row rounded-lg bg-red-50 p-4">
+          <SvgIcon
+            aria-hidden="true"
+            class="h-5 w-5 shrink-0 text-red-700"
+            :path="mdiAlertCircle"
+            type="mdi" />
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">
+              {{ $t('activity.detail.nonCompliant.title') }}
+            </h3>
+            <i18n-t
+              class="mt-2 whitespace-pre-line text-sm text-red-700"
+              keypath="activity.detail.nonCompliant.description"
+              scope="global"
+              tag="p">
+              <template #emphasized>
+                <span class="font-semibold">
+                  {{ $t('activity.detail.nonCompliant.emphasized', { count: selected.value }) }}
+                </span>
+              </template>
+            </i18n-t>
+          </div>
+        </div>
 
         <RadioGroup v-model="state.type">
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
@@ -218,7 +241,14 @@ import {
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue';
-import { mdiCheck, mdiCheckCircle, mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js';
+import {
+  mdiAlertCircle,
+  mdiCheck,
+  mdiCheckCircle,
+  mdiChevronLeft,
+  mdiChevronRight,
+  mdiClose,
+} from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -253,6 +283,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  nonCompliantDates: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
 });
 
 const state = reactive({
@@ -278,6 +312,10 @@ const next = computed<Attendance | null>(() => {
     .filter(({ date }) => dayjs(date).isAfter(selected.value?.date))
     .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
   return earliestDate ?? null;
+});
+
+const isNonCompliant = computed(() => {
+  return props.nonCompliantDates.includes(props.date);
 });
 
 const rules = computed(() => ({

@@ -16,6 +16,11 @@
     "head": {
       "title": "@:activity.detail.title"
     },
+    "nonCompliant": {
+      "description": "The person showed up at the Coworking but:\n- did not have an active subscription,\n- did not have a sufficient ticket balance.\nThis resulted in an {emphasized}.\n\nTo rectify the situation, you need to add a ticket or activate a subscription covering this date.",
+      "emphasized": "overconsumption of {count} ticket | overconsumption of {count} tickets",
+      "title": "Non-compliant attendance"
+    },
     "onUpdate": {
       "fail": "Unable to update attendance on {date}",
       "success": "Attendance on {date} has been updated"
