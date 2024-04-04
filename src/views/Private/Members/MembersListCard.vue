@@ -14,13 +14,13 @@
         </template>
       </div>
       <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">
-        <div class="flex shrink grow basis-0 flex-col items-start">
+        <div class="flex min-w-48 shrink grow basis-0 flex-col items-start">
           <template v-if="member">
             <p class="shrink-0 font-medium text-indigo-600 sm:text-sm">
               {{ fullname }}
             </p>
 
-            <p class="mt-1 flex max-w-max items-center text-sm text-gray-500">
+            <p class="mt-1 flex w-full items-center text-sm text-gray-500">
               <span class="truncate">{{ member.email }}</span>
             </p>
 
