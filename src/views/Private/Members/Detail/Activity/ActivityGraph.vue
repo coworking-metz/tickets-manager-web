@@ -54,6 +54,10 @@ const props = defineProps({
     type: String,
     default: () => dayjs().format('YYYY-MM-DD'),
   },
+  nonCompliantDates: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
 });
 
 const { width } = useWindowSize();
@@ -74,16 +78,7 @@ const options = computed<
     position: 'top',
     show: !state.shouldHideTooltip,
     formatter: ({ data }: any) => {
-      const [date, amount] = data as [string, number];
-      return i18n.t('members.detail.attendance.graph.tooltip', {
-        date: dayjs(date).format('LL'),
-        amount:
-          amount === 1
-            ? i18n.t('members.detail.attendance.graph.value.FULL')
-            : amount === 0.5
-              ? i18n.t('members.detail.attendance.graph.value.HALF')
-              : i18n.t('members.detail.attendance.graph.value.NONE'),
-      });
+      return data.tooltip;
     },
   },
   visualMap: {
@@ -91,9 +86,6 @@ const options = computed<
     min: 0,
     max: 1,
     show: false,
-    inRange: {
-      color: ['#ffffff', theme.peachYellow, theme.meatBrown], //From smaller to bigger value ->
-    },
   },
   calendar: {
     locale: 'fr-FR',
@@ -110,12 +102,37 @@ const options = computed<
     locale: 'fr-FR',
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.activity.map(({ date, value }) => [dayjs(date).format('YYYY-MM-DD'), value]),
+    data: props.activity.map(({ date, value }) => {
+      const isCompliant = !props.nonCompliantDates.includes(date);
+      const color = isCompliant
+        ? value === 1
+          ? theme.meatBrown
+          : theme.peachYellow
+        : value === 1
+          ? '#b91c1c'
+          : '#fca5a5';
+
+      return {
+        value: [dayjs(date).format('YYYY-MM-DD'), value],
+        itemStyle: {
+          color,
+        },
+        tooltip: i18n.t('members.detail.attendance.graph.tooltip', {
+          date: dayjs(date).format('LL'),
+          amount:
+            value === 1
+              ? i18n.t('members.detail.attendance.graph.value.FULL')
+              : value === 0.5
+                ? i18n.t('members.detail.attendance.graph.value.HALF')
+                : i18n.t('members.detail.attendance.graph.value.NONE'),
+        }),
+      };
+    }),
   },
 }));
 
 const onSelect = ({ data }: any) => {
-  const [date] = data as [string];
+  const [date] = data.value as [string];
   const selected = props.activity.find(
     (activity) => dayjs(activity.date).format('YYYY-MM-DD') === date,
   );
