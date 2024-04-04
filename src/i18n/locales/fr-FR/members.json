@@ -121,6 +121,10 @@
       },
       "title": "Profil"
     },
+    "status": {
+      "trusted": "Intègre",
+      "voting": "Électeur⸱rice"
+    },
     "wordpress": {
       "check": "Consulter le profil",
       "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets et d'abonnement se mettront à jour.",

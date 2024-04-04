@@ -75,6 +75,16 @@
                       : $t('members.detail.membership.none')
                   }}
                 </span>
+                <span
+                  v-if="state.member.trustedUser"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                  {{ $t('members.detail.status.trusted') }}
+                </span>
+                <span
+                  v-if="state.member.activeUser"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                  {{ $t('members.detail.status.voting') }}
+                </span>
               </div>
             </div>
           </div>

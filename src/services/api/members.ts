@@ -42,6 +42,8 @@ export interface Member extends MemberListItem {
   totalActivity: number;
   macAddresses: string[];
   memberships: Membership[];
+  trustedUser: boolean; // with at least 10 days of totalActivity
+  activeUser: boolean; // with at least 20 days of activity (in the last 180 days)
 }
 
 export const isMembershipNonCompliant = (member: Member | MemberListItem) => {

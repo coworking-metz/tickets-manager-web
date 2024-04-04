@@ -121,6 +121,10 @@
       },
       "title": "Profile"
     },
+    "status": {
+      "trusted": "Trusted",
+      "voting": "Voting"
+    },
     "wordpress": {
       "check": "View Profile",
       "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket and subscription orders will be updated.",
