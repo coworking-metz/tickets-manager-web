@@ -12,7 +12,7 @@ export const CHARGES_PER_YEAR_IN_EUR = {
   2022: 18_769.51,
 
   2016: 9_877.77, // estimation
-  2023: 1_761.73,
+  2023: 1_761.73 * 12,
   2024: // estimation
     1_645.3 * 12 + // rent
     208.35 + // insurance
