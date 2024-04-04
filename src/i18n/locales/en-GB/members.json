@@ -30,7 +30,7 @@
       "description": "Present for the last time {date}"
     },
     "membership": {
-      "current": "{year} membership ongoing",
+      "current": "{year} membership",
       "last": "Last membership in {year}",
       "none": "No membership"
     },

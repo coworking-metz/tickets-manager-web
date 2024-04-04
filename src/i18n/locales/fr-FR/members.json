@@ -30,7 +30,7 @@
       "description": "Présent⸱e pour la dernière fois {date}"
     },
     "membership": {
-      "current": "Adhésion {year} en cours",
+      "current": "Adhérent⸱e {year}",
       "last": "Dernière adhésion en {year}",
       "none": "Aucune adhésion"
     },
