@@ -265,8 +265,8 @@ const filteredList = computed(() => {
     .filter((member) =>
       searchIn(
         state.search,
-        member.firstName,
-        member.lastName,
+        [member.firstName, member.lastName].filter(Boolean).join(' '),
+        [member.lastName, member.firstName].filter(Boolean).join(' '),
         member.email,
         dayjs().isSame(member.lastSeen, 'day')
           ? dayjs(member.lastSeen).fromNow()
