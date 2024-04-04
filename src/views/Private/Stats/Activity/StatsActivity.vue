@@ -262,10 +262,28 @@ const previousPeriod = computed(() => {
   if (state.period.start && state.period.end) {
     const from = dayjs(state.period.start);
     const to = dayjs(state.period.end);
-    return {
-      start: from.subtract(1, 'day').subtract(to.diff(from, 'day'), 'day').format(DATE_FORMAT),
-      end: from.subtract(1, 'day').format(DATE_FORMAT),
-    };
+    switch (route.name) {
+      case ROUTE_NAMES.STATS.INCOMES.YEARLY:
+        return {
+          start: from.subtract(to.diff(from, 'year') || 1, 'year').format(DATE_FORMAT),
+          end: from.format(DATE_FORMAT),
+        };
+      case ROUTE_NAMES.STATS.INCOMES.MONTHLY:
+        return {
+          start: from.subtract(to.diff(from, 'month') || 1, 'month').format(DATE_FORMAT),
+          end: from.format(DATE_FORMAT),
+        };
+      case ROUTE_NAMES.STATS.INCOMES.WEEKLY:
+        return {
+          start: from.subtract(to.diff(from, 'week') || 1, 'week').format(DATE_FORMAT),
+          end: from.format(DATE_FORMAT),
+        };
+      default:
+        return {
+          start: from.subtract(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
+          end: from.format(DATE_FORMAT),
+        };
+    }
   }
   return null;
 });
@@ -274,10 +292,28 @@ const nextPeriod = computed(() => {
   if (state.period.start && state.period.end) {
     const from = dayjs(state.period.start);
     const to = dayjs(state.period.end);
-    return {
-      start: to.add(1, 'day').format(DATE_FORMAT),
-      end: to.add(1, 'day').add(to.diff(from, 'day'), 'day').format(DATE_FORMAT),
-    };
+    switch (route.name) {
+      case ROUTE_NAMES.STATS.INCOMES.YEARLY:
+        return {
+          start: to.format(DATE_FORMAT),
+          end: to.add(to.diff(from, 'year') || 1, 'year').format(DATE_FORMAT),
+        };
+      case ROUTE_NAMES.STATS.INCOMES.MONTHLY:
+        return {
+          start: to.format(DATE_FORMAT),
+          end: to.add(to.diff(from, 'month') || 1, 'month').format(DATE_FORMAT),
+        };
+      case ROUTE_NAMES.STATS.INCOMES.WEEKLY:
+        return {
+          start: to.format(DATE_FORMAT),
+          end: to.add(to.diff(from, 'week') || 1, 'week').format(DATE_FORMAT),
+        };
+      default:
+        return {
+          start: to.format(DATE_FORMAT),
+          end: to.add(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
+        };
+    }
   }
   return null;
 });

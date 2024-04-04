@@ -167,7 +167,7 @@
       }
     },
     "head": {
-      "title": "Fréquentation hebdomadaire"
+      "title": "Fréquentation annuelle"
     },
     "onFetch": {
       "empty": "Aucune fréquentation annuelle pour cette période",
