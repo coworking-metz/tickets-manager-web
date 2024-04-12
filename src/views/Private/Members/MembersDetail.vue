@@ -1,7 +1,7 @@
 <template>
   <article
     class="mx-auto mb-12 flex w-full max-w-7xl flex-col max-sm:grow sm:mb-24 sm:min-h-full sm:px-6 lg:px-8">
-    <LoadingSpinner v-if="state.isFetchingMember" class="m-auto h-16 w-16" />
+    <LoadingSpinner v-if="state.isFetchingMember" class="m-auto size-16" />
     <ErrorState
       v-else-if="state.fetchMemberErrorMessage"
       class="m-auto"
@@ -11,19 +11,25 @@
       <!-- trick to trigger useHead.titleTemplate -->
       <Head><title></title></Head>
       <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
-        <div class="min-w-[12rem] shrink grow basis-0" />
+        <div class="min-w-48 shrink grow basis-0" />
         <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
           <div class="flex flex-row space-x-5 sm:ml-8">
             <div class="shrink-0">
-              <div class="relative h-16 w-16 rounded-full bg-gray-200">
+              <div class="relative size-16 rounded-full bg-gray-200">
                 <img
-                  v-if="state.member.wpUserId"
+                  v-if="state.member.thumbnail"
                   :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
-                  class="h-full w-full rounded-full object-cover object-top"
-                  :src="buildMemberPictureUrl(state.member.wpUserId)" />
+                  class="size-full rounded-full object-cover object-top"
+                  :src="state.member.thumbnail" />
+                <SvgIcon
+                  v-else
+                  aria-hidden="true"
+                  class="size-full"
+                  :path="mdiAccountCircle"
+                  type="mdi" />
                 <span
                   v-if="state.member.attending"
-                  class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-white" />
+                  class="absolute bottom-0 right-0 block size-4 rounded-full bg-green-400 ring-2 ring-white" />
               </div>
             </div>
             <div class="flex flex-col gap-1">
@@ -90,11 +96,11 @@
           </div>
         </header>
 
-        <div class="min-w-[12rem] shrink grow basis-0" />
+        <div class="min-w-48 shrink grow basis-0" />
       </section>
 
       <SectionRow class="mt-6">
-        <LoadingSpinner v-if="state.isFetchingActivity" class="m-auto h-12 w-12" />
+        <LoadingSpinner v-if="state.isFetchingActivity" class="m-auto size-12" />
         <ActivityGraph
           v-else
           :key="`activity-graph-${state.shouldRenderAllActivity}`"
@@ -229,13 +235,13 @@
         :title="$t('members.detail.orders.title')">
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
-            class="max-h-[40rem] min-w-[16rem] shrink grow basis-0"
+            class="max-h-[40rem] min-w-64 shrink grow basis-0"
             :loading="state.isFetchingTickets"
             :remaining="state.member.balance"
             :tickets="state.tickets" />
           <SubscriptionsListPanel
             :active="state.subscriptions.some(({ ended }) => dayjs().isBefore(ended))"
-            class="max-h-[40rem] min-w-[16rem] shrink grow basis-0"
+            class="max-h-[40rem] min-w-64 shrink grow basis-0"
             :loading="state.isFetchingSubscriptions"
             :subscriptions="state.subscriptions" />
         </div>
@@ -325,17 +331,12 @@ import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { handleSilentError, parseErrorText } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  Attendance,
-  Member,
-  buildMemberPictureUrl,
-  getMember,
-  getMemberActivity,
-} from '@/services/api/members';
+import { Attendance, Member, getMember, getMemberActivity } from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
+import { mdiAccountCircle } from '@mdi/js';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';

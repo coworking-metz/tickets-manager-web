@@ -22,7 +22,6 @@ export interface Device {
 
 export interface MemberListItem {
   _id: string;
-  picture?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -35,6 +34,8 @@ export interface MemberListItem {
   lastMembership: number;
   attending: boolean;
   wpUserId?: number;
+  picture?: string;
+  thumbnail?: string;
 }
 
 export interface Member extends MemberListItem {
@@ -91,13 +92,6 @@ export const updateMemberActivity = (
 
 export const syncMember = (id: string): Promise<Member> => {
   return HTTP.post(`/api/members/${id}/sync-wordpress`).then(({ data }) => data);
-};
-
-export const buildMemberPictureUrl = (wordpressUserId: number) => {
-  return new URL(
-    `/polaroid/${wordpressUserId}-raw-small.jpg`,
-    import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
-  ).toString();
 };
 
 export const buildMemberWordpressProfileUrl = (wordpressUserId: number) => {

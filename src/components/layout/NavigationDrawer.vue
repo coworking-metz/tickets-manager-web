@@ -17,7 +17,7 @@
         :to="item.to">
         <SvgIcon
           aria-hidden="true"
-          :class="[item.active ? 'text-white' : 'text-amber-100 group-hover:text-white', 'h-6 w-6']"
+          :class="[item.active ? 'text-white' : 'text-amber-100 group-hover:text-white', 'size-6']"
           :path="item.icon"
           type="mdi" />
         <span class="mt-2">{{ item.label }}</span>
@@ -33,10 +33,16 @@
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <img
-          v-if="authStore.user?.wpUserId"
+          v-if="authStore.user?.picture"
           :alt="`${$t('members.detail.profile.picture.label')} - ${authStore.user?.name}`"
-          class="inline-block h-12 w-12 rounded-full bg-slate-200 object-cover object-top text-black"
-          :src="buildMemberPictureUrl(authStore.user?.wpUserId)" />
+          class="inline-block size-12 rounded-full bg-slate-200 object-cover object-top text-black"
+          :src="authStore.user?.picture" />
+        <SvgIcon
+          v-else
+          aria-hidden="true"
+          class="size-12 text-amber-100 group-hover:text-white"
+          :path="mdiAccountCircle"
+          type="mdi" />
         <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
       </router-link>
     </nav>
@@ -47,9 +53,8 @@
 import monoLogo from '@/assets/logo-mono-inverted.svg';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
-import { buildMemberPictureUrl } from '@/services/api/members';
 import { useAuthStore } from '@/store/auth';
-import { mdiAccountGroup, mdiFinance } from '@mdi/js';
+import { mdiAccountCircle, mdiAccountGroup, mdiFinance } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw, useRoute } from 'vue-router';
