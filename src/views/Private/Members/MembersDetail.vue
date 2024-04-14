@@ -118,7 +118,7 @@
           "
           :activity="state.activity"
           class="max-sm:overflow-x-auto"
-          :non-compliant-dates="nonCompliantDates" />
+          :non-compliant-activity="nonCompliantActivity" />
         <template #title>
           <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
@@ -311,7 +311,7 @@
         "
         :member="state.member"
         :member-id="id"
-        :non-compliant-dates="nonCompliantDates"
+        :non-compliant-activity="nonCompliantActivity"
         :subscriptions="state.subscriptions"
         :tickets="state.tickets" />
     </SideDialog>
@@ -432,20 +432,29 @@ const monthlyAmountSpent = computed<number>(() => {
   return 0;
 });
 
-const nonCompliantDates = computed(() => {
+const nonCompliantActivity = computed(() => {
   const balance = state.member?.balance || 0;
   if (balance < 0 && state.activity.length) {
-    return state.activity
+    const ticketActivities = state.activity
       .filter(({ type }) => type === 'ticket')
-      .sort((a, b) => dayjs(b.date).diff(a.date))
-      .reduce((acc, item) => {
-        const sum = acc.reduce((s, { value }) => s + value, 0);
-        if (sum < Math.abs(balance)) {
-          return [...acc, item];
-        }
-        return acc;
-      }, [] as Attendance[])
-      .map(({ date }) => date);
+      .sort((a, b) => dayjs(b.date).diff(a.date));
+
+    let remainingDebt = Math.abs(balance);
+    const nonCompliantAttendance = [];
+    for (const { date, value, type } of ticketActivities) {
+      if (remainingDebt <= 0) {
+        break;
+      }
+
+      const debt = value > remainingDebt ? remainingDebt : value;
+      nonCompliantAttendance.push({
+        date,
+        value: debt,
+        type,
+      });
+      remainingDebt -= debt;
+    }
+    return nonCompliantAttendance;
   }
 
   return [];

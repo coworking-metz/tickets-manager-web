@@ -54,8 +54,8 @@ const props = defineProps({
     type: String,
     default: () => dayjs().format('YYYY-MM-DD'),
   },
-  nonCompliantDates: {
-    type: Array as PropType<string[]>,
+  nonCompliantActivity: {
+    type: Array as PropType<Attendance[]>,
     default: () => [],
   },
 });
@@ -103,14 +103,14 @@ const options = computed<
     type: 'heatmap',
     coordinateSystem: 'calendar',
     data: props.activity.map(({ date, value }) => {
-      const isCompliant = !props.nonCompliantDates.includes(date);
-      const color = isCompliant
-        ? value === 1
-          ? theme.meatBrown
-          : theme.peachYellow
-        : value === 1
+      const nonCompliant = props.nonCompliantActivity.find(({ date: d }) => dayjs(d).isSame(date));
+      const color = nonCompliant
+        ? nonCompliant.value === 1
           ? '#b91c1c'
-          : '#fca5a5';
+          : '#fca5a5' // even tho it could be a full day, the most important is its non compliant period
+        : value === 1
+          ? theme.meatBrown
+          : theme.peachYellow;
 
       return {
         value: [dayjs(date).format('YYYY-MM-DD'), value],
@@ -125,6 +125,12 @@ const options = computed<
               : value === 0.5
                 ? i18n.t('members.detail.attendance.graph.value.HALF')
                 : i18n.t('members.detail.attendance.graph.value.NONE'),
+          ...(nonCompliant && {
+            suffix:
+              nonCompliant.value === 1
+                ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
+                : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
+          }),
         }),
       };
     }),
