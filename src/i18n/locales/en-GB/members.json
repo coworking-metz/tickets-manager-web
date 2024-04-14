@@ -3,11 +3,15 @@
     "attendance": {
       "description": "Attendance is automatically recorded when the member connects to the coworking's wifi network.",
       "graph": {
-        "tooltip": "{date}: {amount}",
+        "tooltip": "{date}: {amount}{suffix}",
         "value": {
           "FULL": "full day",
           "HALF": "half day",
           "NONE": "absent"
+        },
+        "withNonCompliantValue": {
+          "FULL": "{' '}overconsumed",
+          "HALF": "<br />with half day overconsumed"
         }
       },
       "onFetch": {

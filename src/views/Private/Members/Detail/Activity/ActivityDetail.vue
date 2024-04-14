@@ -22,7 +22,7 @@
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
+            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
           </RouterLink>
         </div>
       </div>
@@ -31,7 +31,7 @@
         {{ $t('activity.detail.description') }}
       </p>
     </div>
-    <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+    <LoadingSpinner v-if="loading" class="m-auto size-16" />
     <EmptyState
       v-else-if="!selected"
       class="m-auto"
@@ -49,7 +49,7 @@
           }">
           <SvgIcon
             aria-hidden="true"
-            class="mr-1 h-5 w-5 text-gray-400"
+            class="mr-1 size-5 text-gray-400"
             :path="mdiChevronLeft"
             type="mdi" />
           {{ dayjs(previous.date).format('dddd DD/MM') }}
@@ -65,7 +65,7 @@
           {{ dayjs(next.date).format('dddd DD/MM') }}
           <SvgIcon
             aria-hidden="true"
-            class="ml-1 h-5 w-5 text-gray-400"
+            class="ml-1 size-5 text-gray-400"
             :path="mdiChevronRight"
             type="mdi" />
         </RouterLink>
@@ -85,10 +85,10 @@
           {{ $t('activity.detail.daily.label') }}
         </p>
         <DailyActivityGraph class="mb-4" /> -->
-        <div v-if="isNonCompliant" class="mb-5 flex flex-row rounded-lg bg-red-50 p-4">
+        <div v-if="nonCompliant" class="mb-5 flex flex-row rounded-lg bg-red-50 p-4">
           <SvgIcon
             aria-hidden="true"
-            class="h-5 w-5 shrink-0 text-red-700"
+            class="size-5 shrink-0 text-red-700"
             :path="mdiAlertCircle"
             type="mdi" />
           <div class="ml-3">
@@ -102,7 +102,7 @@
               tag="p">
               <template #emphasized>
                 <span class="font-semibold">
-                  {{ $t('activity.detail.nonCompliant.emphasized', { count: selected.value }) }}
+                  {{ $t('activity.detail.nonCompliant.emphasized', { count: nonCompliant.value }) }}
                 </span>
               </template>
             </i18n-t>
@@ -142,7 +142,7 @@
                 </span>
                 <SvgIcon
                   aria-hidden="true"
-                  :class="[!checked && 'invisible', 'h-5 w-5 text-indigo-600']"
+                  :class="[!checked && 'invisible', 'size-5 text-indigo-600']"
                   :path="mdiCheckCircle"
                   type="mdi" />
                 <span
@@ -283,8 +283,8 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  nonCompliantDates: {
-    type: Array as PropType<string[]>,
+  nonCompliantActivity: {
+    type: Array as PropType<Attendance[]>,
     default: () => [],
   },
 });
@@ -314,8 +314,8 @@ const next = computed<Attendance | null>(() => {
   return earliestDate ?? null;
 });
 
-const isNonCompliant = computed(() => {
-  return props.nonCompliantDates.includes(props.date);
+const nonCompliant = computed(() => {
+  return props.nonCompliantActivity.find(({ date }) => dayjs(props.date).isSame(date));
 });
 
 const rules = computed(() => ({

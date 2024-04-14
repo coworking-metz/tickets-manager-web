@@ -3,11 +3,15 @@
     "attendance": {
       "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
       "graph": {
-        "tooltip": "{date} : {amount}",
+        "tooltip": "{date} : {amount}{suffix}",
         "value": {
           "FULL": "journée complète",
           "HALF": "demi-journée",
           "NONE": "absent"
+        },
+        "withNonCompliantValue": {
+          "FULL": "{' '}surconsommée",
+          "HALF": "<br />dont une demi-journée surconsommée"
         }
       },
       "onFetch": {
