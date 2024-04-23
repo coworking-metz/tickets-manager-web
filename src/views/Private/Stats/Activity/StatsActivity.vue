@@ -50,7 +50,7 @@
                 }">
                 <SvgIcon
                   aria-hidden="true"
-                  class="h-6 w-6 text-gray-400"
+                  class="size-6 text-gray-400"
                   :path="mdiChevronLeft"
                   type="mdi" />
               </component>
@@ -69,7 +69,7 @@
                 }">
                 <SvgIcon
                   aria-hidden="true"
-                  class="h-6 w-6 text-gray-400"
+                  class="size-6 text-gray-400"
                   :path="mdiChevronRight"
                   type="mdi" />
               </component>
@@ -262,28 +262,11 @@ const previousPeriod = computed(() => {
   if (state.period.start && state.period.end) {
     const from = dayjs(state.period.start);
     const to = dayjs(state.period.end);
-    switch (route.name) {
-      case ROUTE_NAMES.STATS.INCOMES.YEARLY:
-        return {
-          start: from.subtract(to.diff(from, 'year') || 1, 'year').format(DATE_FORMAT),
-          end: from.format(DATE_FORMAT),
-        };
-      case ROUTE_NAMES.STATS.INCOMES.MONTHLY:
-        return {
-          start: from.subtract(to.diff(from, 'month') || 1, 'month').format(DATE_FORMAT),
-          end: from.format(DATE_FORMAT),
-        };
-      case ROUTE_NAMES.STATS.INCOMES.WEEKLY:
-        return {
-          start: from.subtract(to.diff(from, 'week') || 1, 'week').format(DATE_FORMAT),
-          end: from.format(DATE_FORMAT),
-        };
-      default:
-        return {
-          start: from.subtract(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
-          end: from.format(DATE_FORMAT),
-        };
-    }
+    const nextStart = from.subtract(1, 'day');
+    return {
+      start: nextStart.subtract(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
+      end: nextStart.format(DATE_FORMAT),
+    };
   }
   return null;
 });
@@ -292,28 +275,11 @@ const nextPeriod = computed(() => {
   if (state.period.start && state.period.end) {
     const from = dayjs(state.period.start);
     const to = dayjs(state.period.end);
-    switch (route.name) {
-      case ROUTE_NAMES.STATS.INCOMES.YEARLY:
-        return {
-          start: to.format(DATE_FORMAT),
-          end: to.add(to.diff(from, 'year') || 1, 'year').format(DATE_FORMAT),
-        };
-      case ROUTE_NAMES.STATS.INCOMES.MONTHLY:
-        return {
-          start: to.format(DATE_FORMAT),
-          end: to.add(to.diff(from, 'month') || 1, 'month').format(DATE_FORMAT),
-        };
-      case ROUTE_NAMES.STATS.INCOMES.WEEKLY:
-        return {
-          start: to.format(DATE_FORMAT),
-          end: to.add(to.diff(from, 'week') || 1, 'week').format(DATE_FORMAT),
-        };
-      default:
-        return {
-          start: to.format(DATE_FORMAT),
-          end: to.add(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
-        };
-    }
+    const nextStart = to.add(1, 'day');
+    return {
+      start: nextStart.format(DATE_FORMAT),
+      end: nextStart.add(to.diff(from, 'day') || 1, 'day').format(DATE_FORMAT),
+    };
   }
   return null;
 });
