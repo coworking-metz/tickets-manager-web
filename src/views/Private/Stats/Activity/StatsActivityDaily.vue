@@ -33,11 +33,11 @@
               <input
                 :id="`day-${weekDay.index}`"
                 v-model="weekDay.value"
-                class="h-4 w-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                class="size-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 :name="`day-${weekDay.index}`"
                 type="checkbox" />
               <label
-                class="h-full w-full cursor-pointer select-none py-2 text-sm font-medium"
+                class="size-full cursor-pointer select-none py-2 text-sm font-medium"
                 :for="`day-${weekDay.index}`">
                 {{ dayjs().set('day', weekDay.index).format('dddd') }}
               </label>

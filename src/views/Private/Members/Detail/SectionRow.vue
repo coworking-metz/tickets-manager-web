@@ -9,7 +9,7 @@
     <hr class="my-3 w-full border-t border-gray-200" />
 
     <div class="flex w-full flex-row flex-wrap gap-3">
-      <aside class="flex min-w-[12rem] shrink grow basis-0 flex-col">
+      <aside class="flex min-w-48 shrink grow basis-0 flex-col">
         <slot name="description">
           <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-500">
             {{ description }}
@@ -19,10 +19,10 @@
       <div class="flex w-full max-w-2xl shrink-0 grow flex-col">
         <slot />
       </div>
-      <aside class="relative flex min-w-[12rem] shrink grow basis-0 flex-row flex-wrap">
+      <aside class="relative flex min-w-48 shrink grow basis-0 flex-row flex-wrap">
         <!-- one hell of a trick -->
-        <div class="mr-3 max-h-0 min-w-[12rem] shrink grow basis-0" />
-        <div class="h-full w-full max-w-2xl shrink-0 grow">
+        <div class="mr-3 max-h-0 min-w-48 shrink grow basis-0" />
+        <div class="size-full max-w-2xl shrink-0 grow">
           <slot name="append" />
         </div>
       </aside>

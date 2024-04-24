@@ -28,10 +28,10 @@
               <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                   <div
-                    class="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
                     <SvgIcon
                       aria-hidden="true"
-                      class="h-6 w-6 text-red-600"
+                      class="size-6 text-red-600"
                       :path="mdiAlertOutline"
                       type="mdi" />
                   </div>
@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div
-                class="flex flex-col gap-3 border-t-[1px] border-gray-200 bg-gray-50 px-4 py-3 sm:flex-row-reverse sm:px-6">
+                class="flex flex-col gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:flex-row-reverse sm:px-6">
                 <AppButton
                   class="w-full border border-transparent bg-red-600 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:ring-red-500 sm:w-auto sm:text-sm"
                   :loading="state.isDeleting"

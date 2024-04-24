@@ -20,7 +20,7 @@
         <div class="mt-6 flex flex-col gap-6 sm:ml-6">
           <AppTextField
             id="name"
-            class="min-w-[12rem] shrink grow basis-0"
+            class="min-w-48 shrink grow basis-0"
             disabled
             hide-details
             :label="$t('user.profile.name.label')"
@@ -29,7 +29,7 @@
             type="text" />
           <AppTextField
             id="email"
-            class="min-w-[12rem] shrink grow basis-0"
+            class="min-w-48 shrink grow basis-0"
             disabled
             hide-details
             :label="$t('user.profile.email.label')"
@@ -79,9 +79,9 @@
                     :class="[
                       checked ? 'border-transparent bg-orange-500' : 'border-gray-300 bg-white',
                       active ? 'ring-2 ring-gray-900 ring-offset-2' : '',
-                      'flex h-4 w-4 items-center justify-center rounded-full border',
+                      'flex size-4 items-center justify-center rounded-full border',
                     ]">
-                    <span class="h-1.5 w-1.5 rounded-full bg-white" />
+                    <span class="size-1.5 rounded-full bg-white" />
                   </span>
                   <RadioGroupLabel as="span" class="ml-3 font-medium text-gray-900">
                     {{ $t(`user.profile.locale.value.${locale}`) }}

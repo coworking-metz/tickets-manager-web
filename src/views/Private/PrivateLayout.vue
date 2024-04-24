@@ -16,7 +16,7 @@
         <SvgIcon
           aria-hidden="true"
           :class="{
-            ['h-6 w-6 transition-transform duration-300']: true,
+            ['size-6 transition-transform duration-300']: true,
             ['!rotate-[540deg]']: !state.isMenuOpen,
           }"
           :path="state.isMenuOpen ? mdiMenuOpen : mdiMenu"
@@ -27,13 +27,13 @@
     <NavigationDrawer
       :class="[
         'top-0 z-[1] h-full shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:fixed sm:h-screen',
-        state.isMenuOpen && 'max-sm:max-w-[7rem]',
+        state.isMenuOpen && 'max-sm:max-w-28',
       ]" />
 
     <div
       :class="{
         ['h-full w-screen max-w-0 shrink-0 grow-0 transition-[max-width] sm:hidden']: true,
-        ['max-w-[7rem]']: state.isMenuOpen,
+        ['max-w-28']: state.isMenuOpen,
       }" />
     <main
       :class="[

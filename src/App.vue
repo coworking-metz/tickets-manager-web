@@ -3,7 +3,7 @@
     <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
     <html :lang="$i18n.locale.substring(0, 2)" />
   </Head>
-  <LoadingSpinner v-if="state.isLoading" class="m-auto h-16 w-16" />
+  <LoadingSpinner v-if="state.isLoading" class="m-auto size-16" />
   <router-view v-else />
   <NotificationToast />
 </template>

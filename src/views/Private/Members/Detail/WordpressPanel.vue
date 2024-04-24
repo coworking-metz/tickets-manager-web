@@ -20,7 +20,7 @@
         target="_blank">
         <SvgIcon
           aria-hidden="true"
-          class="h-5 w-5 text-indigo-500 group-hover:text-indigo-700"
+          class="size-5 text-indigo-500 group-hover:text-indigo-700"
           :path="mdiOpenInNew"
           type="mdi" />
         <span>{{ $t('members.detail.wordpress.check') }}</span>

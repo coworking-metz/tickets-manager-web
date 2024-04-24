@@ -240,7 +240,11 @@
             :remaining="state.member.balance"
             :tickets="state.tickets" />
           <SubscriptionsListPanel
-            :active="state.subscriptions.some(({ ended }) => dayjs().isBefore(ended))"
+            :active="
+              state.subscriptions.some(
+                ({ started, ended }) => dayjs().isAfter(started) && dayjs().isBefore(ended),
+              )
+            "
             class="max-h-[40rem] min-w-64 shrink grow basis-0"
             :loading="state.isFetchingSubscriptions"
             :subscriptions="state.subscriptions" />

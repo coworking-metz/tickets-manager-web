@@ -6,7 +6,7 @@
           id="first-name"
           v-model="state.firstname"
           autocomplete="given-name"
-          class="min-w-[12rem] shrink grow basis-0"
+          class="min-w-48 shrink grow basis-0"
           disabled
           :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.firstname.label')"
@@ -18,7 +18,7 @@
           id="last-name"
           v-model="state.lastname"
           autocomplete="family-name"
-          class="min-w-[12rem] shrink grow basis-0"
+          class="min-w-48 shrink grow basis-0"
           disabled
           :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.lastname.label')"
@@ -33,7 +33,7 @@
           id="email"
           v-model="state.email"
           autocomplete="email"
-          class="min-w-[12rem] shrink grow basis-0"
+          class="min-w-48 shrink grow basis-0"
           disabled
           :errors="vuelidate.email.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.email.label')"
@@ -45,7 +45,7 @@
           id="birthdate"
           v-model="state.birthdate"
           autocomplete="bday"
-          class="min-w-[12rem] shrink grow basis-0"
+          class="min-w-48 shrink grow basis-0"
           disabled
           :label="$t('members.detail.profile.birthdate.label')"
           name="birthdate"
@@ -71,7 +71,7 @@
             </a>
             <SvgIcon
               aria-hidden="true"
-              class="inline-block h-4 w-4 pb-1 text-blue-600"
+              class="inline-block size-4 pb-1 text-blue-600"
               :path="mdiOpenInNew"
               type="mdi" />
           </template>
@@ -102,7 +102,7 @@
                   {{ $t('members.detail.profile.macAddresses.check') }}
                   <SvgIcon
                     aria-hidden="true"
-                    class="ml-1 inline-block h-5 w-5"
+                    class="ml-1 inline-block size-5"
                     :path="mdiOpenInNew"
                     type="mdi" />
                 </a>
@@ -115,7 +115,7 @@
                   @click="() => onRemoveMacAddress(index)">
                   <SvgIcon
                     aria-hidden="true"
-                    class="h-5 w-5 text-gray-400"
+                    class="size-5 text-gray-400"
                     :path="mdiClose"
                     type="mdi" />
                   <span>{{ $t('members.detail.profile.macAddresses.remove') }}</span>
@@ -127,7 +127,7 @@
             <AppButton
               class="border border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400"
               @click="onAddMacAddress">
-              <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
+              <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
               {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
             </AppButton>
           </li>
@@ -158,7 +158,7 @@
               aria-hidden="true"
               :class="[
                 state.isManager ? 'translate-x-5' : 'translate-x-0',
-                'inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                'inline-block size-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
               ]" />
           </Switch>
         </SwitchGroup>
@@ -183,13 +183,13 @@
               aria-hidden="true"
               :class="[
                 state.hasParkingAccess ? 'translate-x-5' : 'translate-x-0',
-                'inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                'inline-block size-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
               ]" />
           </Switch>
         </SwitchGroup>
       </ul>
     </div>
-    <div class="flex flex-row border-t-[1px] border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+    <div class="flex flex-row border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
       <AppButton
         class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
         :icon="mdiCheckAll"

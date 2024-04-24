@@ -1,5 +1,5 @@
 <template>
-  <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+  <LoadingSpinner v-if="loading" class="m-auto size-16" />
   <EmptyState
     v-else-if="!incomes.length"
     :animation="AnalyticsGraph"
@@ -10,7 +10,7 @@
     v-else
     :key="`echarts-${width}`"
     ref="chart"
-    class="h-full w-full"
+    class="size-full"
     :option="options"
     @click="$emit('click')" />
 </template>

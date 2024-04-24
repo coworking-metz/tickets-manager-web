@@ -60,7 +60,7 @@
                 tabindex="1">
                 <SvgIcon
                   aria-hidden="true"
-                  class="h-5 w-5 shrink-0 text-gray-400"
+                  class="size-5 shrink-0 text-gray-400"
                   :path="mdiSort"
                   type="mdi" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
@@ -74,7 +74,7 @@
                 </span>
                 <SvgIcon
                   aria-hidden="true"
-                  class="-mr-1.5 ml-2.5 h-5 w-5 text-gray-400"
+                  class="-mr-1.5 ml-2.5 size-5 text-gray-400"
                   :path="mdiChevronDown"
                   type="mdi" />
               </MenuButton>
@@ -108,7 +108,7 @@
                         {{ $t(`members.list.sort.value.${listSorter.key}`) }}
                         <SvgIcon
                           aria-hidden="true"
-                          class="-mr-1.5 ml-2.5 h-4 w-4"
+                          class="-mr-1.5 ml-2.5 size-4"
                           :path="listSorter.key === sort ? mdiCheck : ''"
                           type="mdi" />
                       </RouterLink>

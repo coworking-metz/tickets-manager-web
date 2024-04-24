@@ -8,7 +8,7 @@
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"
-              class="h-6 w-6 shrink-0 text-indigo-400"
+              class="size-6 shrink-0 text-indigo-400"
               :path="activeTab?.icon"
               type="mdi" />
             <div class="mx-3 text-left text-sm">
@@ -18,7 +18,7 @@
 
             <SvgIcon
               aria-hidden="true"
-              class="ml-auto h-6 w-6 shrink-0 self-center text-gray-400 group-hover:text-gray-500"
+              class="ml-auto size-6 shrink-0 self-center text-gray-400 group-hover:text-gray-500"
               :path="mdiUnfoldMoreHorizontal"
               type="mdi" />
           </span>
@@ -47,7 +47,7 @@
                   @click.capture="close">
                   <SvgIcon
                     aria-hidden="true"
-                    class="h-6 w-6 shrink-0 text-indigo-400"
+                    class="size-6 shrink-0 text-indigo-400"
                     :path="tab.icon"
                     type="mdi" />
                   <div class="ml-3 overflow-hidden text-left text-sm">
@@ -85,7 +85,7 @@
               :to="tab.to">
               <SvgIcon
                 aria-hidden="true"
-                class="-mt-0.5 h-6 w-6 shrink-0 text-indigo-400"
+                class="-mt-0.5 size-6 shrink-0 text-indigo-400"
                 :path="tab.icon"
                 type="mdi" />
               <div class="ml-3 text-sm">
@@ -95,7 +95,7 @@
               <SvgIcon
                 aria-hidden="true"
                 :class="[
-                  'h-6 w-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:!opacity-100',
+                  'size-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:!opacity-100',
                   tab.active ? 'opacity-80' : 'opacity-0',
                 ]"
                 :path="mdiChevronRight"

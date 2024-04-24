@@ -16,7 +16,7 @@
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
+            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
           </RouterLink>
         </div>
       </div>
@@ -30,7 +30,7 @@
         }}
       </p>
     </div>
-    <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+    <LoadingSpinner v-if="loading" class="m-auto size-16" />
     <EmptyState
       v-else-if="!selectedTicket"
       class="m-auto"

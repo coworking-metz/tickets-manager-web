@@ -6,9 +6,11 @@
       <span
         :class="[
           'rounded-full px-3 py-1 leading-6 ring-1 ring-inset sm:text-sm',
-          remaining >= 0
+          remaining > 0
             ? 'bg-indigo-500/10 text-indigo-400 ring-indigo-500/20'
-            : 'bg-red-500/10 text-red-400 ring-red-500/20',
+            : remaining < 0
+              ? 'bg-red-500/10 text-red-400 ring-red-500/20'
+              : 'bg-gray-500/10 text-gray-400 ring-gray-500/20',
         ]">
         {{
           remaining >= 0
@@ -24,12 +26,12 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="loading" class="m-auto h-16 w-16" />
+      <LoadingSpinner v-if="loading" class="m-auto size-16" />
       <template v-else>
         <li
           v-for="ticket in tickets"
           :key="`ticket-${ticket.purchased}-${ticket.count}`"
-          class="border-b-[1px] border-gray-200">
+          class="border-b border-gray-200">
           <RouterLink
             :class="{
               ['flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200']: true,
@@ -73,11 +75,7 @@
           v-if="!state.shouldScroll && tickets.length > 8"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
           @click="state.shouldScroll = true">
-          <SvgIcon
-            aria-hidden="true"
-            class="mr-2 h-5 w-5"
-            :path="mdiChevronDoubleDown"
-            type="mdi" />
+          <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
           {{ $t('members.detail.orders.tickets.more') }}
         </button>
       </template>
@@ -87,7 +85,7 @@
         class="flex flex-row items-center rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
         replace
         :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW }">
-        <SvgIcon aria-hidden="true" class="mr-2 h-5 w-5" :path="mdiPlus" type="mdi" />
+        <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
         {{ $t('members.detail.orders.tickets.add') }}
       </RouterLink>
     </div>

@@ -37,7 +37,7 @@
                   {{ $t('login.headline.readMore') }}
                   <SvgIcon
                     aria-hidden="true"
-                    class="ml-1 h-4 w-4"
+                    class="ml-1 size-4"
                     :path="mdiArrowRight"
                     type="mdi" />
                 </a>
@@ -54,7 +54,7 @@
                 class="flex flex-row items-center gap-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 :href="HTTP.getUri({ url: '/api/auth/login', params: $route.query })"
                 @click="state.isLoggingIn = true">
-                <LoadingSpinner v-if="state.isLoggingIn" class="h-5 w-5" />
+                <LoadingSpinner v-if="state.isLoggingIn" class="size-5" />
                 {{ $t('action.login') }}
               </a>
             </div>
@@ -66,14 +66,14 @@
       class="relative overflow-hidden bg-gray-50 max-sm:max-h-[320px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
       <img
         :alt="$t('login.background.label')"
-        class="aspect-auto h-full object-cover grayscale-[100%] lg:w-full"
+        class="aspect-auto h-full object-cover grayscale lg:w-full"
         :src="state.selectedPhoto" />
       <i
         class="pointer-events-none absolute inset-0 mix-blend-screen"
         style="background-color: rgb(243, 175, 16, 0.6)" />
       <img
         :alt="$t('login.logo.label')"
-        class="pointer-events-none absolute inset-0 m-auto h-full max-h-[320px] w-full max-w-[320px] object-contain"
+        class="pointer-events-none absolute inset-0 m-auto size-full max-h-[320px] max-w-[320px] object-contain"
         :src="typoLePoulailler" />
     </section>
   </article>
