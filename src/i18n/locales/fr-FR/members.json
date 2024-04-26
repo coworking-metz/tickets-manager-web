@@ -148,6 +148,17 @@
       "title": "@:members.list.title"
     },
     "lastSeen": "Présent⸱e pour la dernière fois {date}",
+    "nonCompliant": {
+      "missingMemberships": {
+        "label": "Adhésion | Adhésion | Adhésions",
+        "none": "Aucune",
+        "value": "{count} manquante | {count} seule manquante | {count} manquantes"
+      },
+      "totalDebt": {
+        "label": "Dette totale",
+        "value": "Aucune | {count} ticket | {count} tickets"
+      }
+    },
     "onFetch": {
       "fail": "Impossible de récupérer la liste des membres"
     },
@@ -162,6 +173,7 @@
       "label": "Trier {suffix}",
       "value": {
         "created": "Par date d'inscription",
+        "debt": "Par dette",
         "lastSeen": "Par présence",
         "name": "Par nom"
       }

@@ -148,6 +148,17 @@
       "title": "@:members.list.title"
     },
     "lastSeen": "Last seen on {date}",
+    "nonCompliant": {
+      "missingMemberships": {
+        "label": "Membership | Membership | Memberships",
+        "none": "None",
+        "value": "{count} missing | {count} missing | {count} missing"
+      },
+      "totalDebt": {
+        "label": "Total debt",
+        "value": "None | {count} ticket | {count} tickets"
+      }
+    },
     "onFetch": {
       "fail": "Unable to fetch members list"
     },
@@ -162,6 +173,7 @@
       "label": "Sort {suffix}",
       "value": {
         "created": "By creation date",
+        "debt": "By debt",
         "lastSeen": "By last seen date",
         "name": "By name"
       }

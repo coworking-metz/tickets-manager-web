@@ -7,8 +7,7 @@
       class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
       {{ $t('members.list.title') }}
     </h1>
-    <div
-      class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3 border-b border-gray-200">
+    <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <nav class="flex flex-row gap-x-3 overflow-x-auto px-3 sm:px-0">
         <router-link
           v-for="listTab in ALL_TABS"
@@ -99,6 +98,7 @@
                         ]"
                         replace
                         :to="{
+                          ...$route,
                           query: {
                             ...$route.query,
                             sort: listSorter.key !== sort ? listSorter.key : undefined,
@@ -107,9 +107,10 @@
                         @click="close">
                         {{ $t(`members.list.sort.value.${listSorter.key}`) }}
                         <SvgIcon
+                          v-if="listSorter.key === sort"
                           aria-hidden="true"
-                          class="-mr-1.5 ml-2.5 size-4"
-                          :path="listSorter.key === sort ? mdiCheck : ''"
+                          class="-mr-1.5 ml-2.5 size-4 shrink-0"
+                          :path="mdiCheck"
                           type="mdi" />
                       </RouterLink>
                     </MenuItem>
@@ -122,27 +123,94 @@
       </div>
     </div>
 
-    <ul class="grow divide-y divide-gray-200 bg-white shadow sm:rounded-md" role="list">
-      <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
-        <li v-for="index in 10" :key="`loading-member-card-${index}`">
-          <MembersListCard loading />
+    <div class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
+      <ul
+        class="grow divide-y divide-gray-200 overflow-hidden border-t border-gray-200 bg-white shadow sm:rounded-md"
+        role="list">
+        <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
+          <li v-for="index in 10" :key="`loading-member-card-${index}`">
+            <MembersListCard loading />
+          </li>
+        </template>
+        <EmptyState
+          v-else-if="!slicedList.length"
+          class="m-auto py-6"
+          :title="$t('members.list.empty.title')" />
+        <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
+          <RouterLink
+            class="block hover:bg-gray-50"
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+              params: { id: member._id },
+            }">
+            <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
+          </RouterLink>
         </li>
-      </template>
-      <EmptyState
-        v-else-if="!slicedList.length"
-        class="m-auto py-6"
-        :title="$t('members.list.empty.title')" />
-      <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
-        <RouterLink
-          class="block hover:bg-gray-50"
-          :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-            params: { id: member._id },
-          }">
-          <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
-        </RouterLink>
-      </li>
-    </ul>
+      </ul>
+
+      <aside v-if="selectedTab?.key === 'nonCompliant'" class="flex flex-col">
+        <dl class="flex flex-row flex-wrap gap-3 max-sm:px-3 md:sticky md:top-3 md:max-w-48">
+          <div
+            class="min-w-32 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt class="truncate font-medium text-gray-500 sm:text-sm">
+              {{ $t('members.list.nonCompliant.totalDebt.label') }}
+            </dt>
+            <i18n-t
+              class="mt-1"
+              keypath="members.list.nonCompliant.totalDebt.value"
+              :plural="totalDebt"
+              scope="global"
+              tag="dd">
+              <template #count>
+                <AnimatedCounter
+                  class="block text-3xl font-semibold tracking-tight text-gray-900"
+                  :duration="1"
+                  :format="
+                    (count: number) =>
+                      formatAmount(count, {
+                        maximumFractionDigits: 1,
+                        style: 'decimal',
+                      })
+                  "
+                  :to="totalDebt" />
+              </template>
+            </i18n-t>
+          </div>
+          <div
+            class="min-w-32 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt class="truncate font-medium text-gray-500 sm:text-sm">
+              {{
+                $t('members.list.nonCompliant.missingMemberships.label', {
+                  count: missingMembershipsCount,
+                })
+              }}
+            </dt>
+            <i18n-t
+              class="mt-1"
+              keypath="members.list.nonCompliant.missingMemberships.value"
+              :plural="missingMembershipsCount"
+              scope="global"
+              tag="dd">
+              <template #count>
+                <AnimatedCounter
+                  class="block text-3xl font-semibold tracking-tight text-gray-900"
+                  :duration="1"
+                  :format="
+                    (count: number) =>
+                      count
+                        ? formatAmount(count, {
+                            maximumFractionDigits: 0,
+                            style: 'decimal',
+                          })
+                        : $t('members.list.nonCompliant.missingMemberships.none')
+                  "
+                  :to="missingMembershipsCount" />
+              </template>
+            </i18n-t>
+          </div>
+        </dl>
+      </aside>
+    </div>
   </article>
 </template>
 
@@ -150,6 +218,7 @@
 import MembersListCard from './MembersListCard.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import { formatAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
@@ -200,6 +269,10 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'lastSeen',
     sort: (a, b) => (!b.lastSeen ? -1 : !a.lastSeen ? 1 : dayjs(b.lastSeen).diff(a.lastSeen)),
+  },
+  {
+    key: 'debt',
+    sort: (a, b) => a.balance - b.balance,
   },
 ]);
 
@@ -326,6 +399,17 @@ const tabFilteredList = computed(() =>
 );
 
 const slicedList = computed(() => tabFilteredList.value.slice(0, state.slice));
+
+const totalDebt = computed(() =>
+  filteredList.value.reduce(
+    (acc, member) => acc + (member.balance < 0 ? Math.abs(member.balance) : 0),
+    0,
+  ),
+);
+
+const missingMembershipsCount = computed(() =>
+  filteredList.value.reduce((acc, member) => acc + Number(isMembershipNonCompliant(member)), 0),
+);
 
 const documentElement = ref<Document>();
 useInfiniteScroll(
