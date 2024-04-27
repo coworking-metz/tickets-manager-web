@@ -83,13 +83,15 @@
             class="flex flex-col">
             <AppTextField
               :id="`mac-address-${index}`"
-              v-model="state.devices[index].macAddress"
               class="app-mac-address"
               :errors="vuelidate.devices.$each.$message[index]"
+              max-length="17"
+              :model-value="state.devices[index].macAddress"
               placeholder="A0:B1:C2:D3:E4:F5"
               :prepend-icon="mdiLaptop"
               required
-              @blur="vuelidate.email.$touch()">
+              @blur="vuelidate.email.$touch()"
+              @update:model-value="(value: string) => onMacAddressInput(index, value)">
               <template #append>
                 <a
                   v-if="
@@ -274,8 +276,16 @@ const onAddMacAddress = () => {
   nextTick(() => document.getElementById(`mac-address-${state.devices.length - 1}`)?.focus());
 };
 
-const onRemoveMacAddress = (index: number) => {
-  state.devices.splice(index, 1);
+const onRemoveMacAddress = (deviceIndex: number) => {
+  state.devices.splice(deviceIndex, 1);
+};
+
+const onMacAddressInput = (deviceIndex: number, userInput: string) => {
+  let macAddress = userInput.toUpperCase().replace(/\W/gi, ''); // Remove all non-alphanumeric characters;
+  if (macAddress.length >= 3) {
+    macAddress = macAddress.replace(/(.{2})/g, '$1:'); // Append a colon (:) after every second character;
+  }
+  state.devices[deviceIndex].macAddress = macAddress.slice(0, 17);
 };
 
 const onSubmit = async () => {

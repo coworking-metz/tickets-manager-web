@@ -32,8 +32,10 @@
           }"
           :disabled="disabled"
           :max="max"
+          :maxlength="maxLength"
           :min="min"
           :name="name"
+          :pattern="pattern"
           :placeholder="placeholder"
           :readonly="readonly"
           :required="required"
@@ -150,6 +152,14 @@ const props = defineProps({
   readonly: {
     type: Boolean,
     default: false,
+  },
+  maxLength: {
+    type: [String, Number],
+    default: null,
+  },
+  pattern: {
+    type: String,
+    default: null,
   },
 });
 
