@@ -116,7 +116,7 @@
 
           <div class="mt-1 flex flex-row gap-3">
             <RadioGroupOption
-              v-for="typeOption in ['subscription', 'ticket'] as AttendanceType[]"
+              v-for="typeOption in ['subscription', 'ticket']"
               :key="`attendance-type-${typeOption}`"
               as="template"
               disabled

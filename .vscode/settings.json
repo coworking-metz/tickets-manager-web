@@ -6,5 +6,6 @@
   "eslint.validate": ["javascript", "typescript", "vue", "json", "jsonc", "scss"],
   "html.format.wrapLineLength": 100,
   "svg.preview.background": "editor",
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
