@@ -126,8 +126,14 @@
       "title": "Profil"
     },
     "status": {
-      "trusted": "Intègre",
-      "voting": "Électeur⸱rice"
+      "trusted": {
+        "description": "A acquis au moins 10 jours de présence.\nEst capable d'accéder au lieu en toute autonomie,\nsoit en ouvrant la porte de la terrasse soit en ouvrant la boîte à clés.",
+        "label": "Habitué⸱e"
+      },
+      "voting": {
+        "description": "A acquis au moins 20 jours de présence sur les 6 derniers mois.\nPeut voter lors des assemblées générales.",
+        "label": "Électeur⸱rice"
+      }
     },
     "wordpress": {
       "check": "Consulter le profil",

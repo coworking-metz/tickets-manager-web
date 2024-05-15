@@ -10,7 +10,7 @@
             :src="member.thumbnail" />
           <span
             v-if="member.attending"
-            class="absolute bottom-0 right-0 block size-3 rounded-full bg-green-400 ring-2 ring-white" />
+            class="absolute bottom-0 right-0 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
         </template>
       </div>
       <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">

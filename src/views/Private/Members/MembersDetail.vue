@@ -29,7 +29,7 @@
                   type="mdi" />
                 <span
                   v-if="state.member.attending"
-                  class="absolute bottom-0 right-0 block size-4 rounded-full bg-green-400 ring-2 ring-white" />
+                  class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
               </div>
             </div>
             <div class="flex flex-col gap-1">
@@ -81,16 +81,38 @@
                       : $t('members.detail.membership.none')
                   }}
                 </span>
-                <span
-                  v-if="state.member.trustedUser"
-                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                  {{ $t('members.detail.status.trusted') }}
-                </span>
-                <span
-                  v-if="state.member.activeUser"
-                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                  {{ $t('members.detail.status.voting') }}
-                </span>
+                <VTooltip v-if="state.member.trustedUser">
+                  <span
+                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    {{ $t('members.detail.status.trusted.label') }}
+                    <SvgIcon
+                      aria-hidden="true"
+                      class="size-4"
+                      :path="mdiInformationOutline"
+                      type="mdi" />
+                  </span>
+                  <template #popper>
+                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                      {{ $t('members.detail.status.trusted.description') }}
+                    </span>
+                  </template>
+                </VTooltip>
+                <VTooltip v-if="state.member.activeUser">
+                  <span
+                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    {{ $t('members.detail.status.voting.label') }}
+                    <SvgIcon
+                      aria-hidden="true"
+                      class="size-4"
+                      :path="mdiInformationOutline"
+                      type="mdi" />
+                  </span>
+                  <template #popper>
+                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                      {{ $t('members.detail.status.voting.description') }}
+                    </span>
+                  </template>
+                </VTooltip>
               </div>
             </div>
           </div>
@@ -340,7 +362,7 @@ import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscrip
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiAccountCircle } from '@mdi/js';
+import { mdiAccountCircle, mdiInformationOutline } from '@mdi/js';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';

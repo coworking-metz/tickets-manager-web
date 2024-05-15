@@ -26,6 +26,7 @@
     "axios-retry": "^4.1.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
+    "floating-vue": "^5.2.2",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "typeface-inter": "^3.18.1",

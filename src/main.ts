@@ -1,3 +1,5 @@
+import '@/styles/main.css';
+import 'typeface-inter';
 import App from './App.vue';
 import { i18nInstance } from './i18n';
 import router from './router';
@@ -13,10 +15,10 @@ import SvgIcon from '@jamescoyle/vue-icon';
 import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue';
+import FloatingVue from 'floating-vue';
 import { createApp } from 'vue';
 import VueNumberAnimation from 'vue-number-animation';
-import '@/styles/main.css';
-import 'typeface-inter';
+import 'floating-vue/dist/style.css';
 
 const app = createApp(App);
 const head = createHead();
@@ -25,6 +27,7 @@ app.use(pinia);
 app.use(router);
 app.use(head);
 app.use(VueQueryPlugin);
+app.use(FloatingVue);
 app.component('DotLottiePlayer', DotLottiePlayer);
 app.component('AnimatedCounter', VueNumberAnimation);
 app.component('SvgIcon', SvgIcon);

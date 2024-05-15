@@ -126,8 +126,14 @@
       "title": "Profile"
     },
     "status": {
-      "trusted": "Trusted",
-      "voting": "Voting"
+      "trusted": {
+        "description": "Has acquired at least 10 days of presence.\nCan access the place autonomously,\neither by opening the deck door or by opening the key box.",
+        "label": "Trusted"
+      },
+      "voting": {
+        "description": "Has acquired at least 20 days of presence over the last 6 months.\nCan vote during general assemblies.",
+        "label": "Voting"
+      }
     },
     "wordpress": {
       "check": "View Profile",
