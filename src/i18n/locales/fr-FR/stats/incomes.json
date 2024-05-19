@@ -7,6 +7,7 @@
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
+          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -56,6 +57,7 @@
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
+          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -105,6 +107,7 @@
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
+          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -135,6 +138,7 @@
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
+          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }

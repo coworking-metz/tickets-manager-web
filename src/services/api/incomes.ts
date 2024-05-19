@@ -13,7 +13,8 @@ export const CHARGES_PER_YEAR_IN_EUR = {
 
   2016: 9_877.77, // estimation
   2023: 1_761.73 * 12,
-  2024: // estimation
+  // estimation
+  2024:
     1_645.3 * 12 + // rent
     208.35 + // insurance
     60 * 12 + // internet
@@ -48,9 +49,19 @@ export type IncomePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
   date: string;
   type: PeriodType;
   data: {
-    usedTickets: number; // tickets count consumed
-    daysAbo: number; // days count consumed from subscriptions
-    incomes: number; // amount in euro
+    tickets: {
+      count: number; // tickets count consumed
+      amount: number; // amount in euro
+      debt: {
+        count: number; // tickets count consumed when not paid yet
+        amount: number; // debt in euro
+      };
+    };
+    subscriptions: {
+      count: number; // subscriptions count
+      amount: number; // amount in euro
+      attending: number; // when the member was attending
+    };
   };
 };
 
@@ -58,6 +69,7 @@ export type IncomePeriodWithCharges<PeriodType extends 'year' | 'month' | 'week'
   IncomePeriod<PeriodType> & {
     data: IncomePeriod<PeriodType>['data'] & {
       charges: number; // regular expenses in euro
+      incomes: number; // total incomes in euro
     };
   };
 
@@ -70,12 +82,14 @@ export const getIncomesPerYear = (
       ...(from && { from }),
       ...(to && { to }),
     },
+    timeout: 60_000,
   }).then(({ data }) =>
     data.map((income: IncomePeriod<'year'>) => ({
       ...income,
       data: {
         ...income.data,
         charges: getCharges(income.date, 'year'),
+        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
   );
@@ -90,12 +104,14 @@ export const getIncomesPerMonth = (
       ...(from && { from }),
       ...(to && { to }),
     },
+    timeout: 60_000,
   }).then(({ data }) =>
     data.map((income: IncomePeriod<'month'>) => ({
       ...income,
       data: {
         ...income.data,
         charges: getCharges(income.date, 'month'),
+        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
   );
@@ -110,12 +126,14 @@ export const getIncomesPerWeek = (
       ...(from && { from }),
       ...(to && { to }),
     },
+    timeout: 60_000,
   }).then(({ data }) =>
     data.map((income: IncomePeriod<'week'>) => ({
       ...income,
       data: {
         ...income.data,
         charges: getCharges(income.date, 'week'),
+        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
   );
@@ -130,12 +148,14 @@ export const getIncomesPerDay = (
       ...(from && { from }),
       ...(to && { to }),
     },
+    timeout: 60_000,
   }).then(({ data }) =>
     data.map((income: IncomePeriod<'day'>) => ({
       ...income,
       data: {
         ...income.data,
         charges: getCharges(income.date, 'day'),
+        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
   );

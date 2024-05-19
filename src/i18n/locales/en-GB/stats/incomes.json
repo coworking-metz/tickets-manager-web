@@ -13,6 +13,7 @@
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
+          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -68,6 +69,7 @@
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
+          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -123,6 +125,7 @@
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
+          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -159,6 +162,7 @@
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
+          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
