@@ -20,11 +20,7 @@ import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
-import {
-  INCOME_PER_SUBSCRIPTION_DAY,
-  INCOME_PER_TICKET,
-  IncomePeriodWithCharges,
-} from '@/services/api/incomes';
+import { IncomePeriodWithCharges } from '@/services/api/incomes';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -137,7 +133,7 @@ const options = computed<
             silent: true,
             name: 'subscriptions',
             data: props.incomes.map(({ data }) => ({
-              value: data.daysAbo * INCOME_PER_SUBSCRIPTION_DAY,
+              value: data.subscriptions.amount,
               itemStyle: {
                 color: theme.peachYellow,
               },
@@ -149,9 +145,21 @@ const options = computed<
             silent: true,
             name: 'tickets',
             data: props.incomes.map(({ data }) => ({
-              value: data.usedTickets * INCOME_PER_TICKET,
+              value: data.tickets.amount,
               itemStyle: {
                 color: theme.babyBlueEyes,
+              },
+            })),
+            type: 'bar',
+            stack: 'incomes',
+          },
+          {
+            silent: true,
+            name: 'debt',
+            data: props.incomes.map(({ data }) => ({
+              value: data.tickets.debt.amount,
+              itemStyle: {
+                color: theme.azureishWhite,
               },
             })),
             type: 'bar',
@@ -232,4 +240,3 @@ const options = computed<
   ],
 }));
 </script>
-@/services/api/incomes

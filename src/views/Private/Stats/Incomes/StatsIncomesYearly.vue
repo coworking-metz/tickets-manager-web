@@ -127,12 +127,7 @@ import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  INCOME_PER_SUBSCRIPTION_DAY,
-  INCOME_PER_TICKET,
-  IncomePeriodWithCharges,
-  getIncomesPerYear,
-} from '@/services/api/incomes';
+import { IncomePeriodWithCharges, getIncomesPerYear } from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -189,7 +184,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
   tooltip: {
     formatter: (params) => {
       const {
-        data: { incomes, usedTickets, daysAbo, charges },
+        data: { incomes, tickets, subscriptions, charges },
         date, // @ts-ignore
       } = state.incomes[params[0].dataIndex];
       return `
@@ -198,17 +193,34 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
             ${dayjs(date).format('YYYY')}
           </dt>
 
+          ${
+            tickets.debt.count
+              ? `<div class="flex flex-row justify-between place-items-end">
+              <dt class="flex flex-row gap-1 items-center text-base font-normal">
+                <span class="block h-3 w-3 rounded-full" style="background-color: ${
+                  theme.azureishWhite
+                };"></span>
+                ${i18n.t('stats.incomes.yearly.graph.tooltip.tickets.debt', {
+                  count: tickets.debt.count,
+                })}
+              </dt>
+              <dd class="ml-6 text-base font-medium text-gray-400">${fractionAmount(
+                tickets.debt.amount,
+              )}</dd>
+            </div>`
+              : ''
+          }
           <div class="flex flex-row justify-between place-items-end">
             <dt class="flex flex-row gap-1 items-center text-base font-normal">
               <span class="block h-3 w-3 rounded-full" style="background-color: ${
                 theme.babyBlueEyes
               };"></span>
               ${i18n.t('stats.incomes.yearly.graph.tooltip.tickets.label', {
-                count: usedTickets,
+                count: tickets.count,
               })}
             </dt>
             <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
-              usedTickets * INCOME_PER_TICKET,
+              tickets.amount,
             )}</dd>
           </div>
           <div class="flex flex-row justify-between place-items-end">
@@ -217,11 +229,11 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 theme.peachYellow
               };"></span>
               ${i18n.t('stats.incomes.yearly.graph.tooltip.subscriptions.label', {
-                count: daysAbo,
+                count: subscriptions.count,
               })}
             </dt>
             <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
-              daysAbo * INCOME_PER_SUBSCRIPTION_DAY,
+              subscriptions.amount,
             )}</dd>
           </div>
 
