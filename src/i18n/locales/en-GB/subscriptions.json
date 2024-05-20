@@ -32,6 +32,9 @@
       "fail": "Unable to modify this subscription",
       "success": "Subscription modified"
     },
+    "reference": {
+      "label": "Order reference"
+    },
     "started": {
       "label": "Starting on"
     },

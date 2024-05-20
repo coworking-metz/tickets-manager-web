@@ -57,6 +57,12 @@
           </span>
         </template>
       </AppTextField>
+      <AppTextField
+        id="ticket-reference"
+        disabled
+        :label="$t('tickets.detail.reference.label')"
+        :model-value="selectedTicket.orderReference"
+        readonly />
 
       <AppTextareaField
         id="comment"

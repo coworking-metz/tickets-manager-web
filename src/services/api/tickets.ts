@@ -5,6 +5,7 @@ export interface Ticket {
   purchased: string;
   amount: number;
   count: number;
+  orderReference?: string;
 }
 
 export const getAllMemberTickets = (memberId: string): Promise<Ticket[]> => {

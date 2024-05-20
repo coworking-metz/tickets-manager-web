@@ -145,34 +145,6 @@
           </h2>
         </template>
         <template #description>
-          <RadioGroup
-            v-model="state.shouldRenderAllActivity"
-            class="mx-3 my-1 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
-            <RadioGroupOption
-              v-for="option in [false, true]"
-              :key="`activity-option-${option}`"
-              as="template"
-              :value="option"
-              v-slot="{ checked }">
-              <button
-                :class="[
-                  'flex items-center rounded-md p-1.5 pl-2.5 pr-3.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100',
-                  checked
-                    ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%]'
-                    : 'hover:bg-white/80',
-                ]">
-                <RadioGroupLabel
-                  as="span"
-                  :class="['text-gray-600 group-hover:text-gray-900', checked && 'text-gray-900']">
-                  {{
-                    option
-                      ? $t('members.detail.attendance.period.allTime')
-                      : $t('members.detail.attendance.period.last6Months')
-                  }}
-                </RadioGroupLabel>
-              </button>
-            </RadioGroupOption>
-          </RadioGroup>
           <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0">
             {{ $t('members.detail.attendance.description') }}
           </p>
@@ -180,7 +152,7 @@
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3 px-3 sm:px-0">
             <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              class="flex min-w-48 shrink grow basis-0 flex-col overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.attendance.summary.label') }}
               </dt>
@@ -224,6 +196,38 @@
                   </i18n-t>
                 </template>
               </i18n-t>
+
+              <RadioGroup
+                v-model="state.shouldRenderAllActivity"
+                class="mt-3 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
+                <RadioGroupOption
+                  v-for="option in [false, true]"
+                  :key="`activity-option-${option}`"
+                  as="template"
+                  :value="option"
+                  v-slot="{ checked }">
+                  <button
+                    :class="[
+                      'flex items-center rounded-md p-1.5 pl-2.5 pr-3.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100',
+                      checked
+                        ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%]'
+                        : 'hover:bg-white/80',
+                    ]">
+                    <RadioGroupLabel
+                      as="span"
+                      :class="[
+                        'text-gray-600 group-hover:text-gray-900',
+                        checked && 'text-gray-900',
+                      ]">
+                      {{
+                        option
+                          ? $t('members.detail.attendance.period.allTime')
+                          : $t('members.detail.attendance.period.last6Months')
+                      }}
+                    </RadioGroupLabel>
+                  </button>
+                </RadioGroupOption>
+              </RadioGroup>
             </div>
           </dl>
         </template>

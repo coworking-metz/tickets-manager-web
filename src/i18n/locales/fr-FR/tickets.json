@@ -32,6 +32,9 @@
       "fail": "Impossible de modifier cette commande de tickets",
       "success": "Commande de tickets modifiée"
     },
+    "reference": {
+      "label": "Référence de la commande"
+    },
     "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
   },
   "new": {
