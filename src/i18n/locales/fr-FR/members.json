@@ -86,7 +86,12 @@
         "overconsumed": "{count} surconsommé | {count} surconsommés",
         "purchased": "Commandé le {date} | Commandé le {date} | Commandés le {date}",
         "remaining": "Aucun disponible | {count} restant | {count} restants",
-        "title": "Tickets à l'unité"
+        "title": "Tickets à l'unité",
+        "used": {
+          "label": "Consommation",
+          "orders": "{count} commandé | {count} commandé | {count} commandés",
+          "value": "{count} ticket utilisé sur {orders} | {count} ticket utilisé sur {orders} | {count} tickets utilisés sur {orders}"
+        }
       },
       "title": "Commandes"
     },
