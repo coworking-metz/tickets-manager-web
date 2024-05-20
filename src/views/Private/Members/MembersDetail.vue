@@ -178,8 +178,9 @@
           </p>
         </template>
         <template #append>
-          <dl class="sticky top-3 flex flex-col gap-3 px-3 sm:px-0">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dl class="sticky top-3 flex flex-row flex-wrap gap-3 px-3 sm:px-0">
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.attendance.summary.label') }}
               </dt>
@@ -243,14 +244,61 @@
         <WordpressPanel class="mt-3" :member="member" @update:member="refetchMember" />
 
         <template #append>
-          <dl class="sticky top-3 flex flex-col gap-3">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                 {{ dayjs(member.created).format('YYYY') }}
               </dd>
+            </div>
+
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+                {{ $t('members.detail.orders.tickets.used.label') }}
+              </dt>
+              <i18n-t
+                class="mt-1"
+                keypath="members.detail.orders.tickets.used.value"
+                :plural="totalTicketsUsed"
+                scope="global"
+                tag="dd">
+                <template #count>
+                  <AnimatedCounter
+                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    :duration="1"
+                    :format="
+                      (count: number) =>
+                        fractionAmount(count, {
+                          style: 'decimal',
+                        })
+                    "
+                    :to="totalTicketsUsed" />
+                </template>
+                <template #orders>
+                  <i18n-t
+                    keypath="members.detail.orders.tickets.used.orders"
+                    :plural="totalTicketsCount"
+                    scope="global"
+                    tag="span">
+                    <template #count>
+                      <AnimatedCounter
+                        class="inline-block font-bold tracking-tight text-gray-900"
+                        :duration="1"
+                        :format="
+                          (count: number) =>
+                            fractionAmount(count, {
+                              style: 'decimal',
+                            })
+                        "
+                        :to="totalTicketsCount" />
+                    </template>
+                  </i18n-t>
+                </template>
+              </i18n-t>
             </div>
           </dl>
         </template>
@@ -294,8 +342,9 @@
         </div>
 
         <template #append>
-          <dl class="sticky top-3 flex flex-col gap-3">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.orders.spent.monthly.label') }}
               </dt>
@@ -313,7 +362,8 @@
                 </template>
               </i18n-t>
             </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate font-medium text-gray-500 sm:text-sm">
                 {{ $t('members.detail.orders.spent.total.label') }}
               </dt>
@@ -531,6 +581,16 @@ const periodAttendance = computed<number>(() => {
   return (
     (state.shouldRenderAllActivity ? member.value?.totalActivity : member.value?.activity) || 0
   );
+});
+
+const totalTicketsCount = computed<number>(() => {
+  return state.tickets.reduce((acc, ticketsOrder) => acc + ticketsOrder.count, 0);
+});
+
+const totalTicketsUsed = computed<number>(() => {
+  return state.activity
+    .filter(({ type }) => type === 'ticket')
+    .reduce((acc, { value }) => acc + value, 0);
 });
 
 const totalAmountSpent = computed<number>(() => {
