@@ -32,6 +32,9 @@
       "fail": "Unable to edit this ticket order",
       "success": "Ticket order updated"
     },
+    "reference": {
+      "label": "Order reference"
+    },
     "title": "Order for {count} ticket | Order for one ticket | Order for {count} tickets"
   },
   "new": {

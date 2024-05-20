@@ -6,6 +6,7 @@ export interface Subscription {
   ended: string;
   purchased: string;
   amount: number;
+  orderReference?: string;
 }
 
 export const getAllMemberSubscriptions = (memberId: string): Promise<Subscription[]> => {

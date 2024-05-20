@@ -67,6 +67,12 @@
         :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />
+      <AppTextField
+        id="subscription-reference"
+        disabled
+        :label="$t('subscriptions.detail.reference.label')"
+        :model-value="selectedSubscription.orderReference"
+        readonly />
 
       <AppTextareaField
         id="comment"

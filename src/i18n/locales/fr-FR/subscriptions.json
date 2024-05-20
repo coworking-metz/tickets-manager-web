@@ -32,6 +32,9 @@
       "fail": "Impossible de modifier cet abonnement",
       "success": "Abonnement modifié"
     },
+    "reference": {
+      "label": "Référence de la commande"
+    },
     "started": {
       "label": "Débutant le"
     },
