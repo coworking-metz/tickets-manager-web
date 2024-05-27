@@ -52,6 +52,7 @@ export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
   return Boolean(
     !member.membershipOk &&
       member.lastSeen &&
+      dayjs(member.lastSeen).isSame(dayjs(), 'year') &&
       (!member.lastMembership ||
         dayjs(member.lastSeen).isAfter(dayjs().year(member.lastMembership).endOf('year'), 'year')),
   );
