@@ -61,12 +61,21 @@
 
       <AppTextField
         id="subscription-ended"
-        v-model="state.ended"
-        :errors="vuelidate.ended.$errors.map(({ $message }) => $message as string)"
+        disabled
+        :hint="$t('subscriptions.detail.ended.hint')"
         :label="$t('subscriptions.detail.ended.label')"
+        :model-value="selectedSubscription.ended"
         :prepend-icon="mdiCalendarEndOutline"
         required
         type="date" />
+
+      <AppTextField
+        id="comment"
+        v-model.number="state.comment"
+        :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.comment.label')"
+        :placeholder="$t('subscriptions.detail.comment.placeholder')"
+        required />
 
       <div class="mt-1 flex flex-row justify-between gap-3">
         <AppButton
@@ -145,7 +154,7 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   started: null as string | null,
-  ended: null as string | null,
+  comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
 });
@@ -156,7 +165,7 @@ const selectedSubscription = computed<Subscription | null>(() => {
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
-  ended: { required: withAppI18nMessage(required) },
+  comment: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -170,9 +179,9 @@ const onSubmit = async () => {
 
   state.isSubmitting = true;
   updateMemberSubscription(props.memberId, props.id, {
-    started: state.started,
-    ended: state.ended,
-  } as Subscription)
+    started: state.started as string,
+    comment: state.comment as string,
+  })
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
@@ -196,7 +205,6 @@ watch(
   (subscription) => {
     if (subscription) {
       state.started = dayjs(subscription.started).format('YYYY-MM-DD');
-      state.ended = dayjs(subscription.ended).format('YYYY-MM-DD');
     }
   },
   { immediate: true },
