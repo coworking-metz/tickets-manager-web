@@ -8,12 +8,17 @@
     "title": "Suppression de l'abonnement"
   },
   "detail": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de ce changement"
+    },
     "description": "Commandé le {purchasedDate} à {purchasedTime}",
     "empty": {
       "description": "Assurez-vous que l'abonnement est bien rattaché à ce membre.",
       "title": "Abonnement introuvable"
     },
     "ended": {
+      "hint": "La date est déterminée à partir de la date de début.",
       "label": "Terminant le"
     },
     "head": {

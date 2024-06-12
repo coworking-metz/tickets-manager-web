@@ -28,10 +28,14 @@ export const addMemberSubscription = (
   return HTTP.post(`/api/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
 };
 
+export type SubscriptionChange = Pick<Subscription, 'started'> & {
+  comment: string; // comment is mandatory to audit what happened
+};
+
 export const updateMemberSubscription = (
   memberId: string,
   subscriptionId: string,
-  subscription: Subscription,
+  subscription: SubscriptionChange,
 ): Promise<Subscription> => {
   return HTTP.put(`/api/members/${memberId}/subscriptions/${subscriptionId}`, subscription).then(
     ({ data }) => data,
