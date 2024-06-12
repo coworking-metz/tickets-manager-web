@@ -1,7 +1,7 @@
 <template>
   <div role="status">
     <svg
-      class="h-full w-full animate-spin"
+      class="size-full animate-spin"
       fill="none"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg">
