@@ -26,7 +26,7 @@
             <div class="flex items-start">
               <SvgIcon
                 aria-hidden="true"
-                :class="['h-6 w-6 shrink-0', getIconColorFromType(notification.type)]"
+                :class="['size-6 shrink-0', getIconColorFromType(notification.type)]"
                 :path="notification.icon || getIconFromType(notification.type)"
                 type="mdi" />
               <div class="ml-3 w-0 flex-1 pt-0.5">
@@ -58,7 +58,7 @@
                 type="button"
                 @click="notificationsStore.dismissNotification(notification.id)">
                 <span class="sr-only">{{ $t('action.close') }}</span>
-                <SvgIcon aria-hidden="true" class="h-6 w-6" :path="mdiClose" type="mdi" />
+                <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
               </button>
             </div>
           </div>
