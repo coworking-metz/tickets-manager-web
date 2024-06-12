@@ -30,6 +30,17 @@
       },
       "title": "Attendance"
     },
+    "audit": {
+      "description": "All the events done by or that impacted this member.",
+      "empty": {
+        "title": "Nothing has happened yet"
+      },
+      "more": "More",
+      "onFetch": {
+        "fail": "Unable to retrieve the history"
+      },
+      "title": "History"
+    },
     "header": {
       "description": "Present for the last time {date}"
     },
@@ -77,7 +88,7 @@
         "remaining": "None available | {count} remaining | {count} remaining",
         "title": "Individual Tickets"
       },
-      "title": "Order History"
+      "title": "Orders"
     },
     "profile": {
       "birthdate": {

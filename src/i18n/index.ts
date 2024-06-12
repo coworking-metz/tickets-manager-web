@@ -3,6 +3,7 @@ import { createI18nMessage } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar.js';
 import duration from 'dayjs/plugin/duration.js';
+import isBetween from 'dayjs/plugin/isBetween.js';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import updateLocale from 'dayjs/plugin/updateLocale.js';
@@ -14,6 +15,7 @@ dayjs.extend(calendar);
 dayjs.extend(relativeTime);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(duration);
+dayjs.extend(isBetween);
 
 dayjs.updateLocale('fr', {
   calendar: {

@@ -30,6 +30,17 @@
       },
       "title": "Présence"
     },
+    "audit": {
+      "description": "Tous les évènements qu'a fait ou qui ont impacté ce membre.",
+      "empty": {
+        "title": "Il ne s'est encore rien passé"
+      },
+      "more": "Plus",
+      "onFetch": {
+        "fail": "Impossible de récupérer l'historique"
+      },
+      "title": "Historique"
+    },
     "header": {
       "description": "Présent⸱e pour la dernière fois {date}"
     },
@@ -77,7 +88,7 @@
         "remaining": "Aucun disponible | {count} restant | {count} restants",
         "title": "Tickets à l'unité"
       },
-      "title": "Historique des commandes"
+      "title": "Commandes"
     },
     "profile": {
       "birthdate": {

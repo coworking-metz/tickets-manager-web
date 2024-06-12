@@ -232,6 +232,13 @@
 
       <SectionRow
         class="mt-16 px-3 sm:px-0"
+        :description="$t('members.detail.audit.description')"
+        :title="$t('members.detail.audit.title')">
+        <MemberHistoryPanel :member="state.member" />
+      </SectionRow>
+
+      <SectionRow
+        class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
         <ProfilePanel :member="state.member" @update:member="onUpdateMember" />
@@ -346,6 +353,7 @@
 
 <script setup lang="ts">
 import ActivityGraph from './Detail/Activity/ActivityGraph.vue';
+import MemberHistoryPanel from './Detail/MemberHistoryPanel.vue';
 import ProfilePanel from './Detail/ProfilePanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
