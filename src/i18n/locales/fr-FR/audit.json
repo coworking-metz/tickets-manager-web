@@ -1,0 +1,42 @@
+{
+  "action": {
+    "MEMBER_SUBSCRIPTION_UPDATE": {
+      "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}"
+    }
+  },
+  "list": {
+    "description": "Tout ce qui se passe en détail.",
+    "empty": {
+      "title": "Rien trouvé"
+    },
+    "head": {
+      "title": "@:audit.list.title"
+    },
+    "onFetch": {
+      "fail": "Impossible de récupérer l'historique global"
+    },
+    "period": {
+      "placeholder": "Période",
+      "shortcuts": {
+        "currentWeek": "Cette semaine",
+        "last30days": "30 derniers jours",
+        "sinceFirstDay": "Depuis toujours",
+        "today": "Aujourd'hui"
+      },
+      "value": "Du {start} au {end}"
+    },
+    "search": {
+      "label": "Rechercher",
+      "placeholder": "@:audit.list.search.label"
+    },
+    "sort": {
+      "label": "Trier {suffix}",
+      "value": {
+        "action": "Par type",
+        "author": "Par auteur",
+        "occurred": "Par date"
+      }
+    },
+    "title": "Historique"
+  }
+}

@@ -1,3 +1,4 @@
+import { AuditEvent } from './audit';
 import HTTP from '../http';
 import dayjs from 'dayjs';
 
@@ -99,4 +100,8 @@ export const buildMemberWordpressProfileUrl = (wordpressUserId: number) => {
     `/wp-admin/user-edit.php?user_id=${wordpressUserId}`,
     import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
   ).toString();
+};
+
+export const getMemberAuditEvents = (id: string): Promise<AuditEvent[]> => {
+  return HTTP.get(`/api/members/${id}/audit`).then(({ data }) => data);
 };

@@ -202,6 +202,16 @@ export const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: 'history',
+        name: ROUTE_NAMES.HISTORY,
+        component: () => import('@/views/Private/History/HistoryEventsList.vue'),
+        props: (route) => ({
+          search: route.query.search,
+          sort: route.query.sort,
+          slice: route.query.slice,
+        }),
+      },
+      {
         path: 'profile',
         name: ROUTE_NAMES.USER.PROFILE,
         component: () => import('@/views/Private/User/UserProfile.vue'),

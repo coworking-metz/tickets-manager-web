@@ -1,0 +1,42 @@
+{
+  "action": {
+    "MEMBER_SUBSCRIPTION_UPDATE": {
+      "message": "{author} has changed {member}'s subscription to start on {started} instead of {previouslyStarted}"
+    }
+  },
+  "list": {
+    "description": "Everything that happens in detail.",
+    "empty": {
+      "title": "Nothing found"
+    },
+    "head": {
+      "title": "@:audit.list.title"
+    },
+    "onFetch": {
+      "fail": "Unable to retrieve the global history"
+    },
+    "period": {
+      "placeholder": "Period",
+      "shortcuts": {
+        "currentWeek": "This week",
+        "last30days": "Last 30 days",
+        "sinceFirstDay": "Since always",
+        "today": "Today"
+      },
+      "value": "From {start} to {end}"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "@:audit.list.search.label"
+    },
+    "sort": {
+      "label": "Sort {suffix}",
+      "value": {
+        "action": "By type",
+        "author": "By author",
+        "occurred": "By date"
+      }
+    },
+    "title": "History"
+  }
+}

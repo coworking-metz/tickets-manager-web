@@ -64,7 +64,7 @@
         disabled
         :hint="$t('subscriptions.detail.ended.hint')"
         :label="$t('subscriptions.detail.ended.label')"
-        :model-value="selectedSubscription.ended"
+        :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
         required
         type="date" />
@@ -161,6 +161,12 @@ const state = reactive({
 
 const selectedSubscription = computed<Subscription | null>(() => {
   return props.subscriptions.find(({ _id }) => `${_id}` === `${props.id}`) ?? null;
+});
+
+const computedEnded = computed(() => {
+  return state.started
+    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').format('YYYY-MM-DD')
+    : null;
 });
 
 const rules = computed(() => ({

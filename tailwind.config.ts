@@ -3,7 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 import type { Config } from 'tailwindcss';
 
 export default {
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',

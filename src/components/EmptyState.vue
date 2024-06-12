@@ -6,7 +6,7 @@
     ]">
     <dotlottie-player
       autoplay="true"
-      :class="[horizontal ? 'max-h-[12rem] w-auto max-w-[12rem]' : 'mb-6 h-64']"
+      :class="[horizontal ? 'max-h-48 w-auto max-w-48' : 'mb-6 h-64', animationClass]"
       :loop="loop"
       :src="animation" />
     <div
@@ -41,6 +41,10 @@ defineProps({
   animation: {
     type: String,
     default: EmptyBox,
+  },
+  animationClass: {
+    type: String,
+    default: '',
   },
   loop: {
     type: Boolean,

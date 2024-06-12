@@ -54,7 +54,7 @@ import monoLogo from '@/assets/logo-mono-inverted.svg';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
-import { mdiAccountCircle, mdiAccountGroup, mdiFinance } from '@mdi/js';
+import { mdiAccountCircle, mdiAccountGroup, mdiFinance, mdiHistory } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw, useRoute } from 'vue-router';
@@ -85,6 +85,14 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     },
     icon: mdiFinance,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS),
+  },
+  {
+    label: i18n.t('navigation.history'),
+    to: {
+      name: ROUTE_NAMES.HISTORY,
+    },
+    icon: mdiHistory,
+    active: doesRouteBelongsTo(route, ROUTE_NAMES.HISTORY),
   },
 ]);
 </script>

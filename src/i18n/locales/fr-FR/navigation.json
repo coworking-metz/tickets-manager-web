@@ -1,5 +1,6 @@
 {
   "close": "Fermer le menu",
+  "history": "@:audit.list.title",
   "members": "@:members.list.title",
   "open": "Ouvrir le menu",
   "stats": "@:stats.title"

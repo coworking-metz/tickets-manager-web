@@ -68,8 +68,11 @@
         <nav
           aria-label="Sections"
           class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col">
-          <div class="flex h-16 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6">
-            <p class="text-lg font-medium text-gray-900">{{ $t('stats.title') }}</p>
+          <div class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6">
+            <h1
+              class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+              {{ $t('stats.title') }}
+            </h1>
           </div>
           <div class="min-h-0 flex-1 overflow-y-auto">
             <router-link
