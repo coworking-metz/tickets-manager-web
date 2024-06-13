@@ -1,13 +1,13 @@
 <template>
   <article
     class="mx-auto mb-12 flex w-full max-w-7xl flex-col max-sm:grow sm:mb-24 sm:min-h-full sm:px-6 lg:px-8">
-    <LoadingSpinner v-if="state.isFetchingMember" class="m-auto size-16" />
+    <LoadingSpinner v-if="isPendingMember" class="m-auto size-16" />
     <ErrorState
-      v-else-if="state.fetchMemberErrorMessage"
+      v-else-if="memberError"
       class="m-auto"
-      :description="state.fetchMemberErrorMessage"
+      :description="memberError"
       :title="$t('members.detail.onFetch.fail')" />
-    <template v-else-if="state.member">
+    <template v-else-if="member">
       <!-- trick to trigger useHead.titleTemplate -->
       <Head><title></title></Head>
       <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
@@ -17,10 +17,10 @@
             <div class="shrink-0">
               <div class="relative size-16 rounded-full bg-gray-200">
                 <img
-                  v-if="state.member.thumbnail"
+                  v-if="member.thumbnail"
                   :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
                   class="size-full rounded-full object-cover object-top"
-                  :src="state.member.thumbnail" />
+                  :src="member.thumbnail" />
                 <SvgIcon
                   v-else
                   aria-hidden="true"
@@ -28,16 +28,16 @@
                   :path="mdiAccountCircle"
                   type="mdi" />
                 <span
-                  v-if="state.member.attending"
+                  v-if="member.attending"
                   class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
               </div>
             </div>
             <div class="flex flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900">
-                {{ fullname || state.member.email }}
+                {{ fullname || member.email }}
               </h1>
               <i18n-t
-                v-if="!!state.member.lastSeen"
+                v-if="!!member.lastSeen"
                 class="text-sm font-medium text-gray-500"
                 keypath="members.detail.header.description"
                 scope="global"
@@ -45,43 +45,41 @@
                 <template #date>
                   <time
                     class="lowercase text-gray-900"
-                    :datetime="state.member.lastSeen"
-                    :title="dayjs(state.member.lastSeen).format('llll')">
+                    :datetime="member.lastSeen"
+                    :title="dayjs(member.lastSeen).format('llll')">
                     {{
-                      dayjs().diff(state.member.lastSeen, 'hour') < 1
-                        ? dayjs(state.member.lastSeen).fromNow()
-                        : dayjs(state.member.lastSeen).calendar(dayjs())
+                      dayjs().diff(member.lastSeen, 'hour') < 1
+                        ? dayjs(member.lastSeen).fromNow()
+                        : dayjs(member.lastSeen).calendar(dayjs())
                     }}
                   </time>
                 </template>
               </i18n-t>
               <div class="mt-1 flex flex-row flex-wrap items-center gap-2">
                 <span
-                  v-if="state.member.balance < 0"
+                  v-if="member.balance < 0"
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
                   {{
                     $t('members.detail.orders.tickets.overconsumed', {
-                      count: Math.abs(state.member.balance),
+                      count: Math.abs(member.balance),
                     })
                   }}
                 </span>
                 <span
-                  v-if="state.member.membershipOk"
+                  v-if="member.membershipOk"
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                  {{
-                    $t('members.detail.membership.current', { year: state.member.lastMembership })
-                  }}
+                  {{ $t('members.detail.membership.current', { year: member.lastMembership }) }}
                 </span>
                 <span
                   v-else
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
                   {{
-                    state.member.lastMembership
-                      ? $t('members.detail.membership.last', { year: state.member.lastMembership })
+                    member.lastMembership
+                      ? $t('members.detail.membership.last', { year: member.lastMembership })
                       : $t('members.detail.membership.none')
                   }}
                 </span>
-                <VTooltip v-if="state.member.trustedUser">
+                <VTooltip v-if="member.trustedUser">
                   <span
                     class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
                     {{ $t('members.detail.status.trusted.label') }}
@@ -97,7 +95,7 @@
                     </span>
                   </template>
                 </VTooltip>
-                <VTooltip v-if="state.member.activeUser">
+                <VTooltip v-if="member.activeUser">
                   <span
                     class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
                     {{ $t('members.detail.status.voting.label') }}
@@ -122,23 +120,23 @@
       </section>
 
       <SectionRow class="mt-6">
-        <LoadingSpinner v-if="state.isFetchingActivity" class="m-auto size-12" />
+        <LoadingSpinner v-if="isFetchingActivity" class="m-auto size-12" />
         <ActivityGraph
-          v-else
+          v-else-if="activity"
           :key="`activity-graph-${state.shouldRenderAllActivity}`"
           v-bind="
             state.shouldRenderAllActivity &&
-            state.activity.length && {
+            activity.length && {
               class: 'overflow-x-auto',
-              endDate: dayjs(
-                Math.max(...state.activity.map(({ date }) => dayjs(date).valueOf())),
-              ).format('YYYY-MM-DD'),
+              endDate: dayjs(Math.max(...activity.map(({ date }) => dayjs(date).valueOf()))).format(
+                'YYYY-MM-DD',
+              ),
               startDate: dayjs(
-                Math.min(...state.activity.map(({ date }) => dayjs(date).valueOf())),
+                Math.min(...activity.map(({ date }) => dayjs(date).valueOf())),
               ).format('YYYY-MM-DD'),
             }
           "
-          :activity="state.activity"
+          :activity="activity"
           class="max-sm:overflow-x-auto"
           :non-compliant-activity="nonCompliantActivity" />
         <template #title>
@@ -234,15 +232,15 @@
         class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.audit.description')"
         :title="$t('members.detail.audit.title')">
-        <MemberHistoryPanel :member="state.member" />
+        <MemberHistoryPanel :member="member" />
       </SectionRow>
 
       <SectionRow
         class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
-        <ProfilePanel :member="state.member" @update:member="onUpdateMember" />
-        <WordpressPanel class="mt-3" :member="state.member" @update:member="onUpdateMember" />
+        <ProfilePanel :member="member" @update:member="refetchMember" />
+        <WordpressPanel class="mt-3" :member="member" @update:member="refetchMember" />
 
         <template #append>
           <dl class="sticky top-3 flex flex-col gap-3">
@@ -251,7 +249,7 @@
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                {{ dayjs(state.member.created).format('YYYY') }}
+                {{ dayjs(member.created).format('YYYY') }}
               </dd>
             </div>
           </dl>
@@ -265,18 +263,18 @@
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
             class="max-h-[40rem] min-w-64 shrink grow basis-0"
-            :loading="state.isFetchingTickets"
-            :remaining="state.member.balance"
-            :tickets="state.tickets" />
+            :loading="isFetchingTickets"
+            :remaining="member.balance"
+            :tickets="tickets" />
           <SubscriptionsListPanel
             :active="
-              state.subscriptions.some(
+              subscriptions?.some(
                 ({ started, ended }) => dayjs().isAfter(started) && dayjs().isBefore(ended),
               )
             "
             class="max-h-[40rem] min-w-64 shrink grow basis-0"
-            :loading="state.isFetchingSubscriptions"
-            :subscriptions="state.subscriptions" />
+            :loading="isFetchingSubscriptions"
+            :subscriptions="subscriptions" />
         </div>
 
         <template #append>
@@ -335,18 +333,15 @@
       "
       @close="$router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
       <RouterView
-        :activity="state.activity"
+        :activity="activity"
         :loading="
-          state.isFetchingMember ||
-          state.isFetchingActivity ||
-          state.isFetchingSubscriptions ||
-          state.isFetchingTickets
+          isFetchingMember || isFetchingActivity || isFetchingSubscriptions || isFetchingTickets
         "
-        :member="state.member"
+        :member="member"
         :member-id="id"
         :non-compliant-activity="nonCompliantActivity"
-        :subscriptions="state.subscriptions"
-        :tickets="state.tickets" />
+        :subscriptions="subscriptions"
+        :tickets="tickets" />
     </SideDialog>
   </article>
 </template>
@@ -363,14 +358,15 @@ import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
-import { handleSilentError, parseErrorText } from '@/helpers/errors';
+import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, Member, getMember, getMemberActivity } from '@/services/api/members';
+import { Attendance, getMember, getMemberActivity } from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { mdiAccountCircle, mdiInformationOutline } from '@mdi/js';
+import { useQuery } from '@tanstack/vue-query';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
@@ -395,10 +391,6 @@ const props = defineProps({
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
-  isFetchingMember: false,
-  member: null as Member | null,
-  fetchMemberErrorMessage: null as string | null,
-
   isFetchingActivity: false,
   activity: [] as Attendance[],
 
@@ -416,28 +408,114 @@ useHead({
   titleTemplate: (title?: string) =>
     [
       title,
-      [state.member?.firstName, state.member?.lastName].filter(Boolean).join(' '),
+      [member.value?.firstName, member.value?.lastName].filter(Boolean).join(' '),
       i18n.t('head.title'),
     ]
       .filter(Boolean)
       .join(' - '),
 });
 
+const {
+  isPending: isPendingMember,
+  isFetching: isFetchingMember,
+  data: member,
+  error: memberError,
+  refetch: refetchMember,
+} = useQuery({
+  queryKey: ['members', computed(() => props.id)],
+  queryFn: ({ queryKey: [_, memberId] }) => getMember(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+const {
+  isFetching: isFetchingActivity,
+  data: activity,
+  error: activityError,
+} = useQuery({
+  queryKey: ['members', computed(() => props.id), 'activity'],
+  queryFn: ({ queryKey: [_, memberId] }) => getMemberActivity(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+watch(
+  () => activityError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.attendance.onFetch.fail'),
+      );
+      // TODO: should report to Sentry
+    }
+  },
+);
+
+const {
+  isFetching: isFetchingTickets,
+  data: tickets,
+  error: ticketsError,
+} = useQuery({
+  queryKey: ['members', computed(() => props.id), 'tickets'],
+  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberTickets(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+watch(
+  () => ticketsError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(error, i18n.t('members.detail.tickets.onFetch.fail'));
+      // TODO: should report to Sentry
+    }
+  },
+);
+
+const {
+  isFetching: isFetchingSubscriptions,
+  data: subscriptions,
+  error: subscriptionsError,
+} = useQuery({
+  queryKey: ['members', computed(() => props.id), 'subscriptions'],
+  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberSubscriptions(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+watch(
+  () => subscriptionsError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.subscriptions.onFetch.fail'),
+      );
+      // TODO: should report to Sentry
+    }
+  },
+);
+
 const fullname = computed<string>(() =>
-  [state.member?.firstName, state.member?.lastName].filter(Boolean).join(' '),
+  [member.value?.firstName, member.value?.lastName].filter(Boolean).join(' '),
 );
 
 const periodAttendance = computed<number>(() => {
   return (
-    (state.shouldRenderAllActivity ? state.member?.totalActivity : state.member?.activity) || 0
+    (state.shouldRenderAllActivity ? member.value?.totalActivity : member.value?.activity) || 0
   );
 });
 
 const totalAmountSpent = computed<number>(() => {
-  const totalTicketsAmount = state.tickets.reduce((total, ticket) => {
+  const totalTicketsAmount = (tickets.value || []).reduce((total, ticket) => {
     return total + ticket.amount;
   }, 0);
-  const totalSubscriptionsAmount = state.subscriptions.reduce((total, subscription) => {
+  const totalSubscriptionsAmount = (subscriptions.value || []).reduce((total, subscription) => {
     return total + subscription.amount;
   }, 0);
 
@@ -445,16 +523,16 @@ const totalAmountSpent = computed<number>(() => {
 });
 
 const monthlyAmountSpent = computed<number>(() => {
-  if (state.member) {
-    const [lastActivity] = state.activity
+  if (member.value) {
+    const [lastActivity] = (activity.value || [])
       .filter(({ value }) => value > 0)
       .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
 
     const totalMonths =
       Math.ceil(
         Math.abs(
-          dayjs(lastActivity?.date || state.member.lastSeen).diff(
-            state.member.created,
+          dayjs(lastActivity?.date || member.value.lastSeen).diff(
+            member.value.created,
             'month',
             true,
           ),
@@ -467,9 +545,9 @@ const monthlyAmountSpent = computed<number>(() => {
 });
 
 const nonCompliantActivity = computed(() => {
-  const balance = state.member?.balance || 0;
-  if (balance < 0 && state.activity.length) {
-    const ticketActivities = state.activity
+  const balance = member.value?.balance || 0;
+  if (balance < 0 && activity.value?.length) {
+    const ticketActivities = activity.value
       .filter(({ type }) => type === 'ticket')
       .sort((a, b) => dayjs(b.date).diff(a.date));
 
@@ -493,95 +571,4 @@ const nonCompliantActivity = computed(() => {
 
   return [];
 });
-
-const fetchMember = (memberId: string) => {
-  state.isFetchingMember = true;
-  state.fetchMemberErrorMessage = null;
-  getMember(memberId)
-    .then((member) => {
-      state.member = member;
-    })
-    .catch(handleSilentError)
-    .catch(async (error) => {
-      state.fetchMemberErrorMessage = await parseErrorText(error);
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isFetchingMember = false;
-    });
-};
-
-const fetchActivity = (memberId: string) => {
-  state.isFetchingActivity = true;
-  getMemberActivity(memberId)
-    .then((activity) => {
-      state.activity = activity;
-    })
-    .catch(handleSilentError)
-    .catch((error) => {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.attendance.onFetch.fail'),
-      );
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isFetchingActivity = false;
-    });
-};
-
-const fetchSubscriptions = (memberId: string) => {
-  state.isFetchingSubscriptions = true;
-  getAllMemberSubscriptions(memberId)
-    .then((subscriptions) => {
-      state.subscriptions = subscriptions;
-    })
-    .catch(handleSilentError)
-    .catch((error) => {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.orders.subscriptions.onFetch.fail'),
-      );
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isFetchingSubscriptions = false;
-    });
-};
-
-const fetchTickets = (memberId: string) => {
-  state.isFetchingTickets = true;
-  getAllMemberTickets(memberId)
-    .then((tickets) => {
-      state.tickets = tickets;
-    })
-    .catch(handleSilentError)
-    .catch((error) => {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.orders.tickets.onFetch.fail'),
-      );
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isFetchingTickets = false;
-    });
-};
-
-const onUpdateMember = (member: Member) => {
-  state.member = member;
-};
-
-watch(
-  () => props.id,
-  (memberId) => {
-    if (memberId) {
-      fetchMember(memberId);
-      fetchActivity(memberId);
-      fetchSubscriptions(memberId);
-      fetchTickets(memberId);
-    }
-  },
-  { immediate: true },
-);
 </script>

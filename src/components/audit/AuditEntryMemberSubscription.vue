@@ -4,17 +4,20 @@
       <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
         <template #author>
           <RouterLink
-            class="font-medium text-indigo-600"
+            v-if="$route.params.id !== event.author._id"
+            class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.author._id || event.author.wpUserId },
             }">
             {{ event.author.name }}
           </RouterLink>
+          <span v-else class="font-medium text-gray-900">{{ event.author.name }}</span>
         </template>
         <template #member>
           <RouterLink
-            class="font-medium text-indigo-600"
+            v-if="$route.params.id !== event.context.member._id"
+            class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.context.member._id },
@@ -25,6 +28,13 @@
                 .join(' ')
             }}
           </RouterLink>
+          <span v-else class="font-medium text-gray-900">
+            {{
+              [event.context.member.firstName, event.context.member.lastName]
+                .filter(Boolean)
+                .join(' ')
+            }}
+          </span>
         </template>
 
         <template #started>

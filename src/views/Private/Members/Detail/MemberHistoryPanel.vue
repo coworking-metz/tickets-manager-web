@@ -77,5 +77,7 @@ const {
   queryKey: ['members', computed(() => props.member._id), 'history'],
   queryFn: ({ queryKey: [_, memberId] }) => getMemberAuditEvents(memberId),
   retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
 });
 </script>

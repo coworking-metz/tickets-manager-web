@@ -129,7 +129,7 @@
     </div>
 
     <div class="flex flex-col-reverse items-stretch gap-3 pt-6 md:flex-row">
-      <ul ref="listRef" class="grow overflow-hidden" role="list">
+      <ul class="grow overflow-hidden" role="list">
         <template v-if="isPendingHistory">
           <li v-for="index in 10" :key="`loading-event-${index}`">
             <AuditEntry loading />
@@ -233,8 +233,6 @@ const state = reactive({
   isEmpty: false as boolean,
 });
 
-const listRef = ref();
-
 const {
   isSuccess: isSuccessHistory,
   isPending: isPendingHistory,
@@ -252,6 +250,7 @@ const filteredList = computed(() => {
     .filter((event) =>
       dayjs(event.occurred).isBetween(state.period.start, state.period.end, 'day', '[]'),
     )
+    .filter((event) => !state.search || searchIn(state.search, JSON.stringify(event)))
     .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
 });
 
@@ -333,26 +332,6 @@ watch(
 );
 
 watch(
-  [() => state.search, listRef, () => isSuccessHistory.value],
-  ([search, list, isSuccess]) => {
-    if (list && isSuccess) {
-      requestAnimationFrame(() => {
-        list.querySelectorAll('li').forEach((li: HTMLDataListElement) => {
-          if (searchIn(search, li.textContent)) {
-            li.classList.remove('hidden');
-          } else {
-            li.classList.add('hidden');
-          }
-        });
-
-        state.isEmpty = list.querySelectorAll('li:not(.hidden)').length === 0;
-      });
-    }
-  },
-  { immediate: true },
-);
-
-watch(
   () => isSuccessHistory.value,
   (success) => {
     if (success) {
@@ -393,10 +372,7 @@ const shortcuts = computed(() => () => [
     label: i18n.t('audit.list.period.shortcuts.sinceFirstDay'),
     atClick: () => {
       const now = dayjs();
-      const [oldest] = (history.value || [])
-        .map(({ occurred }) => occurred)
-        .sort()
-        .reverse();
+      const [oldest] = (history.value || []).map(({ occurred }) => occurred).sort();
       return [dayjs(oldest || '01-01-2014').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },

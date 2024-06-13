@@ -122,6 +122,7 @@ import {
   mdiClose,
   mdiDeleteOutline,
 } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -152,6 +153,7 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
   comment: null as string | null,
@@ -193,6 +195,12 @@ const onSubmit = async () => {
         type: 'success',
         message: i18n.t('subscriptions.detail.onUpdate.success'),
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
       });
       return router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
     })
