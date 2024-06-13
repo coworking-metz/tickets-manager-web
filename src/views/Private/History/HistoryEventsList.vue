@@ -129,7 +129,7 @@
     </div>
 
     <div class="flex flex-col-reverse items-stretch gap-3 pt-6 md:flex-row">
-      <ul class="grow overflow-hidden" role="list">
+      <ul ref="listRef" class="grow overflow-hidden" role="list">
         <template v-if="isPendingHistory">
           <li v-for="index in 10" :key="`loading-event-${index}`">
             <AuditEntry loading />
@@ -140,16 +140,17 @@
           class="m-auto"
           :description="historyError"
           :title="$t('audit.list.onFetch.fail')" />
-        <EmptyState
-          v-else-if="!slicedList.length"
-          class="m-auto py-6"
-          :title="$t('audit.list.empty.title')" />
         <li v-else v-for="(event, eventIndex) in slicedList" :key="`event-${event._id}`">
           <AuditEntry
             :event="event"
             :loading="isFetchingHistory"
             :with-timeline="eventIndex !== slicedList.length - 1" />
         </li>
+
+        <EmptyState
+          v-if="state.isEmpty || !slicedList.length"
+          class="m-auto py-6"
+          :title="$t('audit.list.empty.title')" />
       </ul>
     </div>
   </article>
@@ -162,12 +163,13 @@ import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';
+import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
-import { useInfiniteScroll, useWindowSize } from '@vueuse/core';
+import { useDebounceFn, useInfiniteScroll, useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
@@ -228,7 +230,10 @@ const state = reactive({
   search: null as string | null,
   slice: Number(props.slice) as number,
   period: { start: '' as string, end: '' as string },
+  isEmpty: false as boolean,
 });
+
+const listRef = ref();
 
 const {
   isSuccess: isSuccessHistory,
@@ -244,14 +249,6 @@ const {
 
 const filteredList = computed(() => {
   return (history.value || [])
-    .filter((event) =>
-      searchIn(
-        state.search,
-        dayjs().diff(event.occurred, 'hour') < 2
-          ? dayjs(event.occurred).fromNow()
-          : dayjs(event.occurred).calendar(),
-      ),
-    )
     .filter((event) =>
       dayjs(event.occurred).isBetween(state.period.start, state.period.end, 'day', '[]'),
     )
@@ -308,33 +305,51 @@ watch(
   { immediate: true },
 );
 
-watch(
-  () => state.search,
-  (search) => {
-    if (search !== props.search) {
+const debounceQueryParams = useDebounceFn(
+  (search: string | null, slice: number, period: { start: string; end: string }) => {
+    if (router.currentRoute.value?.name === ROUTE_NAMES.HISTORY) {
       router.replace({
         ...router.currentRoute.value,
         query: {
           ...router.currentRoute.value.query,
           search: search || undefined,
+          slice: slice || undefined,
+          from: period.start || undefined,
+          to: period.end || undefined,
         },
       });
     }
   },
-  { immediate: true },
+  300,
 );
 
 watch(
-  () => state.slice,
-  () => {
-    router.replace({
-      ...router.currentRoute.value,
-      query: {
-        ...router.currentRoute.value.query,
-        slice: state.slice,
-      },
-    });
+  [() => state.search, () => state.slice, () => state.period],
+  ([search, slice, period], [_previousSearch, previousSlice]) => {
+    if (Number(slice) >= Number(previousSlice)) {
+      debounceQueryParams(search, slice, period);
+    }
   },
+);
+
+watch(
+  [() => state.search, listRef, () => isSuccessHistory.value],
+  ([search, list, isSuccess]) => {
+    if (list && isSuccess) {
+      requestAnimationFrame(() => {
+        list.querySelectorAll('li').forEach((li: HTMLDataListElement) => {
+          if (searchIn(search, li.textContent)) {
+            li.classList.remove('hidden');
+          } else {
+            li.classList.add('hidden');
+          }
+        });
+
+        state.isEmpty = list.querySelectorAll('li:not(.hidden)').length === 0;
+      });
+    }
+  },
+  { immediate: true },
 );
 
 watch(

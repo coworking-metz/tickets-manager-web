@@ -1,11 +1,7 @@
 <template>
   <AuditEntryInline :event="event">
     <template #message>
-      <i18n-t
-        class="text-sm"
-        :keypath="`audit.action.${event.action}.message`"
-        scope="global"
-        tag="p">
+      <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
         <template #author>
           <RouterLink
             class="font-medium text-indigo-600"

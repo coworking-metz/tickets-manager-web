@@ -3,48 +3,59 @@
     <div class="flex w-10 shrink-0 flex-col items-center gap-2 self-stretch">
       <slot name="icon">
         <div
-          class="z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-900">
-          <SvgIcon aria-hidden="true" class="size-5 text-gray-500" :path="icon" type="mdi" />
+          :class="[
+            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-900',
+            loading && ' animate-pulse',
+          ]">
+          <SvgIcon
+            v-if="!loading"
+            aria-hidden="true"
+            class="size-5 text-gray-500"
+            :path="icon"
+            type="mdi" />
         </div>
       </slot>
 
       <template v-if="withTimeline">
         <slot name="timeline">
-          <span aria-hidden="true" class="h-full w-0.5 bg-gray-200 dark:bg-gray-700" />
+          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
         </slot>
       </template>
     </div>
 
-    <div v-if="event" class="flex grow flex-col overflow-hidden pb-6">
-      <div class="flex flex-row flex-wrap items-start gap-1">
-        <div class="min-w-56 flex-1 pb-0 pt-1.5 text-slate-500 dark:text-slate-400">
-          <slot name="message">
-            <i18n-t
-              class="text-sm"
-              :keypath="`audit.action.${event.action}.message`"
-              scope="global"
-              tag="p">
-              <template #author>
-                <span class="font-medium text-gray-900 dark:text-gray-100">
-                  {{ event.author.name }}
-                </span>
-              </template>
-            </i18n-t>
-          </slot>
-          <time
-            class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
-            :datetime="event.occurred"
-            :title="dayjs(event.occurred).format('llll')">
-            {{
-              dayjs().diff(event.occurred, 'hour') < 2
-                ? dayjs(event.occurred).fromNow()
-                : dayjs(event.occurred).calendar()
-            }}
-          </time>
-        </div>
-      </div>
+    <div v-if="loading" class="flex w-full flex-col items-start pb-6">
+      <div
+        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200"
+        :style="{
+          maxWidth: `${Math.floor(Math.random() * 256) + 128}px`,
+        }" />
+      <div class="mt-2 h-3 w-20 animate-pulse rounded-3xl bg-slate-200" />
+    </div>
 
-      <div v-if="event.context.comment" class="prose mt-2 dark:prose-invert">
+    <div
+      v-else-if="event"
+      class="flex grow flex-col gap-1 overflow-hidden pb-6 pt-1.5 text-sm text-slate-500 dark:text-slate-400">
+      <slot name="message">
+        <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
+          <template #author>
+            <span class="font-medium text-gray-900 dark:text-gray-100">
+              {{ event.author.name }}
+            </span>
+          </template>
+        </i18n-t>
+      </slot>
+      <time
+        class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
+        :datetime="event.occurred"
+        :title="dayjs(event.occurred).format('llll')">
+        {{
+          dayjs().diff(event.occurred, 'hour') < 2
+            ? dayjs(event.occurred).fromNow()
+            : dayjs(event.occurred).calendar()
+        }}
+      </time>
+
+      <div v-if="event.context.comment" class="prose mt-1 dark:prose-invert">
         <blockquote class="whitespace-pre-line text-sm">
           {{ event.context.comment }}
         </blockquote>

@@ -209,6 +209,8 @@ export const routes: RouteRecordRaw[] = [
           search: route.query.search,
           sort: route.query.sort,
           slice: route.query.slice,
+          from: route.query.from,
+          to: route.query.to,
         }),
       },
       {
