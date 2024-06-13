@@ -64,7 +64,7 @@
           tag="span">
           <template #link>
             <a
-              class="font-medium text-blue-600 hover:underline dark:text-blue-500"
+              class="font-medium text-indigo-600 hover:underline"
               href="https://www.studentinternet.eu/fr/docs/nederlands/depannage/comment-puis-je-trouver-ladresse-mac-de-mon-appareil/"
               target="_blank">
               {{ $t('members.detail.profile.macAddresses.description.link') }}
@@ -98,7 +98,7 @@
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-blue-600 hover:underline max-sm:hidden sm:text-sm dark:text-blue-500"
+                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-indigo-600 hover:underline max-sm:hidden sm:text-sm"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.check') }}

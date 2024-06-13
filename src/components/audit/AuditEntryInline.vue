@@ -4,7 +4,7 @@
       <slot name="icon">
         <div
           :class="[
-            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-900',
+            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200',
             loading && ' animate-pulse',
           ]">
           <SvgIcon
@@ -18,7 +18,7 @@
 
       <template v-if="withTimeline">
         <slot name="timeline">
-          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
+          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200" />
         </slot>
       </template>
     </div>
@@ -34,18 +34,18 @@
 
     <div
       v-else-if="event"
-      class="flex grow flex-col gap-1 overflow-hidden pb-6 pt-1.5 text-sm text-slate-500 dark:text-slate-400">
+      class="flex grow flex-col gap-1 overflow-hidden pb-6 pt-1.5 text-sm text-slate-500">
       <slot name="message">
         <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
           <template #author>
-            <span class="font-medium text-gray-900 dark:text-gray-100">
+            <span class="font-medium text-gray-900">
               {{ event.author.name }}
             </span>
           </template>
         </i18n-t>
       </slot>
       <time
-        class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
+        class="whitespace-nowrap text-xs font-light lowercase text-gray-500"
         :datetime="event.occurred"
         :title="dayjs(event.occurred).format('llll')">
         {{
@@ -55,7 +55,7 @@
         }}
       </time>
 
-      <div v-if="event.context.comment" class="prose mt-1 dark:prose-invert">
+      <div v-if="event.context.comment" class="prose mt-1">
         <blockquote class="whitespace-pre-line text-sm">
           {{ event.context.comment }}
         </blockquote>

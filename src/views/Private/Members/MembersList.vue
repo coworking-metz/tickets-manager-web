@@ -134,7 +134,7 @@
         </template>
         <EmptyState
           v-else-if="!slicedList.length"
-          class="m-auto py-6"
+          class="m-auto pb-24 pt-6"
           :title="$t('members.list.empty.title')" />
         <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
           <RouterLink
