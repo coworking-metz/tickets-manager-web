@@ -203,12 +203,12 @@
           </li>
         </ul>
 
-        <AppTextField
-          id="reason"
-          v-model.number="state.reason"
-          :errors="vuelidate.reason.$errors.map(({ $message }) => $message as string)"
-          :label="$t('activity.detail.reason.label')"
-          :placeholder="$t('activity.detail.reason.placeholder')"
+        <AppTextareaField
+          id="comment"
+          v-model="state.comment"
+          :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+          :label="$t('activity.detail.comment.label')"
+          :placeholder="$t('activity.detail.comment.placeholder')"
           required />
 
         <AppButton
@@ -228,7 +228,7 @@
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
@@ -292,7 +292,7 @@ const props = defineProps({
 const state = reactive({
   type: 'TICKET' as AttendanceType,
   duration: ActivityDuration.NONE as ActivityDuration,
-  reason: null as string | null,
+  comment: null as string | null,
   isSubmitting: false as boolean,
 });
 
@@ -321,7 +321,7 @@ const nonCompliant = computed(() => {
 const rules = computed(() => ({
   type: { required: withAppI18nMessage(required) },
   duration: { required: withAppI18nMessage(required) },
-  reason: { required: withAppI18nMessage(required) },
+  comment: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -338,7 +338,7 @@ const onSubmit = async () => {
     type: state.type,
     value: state.duration,
     date: props.date,
-    reason: state.reason as string,
+    comment: state.comment as string,
   })
     .then(() => {
       notificationsStore.addNotification({
@@ -376,7 +376,7 @@ watch(
           : activity.value === 0.5
             ? ActivityDuration.HALF
             : ActivityDuration.NONE;
-      state.reason = null;
+      state.comment = null;
     }
   },
   { immediate: true },

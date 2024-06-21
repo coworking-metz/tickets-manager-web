@@ -15,18 +15,26 @@ export const getMemberTicket = (memberId: string, ticketId: string): Promise<Tic
   return HTTP.get(`/api/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
 };
 
-export const addMemberTicket = (memberId: string, ticket: Ticket): Promise<Ticket> => {
+export type TicketChange = Pick<Ticket, 'count'> & {
+  comment: string; // comment is mandatory to audit what happened
+};
+
+export const addMemberTicket = (memberId: string, ticket: TicketChange): Promise<Ticket> => {
   return HTTP.post(`/api/members/${memberId}/tickets`, ticket).then(({ data }) => data);
 };
 
 export const updateMemberTicket = (
   memberId: string,
   ticketId: string,
-  ticket: Ticket,
+  ticket: TicketChange,
 ): Promise<Ticket> => {
   return HTTP.put(`/api/members/${memberId}/tickets/${ticketId}`, ticket).then(({ data }) => data);
 };
 
-export const deleteMemberTicket = (memberId: string, ticketId: string): Promise<void> => {
-  return HTTP.delete(`/api/members/${memberId}/tickets/${ticketId}`);
+export const deleteMemberTicket = (
+  memberId: string,
+  ticketId: string,
+  comment: string,
+): Promise<void> => {
+  return HTTP.delete(`/api/members/${memberId}/tickets/${ticketId}`, { data: { comment } });
 };

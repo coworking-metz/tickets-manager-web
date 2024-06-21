@@ -17,30 +17,26 @@
             :path="prependIcon"
             type="mdi" />
         </slot>
-        <input
+        <textarea
           :id="id"
           :aria-invalid="isInvalid"
-          :autocomplete="autocomplete"
           :class="{
-            ['block min-h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
+            ['block min-h-24 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
             ['rounded-none']: slots.after || slots.before,
             ['rounded-l-md']: !slots.before,
             ['rounded-r-md']: !slots.after,
             ['pl-10']: slots.prepend || prependIcon,
             ['border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500']:
               isInvalid,
-            ['text-right']: type === 'number',
           }"
           :disabled="disabled"
-          :max="max"
           :maxlength="maxLength"
-          :min="min"
           :name="name"
           :pattern="pattern"
           :placeholder="placeholder"
           :readonly="readonly"
           :required="required"
-          :step="step"
+          :rows="rows"
           :tabindex="tabindex"
           :type="type"
           :value="modelValue"
@@ -75,7 +71,7 @@ import { useSlots, PropType, computed } from 'vue';
 defineEmits(['blur', 'update:modelValue']);
 const props = defineProps({
   modelValue: {
-    type: [String, Number] as PropType<String | Number | null>,
+    type: String as PropType<string | null>,
     default: null,
   },
   label: {
@@ -138,18 +134,6 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  step: {
-    type: [String, Number],
-    default: null,
-  },
-  min: {
-    type: [String, Number],
-    default: null,
-  },
-  max: {
-    type: [String, Number],
-    default: null,
-  },
   readonly: {
     type: Boolean,
     default: false,
@@ -162,6 +146,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  rows: {
+    type: [String, Number],
+    default: 3,
+  },
 });
 
 const slots = useSlots();
@@ -170,14 +158,8 @@ const isInvalid = computed(() => props.errors && props.errors.length > 0);
 </script>
 
 <style scoped>
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type='number'] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+textarea {
+  field-sizing: content;
+  height: max-content;
 }
 </style>

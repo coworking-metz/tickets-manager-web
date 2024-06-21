@@ -52,12 +52,19 @@
         required
         type="number">
         <template #append>
-          <span
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
+          <span class="pointer-events-none z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>
       </AppTextField>
+
+      <AppTextareaField
+        id="comment"
+        v-model="state.comment"
+        :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.comment.label')"
+        :placeholder="$t('tickets.detail.comment.placeholder')"
+        required />
 
       <div class="mt-1 flex flex-row justify-between gap-3">
         <AppButton
@@ -91,20 +98,23 @@ import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Ticket } from '@/services/api/tickets';
+import { Ticket, updateMemberTicket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiDeleteOutline, mdiTicket } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { numeric, required } from '@vuelidate/validators';
+import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { nextTick, reactive } from 'vue';
 import { PropType, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   memberId: {
@@ -125,10 +135,13 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
+  comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
 });
@@ -138,7 +151,12 @@ const selectedTicket = computed<Ticket | null>(() => {
 });
 
 const rules = computed(() => ({
-  count: { required: withAppI18nMessage(required), decimal: withAppI18nMessage(numeric) },
+  count: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0.5)),
+  },
+  comment: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -151,10 +169,30 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  Promise.reject(new Error('Not implemented yet'))
+  updateMemberTicket(props.memberId, props.id, {
+    count: state.count as number,
+    comment: state.comment as string,
+  })
+    .then(() => {
+      notificationsStore.addNotification({
+        type: 'success',
+        message: i18n.t('tickets.new.onUpdate.success'),
+        timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'tickets'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
+      });
+      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+    })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('tickets.detail.onFail.message'));
+      notificationsStore.addErrorNotification(error, i18n.t('tickets.detail.onUpdate.fail'));
       return Promise.reject(error);
     })
     .finally(() => {

@@ -30,12 +30,19 @@
         step="0.5"
         type="number">
         <template #append>
-          <span
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
+          <span class="pointer-events-none z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>
       </AppTextField>
+
+      <AppTextareaField
+        id="comment"
+        v-model="state.comment"
+        :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.comment.label')"
+        :placeholder="$t('tickets.detail.comment.placeholder')"
+        required />
 
       <AppButton
         class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
@@ -51,14 +58,16 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
-import { Ticket, addMemberTicket } from '@/services/api/tickets';
+import { addMemberTicket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiPlus, mdiClose, mdiTicket } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { minValue, numeric, required } from '@vuelidate/validators';
@@ -80,8 +89,10 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
+  comment: null as string | null,
   isSubmitting: false as boolean,
 });
 
@@ -91,6 +102,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0.5)),
   },
+  comment: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
@@ -103,12 +115,24 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  addMemberTicket(props.memberId, { count: state.count } as Ticket)
+  addMemberTicket(props.memberId, {
+    count: state.count as number,
+    comment: state.comment as string,
+  })
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('subscriptions.new.onAdd.success'),
+        message: i18n.t('tickets.new.onAdd.success'),
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'tickets'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
       router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
     })
