@@ -66,12 +66,11 @@
         :label="$t('subscriptions.detail.ended.label')"
         :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
-        required
         type="date" />
 
-      <AppTextField
+      <AppTextareaField
         id="comment"
-        v-model.number="state.comment"
+        v-model="state.comment"
         :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
         :label="$t('subscriptions.detail.comment.label')"
         :placeholder="$t('subscriptions.detail.comment.placeholder')"
@@ -109,6 +108,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
@@ -201,6 +201,9 @@ const onSubmit = async () => {
       });
       queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
       return router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
     })

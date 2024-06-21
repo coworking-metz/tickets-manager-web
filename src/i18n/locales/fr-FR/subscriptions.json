@@ -1,5 +1,9 @@
 {
   "delete": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de cette suppression"
+    },
     "description": "Êtes-vous sûr de vouloir supprimer cet abonnement ? Vous ne pourrez pas revenir en arrière.",
     "onDelete": {
       "fail": "Impossible de supprimer cet abonnement",

@@ -30,12 +30,20 @@
 
       <AppTextField
         id="subscription-ended"
-        v-model="state.ended"
-        :errors="vuelidate.ended.$errors.map(({ $message }) => $message as string)"
+        disabled
+        :hint="$t('subscriptions.detail.ended.hint')"
         :label="$t('subscriptions.detail.ended.label')"
+        :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
-        required
         type="date" />
+
+      <AppTextareaField
+        id="comment"
+        v-model="state.comment"
+        :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.comment.label')"
+        :placeholder="$t('subscriptions.detail.comment.placeholder')"
+        required />
 
       <AppButton
         class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
@@ -51,16 +59,19 @@
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Subscription, addMemberSubscription } from '@/services/api/subscriptions';
+import { addMemberSubscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiPlus, mdiClose } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import dayjs from 'dayjs';
 import { computed, nextTick, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -75,18 +86,25 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
-  ended: null as string | null,
+  comment: null as string | null,
   isSubmitting: false as boolean,
 });
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
-  ended: { required: withAppI18nMessage(required) },
+  comment: { required: withAppI18nMessage(required) },
 }));
 
 const vuelidate = useVuelidate(rules, state);
+
+const computedEnded = computed(() => {
+  return state.started
+    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').format('YYYY-MM-DD')
+    : null;
+});
 
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
@@ -97,14 +115,23 @@ const onSubmit = async () => {
 
   state.isSubmitting = true;
   addMemberSubscription(props.memberId, {
-    started: state.started,
-    ended: state.ended,
-  } as Subscription)
+    started: state.started as string,
+    comment: state.comment as string,
+  })
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
         message: i18n.t('subscriptions.new.onAdd.success'),
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
       router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
     })

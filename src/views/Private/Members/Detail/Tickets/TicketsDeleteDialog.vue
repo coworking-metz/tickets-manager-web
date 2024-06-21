@@ -24,7 +24,9 @@
             leave-from="opacity-100 translate-y-0 sm:scale-100"
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <DialogPanel
-              class="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              as="form"
+              class="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+              @submit.prevent="onDelete">
               <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                   <div
@@ -35,15 +37,24 @@
                       :path="mdiAlertOutline"
                       type="mdi" />
                   </div>
-                  <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+                  <div class="mt-2 sm:ml-4">
+                    <DialogTitle
+                      as="h3"
+                      class="text-lg font-medium leading-6 text-gray-900 max-sm:text-center">
                       {{ $t('tickets.delete.title') }}
                     </DialogTitle>
-                    <div class="mt-2">
-                      <p class="text-gray-500 sm:text-sm">
-                        {{ $t('tickets.delete.description') }}
-                      </p>
-                    </div>
+                    <p class="mt-2 text-gray-500 sm:text-sm">
+                      {{ $t('tickets.delete.description') }}
+                    </p>
+
+                    <AppTextareaField
+                      id="comment"
+                      v-model="state.comment"
+                      class="mt-4"
+                      :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+                      :label="$t('tickets.delete.comment.label')"
+                      :placeholder="$t('tickets.delete.comment.placeholder')"
+                      required />
                   </div>
                 </div>
               </div>
@@ -52,8 +63,7 @@
                 <AppButton
                   class="w-full border border-transparent bg-red-600 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:ring-red-500 sm:w-auto sm:text-sm"
                   :loading="state.isDeleting"
-                  type="button"
-                  @click="onDelete">
+                  type="submit">
                   {{ $t('action.delete') }}
                 </AppButton>
                 <AppButton
@@ -73,12 +83,17 @@
 
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
-import { handleSilentError } from '@/helpers/errors';
+import AppTextareaField from '@/components/form/AppTextareaField.vue';
+import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
+import { withAppI18nMessage } from '@/i18n';
 import { deleteMemberTicket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { mdiAlertOutline } from '@mdi/js';
-import { reactive } from 'vue';
+import { useQueryClient } from '@tanstack/vue-query';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import { computed, nextTick, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['update:modelValue', 'deleted']);
@@ -99,18 +114,40 @@ const props = defineProps({
 
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const queryClient = useQueryClient();
 const state = reactive({
+  comment: null as string | null,
   isDeleting: false,
 });
 
-const onDelete = () => {
+const rules = computed(() => ({
+  comment: { required: withAppI18nMessage(required) },
+}));
+
+const vuelidate = useVuelidate(rules, state);
+
+const onDelete = async () => {
+  const isValid = await vuelidate.value.$validate();
+  if (!isValid) {
+    nextTick(scrollToFirstError);
+    return;
+  }
   state.isDeleting = true;
-  deleteMemberTicket(props.memberId, props.ticketId)
+  deleteMemberTicket(props.memberId, props.ticketId, state.comment as string)
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
         message: i18n.t('tickets.delete.onDelete.success'),
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'tickets'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
       emit('update:modelValue', false);
       emit('deleted');

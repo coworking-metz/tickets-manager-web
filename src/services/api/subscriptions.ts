@@ -21,15 +21,15 @@ export const getMemberSubscription = (
   );
 };
 
-export const addMemberSubscription = (
-  memberId: string,
-  subscription: Subscription,
-): Promise<Subscription> => {
-  return HTTP.post(`/api/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
-};
-
 export type SubscriptionChange = Pick<Subscription, 'started'> & {
   comment: string; // comment is mandatory to audit what happened
+};
+
+export const addMemberSubscription = (
+  memberId: string,
+  subscription: SubscriptionChange,
+): Promise<Subscription> => {
+  return HTTP.post(`/api/members/${memberId}/subscriptions`, subscription).then(({ data }) => data);
 };
 
 export const updateMemberSubscription = (
@@ -45,6 +45,9 @@ export const updateMemberSubscription = (
 export const deleteMemberSubscription = (
   memberId: string,
   subscriptionId: string,
+  comment: string,
 ): Promise<void> => {
-  return HTTP.delete(`/api/members/${memberId}/subscriptions/${subscriptionId}`);
+  return HTTP.delete(`/api/members/${memberId}/subscriptions/${subscriptionId}`, {
+    data: { comment },
+  });
 };

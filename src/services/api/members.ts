@@ -84,7 +84,7 @@ export const getMemberActivity = (id: string): Promise<Attendance[]> => {
 export const updateMemberActivity = (
   memberId: string,
   activityId: string,
-  activity: Attendance & { reason: string },
+  activity: Attendance & { comment: string },
 ): Promise<Attendance> => {
   return HTTP.put(`/api/members/${memberId}/activity/${activityId}`, activity).then(
     ({ data }) => data,

@@ -1,5 +1,9 @@
 {
   "delete": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de cette suppression"
+    },
     "description": "Êtes-vous sûr de vouloir supprimer cette commande de tickets ? Vous ne pourrez pas revenir en arrière.",
     "onDelete": {
       "fail": "Impossible de supprimer cette commande de tickets",
@@ -8,6 +12,10 @@
     "title": "Suppression de la commande de tickets"
   },
   "detail": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de ce changement"
+    },
     "count": {
       "label": "Nombre de tickets",
       "unit": "ticket | ticket | tickets"

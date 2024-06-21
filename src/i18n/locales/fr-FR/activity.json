@@ -1,5 +1,9 @@
 {
   "detail": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de ce changement"
+    },
     "description": "",
     "duration": {
       "label": "Durée",
@@ -24,10 +28,6 @@
     "onUpdate": {
       "fail": "Impossible de mettre à jour la présence du {date}",
       "success": "Présence du {date} modifiée"
-    },
-    "reason": {
-      "label": "Motif",
-      "placeholder": "Expliquez la raison de ce changement"
     },
     "title": "Présence du {date}",
     "type": {
