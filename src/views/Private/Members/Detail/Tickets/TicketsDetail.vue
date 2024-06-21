@@ -82,13 +82,13 @@
           {{ $t('action.delete') }}
         </AppButton>
       </div>
-
-      <TicketsDeleteDialog
-        v-model="state.isDeleteDialogVisible"
-        :member-id="props.memberId"
-        :ticket-id="props.id"
-        @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
     </form>
+
+    <TicketsDeleteDialog
+      v-model="state.isDeleteDialogVisible"
+      :member-id="props.memberId"
+      :ticket-id="props.id"
+      @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
   </div>
 </template>
 
@@ -159,7 +159,7 @@ const rules = computed(() => ({
   comment: { required: withAppI18nMessage(required) },
 }));
 
-const vuelidate = useVuelidate(rules, state);
+const vuelidate = useVuelidate(rules, state, { $scope: 'tickets-detail' });
 
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
