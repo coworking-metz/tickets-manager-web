@@ -124,7 +124,7 @@ const rules = computed(() => ({
   comment: { required: withAppI18nMessage(required) },
 }));
 
-const vuelidate = useVuelidate(rules, state);
+const vuelidate = useVuelidate(rules, state, { $scope: 'subscriptions-delete' });
 
 const onDelete = async () => {
   const isValid = await vuelidate.value.$validate();
