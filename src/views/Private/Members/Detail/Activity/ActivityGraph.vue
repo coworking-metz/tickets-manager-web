@@ -77,14 +77,9 @@ const options = computed<
   tooltip: {
     position: 'top',
     show: !state.shouldHideTooltip,
-    formatter: ({ data }: any) => {
-      return data.tooltip;
-    },
+    formatter: ({ data: { tooltip } }: any) => tooltip,
   },
   visualMap: {
-    locale: 'fr-FR',
-    min: 0,
-    max: 1,
     show: false,
   },
   calendar: {
@@ -125,12 +120,13 @@ const options = computed<
               : value === 0.5
                 ? i18n.t('members.detail.attendance.graph.value.HALF')
                 : i18n.t('members.detail.attendance.graph.value.NONE'),
-          ...(nonCompliant && {
-            suffix:
-              nonCompliant.value === 1
-                ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
-                : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
-          }),
+          ...(nonCompliant &&
+            nonCompliant.value !== value && {
+              suffix:
+                nonCompliant.value === 1
+                  ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
+                  : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
+            }),
         }),
       };
     }),
