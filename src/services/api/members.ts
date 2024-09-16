@@ -102,6 +102,13 @@ export const buildMemberWordpressProfileUrl = (wordpressUserId: number) => {
   ).toString();
 };
 
+export const buildMemberWordpressOrdersUrl = (wordpressUserId: number) => {
+  return new URL(
+    `/wp-admin/edit.php?s&post_status=all&post_type=shop_order&_customer_user=${wordpressUserId}`,
+    import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
+  ).toString();
+};
+
 export const getMemberAuditEvents = (id: string): Promise<AuditEvent[]> => {
   return HTTP.get(`/api/members/${id}/audit`).then(({ data }) => data);
 };

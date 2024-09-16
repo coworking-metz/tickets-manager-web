@@ -153,6 +153,7 @@
         "fail": "Unable to synchronize {name}",
         "success": "{name} synchronized"
       },
+      "orders": "View orders",
       "sync": "Synchronize",
       "title": "Sync with WordPress"
     }

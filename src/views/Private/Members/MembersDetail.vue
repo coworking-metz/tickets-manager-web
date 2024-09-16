@@ -256,10 +256,26 @@
         </template>
       </SectionRow>
 
-      <SectionRow
-        class="mt-16 px-3 sm:px-0"
-        :description="$t('members.detail.orders.description')"
-        :title="$t('members.detail.orders.title')">
+      <SectionRow class="mt-16 px-3 sm:px-0" :title="$t('members.detail.orders.title')">
+        <template #description>
+          <p class="mt-1 whitespace-pre-line text-sm text-gray-500">
+            {{ $t('members.detail.orders.description') }}
+          </p>
+
+          <a
+            v-if="!isNil(member.wpUserId)"
+            class="group mt-5 flex flex-row items-center gap-x-3 self-start rounded-md border border-transparent px-4 py-2 font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+            :href="buildMemberWordpressOrdersUrl(member.wpUserId)"
+            target="_blank">
+            <SvgIcon
+              aria-hidden="true"
+              class="size-5 text-indigo-500 group-hover:text-indigo-700"
+              :path="mdiOpenInNew"
+              type="mdi" />
+            <span>{{ $t('members.detail.wordpress.orders') }}</span>
+          </a>
+        </template>
+
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
             class="max-h-[40rem] min-w-64 shrink grow basis-0"
@@ -360,16 +376,22 @@ import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, getMember, getMemberActivity } from '@/services/api/members';
+import {
+  Attendance,
+  buildMemberWordpressOrdersUrl,
+  getMember,
+  getMemberActivity,
+} from '@/services/api/members';
 import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiAccountCircle, mdiInformationOutline } from '@mdi/js';
+import { mdiAccountCircle, mdiInformationOutline, mdiOpenInNew } from '@mdi/js';
 import { useQuery } from '@tanstack/vue-query';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
+import { isNil } from 'lodash';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
