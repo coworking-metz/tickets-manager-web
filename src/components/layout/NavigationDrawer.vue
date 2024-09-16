@@ -12,7 +12,7 @@
           item.active
             ? 'bg-amber-600 text-white'
             : 'text-amber-100 hover:bg-amber-600 hover:text-white',
-          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline',
+          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors',
         ]"
         :to="item.to">
         <SvgIcon
