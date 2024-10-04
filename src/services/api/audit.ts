@@ -2,6 +2,10 @@ import HTTP from '../http';
 
 export enum AuditAction {
   MEMBER_SUBSCRIPTION_UPDATE = 'MEMBER_SUBSCRIPTION_UPDATE',
+  MEMBER_TICKET_UPDATE = 'MEMBER_TICKET_UPDATE',
+  MEMBER_DEVICE_UPDATE = 'MEMBER_DEVICE_UPDATE',
+  KEYS_ACCESS = 'KEYS_ACCESS',
+  UNLOCK_DECK_DOOR = 'UNLOCK_DECK_DOOR',
 }
 
 export interface AuditEvent {
@@ -13,7 +17,7 @@ export interface AuditEvent {
     email: string;
   };
   action: AuditAction;
-  context: any;
+  context?: any;
   occurred: string;
 }
 

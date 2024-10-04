@@ -176,8 +176,11 @@ const onSubmit = async () => {
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('tickets.new.onUpdate.success'),
+        message: i18n.t('tickets.detail.onUpdate.success'),
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId)],
       });
       queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.memberId), 'history'],

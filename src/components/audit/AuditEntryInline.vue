@@ -38,9 +38,16 @@
       <slot name="message">
         <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
           <template #author>
-            <span class="font-medium text-gray-900">
+            <RouterLink
+              v-if="$route.params.id !== event.author._id"
+              class="font-medium text-indigo-600 hover:underline"
+              :to="{
+                name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                params: { id: event.author._id || event.author.wpUserId },
+              }">
               {{ event.author.name }}
-            </span>
+            </RouterLink>
+            <span v-else class="font-medium text-gray-900">{{ event.author.name }}</span>
           </template>
         </i18n-t>
       </slot>
@@ -55,18 +62,28 @@
         }}
       </time>
 
-      <div v-if="event.context.comment" class="prose mt-1">
+      <div v-if="event.context?.comment" class="prose mt-1">
         <blockquote class="whitespace-pre-line text-sm">
-          {{ event.context.comment }}
+          {{ event.context?.comment }}
         </blockquote>
       </div>
+
+      <slot name="append" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent, AuditAction } from '@/services/api/audit';
-import { mdiCalendarStartOutline, mdiHelp } from '@mdi/js';
+import {
+  mdiCalendarStartOutline,
+  mdiDevices,
+  mdiHelp,
+  mdiKeyChainVariant,
+  mdiLockOpen,
+  mdiTicket,
+} from '@mdi/js';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';
 
@@ -89,6 +106,14 @@ const icon = computed(() => {
   switch (props.event?.action) {
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
       return mdiCalendarStartOutline;
+    case AuditAction.MEMBER_TICKET_UPDATE:
+      return mdiTicket;
+    case AuditAction.KEYS_ACCESS:
+      return mdiKeyChainVariant;
+    case AuditAction.UNLOCK_DECK_DOOR:
+      return mdiLockOpen;
+    case AuditAction.MEMBER_DEVICE_UPDATE:
+      return mdiDevices;
     default:
       return mdiHelp;
   }

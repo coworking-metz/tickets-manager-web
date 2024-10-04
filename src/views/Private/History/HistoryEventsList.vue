@@ -148,7 +148,7 @@
         </li>
 
         <EmptyState
-          v-if="state.isEmpty || !slicedList.length"
+          v-if="!historyError && (state.isEmpty || !slicedList.length)"
           class="m-auto py-6"
           :title="$t('audit.list.empty.title')" />
       </ul>
