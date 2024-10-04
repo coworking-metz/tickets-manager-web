@@ -1,7 +1,20 @@
 {
   "action": {
+    "KEYS_ACCESS": {
+      "message": "{author} has retrieved keys access code"
+    },
+    "MEMBER_DEVICE_UPDATE": {
+      "message": "{author} has changed {member}'s devices",
+      "self": "{author} has changed their devices"
+    },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} has changed {member}'s subscription to start on {started} instead of {previouslyStarted}"
+    },
+    "MEMBER_TICKET_UPDATE": {
+      "message": "{author} has changed {member}'s ticket count from {previousCount} to {count}"
+    },
+    "UNLOCK_DECK_DOOR": {
+      "message": "{author} has unlocked the deck door"
     }
   },
   "list": {
