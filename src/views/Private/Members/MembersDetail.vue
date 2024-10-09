@@ -284,8 +284,8 @@
             :tickets="tickets" />
           <SubscriptionsListPanel
             :active="
-              subscriptions?.some(
-                ({ started, ended }) => dayjs().isAfter(started) && dayjs().isBefore(ended),
+              subscriptions?.some(({ started, ended }) =>
+                dayjs().isBetween(started, ended, 'day', '[]'),
               )
             "
             class="max-h-[40rem] min-w-64 shrink grow basis-0"
