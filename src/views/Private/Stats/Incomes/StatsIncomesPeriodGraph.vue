@@ -20,7 +20,7 @@ import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
-import { IncomePeriodWithCharges } from '@/services/api/incomes';
+import { IncomePeriodWithTotal } from '@/services/api/incomes';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -48,7 +48,7 @@ const props = defineProps({
     default: false,
   },
   incomes: {
-    type: Array as PropType<IncomePeriodWithCharges<'year' | 'month' | 'week' | 'day'>[]>,
+    type: Array as PropType<IncomePeriodWithTotal<'year' | 'month' | 'week' | 'day'>[]>,
     default: () => [],
   },
   /**

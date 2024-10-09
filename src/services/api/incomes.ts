@@ -1,54 +1,10 @@
 import HTTP from '../http';
-import dayjs from 'dayjs';
-
-export const CHARGES_PER_YEAR_IN_EUR = {
-  2014: 3_240.73,
-  2015: 9_877.77,
-  2017: 9_795.03,
-  2018: 10_772.51,
-  2019: 12_052.23,
-  2020: 19_022.58,
-  2021: 18_509.5,
-  2022: 18_769.51,
-
-  2016: 9_877.77, // estimation
-  2023: 1_761.73 * 12,
-  // estimation
-  2024:
-    1_645.3 * 12 + // rent
-    208.35 + // insurance
-    60 * 12 + // internet
-    700 + // transactions fees
-    100 + // bank fees
-    2_000, // other
-};
-
-export const INCOME_PER_TICKET = 6 as const;
-export const INCOME_PER_SUBSCRIPTION_DAY = 2 as const;
-
-export const getCharges = (date: string, period: 'year' | 'month' | 'week' | 'day'): number => {
-  const day = dayjs(date);
-  const year = day.year();
-  // @ts-ignore
-  const yearCharges = CHARGES_PER_YEAR_IN_EUR[year] ?? 0;
-  switch (period) {
-    case 'year':
-      return yearCharges;
-    case 'month':
-      return yearCharges / 12;
-    case 'week':
-      return yearCharges / 52;
-    case 'day':
-      return yearCharges / 12 / day.daysInMonth();
-    default:
-      throw new Error(`Unknown period ${period}`);
-  }
-};
 
 export type IncomePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> = {
   date: string;
   type: PeriodType;
   data: {
+    charges: number; // regular expenses in euro
     tickets: {
       count: number; // tickets count consumed
       amount: number; // amount in euro
@@ -65,10 +21,9 @@ export type IncomePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
   };
 };
 
-export type IncomePeriodWithCharges<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
+export type IncomePeriodWithTotal<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
   IncomePeriod<PeriodType> & {
     data: IncomePeriod<PeriodType>['data'] & {
-      charges: number; // regular expenses in euro
       incomes: number; // total incomes in euro
     };
   };
@@ -76,8 +31,8 @@ export type IncomePeriodWithCharges<PeriodType extends 'year' | 'month' | 'week'
 export const getIncomesPerYear = (
   from?: string,
   to?: string,
-): Promise<IncomePeriodWithCharges<'year'>[]> => {
-  return HTTP.get('/stats/incomes/year', {
+): Promise<IncomePeriodWithTotal<'year'>[]> => {
+  return HTTP.get('/stats/incomes/year/from-orders', {
     params: {
       ...(from && { from }),
       ...(to && { to }),
@@ -88,7 +43,6 @@ export const getIncomesPerYear = (
       ...income,
       data: {
         ...income.data,
-        charges: getCharges(income.date, 'year'),
         incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
@@ -98,8 +52,8 @@ export const getIncomesPerYear = (
 export const getIncomesPerMonth = (
   from?: string,
   to?: string,
-): Promise<IncomePeriodWithCharges<'month'>[]> => {
-  return HTTP.get('/stats/incomes/month', {
+): Promise<IncomePeriodWithTotal<'month'>[]> => {
+  return HTTP.get('/stats/incomes/month/from-orders', {
     params: {
       ...(from && { from }),
       ...(to && { to }),
@@ -110,7 +64,6 @@ export const getIncomesPerMonth = (
       ...income,
       data: {
         ...income.data,
-        charges: getCharges(income.date, 'month'),
         incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
@@ -120,8 +73,8 @@ export const getIncomesPerMonth = (
 export const getIncomesPerWeek = (
   from?: string,
   to?: string,
-): Promise<IncomePeriodWithCharges<'week'>[]> => {
-  return HTTP.get('/stats/incomes/week', {
+): Promise<IncomePeriodWithTotal<'week'>[]> => {
+  return HTTP.get('/stats/incomes/week/from-orders', {
     params: {
       ...(from && { from }),
       ...(to && { to }),
@@ -132,7 +85,6 @@ export const getIncomesPerWeek = (
       ...income,
       data: {
         ...income.data,
-        charges: getCharges(income.date, 'week'),
         incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),
@@ -142,8 +94,8 @@ export const getIncomesPerWeek = (
 export const getIncomesPerDay = (
   from?: string,
   to?: string,
-): Promise<IncomePeriodWithCharges<'day'>[]> => {
-  return HTTP.get('/stats/incomes/day', {
+): Promise<IncomePeriodWithTotal<'day'>[]> => {
+  return HTTP.get('/stats/incomes/day/from-orders', {
     params: {
       ...(from && { from }),
       ...(to && { to }),
@@ -154,7 +106,6 @@ export const getIncomesPerDay = (
       ...income,
       data: {
         ...income.data,
-        charges: getCharges(income.date, 'day'),
         incomes: income.data.tickets.amount + income.data.subscriptions.amount,
       },
     })),

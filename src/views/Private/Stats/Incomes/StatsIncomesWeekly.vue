@@ -127,7 +127,7 @@ import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { IncomePeriodWithCharges, getIncomesPerWeek } from '@/services/api/incomes';
+import { IncomePeriodWithTotal, getIncomesPerWeek } from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -161,7 +161,7 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   isFetchingIncomes: false,
-  incomes: [] as IncomePeriodWithCharges<'week'>[],
+  incomes: [] as IncomePeriodWithTotal<'week'>[],
 });
 
 const totalIncome = computed(() =>

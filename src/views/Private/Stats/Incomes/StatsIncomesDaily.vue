@@ -22,7 +22,7 @@
         {{ $t('stats.incomes.daily.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0">
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm">
             {{ $t('stats.incomes.daily.summary.average.label') }}
@@ -115,6 +115,42 @@
             </div>
           </dd>
         </div>
+
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            {{ $t('stats.incomes.daily.summary.debt.label') }}
+          </dt>
+          <dd class="mt-1 flex flex-col">
+            <div
+              v-if="state.isFetchingIncomes"
+              class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
+            <AnimatedCounter
+              v-else
+              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              :duration="1"
+              :format="fractionAmount"
+              :to="totalDebtAmount" />
+
+            <div
+              v-if="state.isFetchingIncomes"
+              class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
+            <div
+              v-else-if="state.incomes.length"
+              class="flex flex-row items-baseline justify-between text-sm">
+              <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+                {{
+                  $t('stats.incomes.daily.summary.debt.tickets', {
+                    count: totalDebtCount,
+                  })
+                }}
+              </span>
+
+              <div class="rounded-full bg-gray-100 px-2.5 py-0.5 font-medium text-gray-800">
+                {{ fractionPercentage(totalDebtAmount / totalIncome, $i18n.locale) }}
+              </div>
+            </div>
+          </dd>
+        </div>
       </dl>
     </section>
   </div>
@@ -124,7 +160,7 @@
 import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { handleSilentError } from '@/helpers/errors';
-import { IncomePeriodWithCharges, getIncomesPerDay } from '@/services/api/incomes';
+import { IncomePeriodWithTotal, getIncomesPerDay } from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -156,7 +192,7 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   isFetchingIncomes: false,
-  incomes: [] as IncomePeriodWithCharges<'day'>[],
+  incomes: [] as IncomePeriodWithTotal<'day'>[],
 });
 
 const totalIncome = computed(() =>
@@ -176,6 +212,16 @@ const averageIncome = computed(() => {
 const averageCharges = computed(() => {
   return totalCharges.value / state.incomes.length || 0;
 });
+
+const totalDebtCount = computed(() =>
+  state.incomes.map(({ data }) => data.tickets.debt.count).reduce((acc, count) => acc + count, 0),
+);
+
+const totalDebtAmount = computed(() =>
+  state.incomes
+    .map(({ data }) => data.tickets.debt.amount)
+    .reduce((acc, amount) => acc + amount, 0),
+);
 
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
