@@ -17,6 +17,9 @@
       "message": "{author} has unlocked the deck door"
     }
   },
+  "author": {
+    "unknown": "Someone"
+  },
   "list": {
     "description": "Everything that happens in detail.",
     "empty": {

@@ -10,7 +10,7 @@ export enum AuditAction {
 
 export interface AuditEvent {
   _id: string;
-  author: {
+  author?: {
     _id?: string;
     wpUserId: number;
     name: string;

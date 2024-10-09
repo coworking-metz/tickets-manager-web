@@ -17,6 +17,9 @@
       "message": "{author} a déverrouillé la porte de la terrasse"
     }
   },
+  "author": {
+    "unknown": "Quelqu'un"
+  },
   "list": {
     "description": "Tout ce qui se passe en détail.",
     "empty": {

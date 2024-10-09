@@ -185,7 +185,8 @@ interface ListSorter {
 const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'occurred',
-    sort: (a, b) => new Date(b.occurred).getTime() - new Date(a.occurred).getTime(),
+    sort: (a: AuditEvent, b: AuditEvent) =>
+      new Date(b.occurred).getTime() - new Date(a.occurred).getTime(),
   },
   {
     key: 'action',
@@ -194,7 +195,9 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'author',
     sort: (a, b) =>
-      a.author.name.toLocaleLowerCase().localeCompare(b.author.name.toLocaleLowerCase()),
+      (a.author?.name.toLocaleLowerCase() || '').localeCompare(
+        b.author?.name.toLocaleLowerCase() || '',
+      ),
   },
 ]);
 

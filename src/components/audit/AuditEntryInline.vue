@@ -39,7 +39,7 @@
         <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
           <template #author>
             <RouterLink
-              v-if="$route.params.id !== event.author._id"
+              v-if="event.author && $route.params.id !== event.author._id"
               class="font-medium text-indigo-600 hover:underline"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -47,7 +47,9 @@
               }">
               {{ event.author.name }}
             </RouterLink>
-            <span v-else class="font-medium text-gray-900">{{ event.author.name }}</span>
+            <span v-else class="font-medium text-gray-900">
+              {{ event.author?.name || $t('audit.author.unknown') }}
+            </span>
           </template>
         </i18n-t>
       </slot>
