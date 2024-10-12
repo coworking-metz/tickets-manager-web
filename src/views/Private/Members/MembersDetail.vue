@@ -167,7 +167,7 @@
                 tag="dd">
                 <template #amount>
                   <div
-                    v-if="state.isFetchingActivity"
+                    v-if="isFetchingActivity"
                     class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
                   <span
                     v-else-if="!periodAttendance"
@@ -187,8 +187,8 @@
                         :format="
                           (amount: number) =>
                             formatAmount(amount, {
-                              maximumFractionDigits: 1,
                               style: 'decimal',
+                              maximumFractionDigits: 1,
                             })
                         "
                         :to="periodAttendance" />
@@ -276,8 +276,10 @@
                     :duration="1"
                     :format="
                       (count: number) =>
-                        fractionAmount(count, {
+                        formatAmount(count, {
                           style: 'decimal',
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 1,
                         })
                     "
                     :to="totalTicketsUsed" />
@@ -294,8 +296,10 @@
                         :duration="1"
                         :format="
                           (count: number) =>
-                            fractionAmount(count, {
+                            formatAmount(count, {
                               style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
                             })
                         "
                         :to="totalTicketsCount" />
@@ -431,13 +435,12 @@ import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {
-  Attendance,
   buildMemberWordpressOrdersUrl,
   getMember,
   getMemberActivity,
 } from '@/services/api/members';
-import { Subscription, getAllMemberSubscriptions } from '@/services/api/subscriptions';
-import { Ticket, getAllMemberTickets } from '@/services/api/tickets';
+import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
+import { getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { mdiAccountCircle, mdiInformationOutline, mdiOpenInNew } from '@mdi/js';
@@ -467,17 +470,7 @@ const props = defineProps({
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
-  isFetchingActivity: false,
-  activity: [] as Attendance[],
-
-  isFetchingSubscriptions: false,
-  subscriptions: [] as Subscription[],
-
-  isFetchingTickets: false,
-  tickets: [] as Ticket[],
-
   shouldRenderAllActivity: false as boolean,
-  isTicketsDialogVisible: true as boolean,
 });
 
 useHead({
@@ -588,13 +581,15 @@ const periodAttendance = computed<number>(() => {
 });
 
 const totalTicketsCount = computed<number>(() => {
-  return state.tickets.reduce((acc, ticketsOrder) => acc + ticketsOrder.count, 0);
+  return tickets.value?.reduce((total, ticketsOrder) => total + ticketsOrder.count, 0) || 0;
 });
 
 const totalTicketsUsed = computed<number>(() => {
-  return state.activity
-    .filter(({ type }) => type === 'ticket')
-    .reduce((acc, { value }) => acc + value, 0);
+  return (
+    activity.value
+      ?.filter(({ type }) => type === 'ticket')
+      .reduce((total, { value }) => total + value, 0) || 0
+  );
 });
 
 const totalAmountSpent = computed<number>(() => {
