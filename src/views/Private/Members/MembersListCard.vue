@@ -8,6 +8,7 @@
             :alt="getInitials(fullname)"
             class="size-full rounded-full object-cover object-top"
             loading="lazy"
+            role="figure"
             :src="member.thumbnail"
             @error="(event) => (event.target as HTMLImageElement).removeAttribute('loading')" />
           <span
