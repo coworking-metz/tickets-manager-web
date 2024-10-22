@@ -21,7 +21,10 @@
                   :alt="getInitials(fullname)"
                   class="size-full rounded-full object-cover object-top"
                   loading="lazy"
-                  :src="member.thumbnail" />
+                  :src="member.thumbnail"
+                  @error="
+                    (event) => (event.target as HTMLImageElement).removeAttribute('loading')
+                  " />
                 <SvgIcon
                   v-else
                   aria-hidden="true"
