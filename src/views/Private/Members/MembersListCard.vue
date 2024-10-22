@@ -5,9 +5,9 @@
         <template v-if="member">
           <img
             v-if="member.thumbnail"
-            loading="lazy"
             :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
             class="size-full rounded-full object-cover object-top"
+            loading="lazy"
             :src="member.thumbnail" />
           <span
             v-if="member.attending"
