@@ -5,7 +5,7 @@
         <template v-if="member">
           <img
             v-if="member.thumbnail"
-            :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
+            :alt="getInitials(fullname)"
             class="size-full rounded-full object-cover object-top"
             loading="lazy"
             :src="member.thumbnail" />
@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { getInitials } from '@/helpers/text';
 import { MemberListItem, isMembershipNonCompliant } from '@/services/api/members';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';
