@@ -17,7 +17,6 @@
             <div class="shrink-0">
               <div class="relative size-16 rounded-full bg-gray-200">
                 <img
-                  loading="lazy"
                   v-if="member.thumbnail"
                   :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
                   class="size-full rounded-full object-cover object-top"
