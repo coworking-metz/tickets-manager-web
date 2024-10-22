@@ -20,6 +20,7 @@
                   v-if="member.thumbnail"
                   :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
                   class="size-full rounded-full object-cover object-top"
+                  loading="lazy"
                   :src="member.thumbnail" />
                 <SvgIcon
                   v-else
