@@ -14,29 +14,15 @@
         <div class="min-w-48 shrink grow basis-0" />
         <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
           <div class="flex flex-row space-x-5 sm:ml-8">
-            <div class="shrink-0">
-              <div class="relative size-16 rounded-full bg-gray-200">
-                <img
-                  v-if="member.thumbnail"
-                  :alt="getInitials(fullname)"
-                  class="size-full rounded-full object-cover object-top"
-                  loading="lazy"
-                  role="figure"
-                  :src="member.thumbnail"
-                  @error="
-                    (event) => (event.target as HTMLImageElement).removeAttribute('loading')
-                  " />
-                <SvgIcon
-                  v-else
-                  aria-hidden="true"
-                  class="size-full"
-                  :path="mdiAccountCircle"
-                  type="mdi" />
-                <span
-                  v-if="member.attending"
-                  class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
-              </div>
-            </div>
+            <MembersThumbnail
+              class="size-16 shrink-0"
+              :email="member.email"
+              :name="fullname"
+              :thumbnail="member.thumbnail">
+              <span
+                v-if="member.attending"
+                class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50" />
+            </MembersThumbnail>
             <div class="flex flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900">
                 {{ fullname || member.email }}
@@ -433,12 +419,12 @@ import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
 import WordpressPanel from './Detail/WordpressPanel.vue';
+import MembersThumbnail from './MembersThumbnail.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
-import { getInitials } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import {
   buildMemberWordpressOrdersUrl,
@@ -449,7 +435,7 @@ import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiAccountCircle, mdiInformationOutline, mdiOpenInNew } from '@mdi/js';
+import { mdiInformationOutline, mdiOpenInNew } from '@mdi/js';
 import { useQuery } from '@tanstack/vue-query';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';

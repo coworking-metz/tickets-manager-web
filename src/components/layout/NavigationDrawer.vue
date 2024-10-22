@@ -32,20 +32,10 @@
           'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline',
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
-        <img
-          v-if="authStore.user?.picture"
-          :alt="getInitials(authStore.user?.name)"
-          class="inline-block size-12 rounded-full bg-slate-200 object-cover object-top text-black"
-          loading="lazy"
-          role="figure"
-          :src="authStore.user?.picture"
-          @error="(event) => (event.target as HTMLImageElement).removeAttribute('loading')" />
-        <SvgIcon
-          v-else
-          aria-hidden="true"
-          class="size-12 text-amber-100 group-hover:text-white"
-          :path="mdiAccountCircle"
-          type="mdi" />
+        <MembersThumbnail
+          :email="authStore.user?.email"
+          :name="authStore.user?.name"
+          :thumbnail="authStore.user?.picture" />
         <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
       </router-link>
     </nav>
@@ -54,11 +44,11 @@
 
 <script setup lang="ts">
 import monoLogo from '@/assets/logo-mono-inverted.svg';
-import { getInitials } from '@/helpers/text';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
-import { mdiAccountCircle, mdiAccountGroup, mdiFinance, mdiHistory } from '@mdi/js';
+import MembersThumbnail from '@/views/Private/Members/MembersThumbnail.vue';
+import { mdiAccountGroup, mdiFinance, mdiHistory } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw, useRoute } from 'vue-router';

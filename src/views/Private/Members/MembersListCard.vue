@@ -1,21 +1,15 @@
 <template>
   <div :class="['flex items-center p-4 sm:px-6', loading && 'animate-pulse']">
     <div class="flex min-w-0 flex-1 items-start">
-      <div :class="['relative size-12 shrink-0 rounded-full bg-slate-200']">
-        <template v-if="member">
-          <img
-            v-if="member.thumbnail"
-            :alt="getInitials(fullname)"
-            class="size-full rounded-full object-cover object-top"
-            loading="lazy"
-            role="figure"
-            :src="member.thumbnail"
-            @error="(event) => (event.target as HTMLImageElement).removeAttribute('loading')" />
-          <span
-            v-if="member.attending"
-            class="absolute bottom-0 right-0 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
-        </template>
-      </div>
+      <MembersThumbnail
+        class="shrink-0"
+        :email="member?.email"
+        :name="fullname"
+        :thumbnail="member?.thumbnail">
+        <span
+          v-if="member?.attending"
+          class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white" />
+      </MembersThumbnail>
       <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">
         <div class="flex min-w-48 shrink grow basis-0 flex-col items-start">
           <template v-if="member">
@@ -78,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { getInitials } from '@/helpers/text';
+import MembersThumbnail from './MembersThumbnail.vue';
 import { MemberListItem, isMembershipNonCompliant } from '@/services/api/members';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';
