@@ -8,7 +8,8 @@
             :alt="getInitials(fullname)"
             class="size-full rounded-full object-cover object-top"
             loading="lazy"
-            :src="member.thumbnail" />
+            :src="member.thumbnail"
+            @error="(event) => (event.target as HTMLImageElement).removeAttribute('loading')" />
           <span
             v-if="member.attending"
             class="absolute bottom-0 right-0 block size-3 rounded-full bg-green-400 ring-4 ring-white" />
