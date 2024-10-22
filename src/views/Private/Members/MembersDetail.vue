@@ -18,7 +18,7 @@
               <div class="relative size-16 rounded-full bg-gray-200">
                 <img
                   v-if="member.thumbnail"
-                  :alt="`${$t('members.detail.profile.picture.label')} - ${fullname}`"
+                  :alt="getInitials(fullname)"
                   class="size-full rounded-full object-cover object-top"
                   loading="lazy"
                   :src="member.thumbnail" />
@@ -434,6 +434,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
+import { getInitials } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import {
   buildMemberWordpressOrdersUrl,

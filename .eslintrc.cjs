@@ -79,6 +79,7 @@ module.exports = {
     'prettier/prettier': [
       ERROR,
       {
+        endOfLine: 'auto',
         arrowParens: 'always',
         bracketSameLine: true,
         htmlWhitespaceSensitivity: 'ignore',

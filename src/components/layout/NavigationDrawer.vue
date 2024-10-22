@@ -1,7 +1,7 @@
 <template>
   <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500">
     <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
-      <img alt="Your Company" class="h-16 w-auto" :src="monoLogo" />
+      <img alt="Coworking Metz" class="h-16 w-auto" :src="monoLogo" />
     </div>
     <nav class="my-6 flex w-full grow flex-col gap-1 px-2">
       <router-link
@@ -34,8 +34,9 @@
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <img
           v-if="authStore.user?.picture"
-          :alt="`${$t('members.detail.profile.picture.label')} - ${authStore.user?.name}`"
+          :alt="getInitials(authStore.user?.name)"
           class="inline-block size-12 rounded-full bg-slate-200 object-cover object-top text-black"
+          loading="lazy"
           :src="authStore.user?.picture" />
         <SvgIcon
           v-else
@@ -51,6 +52,7 @@
 
 <script setup lang="ts">
 import monoLogo from '@/assets/logo-mono-inverted.svg';
+import { getInitials } from '@/helpers/text';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
