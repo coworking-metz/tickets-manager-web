@@ -6,7 +6,7 @@ html {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-img[loading="lazy"] {
+img[loading="lazy"][role="figure"] {
   overflow: hidden;
   background-repeat: no-repeat;
   background-position: center;
@@ -15,7 +15,7 @@ img[loading="lazy"] {
   background-size: 68%;
 }
 
-img[alt] {
+img[alt][role="figure"] {
   background-color: rgb(172, 176, 181);
   overflow: hidden;
   display: flex;

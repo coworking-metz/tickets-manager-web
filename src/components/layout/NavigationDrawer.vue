@@ -37,6 +37,7 @@
           :alt="getInitials(authStore.user?.name)"
           class="inline-block size-12 rounded-full bg-slate-200 object-cover object-top text-black"
           loading="lazy"
+          role="figure"
           :src="authStore.user?.picture"
           @error="(event) => (event.target as HTMLImageElement).removeAttribute('loading')" />
         <SvgIcon
