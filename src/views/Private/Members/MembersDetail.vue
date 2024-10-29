@@ -33,14 +33,14 @@
                 keypath="members.detail.profile.attending"
                 scope="global"
                 tag="p">
-                <template v-if="member?.location" #location>
+                <template v-if="!!member?.location" #location>
                   <span class="inline-block font-medium text-gray-900">
                     {{ $t(`members.detail.profile.location.${member.location}`) }}
                   </span>
                 </template>
               </i18n-t>
               <i18n-t
-                v-if="!!member.lastSeen"
+                v-else-if="!!member.lastSeen"
                 class="text-sm font-medium text-gray-500"
                 keypath="members.detail.profile.lastSeen"
                 scope="global"
@@ -57,7 +57,7 @@
                     }}
                   </time>
                 </template>
-                <template v-if="member?.location" #location>
+                <template v-if="!!member?.location" #location>
                   <span>
                     {{ $t(`members.detail.profile.location.${member.location}`) }}
                   </span>
