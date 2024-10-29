@@ -50,19 +50,38 @@
           </template>
         </div>
         <i18n-t
-          v-if="member?.lastSeen"
+          v-if="member?.attending"
           class="flex min-w-48 shrink flex-col text-gray-500 sm:items-end sm:text-sm"
-          keypath="members.detail.header.description"
+          keypath="members.detail.profile.attending"
+          scope="global"
+          tag="p">
+          <template v-if="member?.location" #location>
+            <span class="inline-block font-medium text-gray-900">
+              {{ $t(`members.detail.profile.location.${member.location}`) }}
+            </span>
+          </template>
+        </i18n-t>
+        <i18n-t
+          v-else-if="member?.lastSeen"
+          class="flex min-w-48 shrink flex-col text-gray-500 sm:items-end sm:text-sm"
+          keypath="members.detail.profile.lastSeen"
           scope="global"
           tag="p">
           <template #date>
-            <time class="block font-medium lowercase text-gray-900" :datetime="member.lastSeen">
+            <time
+              class="inline-block font-medium lowercase text-gray-900"
+              :datetime="member.lastSeen">
               {{
                 dayjs().diff(member.lastSeen, 'hour') < 1
                   ? dayjs(member.lastSeen).fromNow()
                   : dayjs(member.lastSeen).calendar(dayjs())
               }}
             </time>
+          </template>
+          <template v-if="member?.location" #location>
+            <span>
+              {{ $t(`members.detail.profile.location.${member.location}`) }}
+            </span>
           </template>
         </i18n-t>
       </div>

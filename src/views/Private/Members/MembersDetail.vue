@@ -28,9 +28,21 @@
                 {{ fullname || member.email }}
               </h1>
               <i18n-t
+                v-if="member?.attending"
+                class="flex min-w-48 shrink flex-col text-gray-500 sm:items-end sm:text-sm"
+                keypath="members.detail.profile.attending"
+                scope="global"
+                tag="p">
+                <template v-if="member?.location" #location>
+                  <span class="inline-block font-medium text-gray-900">
+                    {{ $t(`members.detail.profile.location.${member.location}`) }}
+                  </span>
+                </template>
+              </i18n-t>
+              <i18n-t
                 v-if="!!member.lastSeen"
                 class="text-sm font-medium text-gray-500"
-                keypath="members.detail.header.description"
+                keypath="members.detail.profile.lastSeen"
                 scope="global"
                 tag="p">
                 <template #date>
@@ -44,6 +56,11 @@
                         : dayjs(member.lastSeen).calendar(dayjs())
                     }}
                   </time>
+                </template>
+                <template v-if="member?.location" #location>
+                  <span>
+                    {{ $t(`members.detail.profile.location.${member.location}`) }}
+                  </span>
                 </template>
               </i18n-t>
               <div class="mt-1 flex flex-row flex-wrap items-center gap-2">

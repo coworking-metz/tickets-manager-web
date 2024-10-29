@@ -41,9 +41,6 @@
       },
       "title": "History"
     },
-    "header": {
-      "description": "Present for the last time {date}"
-    },
     "membership": {
       "current": "{year} membership",
       "last": "Last membership in {year}",
@@ -96,6 +93,7 @@
       "title": "Orders"
     },
     "profile": {
+      "attending": "Currently attending{location}",
       "birthdate": {
         "label": "Birthdate"
       },
@@ -116,8 +114,13 @@
       "firstname": {
         "label": "First Name"
       },
+      "lastSeen": "Last seen {date}{location}",
       "lastname": {
         "label": "Last Name"
+      },
+      "location": {
+        "poulailler": "{' '}inside Poulailler",
+        "pti-poulailler": "{' '}inside P'ti Poulailler"
       },
       "macAddresses": {
         "add": "Specify a device | Add another device | Add other devices",
@@ -170,7 +173,6 @@
     "head": {
       "title": "@:members.list.title"
     },
-    "lastSeen": "Last seen on {date}",
     "nonCompliant": {
       "missingMemberships": {
         "label": "Membership | Membership | Memberships",

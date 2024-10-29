@@ -3,6 +3,7 @@ import HTTP from '../http';
 import dayjs from 'dayjs';
 
 export type AttendanceType = 'subscription' | 'ticket';
+export type MemberLocation = 'poulailler' | 'pti-poulailler';
 
 export interface Attendance {
   date: string;
@@ -37,6 +38,7 @@ export interface MemberListItem {
   wpUserId?: number;
   picture?: string;
   thumbnail?: string;
+  location?: MemberLocation;
 }
 
 export interface Member extends MemberListItem {

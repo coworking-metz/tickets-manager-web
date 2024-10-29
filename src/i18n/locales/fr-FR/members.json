@@ -41,9 +41,6 @@
       },
       "title": "Historique"
     },
-    "header": {
-      "description": "Présent⸱e pour la dernière fois {date}"
-    },
     "membership": {
       "current": "Adhérent⸱e {year}",
       "last": "Dernière adhésion en {year}",
@@ -96,6 +93,7 @@
       "title": "Commandes"
     },
     "profile": {
+      "attending": "Actuellement présent⸱e{location}",
       "birthdate": {
         "label": "Date de naissance"
       },
@@ -116,8 +114,13 @@
       "firstname": {
         "label": "Prénom"
       },
+      "lastSeen": "Présent⸱e pour la dernière fois {date}{location}",
       "lastname": {
         "label": "Nom"
+      },
+      "location": {
+        "poulailler": "{' '}au Poulailler",
+        "pti-poulailler": "{' '}au P'ti Poulailler"
       },
       "macAddresses": {
         "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
@@ -170,7 +173,6 @@
     "head": {
       "title": "@:members.list.title"
     },
-    "lastSeen": "Présent⸱e pour la dernière fois {date}",
     "nonCompliant": {
       "missingMemberships": {
         "label": "Adhésion | Adhésion | Adhésions",
