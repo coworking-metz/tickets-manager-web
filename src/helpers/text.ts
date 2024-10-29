@@ -6,10 +6,10 @@ export const normalize = (value?: string | number | null) =>
 
 export const searchIn = (
   needle: string | null,
-  ...elements: (string | number | undefined | null)[]
+  ...elements: (string | number | false | undefined | null)[]
 ): boolean =>
   !needle ||
-  elements.filter(Boolean).some((element) => normalize(element).includes(normalize(needle.trim())));
+  elements.some((element) => !!element && normalize(element).includes(normalize(needle.trim())));
 
 export const getInitials = (name?: string, email?: string): string => {
   let words: string[] = [];

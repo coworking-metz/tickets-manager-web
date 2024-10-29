@@ -341,19 +341,19 @@ const filteredList = computed(() => {
         [member.firstName, member.lastName].filter(Boolean).join(' '),
         [member.lastName, member.firstName].filter(Boolean).join(' '),
         member.email,
+        member.attending && i18n.t('members.detail.profile.attending'),
+        member.location && i18n.t(`members.detail.profile.location.${member.location}`),
         dayjs().isSame(member.lastSeen, 'day')
           ? dayjs(member.lastSeen).fromNow()
           : dayjs(member.lastSeen).calendar(dayjs()),
-        member.balance < 0
-          ? i18n.t('members.detail.orders.tickets.overconsumed', {
-              count: Math.abs(member.balance),
-            })
-          : null,
-        isMembershipNonCompliant(member)
-          ? member.lastMembership
+        member.balance < 0 &&
+          i18n.t('members.detail.orders.tickets.overconsumed', {
+            count: Math.abs(member.balance),
+          }),
+        isMembershipNonCompliant(member) &&
+          (member.lastMembership
             ? i18n.t('members.detail.membership.last', { year: member.lastMembership })
-            : i18n.t('members.detail.membership.none')
-          : null,
+            : i18n.t('members.detail.membership.none')),
       ),
     )
     .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
