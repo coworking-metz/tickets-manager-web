@@ -29,12 +29,12 @@
               </h1>
               <i18n-t
                 v-if="member?.attending"
-                class="flex min-w-48 shrink flex-col text-gray-500 sm:items-end sm:text-sm"
+                class="text-sm font-medium text-gray-500"
                 keypath="members.detail.profile.attending"
                 scope="global"
                 tag="p">
                 <template v-if="!!member?.location" #location>
-                  <span class="inline-block font-medium text-gray-900">
+                  <span class="font-medium text-gray-900">
                     {{ $t(`members.detail.profile.location.${member.location}`) }}
                   </span>
                 </template>
