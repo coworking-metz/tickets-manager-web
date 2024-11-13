@@ -43,7 +43,7 @@
           <slot name="message">
             <i18n-t
               :keypath="
-                event.author?._id === event.context.member._id
+                event.author?._id === event.context?.member._id
                   ? `audit.action.${event.action}.self`
                   : `audit.action.${event.action}.message`
               "
@@ -66,7 +66,7 @@
 
               <template #member>
                 <RouterLink
-                  v-if="$route.params.id !== event.context.member._id"
+                  v-if="$route.params.id !== event.context?.member._id"
                   class="font-medium text-indigo-600 hover:underline"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -109,7 +109,7 @@
 
       <div v-if="event.context?.comment" class="prose mt-1">
         <blockquote class="whitespace-pre-line text-sm">
-          {{ event.context?.comment }}
+          {{ event.context.comment }}
         </blockquote>
       </div>
 
