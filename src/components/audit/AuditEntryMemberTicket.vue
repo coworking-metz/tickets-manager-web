@@ -3,7 +3,7 @@
     <template #message>
       <i18n-t
         :keypath="
-          event.author?._id === event.context.member._id
+          event.author?._id === event.context?.member._id
             ? `audit.action.${event.action}.self`
             : `audit.action.${event.action}.message`
         "
@@ -26,7 +26,7 @@
 
         <template #member>
           <RouterLink
-            v-if="$route.params.id !== event.context.member._id"
+            v-if="$route.params.id !== event.context?.member._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -40,7 +40,7 @@
           </RouterLink>
           <span v-else class="font-medium text-gray-900">
             {{
-              [event.context.member.firstName, event.context.member.lastName]
+              [event.context?.member.firstName, event.context?.member.lastName]
                 .filter(Boolean)
                 .join(' ')
             }}
@@ -49,12 +49,12 @@
 
         <template #count>
           <strong class="font-bold text-gray-900">
-            {{ event.context.count }}
+            {{ event.context?.count }}
           </strong>
         </template>
 
         <template #previousCount>
-          {{ event.context.previousCount }}
+          {{ event.context?.previousCount }}
         </template>
       </i18n-t>
     </template>
