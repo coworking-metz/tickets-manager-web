@@ -38,7 +38,11 @@
       v-slot="{ open }"
       class="flex grow flex-col gap-1 overflow-hidden pb-6 text-sm text-slate-500">
       <DisclosureButton
-        class="flex flex-row justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-gray-200 active:bg-gray-300">
+        :class="[
+          'flex flex-row justify-between rounded-md px-2 py-1.5',
+          !!essentialContext && 'transition-colors hover:bg-gray-200 active:bg-gray-300',
+        ]"
+        :disabled="!essentialContext">
         <div class="flex flex-col text-start">
           <slot name="message">
             <i18n-t
@@ -80,7 +84,7 @@
                 </RouterLink>
                 <span v-else class="font-medium text-gray-900">
                   {{
-                    [event.context.member.firstName, event.context.member.lastName]
+                    [event.context?.member.firstName, event.context?.member.lastName]
                       .filter(Boolean)
                       .join(' ')
                   }}
@@ -101,6 +105,7 @@
         </div>
 
         <SvgIcon
+          v-if="!!essentialContext"
           aria-hidden="true"
           class="size-6 shrink-0 self-center"
           :path="open ? mdiChevronUp : mdiChevronDown"
@@ -115,6 +120,7 @@
 
       <slot name="append">
         <Transition
+          v-if="!!essentialContext"
           enter-active-class="transition duration-100 ease-out"
           enter-from-class="transform scale-95 opacity-0"
           enter-to-class="transform scale-100 opacity-100"
@@ -122,7 +128,7 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0">
           <DisclosurePanel
-            class="select-text rounded-md bg-slate-800 px-2 py-1 text-gray-200"
+            class="mt-1 select-text rounded-md bg-slate-800 px-2 py-1 text-gray-200"
             tag="pre">
             <code class="whitespace-pre-wrap">{{ JSON.stringify(essentialContext, null, 2) }}</code>
           </DisclosurePanel>
