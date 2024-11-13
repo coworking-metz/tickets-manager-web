@@ -172,7 +172,7 @@ const props = defineProps({
 });
 
 const essentialContext = computed(() => {
-  const { memberId, member, ...rest } = props.event.context;
+  const { memberId, member, ...rest } = props.event.context || {};
   return rest;
 });
 
