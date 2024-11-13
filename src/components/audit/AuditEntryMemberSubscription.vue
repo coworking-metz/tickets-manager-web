@@ -24,9 +24,9 @@
           </span>
         </template>
 
-        <template #member>
+        <template #member v-if="event.context?.member">
           <RouterLink
-            v-if="$route.params.id !== event.context?.member._id"
+            v-if="$route.params.id !== event.context.member._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -40,7 +40,7 @@
           </RouterLink>
           <span v-else class="font-medium text-gray-900">
             {{
-              [event.context?.member.firstName, event.context?.member.lastName]
+              [event.context.member.firstName, event.context.member.lastName]
                 .filter(Boolean)
                 .join(' ')
             }}
