@@ -140,17 +140,16 @@
           class="m-auto"
           :description="historyError"
           :title="$t('audit.list.onFetch.fail')" />
+        <EmptyState
+          v-else-if="!slicedList.length"
+          class="m-auto py-6"
+          :title="$t('audit.list.empty.title')" />
         <li v-else v-for="(event, eventIndex) in slicedList" :key="`event-${event._id}`">
           <AuditEntry
             :event="event"
             :loading="isFetchingHistory"
             :with-timeline="eventIndex !== slicedList.length - 1" />
         </li>
-
-        <EmptyState
-          v-if="!historyError && (state.isEmpty || !slicedList.length)"
-          class="m-auto py-6"
-          :title="$t('audit.list.empty.title')" />
       </ul>
     </div>
   </article>
@@ -233,7 +232,6 @@ const state = reactive({
   search: null as string | null,
   slice: Number(props.slice) as number,
   period: { start: '' as string, end: '' as string },
-  isEmpty: false as boolean,
 });
 
 const {

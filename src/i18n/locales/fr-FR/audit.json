@@ -3,15 +3,21 @@
     "KEYS_ACCESS": {
       "message": "{author} a recupéré le code d'accès à la boîte à clés"
     },
+    "MEMBER_CAPABILITIES_UPDATE": {
+      "message": "{author} a modifié les capacités de {member}",
+      "self": "{author} a modifié ses capacités"
+    },
     "MEMBER_DEVICE_UPDATE": {
       "message": "{author} a modifié les appareils de {member}",
       "self": "{author} a modifié ses appareils"
     },
     "MEMBER_SUBSCRIPTION_UPDATE": {
-      "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}"
+      "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}",
+      "self": "{author} a modifié son abonnement pour débuter au {started} au lieu du {previouslyStarted}"
     },
     "MEMBER_TICKET_UPDATE": {
-      "message": "{author} a modifié le nombre de tickets d'une commande, de précédemment {previousCount} à désormais {count} pour {member}"
+      "message": "{author} a modifié le nombre de tickets d'une commande, de précédemment {previousCount} à désormais {count} pour {member}",
+      "self": "{author} a modifié le nombre de tickets d'une de ses commandes, de précédemment {previousCount} à désormais {count}"
     },
     "UNLOCK_DECK_DOOR": {
       "message": "{author} a déverrouillé la porte de la terrasse"

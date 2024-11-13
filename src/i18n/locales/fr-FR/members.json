@@ -97,19 +97,34 @@
       "birthdate": {
         "label": "Date de naissance"
       },
+      "capacities": {
+        "keysAccess": {
+          "description": "Récupère le code des boîtes à clés dans l'application mobile pour accéder aux espaces de travail en toute autonomie.",
+          "label": "Accès à la boîte à clés"
+        },
+        "manager": {
+          "description": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.\nCe paramètre se change sur le profil Wordpress.",
+          "label": "Administrateur"
+        },
+        "onFetch": {
+          "fail": "Impossible de récupérer les capacités"
+        },
+        "parkingAccess": {
+          "description": "Ouvrir la barrière du parking.",
+          "label": "Accès au parking"
+        },
+        "unlockDeckDoor": {
+          "description": "En utilisant l'application mobile. La porte donne un accès direct au Poulailler depuis l'extérieur.",
+          "label": "Déverouiller la porte de la terrasse"
+        },
+        "unlockGate": {
+          "description": "Pour entrer dans l'enceinte du tiers lieu.",
+          "label": "Déverouiller le portail piéton"
+        }
+      },
       "description": "Les informations de contact et autres données personnelles de ce membre.\nCes informations ne sont pas publiques.",
       "email": {
         "label": "Adresse email"
-      },
-      "features": {
-        "manager": {
-          "description": "Permet de gérer les membres et les services et d'accéder à toutes les fonctionnalités.\nEn gros, il a les pleins pouvoirs.",
-          "label": "Administrateur"
-        },
-        "parking": {
-          "description": "Permet d'ouvrir la barrière du parking au travers de l'application mobile.",
-          "label": "Accès au parking"
-        }
       },
       "firstname": {
         "label": "Prénom"
