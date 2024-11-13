@@ -109,7 +109,7 @@
           </div>
         </div>
 
-        <RadioGroup v-model="state.type">
+        <RadioGroup v-model="state.type" disabled>
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
             {{ $t('activity.detail.type.label') }}
           </RadioGroupLabel>
@@ -119,14 +119,15 @@
               v-for="typeOption in ['subscription', 'ticket']"
               :key="`attendance-type-${typeOption}`"
               as="template"
-              disabled
               :value="typeOption"
-              v-slot="{ checked, active }">
+              v-slot="{ checked, active, disabled }">
               <div
                 :class="[
-                  checked ? 'border-transparent' : 'border-gray-300 ',
-                  active ? 'border-indigo-500 ring-2 ring-indigo-500' : '',
+                  checked ? 'border-transparent' : 'border-gray-300',
+                  active && 'border-indigo-500 ring-2 ring-indigo-500',
                   'relative flex flex-1 rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
+                  disabled && 'cursor-not-allowed',
+                  disabled && !checked && 'opacity-50',
                 ]">
                 <span class="flex flex-1">
                   <span class="flex flex-col">

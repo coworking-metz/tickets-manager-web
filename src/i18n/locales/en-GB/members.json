@@ -97,19 +97,34 @@
       "birthdate": {
         "label": "Birthdate"
       },
+      "capacities": {
+        "keysAccess": {
+          "description": "Retrieve the code for key boxes in the mobile app to access workspaces independently.",
+          "label": "Key Box Access"
+        },
+        "manager": {
+          "description": "Manage members and services and access all features. In short: full control.\nThis setting is changed in the Wordpress profile.",
+          "label": "Administrator"
+        },
+        "onFetch": {
+          "fail": "Unable to fetch member's capacities"
+        },
+        "parkingAccess": {
+          "description": "Open the parking barrier.",
+          "label": "Parking Access"
+        },
+        "unlockDeckDoor": {
+          "description": "Using the mobile app. The door provides direct access to the Poulailler from the outside.",
+          "label": "Unlock Deck Door"
+        },
+        "unlockGate": {
+          "description": "To enter the third-place enclosure.",
+          "label": "Unlock Pedestrian Gate"
+        }
+      },
       "description": "Contact information and other personal data of this member.\nThis information is not public.",
       "email": {
         "label": "Email Address"
-      },
-      "features": {
-        "manager": {
-          "description": "Allows managing members and services and accessing all features.\nIn short, it has full powers.",
-          "label": "Administrator"
-        },
-        "parking": {
-          "description": "Allows opening the parking barrier through the mobile application.",
-          "label": "Parking Access"
-        }
       },
       "firstname": {
         "label": "First Name"

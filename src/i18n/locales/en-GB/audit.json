@@ -1,20 +1,26 @@
 {
   "action": {
     "KEYS_ACCESS": {
-      "message": "{author} has retrieved keys access code"
+      "message": "{author} retrieved the access code for the key box"
+    },
+    "MEMBER_CAPABILITIES_UPDATE": {
+      "message": "{author} has changed the capabilities of {member}",
+      "self": "{author} has changed their capabilities"
     },
     "MEMBER_DEVICE_UPDATE": {
-      "message": "{author} has changed {member}'s devices",
+      "message": "{author} has changed the devices of {member}",
       "self": "{author} has changed their devices"
     },
     "MEMBER_SUBSCRIPTION_UPDATE": {
-      "message": "{author} has changed {member}'s subscription to start on {started} instead of {previouslyStarted}"
+      "message": "{author} updated the subscription for {member} to start on {started} instead of {previouslyStarted}",
+      "self": "{author} updated their subscription to start on {started} instead of {previouslyStarted}"
     },
     "MEMBER_TICKET_UPDATE": {
-      "message": "{author} has changed {member}'s ticket count from {previousCount} to {count}"
+      "message": "{author} modified the number of tickets in an order, from previously {previousCount} to now {count} for {member}",
+      "self": "{author} modified the number of tickets in one of their orders, from previously {previousCount} to now {count}"
     },
     "UNLOCK_DECK_DOOR": {
-      "message": "{author} has unlocked the deck door"
+      "message": "{author} unlocked the deck door"
     }
   },
   "author": {

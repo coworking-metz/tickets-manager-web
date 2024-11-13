@@ -4,7 +4,6 @@
 
 <script setup lang="ts">
 import AuditEntryInline from './AuditEntryInline.vue';
-import AuditEntryMemberDevice from './AuditEntryMemberDevice.vue';
 import AuditEntryMemberSubscription from './AuditEntryMemberSubscription.vue';
 import AuditEntryMemberTicket from './AuditEntryMemberTicket.vue';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
@@ -23,8 +22,6 @@ const auditComponent = computed(() => {
       return AuditEntryMemberSubscription;
     case AuditAction.MEMBER_TICKET_UPDATE:
       return AuditEntryMemberTicket;
-    case AuditAction.MEMBER_DEVICE_UPDATE:
-      return AuditEntryMemberDevice;
     default:
       return AuditEntryInline;
   }

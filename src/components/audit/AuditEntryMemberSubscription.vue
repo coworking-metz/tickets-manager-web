@@ -1,7 +1,14 @@
 <template>
   <AuditEntryInline :event="event">
     <template #message>
-      <i18n-t :keypath="`audit.action.${event.action}.message`" scope="global" tag="p">
+      <i18n-t
+        :keypath="
+          event.author?._id === event.context.member._id
+            ? `audit.action.${event.action}.self`
+            : `audit.action.${event.action}.message`
+        "
+        scope="global"
+        tag="p">
         <template #author>
           <RouterLink
             v-if="event.author && $route.params.id !== event.author._id"
@@ -16,6 +23,7 @@
             {{ event.author?.name || $t('audit.author.unknown') }}
           </span>
         </template>
+
         <template #member>
           <RouterLink
             v-if="$route.params.id !== event.context.member._id"

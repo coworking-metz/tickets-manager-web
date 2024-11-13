@@ -138,57 +138,51 @@
 
       <hr class="mt-6 border-gray-200" />
 
-      <ul class="flex flex-col py-2">
-        <SwitchGroup as="li" class="flex items-center justify-between py-2">
-          <div class="flex flex-col">
-            <SwitchLabel as="p" class="font-medium text-gray-900 sm:text-sm" passive>
-              {{ $t('members.detail.profile.features.manager.label') }}
-            </SwitchLabel>
-            <SwitchDescription class="text-sm text-gray-500">
-              {{ $t('members.detail.profile.features.manager.description') }}
-            </SwitchDescription>
-          </div>
-          <Switch
-            v-model="state.isManager"
-            :class="[
-              'cursor-not-allowed opacity-70',
-              state.isManager ? 'bg-teal-500' : 'bg-gray-200',
-              'relative ml-4 inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
-            ]"
-            disabled>
-            <span
-              aria-hidden="true"
-              :class="[
-                state.isManager ? 'translate-x-5' : 'translate-x-0',
-                'inline-block size-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-              ]" />
-          </Switch>
-        </SwitchGroup>
-        <SwitchGroup as="li" class="flex items-center justify-between py-2">
-          <div class="flex flex-col">
-            <SwitchLabel as="p" class="font-medium text-gray-900 sm:text-sm" passive>
-              {{ $t('members.detail.profile.features.parking.label') }}
-            </SwitchLabel>
-            <SwitchDescription class="text-sm text-gray-500">
-              {{ $t('members.detail.profile.features.parking.description') }}
-            </SwitchDescription>
-          </div>
-          <Switch
-            v-model="state.hasParkingAccess"
-            :class="[
-              'cursor-not-allowed opacity-70',
-              state.hasParkingAccess ? 'bg-teal-500' : 'bg-gray-200',
-              'relative ml-4 inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2',
-            ]"
-            disabled>
-            <span
-              aria-hidden="true"
-              :class="[
-                state.hasParkingAccess ? 'translate-x-5' : 'translate-x-0',
-                'inline-block size-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-              ]" />
-          </Switch>
-        </SwitchGroup>
+      <ul class="mb-2 mt-6 flex flex-col gap-4">
+        <AppSwitchField
+          as="li"
+          :description="$t('members.detail.profile.capacities.manager.description')"
+          disabled
+          :label="$t('members.detail.profile.capacities.manager.label')"
+          :model-value="member.isAdmin" />
+        <AppSwitchField
+          v-model="state.canUnlockGate"
+          as="li"
+          :description="$t('members.detail.profile.capacities.unlockGate.description')"
+          :label="$t('members.detail.profile.capacities.unlockGate.label')"
+          :loading="isFetchingCapabilites" />
+        <AppSwitchField
+          v-model="state.hasParkingAccess"
+          as="li"
+          :description="$t('members.detail.profile.capacities.parkingAccess.description')"
+          :label="$t('members.detail.profile.capacities.parkingAccess.label')"
+          :loading="isFetchingCapabilites" />
+        <AppSwitchField
+          v-model="state.canUnlockDeckDoor"
+          as="li"
+          :description="$t('members.detail.profile.capacities.unlockDeckDoor.description')"
+          :label="$t('members.detail.profile.capacities.unlockDeckDoor.label')"
+          :loading="isFetchingCapabilites" />
+        <AppSwitchField
+          v-model="state.hasKeysAccess"
+          as="li"
+          :description="$t('members.detail.profile.capacities.keysAccess.description')"
+          :label="$t('members.detail.profile.capacities.keysAccess.label')"
+          :loading="isFetchingCapabilites" />
+        <AppAlert
+          v-if="capabilitiesError"
+          :description="capabilitiesError.message"
+          :title="$t('members.detail.profile.capacities.onFetch.fail')"
+          type="error">
+          <template #action>
+            <AppButton
+              class="self-start border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
+              :loading="isFetchingCapabilites"
+              @click="refetchCapabilities">
+              {{ $t('action.retry') }}
+            </AppButton>
+          </template>
+        </AppAlert>
       </ul>
     </div>
     <div class="flex flex-row border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
@@ -204,13 +198,21 @@
 </template>
 
 <script setup lang="ts">
+import AppAlert from '@/components/form/AppAlert.vue';
 import AppButton from '@/components/form/AppButton.vue';
+import AppSwitchField from '@/components/form/AppSwitchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { Device, Member, updateMemberMacAddresses } from '@/services/api/members';
+import { UserCapabilities } from '@/services/api/auth';
+import {
+  Device,
+  Member,
+  getMemberCapabilities,
+  updateMemberCapabilities,
+  updateMemberMacAddresses,
+} from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import {
   mdiCakeVariantOutline,
   mdiCheckAll,
@@ -219,6 +221,7 @@ import {
   mdiOpenInNew,
   mdiPlus,
 } from '@mdi/js';
+import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, macAddress, required } from '@vuelidate/validators';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
@@ -232,6 +235,7 @@ const props = defineProps({
   },
 });
 
+const queryClient = useQueryClient();
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
@@ -240,9 +244,23 @@ const state = reactive({
   email: null as string | null,
   birthdate: null as string | null,
   devices: [] as Device[],
-  isManager: false as boolean,
+  canUnlockGate: false as boolean,
   hasParkingAccess: false as boolean,
+  canUnlockDeckDoor: false as boolean,
+  hasKeysAccess: false as boolean,
   isSubmitting: false as boolean,
+});
+
+const {
+  isFetching: isFetchingCapabilites,
+  data: capabilities,
+  error: capabilitiesError,
+  refetch: refetchCapabilities,
+} = useQuery({
+  queryKey: ['members', computed(() => props.member._id), 'capabilities'],
+  queryFn: ({ queryKey: [_, memberId] }) => getMemberCapabilities(memberId),
+  retry: false,
+  refetchOnWindowFocus: false,
 });
 
 const rules = computed(() => ({
@@ -296,17 +314,26 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  // updateMember(props.member.id, {
-  //   firstName: state.firstname,
-  //   lastName: state.lastname,
-  //   email: state.email,
-  //   birthdate: state.birthdate,
-  //   macAddresses: state.devices.map(({ macAddress }) => macAddress),
-  // } as Member)
-  updateMemberMacAddresses(
-    props.member._id,
-    state.devices.map(({ macAddress }) => macAddress),
-  )
+  (async () => {
+    // await updateMember(props.member.id, {
+    //   firstName: state.firstname,
+    //   lastName: state.lastname,
+    //   email: state.email,
+    //   birthdate: state.birthdate,
+    //   macAddresses: state.devices.map(({ macAddress }) => macAddress),
+    // } as Member)
+    await updateMemberCapabilities(props.member._id, {
+      [UserCapabilities.UNLOCK_GATE]: state.canUnlockGate,
+      [UserCapabilities.PARKING_ACCESS]: state.hasParkingAccess,
+      [UserCapabilities.UNLOCK_DECK_DOOR]: state.canUnlockDeckDoor,
+      [UserCapabilities.KEYS_ACCESS]: state.hasKeysAccess,
+    });
+
+    await updateMemberMacAddresses(
+      props.member._id,
+      state.devices.map(({ macAddress }) => macAddress),
+    );
+  })()
     .then(() => {
       // emit('update:member', updatedMember);
       notificationsStore.addNotification({
@@ -315,6 +342,9 @@ const onSubmit = async () => {
         }),
         type: 'success',
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.member._id), 'history'],
       });
     })
     .catch(handleSilentError)
@@ -343,6 +373,17 @@ watch(
       state.devices =
         member.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
     }
+  },
+  { immediate: true },
+);
+
+watch(
+  capabilities,
+  (memberCapabilities) => {
+    state.canUnlockGate = memberCapabilities?.[UserCapabilities.UNLOCK_GATE] ?? false;
+    state.hasParkingAccess = memberCapabilities?.[UserCapabilities.PARKING_ACCESS] ?? false;
+    state.canUnlockDeckDoor = memberCapabilities?.[UserCapabilities.UNLOCK_DECK_DOOR] ?? false;
+    state.hasKeysAccess = memberCapabilities?.[UserCapabilities.KEYS_ACCESS] ?? false;
   },
   { immediate: true },
 );

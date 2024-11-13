@@ -1,4 +1,5 @@
 import { AuditEvent } from './audit';
+import { UserCapabilities } from './auth';
 import HTTP from '../http';
 import dayjs from 'dayjs';
 
@@ -27,6 +28,7 @@ export interface MemberListItem {
   firstName?: string;
   lastName?: string;
   email?: string;
+  isAdmin?: boolean;
   birthDate?: string;
   created: string;
   lastSeen?: string;
@@ -114,4 +116,19 @@ export const buildMemberWordpressOrdersUrl = (wordpressUserId: number) => {
 
 export const getMemberAuditEvents = (id: string): Promise<AuditEvent[]> => {
   return HTTP.get(`/api/members/${id}/audit`).then(({ data }) => data);
+};
+
+export type MemberCapabilities = {
+  [capability in UserCapabilities]: boolean;
+};
+
+export const getMemberCapabilities = (id: string): Promise<MemberCapabilities> => {
+  return HTTP.get(`/api/members/${id}/capabilities`).then(({ data }) => data);
+};
+
+export const updateMemberCapabilities = (
+  id: string,
+  capabilities: MemberCapabilities,
+): Promise<MemberCapabilities> => {
+  return HTTP.put(`/api/members/${id}/capabilities`, capabilities).then(({ data }) => data);
 };

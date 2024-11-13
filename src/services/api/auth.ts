@@ -1,5 +1,13 @@
 import { version as appVersion } from '../../../package.json';
 import axios from 'axios';
+
+export enum UserCapabilities {
+  UNLOCK_GATE = 'UNLOCK_GATE',
+  PARKING_ACCESS = 'PARKING_ACCESS',
+  UNLOCK_DECK_DOOR = 'UNLOCK_DECK_DOOR',
+  KEYS_ACCESS = 'KEYS_ACCESS',
+}
+
 export interface User {
   id: string;
   name: string;
@@ -9,6 +17,7 @@ export interface User {
   wpUserId?: number;
   iat: number;
   exp: number;
+  capabilities: UserCapabilities[];
 }
 
 export const refreshTokens = (

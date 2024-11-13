@@ -36,7 +36,7 @@
           :email="authStore.user?.email"
           :name="authStore.user?.name"
           :thumbnail="authStore.user?.picture" />
-        <span class="mt-2 whitespace-nowrap text-center">{{ authStore.user?.name }}</span>
+        <span class="mt-2 text-center">{{ authStore.user?.name }}</span>
       </router-link>
     </nav>
   </aside>
