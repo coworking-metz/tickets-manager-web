@@ -154,6 +154,7 @@ import {
   mdiTicket,
 } from '@mdi/js';
 import dayjs from 'dayjs';
+import { isEmpty } from 'lodash';
 import { PropType, computed } from 'vue';
 
 const props = defineProps({
@@ -173,7 +174,7 @@ const props = defineProps({
 
 const essentialContext = computed(() => {
   const { memberId, member, ...rest } = props.event.context || {};
-  return rest;
+  return !isEmpty(rest) ? rest : null;
 });
 
 const icon = computed(() => {
