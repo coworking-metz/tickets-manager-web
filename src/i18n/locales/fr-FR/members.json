@@ -135,7 +135,8 @@
       },
       "location": {
         "poulailler": "{' '}au Poulailler",
-        "pti-poulailler": "{' '}au P'ti Poulailler"
+        "pti-poulailler": "{' '}au P'ti Poulailler",
+        "racine": "{' '}dans la racine"
       },
       "macAddresses": {
         "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
