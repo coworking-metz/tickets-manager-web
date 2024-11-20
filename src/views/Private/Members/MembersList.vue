@@ -314,8 +314,8 @@ const {
 } = useQuery({
   queryKey: ['members'],
   queryFn: () => getAllMembers(),
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
+  refetchOnMount: true,
+  refetchOnWindowFocus: true,
   retry: false,
 });
 
