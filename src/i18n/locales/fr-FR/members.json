@@ -97,7 +97,8 @@
       "birthdate": {
         "label": "Date de naissance"
       },
-      "capacities": {
+      "capabilities": {
+        "apply": "Modifier les capacités",
         "keysAccess": {
           "description": "Récupère le code des boîtes à clés dans l'application mobile pour accéder aux espaces de travail en toute autonomie.",
           "label": "Accès à la boîte à clés"
@@ -108,6 +109,10 @@
         },
         "onFetch": {
           "fail": "Impossible de récupérer les capacités"
+        },
+        "onUpdate": {
+          "fail": "Impossible de mettre à jour les capacités de {name}",
+          "success": "Capacités de {name} mis à jour"
         },
         "parkingAccess": {
           "description": "Ouvrir la barrière du parking.",
@@ -140,12 +145,17 @@
       },
       "macAddresses": {
         "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
+        "apply": "Modifier les appareils",
         "check": "Vérifier",
         "description": {
           "link": "adresse MAC",
           "text": "Permet de connaître la présence au travers d'une {link}"
         },
         "label": "Appareil | Appareil | Appareils",
+        "onUpdate": {
+          "fail": "Impossible de mettre à jour les appareils de {name}",
+          "success": "Appareils de {name} mis à jour"
+        },
         "remove": "Retirer"
       },
       "onUpdate": {

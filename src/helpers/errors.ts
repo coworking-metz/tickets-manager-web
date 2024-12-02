@@ -1,3 +1,4 @@
+import { ErrorObject } from '@vuelidate/core';
 import { AxiosError } from 'axios';
 import { isNil } from 'lodash';
 
@@ -75,3 +76,19 @@ export const scrollToFirstError = () => {
     });
   }
 };
+
+/**
+ * Retrieve the count of error fields in Vuelidate
+ * @param errors
+ * @returns number
+ */
+export const getVuelidateErrorFieldsCount = (errors: ErrorObject[]): number =>
+  Object.keys(
+    errors.reduce(
+      (groups, error) => ({
+        ...groups,
+        [error.$property]: [...((groups as never)[error.$property] || []), error],
+      }),
+      {},
+    ),
+  ).length;

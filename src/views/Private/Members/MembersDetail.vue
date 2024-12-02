@@ -252,8 +252,10 @@
         class="mt-16 px-3 sm:px-0"
         :description="$t('members.detail.profile.description')"
         :title="$t('members.detail.profile.title')">
-        <ProfilePanel :member="member" @update:member="refetchMember" />
-        <WordpressPanel class="mt-3" :member="member" @update:member="refetchMember" />
+        <MemberProfilePanel :member="member" />
+        <MemberDevicesPanel class="mt-3" :member="member" />
+        <MemberCapabilitesPanel class="mt-3" :member="member" />
+        <MemberWordpressPanel class="mt-3" :member="member" />
 
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
@@ -430,12 +432,14 @@
 
 <script setup lang="ts">
 import ActivityGraph from './Detail/Activity/ActivityGraph.vue';
+import MemberCapabilitesPanel from './Detail/MemberCapabilitesPanel.vue';
+import MemberDevicesPanel from './Detail/MemberDevicesPanel.vue';
 import MemberHistoryPanel from './Detail/MemberHistoryPanel.vue';
-import ProfilePanel from './Detail/ProfilePanel.vue';
+import MemberProfilePanel from './Detail/MemberProfilePanel.vue';
+import MemberWordpressPanel from './Detail/MemberWordpressPanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
-import WordpressPanel from './Detail/WordpressPanel.vue';
 import MembersThumbnail from './MembersThumbnail.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
@@ -498,7 +502,6 @@ const {
   isFetching: isFetchingMember,
   data: member,
   error: memberError,
-  refetch: refetchMember,
 } = useQuery({
   queryKey: ['members', computed(() => props.id)],
   queryFn: ({ queryKey: [_, memberId] }) => getMember(memberId),

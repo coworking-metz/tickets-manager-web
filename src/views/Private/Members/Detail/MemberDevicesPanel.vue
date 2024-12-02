@@ -1,58 +1,6 @@
 <template>
   <form class="shadow sm:overflow-hidden sm:rounded-md" @submit.prevent="onSubmit">
     <div class="flex flex-col items-stretch bg-white px-4 py-5 sm:p-6">
-      <div class="flex flex-row flex-wrap gap-x-6">
-        <AppTextField
-          id="first-name"
-          v-model="state.firstname"
-          autocomplete="given-name"
-          class="min-w-48 shrink grow basis-0"
-          disabled
-          :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
-          :label="$t('members.detail.profile.firstname.label')"
-          name="first-name"
-          required
-          type="text"
-          @blur="vuelidate.firstname.$touch()" />
-        <AppTextField
-          id="last-name"
-          v-model="state.lastname"
-          autocomplete="family-name"
-          class="min-w-48 shrink grow basis-0"
-          disabled
-          :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
-          :label="$t('members.detail.profile.lastname.label')"
-          name="last-name"
-          required
-          type="text"
-          @blur="vuelidate.lastname.$touch()" />
-      </div>
-
-      <div class="flex flex-row flex-wrap gap-x-6">
-        <AppTextField
-          id="email"
-          v-model="state.email"
-          autocomplete="email"
-          class="min-w-48 shrink grow basis-0"
-          disabled
-          :errors="vuelidate.email.$errors.map(({ $message }) => $message as string)"
-          :label="$t('members.detail.profile.email.label')"
-          name="email"
-          required
-          type="email"
-          @blur="vuelidate.email.$touch()" />
-        <AppTextField
-          id="birthdate"
-          v-model="state.birthdate"
-          autocomplete="bday"
-          class="min-w-48 shrink grow basis-0"
-          disabled
-          :label="$t('members.detail.profile.birthdate.label')"
-          name="birthdate"
-          :prepend-icon="mdiCakeVariantOutline"
-          type="date" />
-      </div>
-
       <fieldset class="flex flex-col">
         <legend class="block font-medium text-gray-900 sm:text-sm">
           {{ $t('members.detail.profile.macAddresses.label', { count: state.devices.length }) }}
@@ -90,7 +38,6 @@
               placeholder="A0:B1:C2:D3:E4:F5"
               :prepend-icon="mdiLaptop"
               required
-              @blur="vuelidate.email.$touch()"
               @update:model-value="(value: string) => onMacAddressInput(index, value)">
               <template #append>
                 <a
@@ -135,64 +82,26 @@
           </li>
         </ul>
       </fieldset>
-
-      <hr class="mt-6 border-gray-200" />
-
-      <ul class="mb-2 mt-6 flex flex-col gap-4">
-        <AppSwitchField
-          as="li"
-          :description="$t('members.detail.profile.capacities.manager.description')"
-          disabled
-          :label="$t('members.detail.profile.capacities.manager.label')"
-          :model-value="member.isAdmin" />
-        <AppSwitchField
-          v-model="state.canUnlockGate"
-          as="li"
-          :description="$t('members.detail.profile.capacities.unlockGate.description')"
-          :label="$t('members.detail.profile.capacities.unlockGate.label')"
-          :loading="isFetchingCapabilites" />
-        <AppSwitchField
-          v-model="state.hasParkingAccess"
-          as="li"
-          :description="$t('members.detail.profile.capacities.parkingAccess.description')"
-          :label="$t('members.detail.profile.capacities.parkingAccess.label')"
-          :loading="isFetchingCapabilites" />
-        <AppSwitchField
-          v-model="state.canUnlockDeckDoor"
-          as="li"
-          :description="$t('members.detail.profile.capacities.unlockDeckDoor.description')"
-          :label="$t('members.detail.profile.capacities.unlockDeckDoor.label')"
-          :loading="isFetchingCapabilites" />
-        <AppSwitchField
-          v-model="state.hasKeysAccess"
-          as="li"
-          :description="$t('members.detail.profile.capacities.keysAccess.description')"
-          :label="$t('members.detail.profile.capacities.keysAccess.label')"
-          :loading="isFetchingCapabilites" />
-        <AppAlert
-          v-if="capabilitiesError"
-          :description="capabilitiesError.message"
-          :title="$t('members.detail.profile.capacities.onFetch.fail')"
-          type="error">
-          <template #action>
-            <AppButton
-              class="self-start border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
-              :loading="isFetchingCapabilites"
-              @click="refetchCapabilities">
-              {{ $t('action.retry') }}
-            </AppButton>
-          </template>
-        </AppAlert>
-      </ul>
     </div>
-    <div class="flex flex-row border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+
+    <div
+      class="flex flex-row flex-wrap gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
       <AppButton
         class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
         :icon="mdiCheckAll"
         :loading="state.isSubmitting"
         type="submit">
-        {{ $t('action.apply') }}
+        {{ $t('members.detail.profile.macAddresses.apply') }}
       </AppButton>
+      <AppAlert
+        v-if="state.hasFailValidationOnce"
+        class="truncate"
+        :title="
+          $t('validations.invalidFields', {
+            count: getVuelidateErrorFieldsCount(vuelidate.$errors),
+          })
+        "
+        :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
     </div>
   </form>
 </template>
@@ -200,34 +109,21 @@
 <script setup lang="ts">
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButton from '@/components/form/AppButton.vue';
-import AppSwitchField from '@/components/form/AppSwitchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
-import { withAppI18nMessage } from '@/i18n';
-import { UserCapabilities } from '@/services/api/auth';
 import {
-  Device,
-  Member,
-  getMemberCapabilities,
-  updateMemberCapabilities,
-  updateMemberMacAddresses,
-} from '@/services/api/members';
+  getVuelidateErrorFieldsCount,
+  handleSilentError,
+  scrollToFirstError,
+} from '@/helpers/errors';
+import { Device, Member, updateMemberMacAddresses } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import {
-  mdiCakeVariantOutline,
-  mdiCheckAll,
-  mdiClose,
-  mdiLaptop,
-  mdiOpenInNew,
-  mdiPlus,
-} from '@mdi/js';
-import { useQuery, useQueryClient } from '@tanstack/vue-query';
+import { mdiCheckAll, mdiClose, mdiLaptop, mdiOpenInNew, mdiPlus } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
-import { email, helpers, macAddress, required } from '@vuelidate/validators';
+import { helpers, macAddress, required } from '@vuelidate/validators';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits(['update:member']);
 const props = defineProps({
   member: {
     type: Object as PropType<Member>,
@@ -239,41 +135,13 @@ const queryClient = useQueryClient();
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
-  firstname: null as string | null,
-  lastname: null as string | null,
-  email: null as string | null,
-  birthdate: null as string | null,
   devices: [] as Device[],
-  canUnlockGate: false as boolean,
-  hasParkingAccess: false as boolean,
-  canUnlockDeckDoor: false as boolean,
-  hasKeysAccess: false as boolean,
-  isSubmitting: false as boolean,
-});
 
-const {
-  isFetching: isFetchingCapabilites,
-  data: capabilities,
-  error: capabilitiesError,
-  refetch: refetchCapabilities,
-} = useQuery({
-  queryKey: ['members', computed(() => props.member._id), 'capabilities'],
-  queryFn: ({ queryKey: [_, memberId] }) => getMemberCapabilities(memberId),
-  retry: false,
-  refetchOnWindowFocus: false,
+  isSubmitting: false as boolean,
+  hasFailValidationOnce: false as boolean,
 });
 
 const rules = computed(() => ({
-  firstname: {
-    // required: withAppI18nMessage(required)
-  },
-  lastname: {
-    // required: withAppI18nMessage(required)
-  },
-  email: {
-    required: withAppI18nMessage(required),
-    email: withAppI18nMessage(email),
-  },
   devices: {
     $each: helpers.forEach({
       macAddress: {
@@ -309,35 +177,21 @@ const onMacAddressInput = (deviceIndex: number, userInput: string) => {
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
   if (!isValid) {
+    state.hasFailValidationOnce = true;
     nextTick(scrollToFirstError);
     return;
   }
 
   state.isSubmitting = true;
   (async () => {
-    // await updateMember(props.member.id, {
-    //   firstName: state.firstname,
-    //   lastName: state.lastname,
-    //   email: state.email,
-    //   birthdate: state.birthdate,
-    //   macAddresses: state.devices.map(({ macAddress }) => macAddress),
-    // } as Member)
-    await updateMemberCapabilities(props.member._id, {
-      [UserCapabilities.UNLOCK_GATE]: state.canUnlockGate,
-      [UserCapabilities.PARKING_ACCESS]: state.hasParkingAccess,
-      [UserCapabilities.UNLOCK_DECK_DOOR]: state.canUnlockDeckDoor,
-      [UserCapabilities.KEYS_ACCESS]: state.hasKeysAccess,
-    });
-
     await updateMemberMacAddresses(
       props.member._id,
       state.devices.map(({ macAddress }) => macAddress),
     );
   })()
     .then(() => {
-      // emit('update:member', updatedMember);
       notificationsStore.addNotification({
-        message: i18n.t('members.detail.profile.onUpdate.success', {
+        message: i18n.t('members.detail.profile.macAddresses.onUpdate.success', {
           name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
         }),
         type: 'success',
@@ -351,7 +205,7 @@ const onSubmit = async () => {
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('members.detail.profile.onUpdate.fail', {
+        i18n.t('members.detail.profile.macAddresses.onUpdate.fail', {
           name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
         }),
       );
@@ -366,24 +220,9 @@ watch(
   () => props.member,
   (member) => {
     if (member) {
-      state.firstname = member.firstName || null;
-      state.lastname = member.lastName || null;
-      state.email = member.email || null;
-      state.birthdate = member.birthDate || null;
       state.devices =
         member.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
     }
-  },
-  { immediate: true },
-);
-
-watch(
-  capabilities,
-  (memberCapabilities) => {
-    state.canUnlockGate = memberCapabilities?.[UserCapabilities.UNLOCK_GATE] ?? false;
-    state.hasParkingAccess = memberCapabilities?.[UserCapabilities.PARKING_ACCESS] ?? false;
-    state.canUnlockDeckDoor = memberCapabilities?.[UserCapabilities.UNLOCK_DECK_DOOR] ?? false;
-    state.hasKeysAccess = memberCapabilities?.[UserCapabilities.KEYS_ACCESS] ?? false;
   },
   { immediate: true },
 );

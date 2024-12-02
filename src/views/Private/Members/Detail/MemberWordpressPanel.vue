@@ -34,11 +34,11 @@ import AppButton from '@/components/form/AppButton.vue';
 import { Member, buildMemberWordpressProfileUrl, syncMember } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiOpenInNew } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { isNil } from 'lodash';
-import { PropType, reactive } from 'vue';
+import { PropType, computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits(['update:member']);
 const props = defineProps({
   member: {
     type: Object as PropType<Member>,
@@ -46,6 +46,7 @@ const props = defineProps({
   },
 });
 
+const queryClient = useQueryClient();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -55,14 +56,16 @@ const state = reactive({
 const onSync = () => {
   state.isSyncing = true;
   syncMember(props.member._id)
-    .then((member) => {
-      emit('update:member', member);
+    .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.wordpress.onSync.success', {
           name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.member._id), 'history'],
       });
     })
     .catch((error) => {

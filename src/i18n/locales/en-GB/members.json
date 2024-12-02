@@ -97,7 +97,8 @@
       "birthdate": {
         "label": "Birthdate"
       },
-      "capacities": {
+      "capabilities": {
+        "apply": "Change capabilities",
         "keysAccess": {
           "description": "Retrieve the code for key boxes in the mobile app to access workspaces independently.",
           "label": "Key Box Access"
@@ -107,7 +108,11 @@
           "label": "Administrator"
         },
         "onFetch": {
-          "fail": "Unable to fetch member's capacities"
+          "fail": "Unable to fetch member's capabilities"
+        },
+        "onUpdate": {
+          "fail": "Unable to update {name} capabilities",
+          "success": "{name} capabilities updated"
         },
         "parkingAccess": {
           "description": "Open the parking barrier.",
@@ -140,12 +145,17 @@
       },
       "macAddresses": {
         "add": "Specify a device | Add another device | Add other devices",
+        "apply": "Change devices",
         "check": "Check",
         "description": {
           "link": "MAC address",
           "text": "Allows knowing the presence through a {link}"
         },
         "label": "Device | Device | Devices",
+        "onUpdate": {
+          "fail": "Unable to update devices of {name}",
+          "success": "Devices of {name} updated"
+        },
         "remove": "Remove"
       },
       "onUpdate": {

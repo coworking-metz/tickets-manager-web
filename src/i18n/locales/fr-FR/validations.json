@@ -1,6 +1,7 @@
 {
   "decimal": "Ça ne ressemble pas à un nombre décimal",
   "email": "Ça ne ressemble pas à un email",
+  "invalidFields": "Tout est bon 👍 | Une information est incorrecte | {count} informations sont incorrectes",
   "macAddress": "Ça ne ressemble pas à une addresse MAC",
   "minValue": "Au minimum {min}",
   "numeric": "Ça ne ressemble pas à un nombre entier",
