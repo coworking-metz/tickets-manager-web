@@ -19,8 +19,14 @@
       "message": "{author} modified the number of tickets in an order, from previously {previousCount} to now {count} for {member}",
       "self": "{author} modified the number of tickets in one of their orders, from previously {previousCount} to now {count}"
     },
+    "PARKING_ACCESS": {
+      "message": "{author} has opened the parking barrier"
+    },
     "UNLOCK_DECK_DOOR": {
       "message": "{author} unlocked the deck door"
+    },
+    "UNLOCK_GATE": {
+      "message": "{author} unlock pedestrian gate"
     }
   },
   "author": {

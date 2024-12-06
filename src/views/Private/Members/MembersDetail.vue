@@ -530,7 +530,6 @@ watch(
         error,
         i18n.t('members.detail.attendance.onFetch.fail'),
       );
-      // TODO: should report to Sentry
     }
   },
 );
@@ -551,8 +550,10 @@ watch(
   () => ticketsError.value,
   (error) => {
     if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(error, i18n.t('members.detail.tickets.onFetch.fail'));
-      // TODO: should report to Sentry
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.orders.tickets.onFetch.fail'),
+      );
     }
   },
 );
@@ -575,9 +576,8 @@ watch(
     if (error && !isSilentError(error)) {
       notificationsStore.addErrorNotification(
         error,
-        i18n.t('members.detail.subscriptions.onFetch.fail'),
+        i18n.t('members.detail.orders.subscriptions.onFetch.fail'),
       );
-      // TODO: should report to Sentry
     }
   },
 );

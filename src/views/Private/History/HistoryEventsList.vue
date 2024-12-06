@@ -251,7 +251,17 @@ const filteredList = computed(() => {
     .filter((event) =>
       dayjs(event.occurred).isBetween(state.period.start, state.period.end, 'day', '[]'),
     )
-    .filter((event) => !state.search || searchIn(state.search, JSON.stringify(event)))
+    .filter(
+      (event) =>
+        !state.search ||
+        searchIn(
+          state.search,
+          event.author?._id === event.context?.member._id
+            ? i18n.t(`audit.action.${event.action}.self`)
+            : i18n.t(`audit.action.${event.action}.message`),
+          JSON.stringify(event),
+        ),
+    )
     .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
 });
 

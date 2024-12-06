@@ -11,15 +11,15 @@
         tag="p">
         <template #author>
           <RouterLink
-            v-if="event.author && $route.params.id !== event.author._id"
+            v-if="event.author?._id && $route.params.id !== event.author._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: event.author._id || event.author.wpUserId },
+              params: { id: event.author._id },
             }">
             {{ event.author.name }}
           </RouterLink>
-          <span v-else class="font-medium text-gray-900">
+          <span v-else class="font-medium text-gray-900" :title="event.author?.email">
             {{ event.author?.name || $t('audit.author.unknown') }}
           </span>
         </template>
