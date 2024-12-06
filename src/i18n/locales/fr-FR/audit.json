@@ -19,8 +19,14 @@
       "message": "{author} a modifié le nombre de tickets d'une commande, de précédemment {previousCount} à désormais {count} pour {member}",
       "self": "{author} a modifié le nombre de tickets d'une de ses commandes, de précédemment {previousCount} à désormais {count}"
     },
+    "PARKING_ACCESS": {
+      "message": "{author} a ouvert la barrière pour accéder au parking"
+    },
     "UNLOCK_DECK_DOOR": {
       "message": "{author} a déverrouillé la porte de la terrasse"
+    },
+    "UNLOCK_GATE": {
+      "message": "{author} a déverrouillé le portail piéton"
     }
   },
   "author": {

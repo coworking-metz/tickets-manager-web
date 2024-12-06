@@ -464,7 +464,6 @@ watch(
   (error) => {
     if (error && !isSilentError(error)) {
       notificationsStore.addErrorNotification(error, i18n.t('members.list.onFetch.fail'));
-      // TODO: should report to Sentry
     }
   },
 );
@@ -477,7 +476,6 @@ watch(
         error,
         i18n.t('members.list.onFetchVotingMembers.fail'),
       );
-      // TODO: should report to Sentry
     }
   },
 );
