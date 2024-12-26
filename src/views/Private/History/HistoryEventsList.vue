@@ -143,6 +143,9 @@
         <EmptyState
           v-else-if="!slicedList.length"
           class="m-auto py-6"
+          :description="
+            state.search ? $t('audit.list.empty.description', { search: state.search }) : ''
+          "
           :title="$t('audit.list.empty.title')" />
         <li v-else v-for="(event, eventIndex) in slicedList" :key="`event-${event._id}`">
           <AuditEntry
@@ -228,10 +231,14 @@ const props = defineProps({
 const { width } = useWindowSize();
 const router = useRouter();
 const i18n = useI18n();
+const now = dayjs();
 const state = reactive({
   search: null as string | null,
   slice: Number(props.slice) as number,
-  period: { start: '' as string, end: '' as string },
+  period: {
+    start: now.subtract(7, 'days').format(DATE_FORMAT) as string,
+    end: now.format(DATE_FORMAT) as string,
+  },
 });
 
 const {
@@ -240,11 +247,13 @@ const {
   isFetching: isFetchingHistory,
   data: history,
   error: historyError,
-} = useQuery({
-  queryKey: ['history'],
-  queryFn: () => getAllAuditEvents(),
-  retry: false,
-});
+} = useQuery(
+  computed(() => ({
+    queryKey: ['history', state.period.start, state.period.end],
+    queryFn: () => getAllAuditEvents(state.period.start, state.period.end),
+    retry: false,
+  })),
+);
 
 const filteredList = computed(() => {
   return (history.value || [])
@@ -362,7 +371,7 @@ const shortcuts = computed(() => () => [
     label: i18n.t('audit.list.period.shortcuts.today'),
     atClick: () => {
       const now = dayjs();
-      return [now.startOf('day').format(DATE_FORMAT), now.endOf('day').format(DATE_FORMAT)];
+      return [now.startOf('day').format(DATE_FORMAT), now.add(1, 'day').format(DATE_FORMAT)];
     },
   },
   {
@@ -370,6 +379,13 @@ const shortcuts = computed(() => () => [
     atClick: () => {
       const now = dayjs();
       return [now.startOf('week').format(DATE_FORMAT), now.endOf('week').format(DATE_FORMAT)];
+    },
+  },
+  {
+    label: i18n.t('audit.list.period.shortcuts.last7days'),
+    atClick: () => {
+      const now = dayjs();
+      return [now.subtract(7, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
@@ -381,11 +397,7 @@ const shortcuts = computed(() => () => [
   },
   {
     label: i18n.t('audit.list.period.shortcuts.sinceFirstDay'),
-    atClick: () => {
-      const now = dayjs();
-      const [oldest] = (history.value || []).map(({ occurred }) => occurred).sort();
-      return [dayjs(oldest || '01-01-2014').format(DATE_FORMAT), now.format(DATE_FORMAT)];
-    },
+    atClick: () => [dayjs('01-01-2014').format(DATE_FORMAT)],
   },
 ]);
 </script>

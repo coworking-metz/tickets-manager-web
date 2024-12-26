@@ -35,6 +35,7 @@
   "list": {
     "description": "Tout ce qui se passe en détail.",
     "empty": {
+      "description": "Pour le terme « {search} ».\nEssayez de peaufiner vos critères.",
       "title": "Rien trouvé"
     },
     "head": {
@@ -48,6 +49,7 @@
       "shortcuts": {
         "currentWeek": "Cette semaine",
         "last30days": "30 derniers jours",
+        "last7days": "7 derniers jours",
         "sinceFirstDay": "Depuis toujours",
         "today": "Aujourd'hui"
       },

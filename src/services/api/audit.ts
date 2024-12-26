@@ -24,6 +24,11 @@ export interface AuditEvent {
   occurred: string;
 }
 
-export const getAllAuditEvents = (): Promise<AuditEvent[]> => {
-  return HTTP.get('/api/audit').then(({ data }) => data);
+export const getAllAuditEvents = (from?: string, to?: string): Promise<AuditEvent[]> => {
+  return HTTP.get('/api/audit', {
+    params: {
+      ...(from && { from }),
+      ...(to && { to }),
+    },
+  }).then(({ data }) => data);
 };

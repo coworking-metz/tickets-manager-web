@@ -35,6 +35,8 @@
   "list": {
     "description": "Everything that happens in detail.",
     "empty": {
+      "description": "For the term \"{search}\".\nTry to refine your criteria.",
+      "descriptionFr": "Pour le terme « {search} ».\nEssayez de peaufiner vos critères.",
       "title": "Nothing found"
     },
     "head": {
@@ -48,6 +50,7 @@
       "shortcuts": {
         "currentWeek": "This week",
         "last30days": "Last 30 days",
+        "last7days": "Last 7 days",
         "sinceFirstDay": "Since always",
         "today": "Today"
       },
