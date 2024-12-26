@@ -203,6 +203,9 @@ const onSubmit = async () => {
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId)],
+      });
+      queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.memberId), 'history'],
       });
       queryClient.invalidateQueries({

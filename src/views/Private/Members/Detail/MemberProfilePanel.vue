@@ -139,14 +139,12 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  (async () => {
-    await updateMember(props.member._id, {
-      firstName: state.firstname,
-      lastName: state.lastname,
-      email: state.email,
-      birthdate: state.birthdate,
-    } as never);
-  })()
+  updateMember(props.member._id, {
+    firstName: state.firstname,
+    lastName: state.lastname,
+    email: state.email,
+    birthdate: state.birthdate,
+  } as never)
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
@@ -154,6 +152,9 @@ const onSubmit = async () => {
         }),
         type: 'success',
         timeout: 3_000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.member._id)],
       });
       queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.member._id), 'history'],
