@@ -5,6 +5,7 @@
     </Head>
     <section class="flex min-h-[320px] grow flex-col">
       <StatsIncomesPeriodGraph
+        disabled
         :incomes="state.incomes"
         :loading="state.isFetchingIncomes"
         :options="options"
@@ -14,8 +15,7 @@
               amount: fractionAmount(value),
             })
         "
-        :waterfall="net"
-        @click="onBarSelect" />
+        :waterfall="net" />
     </section>
 
     <section class="mx-3 sm:mx-6">
@@ -124,9 +124,7 @@
 <script lang="ts" setup>
 import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
-import { DATE_FORMAT } from '@/helpers/dates';
 import { handleSilentError } from '@/helpers/errors';
-import { ROUTE_NAMES } from '@/router/names';
 import { IncomePeriodWithTotal, getIncomesPerWeek } from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
@@ -134,7 +132,6 @@ import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
@@ -156,7 +153,6 @@ const props = defineProps({
   },
 });
 
-const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -270,21 +266,6 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
     },
   },
 }));
-
-const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
-  const { date } = state.incomes[dataIndex];
-  const start = dayjs(date).startOf('week');
-  const end = dayjs(date).endOf('week');
-  const from = start.isBefore(props.from) ? props.from : start.format(DATE_FORMAT);
-  const to = end.isAfter(props.to) ? props.to : end.format(DATE_FORMAT);
-  router.push({
-    name: ROUTE_NAMES.STATS.INCOMES.DAILY,
-    query: {
-      from,
-      to,
-    },
-  });
-};
 
 const fetchIncomes = (from: string, to: string) => {
   state.isFetchingIncomes = true;

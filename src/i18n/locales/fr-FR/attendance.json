@@ -1,0 +1,54 @@
+{
+  "calendar": {
+    "tile": {
+      "attending": "Personne | {count} présent | {count} présents",
+      "debt": "Aucune dette | {count} surconsommé | {count} surconsommés"
+    }
+  },
+  "description": "Qui était là ? Qui a fait quoi ? Qui doit de la moula ?",
+  "detail": {
+    "activity": {
+      "value": {
+        "FULL": "1 journée complète",
+        "HALF": "1 demi-journée",
+        "NONE": "absent"
+      }
+    },
+    "attending": "Aucun présent | 1 seul présent | {count} présents",
+    "empty": {
+      "description": "Apparemment, personne ne s'est présenté ce jour-ci.",
+      "title": "Personne"
+    },
+    "search": {
+      "empty": {
+        "title": "Aucun résultat"
+      },
+      "label": "Rechercher un membre",
+      "placeholder": "@:attendance.detail.search.label"
+    },
+    "select": {
+      "description": "Pour visualiser les présences et autres informations d'un jour précis.",
+      "title": "Sélectionner une date"
+    },
+    "sort": {
+      "label": "Trier {suffix}",
+      "value": {
+        "activity": "Par activité",
+        "debt": "Par dette",
+        "name": "Par nom"
+      }
+    }
+  },
+  "head": {
+    "title": "@:attendance.title"
+  },
+  "navigation": {
+    "nextMonth": "Mois suivant",
+    "previousMonth": "Mois précédent",
+    "today": "Aujourd'hui"
+  },
+  "onFetch": {
+    "fail": "Impossible de récupérer les présences pour la période du {start} au {end}"
+  },
+  "title": "Présence"
+}

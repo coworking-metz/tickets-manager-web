@@ -4,6 +4,7 @@ import { flatMapDeep, isEqual } from 'lodash';
 const RAW_ROUTE_NAMES = {
   LOGIN: 'LOGIN',
   HISTORY: 'HISTORY',
+  ATTENDANCE: 'ATTENDANCE',
   STATS: {
     INDEX: 'STATS.INDEX',
     INCOMES: {

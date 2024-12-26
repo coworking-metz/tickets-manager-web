@@ -12,7 +12,7 @@
     ref="chart"
     class="size-full"
     :option="options"
-    @click="$emit('click')" />
+    @click="(event) => $emit('click', event)" />
 </template>
 
 <script lang="ts" setup>
@@ -66,6 +66,10 @@ const props = defineProps({
     type: Object as PropType<ComposeOption<GridComponentOption | TooltipComponentOption>>,
     default: null,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const chart = ref();
@@ -94,13 +98,14 @@ const options = computed<
     axisLabel: {
       formatter: (value: number) => fractionAmount(value),
       align: 'right',
+      clickable: true,
     },
   },
   series: [
     ...(props.waterfall
       ? [
           {
-            silent: true,
+            silent: props.disabled,
             name: 'transparent',
             data: props.incomes.map(({ data: { charges, incomes } }) => {
               return {
@@ -114,7 +119,7 @@ const options = computed<
             stack: 'net',
           },
           {
-            silent: true,
+            silent: props.disabled,
             name: 'net',
             data: props.incomes.map(({ data: { charges, incomes } }) => {
               return {
@@ -130,7 +135,7 @@ const options = computed<
         ]
       : [
           {
-            silent: true,
+            silent: props.disabled,
             name: 'subscriptions',
             data: props.incomes.map(({ data }) => ({
               value: data.subscriptions.amount,
@@ -140,9 +145,10 @@ const options = computed<
             })),
             type: 'bar',
             stack: 'incomes',
+            triggerLineEvent: true,
           },
           {
-            silent: true,
+            silent: props.disabled,
             name: 'tickets',
             data: props.incomes.map(({ data }) => ({
               value: data.tickets.amount,
@@ -152,9 +158,10 @@ const options = computed<
             })),
             type: 'bar',
             stack: 'incomes',
+            triggerLineEvent: true,
           },
           {
-            silent: true,
+            silent: props.disabled,
             name: 'debt',
             data: props.incomes.map(({ data }) => ({
               value: data.tickets.debt.amount,
@@ -164,6 +171,7 @@ const options = computed<
             })),
             type: 'bar',
             stack: 'incomes',
+            triggerLineEvent: true,
           },
         ]),
     {

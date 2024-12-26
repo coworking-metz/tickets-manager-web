@@ -67,7 +67,7 @@ If you are having problem during build, use [`patch-package`](https://github.com
 @@ -1,6 +1,14 @@
  {
    "name": "vue-echarts",
-   "version": "6.6.8",
+   "version": "6.7.3",
 +  "type": "module",
 +  "exports": {
 +    ".": {

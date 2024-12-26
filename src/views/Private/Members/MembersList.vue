@@ -124,29 +124,33 @@
     </div>
 
     <div class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
-      <ul
-        class="grow divide-y divide-gray-200 overflow-hidden border-t border-gray-200 bg-white shadow sm:rounded-md"
-        role="list">
-        <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
-          <li v-for="index in 10" :key="`loading-member-card-${index}`">
-            <MembersListCard loading />
+      <div
+        class="relative flex grow flex-col overflow-hidden border-t border-gray-200 bg-white shadow sm:rounded-md">
+        <LoadingProgressBar
+          v-if="isFetching || isFetchingVotingMembers"
+          class="absolute top-0 h-px w-full" />
+        <ul class="grow divide-y divide-gray-200" role="list">
+          <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
+            <li v-for="index in 10" :key="`loading-member-card-${index}`">
+              <MembersListCard loading />
+            </li>
+          </template>
+          <EmptyState
+            v-else-if="!slicedList.length"
+            class="m-auto pb-24 pt-6"
+            :title="$t('members.list.empty.title')" />
+          <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
+            <RouterLink
+              class="block hover:bg-gray-50"
+              :to="{
+                name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                params: { id: member._id },
+              }">
+              <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
+            </RouterLink>
           </li>
-        </template>
-        <EmptyState
-          v-else-if="!slicedList.length"
-          class="m-auto pb-24 pt-6"
-          :title="$t('members.list.empty.title')" />
-        <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
-          <RouterLink
-            class="block hover:bg-gray-50"
-            :to="{
-              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: member._id },
-            }">
-            <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
-          </RouterLink>
-        </li>
-      </ul>
+        </ul>
+      </div>
 
       <aside v-if="selectedTab?.key === 'nonCompliant'" class="flex flex-col">
         <dl class="flex flex-row flex-wrap gap-3 max-sm:px-3 md:sticky md:top-3 md:max-w-48">
@@ -217,6 +221,7 @@
 <script setup lang="ts">
 import MembersListCard from './MembersListCard.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { formatAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';

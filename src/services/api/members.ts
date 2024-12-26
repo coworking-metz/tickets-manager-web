@@ -4,7 +4,7 @@ import HTTP from '../http';
 import dayjs from 'dayjs';
 
 export type AttendanceType = 'subscription' | 'ticket';
-export type MemberLocation = 'poulailler' | 'pti-poulailler' | 'racine';
+export type MemberLocation = 'poulailler' | 'pti-poulailler' | 'racine' | 'cantina';
 
 export interface Attendance {
   date: string;
