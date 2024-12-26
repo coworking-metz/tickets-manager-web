@@ -47,7 +47,7 @@
           <slot name="message">
             <i18n-t
               :keypath="
-                event.author?._id === event.context?.member._id
+                event.author?._id && event.author._id === event.context?.member._id
                   ? `audit.action.${event.action}.self`
                   : `audit.action.${event.action}.message`
               "
