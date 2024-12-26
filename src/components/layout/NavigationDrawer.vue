@@ -48,7 +48,7 @@ import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
 import MembersThumbnail from '@/views/Private/Members/MembersThumbnail.vue';
-import { mdiAccountGroup, mdiFinance, mdiHistory } from '@mdi/js';
+import { mdiAccountGroup, mdiCalendarMultiselect, mdiFinance, mdiHistory } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw, useRoute } from 'vue-router';
@@ -87,6 +87,14 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     },
     icon: mdiHistory,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.HISTORY),
+  },
+  {
+    label: i18n.t('navigation.attendance'),
+    to: {
+      name: ROUTE_NAMES.ATTENDANCE,
+    },
+    icon: mdiCalendarMultiselect,
+    active: doesRouteBelongsTo(route, ROUTE_NAMES.ATTENDANCE),
   },
 ]);
 </script>

@@ -1,0 +1,54 @@
+{
+  "calendar": {
+    "tile": {
+      "attending": "No one | {count} attendee | {count} attendees",
+      "debt": "No debt | {count} overconsumed | {count} overconsumed"
+    }
+  },
+  "description": "Who was there? Who did what? Who owes money?",
+  "detail": {
+    "activity": {
+      "value": {
+        "FULL": "1 full day",
+        "HALF": "1 half-day",
+        "NONE": "absent"
+      }
+    },
+    "attending": "No attendees | 1 attendee | {count} attendees",
+    "empty": {
+      "description": "Apparently, no one showed up on this day.",
+      "title": "No one"
+    },
+    "search": {
+      "empty": {
+        "title": "No results"
+      },
+      "label": "Search for a member",
+      "placeholder": "@:attendance.detail.search.label"
+    },
+    "select": {
+      "description": "To view attendance and other details for a specific day.",
+      "title": "Select a date"
+    },
+    "sort": {
+      "label": "Sort {suffix}",
+      "value": {
+        "activity": "By activity",
+        "debt": "By debt",
+        "name": "By name"
+      }
+    }
+  },
+  "head": {
+    "title": "@:attendance.title"
+  },
+  "navigation": {
+    "nextMonth": "Next month",
+    "previousMonth": "Previous month",
+    "today": "Today"
+  },
+  "onFetch": {
+    "fail": "Unable to retrieve attendance for the period from {start} to {end}"
+  },
+  "title": "Attendance"
+}

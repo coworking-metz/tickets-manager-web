@@ -214,6 +214,17 @@ export const routes: RouteRecordRaw[] = [
         }),
       },
       {
+        path: 'attendance/:date?',
+        name: ROUTE_NAMES.ATTENDANCE,
+        component: () => import('@/views/Private/Attendance/AttendancePage.vue'),
+        props: (route) => ({
+          month: route.query.month,
+          date: route.params.date,
+          search: route.query.search,
+          sort: route.query.sort,
+        }),
+      },
+      {
         path: 'profile',
         name: ROUTE_NAMES.USER.PROFILE,
         component: () => import('@/views/Private/User/UserProfile.vue'),

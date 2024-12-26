@@ -1,0 +1,243 @@
+<template>
+  <article
+    class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 sm:px-6 lg:flex-row lg:px-8">
+    <Head>
+      <title>{{ $t('attendance.head.title') }}</title>
+    </Head>
+
+    <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 sm:pt-40">
+      <header class="flex flex-col items-start max-sm:px-3">
+        <h1
+          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+          {{ $t('attendance.title') }}
+        </h1>
+        <p class="mt-1 truncate text-base text-slate-500">{{ $t('attendance.description') }}</p>
+
+        <div class="my-4 flex w-full flex-row items-center justify-between">
+          <div class="flex h-10 items-stretch rounded-md shadow-sm md:items-stretch">
+            <RouterLink
+              class="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
+              :to="{
+                ...currentRoute,
+                query: {
+                  ...currentRoute.query,
+                  month: dayjs(state.selectedMonth).subtract(1, 'month').format('YYYY-MM'),
+                },
+              }">
+              <span class="sr-only">{{ $t('attendance.navigation.previousMonth') }}</span>
+              <SvgIcon
+                aria-hidden="true"
+                class="size-6 text-gray-400"
+                :path="mdiChevronLeft"
+                type="mdi" />
+            </RouterLink>
+            <time
+              class="flex flex-row items-center border-y border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 focus:relative"
+              :datetime="state.selectedMonth">
+              {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
+            </time>
+            <RouterLink
+              class="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
+              :to="{
+                ...currentRoute,
+                query: {
+                  ...currentRoute.query,
+                  month: dayjs(state.selectedMonth).add(1, 'month').format('YYYY-MM'),
+                },
+              }">
+              <span class="sr-only">{{ $t('attendance.navigation.nextMonth') }}</span>
+              <SvgIcon
+                aria-hidden="true"
+                class="size-6 text-gray-400"
+                :path="mdiChevronRight"
+                type="mdi" />
+            </RouterLink>
+          </div>
+
+          <RouterLink
+            class="h-10 rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            :to="{
+              params: {
+                ...currentRoute.params,
+                date: dayjs().format('YYYY-MM-DD'),
+              },
+              query: {
+                ...currentRoute.query,
+                month: dayjs().format('YYYY-MM'),
+              },
+            }">
+            {{ $t('attendance.navigation.today') }}
+          </RouterLink>
+        </div>
+      </header>
+
+      <div class="relative border border-gray-200">
+        <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-px w-full" />
+        <div
+          class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
+          <div v-for="weekIndex in 7" :key="`weekday-${weekIndex}`" class="bg-white py-2">
+            {{
+              dayjs(calendarPeriod.start)
+                .add(weekIndex - 1, 'day')
+                .format('ddd')
+            }}
+          </div>
+        </div>
+
+        <div class="flex text-xs leading-6 text-gray-700">
+          <div class="isolate grid w-full grid-cols-7 grid-rows-5 gap-px">
+            <RouterLink
+              v-for="day in calendar"
+              :key="day.date"
+              :to="{
+                params: {
+                  date: `${day.date}`,
+                },
+                query: currentRoute.query,
+              }">
+              <AttendanceCalendarTile
+                :attendance="day.attendance"
+                :date="day.date"
+                :selected="day.isSelected"
+                :selected-month="state.selectedMonth" />
+            </RouterLink>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="relative min-w-[320px] shrink grow basis-0 self-stretch">
+      <AttendanceDetail
+        :attendance="state.selectedAttendance"
+        class="lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-clip lg:px-0.5 lg:pt-40"
+        :date="date"
+        :loading="isFetching"
+        :search="search"
+        :sort="sort" />
+    </aside>
+  </article>
+</template>
+
+<script lang="ts" setup>
+import AttendanceCalendarTile from './AttendanceCalendarTile.vue';
+import AttendanceDetail from './AttendanceDetail.vue';
+import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
+import { isSilentError } from '@/helpers/errors';
+import { AttendancePeriod, getAttendancePerDay } from '@/services/api/attendance';
+import { useNotificationsStore } from '@/store/notifications';
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+import { useQuery } from '@tanstack/vue-query';
+import { Head } from '@unhead/vue/components';
+import dayjs from 'dayjs';
+import { capitalize } from 'lodash';
+import { computed, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  month: {
+    type: String,
+    default: () => dayjs().format().substring(0, 7),
+  },
+  date: {
+    type: String,
+    default: null,
+  },
+  search: {
+    type: String,
+    default: null,
+  },
+  sort: {
+    type: String,
+    default: 'debt',
+  },
+});
+
+const currentRoute = useRoute();
+const notificationsStore = useNotificationsStore();
+const i18n = useI18n();
+const state = reactive({
+  selectedMonth: (props.date ? dayjs(props.date) : dayjs()).format().substring(0, 7) as string,
+  selectedAttendance: null as AttendancePeriod<'day'> | null,
+});
+
+const calendarPeriod = computed(() => {
+  const startOfMonth = dayjs(state.selectedMonth).startOf('month');
+  const start = startOfMonth.day() === 0 ? startOfMonth.day(-6) : startOfMonth.day(1);
+  const end = start.add(5, 'weeks').day(7);
+
+  return {
+    start: start.format().substring(0, 10),
+    end: end.format().substring(0, 10),
+  };
+});
+
+const {
+  isFetching,
+  data: attendance,
+  error: attendanceError,
+} = useQuery(
+  computed(() => ({
+    queryKey: ['attendance', calendarPeriod.value.start, calendarPeriod.value.end],
+    queryFn: () => getAttendancePerDay(calendarPeriod.value.start, calendarPeriod.value.end),
+    staleTime: 300_000,
+  })),
+);
+
+const calendar = computed(() => {
+  return Array.from({
+    length: dayjs(calendarPeriod.value.end).diff(calendarPeriod.value.start, 'days') + 1,
+  }).map((_, index) => {
+    const date = dayjs(calendarPeriod.value.start).add(index, 'day').format().substring(0, 10);
+    const attendanceForThisDate = attendance.value?.find((day) => day.date === date);
+
+    return {
+      date,
+      isSelected: date === props.date,
+      attendance: attendanceForThisDate,
+    };
+  });
+});
+
+watch(
+  () => props.month,
+  (month) => {
+    if (month && dayjs(month, 'YYYY-MM', true).isValid()) {
+      state.selectedMonth = month;
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  [() => props.date, () => attendance.value],
+  ([selectedDate, attendancePeriod]) => {
+    if (selectedDate && dayjs(selectedDate, 'YYYY-MM-DD', true).isValid()) {
+      const attendanceFound = attendancePeriod?.find(
+        (day) => day.date === dayjs(selectedDate).format().substring(0, 10),
+      );
+      if (attendanceFound) {
+        state.selectedAttendance = attendanceFound;
+      }
+    } else {
+      state.selectedAttendance = null;
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  () => attendanceError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('attendance.onFetch.fail', {
+          start: dayjs(calendarPeriod.value.start).format('L'),
+          end: dayjs(calendarPeriod.value.end).format('L'),
+        }),
+      );
+    }
+  },
+);
+</script>

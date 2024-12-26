@@ -95,6 +95,7 @@
         <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
           <AppButton
             class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+            :icon="mdiLockOutline"
             @click="onLogout">
             {{ $t('action.logout') }}
           </AppButton>
@@ -112,6 +113,7 @@ import { SUPPORTED_LOCALES } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
+import { mdiLockOutline } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { useRouter } from 'vue-router';
 

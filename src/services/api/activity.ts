@@ -1,6 +1,6 @@
 import HTTP from '../http';
 
-export const MAX_ATTENDANCE = 28;
+export const MAX_ATTENDANCE = 40;
 
 export type ActivityPeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> = {
   date: string;

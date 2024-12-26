@@ -1,22 +1,23 @@
 diff --git a/node_modules/vue-echarts/dist/index.esm.js b/node_modules/vue-echarts/dist/index.esm.js
-index 4ef9b7c..f05e046 100644
+index 3ec3ce0..c9e8af8 100644
 --- a/node_modules/vue-echarts/dist/index.esm.js
 +++ b/node_modules/vue-echarts/dist/index.esm.js
 @@ -1,5 +1,5 @@
- import { watch, unref, inject, computed, watchEffect, Vue2, defineComponent, shallowRef, toRefs, getCurrentInstance, onMounted, onBeforeUnmount, h, nextTick } from 'vue-demi';
+ import { watch, isRef, unref, inject, computed, watchEffect, Vue2, defineComponent, shallowRef, toRefs, getCurrentInstance, onMounted, onBeforeUnmount, h, nextTick } from 'vue-demi';
 -import { throttle, init } from 'echarts/core';
 +import { throttle, init } from 'echarts/core.js';
  import { addListener, removeListener } from 'resize-detector';
  
  /******************************************************************************
 diff --git a/node_modules/vue-echarts/package.json b/node_modules/vue-echarts/package.json
-index 5fce2eb..5bafc62 100644
+index 7e46d29..dd07c39 100644
 --- a/node_modules/vue-echarts/package.json
 +++ b/node_modules/vue-echarts/package.json
-@@ -1,6 +1,14 @@
- {
-   "name": "vue-echarts",
-   "version": "6.6.8",
+@@ -87,5 +87,13 @@
+     "build:demo": "vue-cli-service build",
+     "docs": "node ./scripts/docs.js",
+     "postinstall": "node ./scripts/postinstall.js"
++  },
 +  "type": "module",
 +  "exports": {
 +    ".": {
@@ -24,7 +25,5 @@ index 5fce2eb..5bafc62 100644
 +      "import": "./dist/index.esm.js",
 +      "types": "./dist/index.d.ts"
 +    }
-+  },
-   "description": "Vue.js component for Apache ECharts.",
-   "author": "GU Yiling <justice360@gmail.com>",
-   "scripts": {
+   }
+ }
