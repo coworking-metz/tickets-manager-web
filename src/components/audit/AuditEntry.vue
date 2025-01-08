@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 import AuditEntryInline from './AuditEntryInline.vue';
+import AuditEntryMemberActivity from './AuditEntryMemberActivity.vue';
 import AuditEntryMemberSubscription from './AuditEntryMemberSubscription.vue';
 import AuditEntryMemberTicket from './AuditEntryMemberTicket.vue';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
@@ -18,6 +19,8 @@ const props = defineProps({
 
 const auditComponent = computed(() => {
   switch (props.event?.action) {
+    case AuditAction.MEMBER_ACTIVITY_UPDATE:
+      return AuditEntryMemberActivity;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
       return AuditEntryMemberSubscription;
     case AuditAction.MEMBER_TICKET_UPDATE:

@@ -47,7 +47,7 @@
           <slot name="message">
             <i18n-t
               :keypath="
-                event.author?._id && event.author._id === event.context?.member._id
+                event.author?._id && event.author._id === event.context?.member?._id
                   ? `audit.action.${event.action}.self`
                   : `audit.action.${event.action}.message`
               "
@@ -143,6 +143,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import {
+  mdiCalendarEditOutline,
   mdiCalendarStartOutline,
   mdiChevronDown,
   mdiChevronUp,
@@ -181,6 +182,8 @@ const essentialContext = computed(() => {
 
 const icon = computed(() => {
   switch (props.event?.action) {
+    case AuditAction.MEMBER_ACTIVITY_UPDATE:
+      return mdiCalendarEditOutline;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
       return mdiCalendarStartOutline;
     case AuditAction.MEMBER_TICKET_UPDATE:

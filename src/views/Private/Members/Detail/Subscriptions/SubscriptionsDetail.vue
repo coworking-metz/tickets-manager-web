@@ -104,7 +104,7 @@
       v-model="state.isDeleteDialogVisible"
       :member-id="props.memberId"
       :subscription-id="props.id"
-      @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
+      @deleted="onChanged" />
   </div>
 </template>
 
@@ -184,6 +184,22 @@ const rules = computed(() => ({
 
 const vuelidate = useVuelidate(rules, state, { $scope: 'subscriptions-detail' });
 
+const onChanged = async () => {
+  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId)],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'history'],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'activity'],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+  });
+};
+
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
   if (!isValid) {
@@ -202,19 +218,7 @@ const onSubmit = async () => {
         message: i18n.t('subscriptions.detail.onUpdate.success'),
         timeout: 3_000,
       });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
-      });
-      return router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      onChanged();
     })
     .catch(handleSilentError)
     .catch((error) => {

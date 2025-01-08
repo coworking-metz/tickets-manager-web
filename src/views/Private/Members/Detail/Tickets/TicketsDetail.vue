@@ -94,7 +94,7 @@
       v-model="state.isDeleteDialogVisible"
       :member-id="props.memberId"
       :ticket-id="props.id"
-      @deleted="() => $router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })" />
+      @deleted="onChanged" />
   </div>
 </template>
 
@@ -167,6 +167,22 @@ const rules = computed(() => ({
 
 const vuelidate = useVuelidate(rules, state, { $scope: 'tickets-detail' });
 
+const onChanged = async () => {
+  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId)],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'history'],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'activity'],
+  });
+  queryClient.invalidateQueries({
+    queryKey: ['members', computed(() => props.memberId), 'tickets'],
+  });
+};
+
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
   if (!isValid) {
@@ -179,25 +195,13 @@ const onSubmit = async () => {
     count: state.count as number,
     comment: state.comment as string,
   })
-    .then(() => {
+    .then(async () => {
       notificationsStore.addNotification({
         type: 'success',
         message: i18n.t('tickets.detail.onUpdate.success'),
         timeout: 3_000,
       });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'tickets'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
-      });
-      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      onChanged();
     })
     .catch(handleSilentError)
     .catch((error) => {

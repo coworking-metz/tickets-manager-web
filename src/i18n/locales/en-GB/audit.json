@@ -3,6 +3,15 @@
     "KEYS_ACCESS": {
       "message": "{author} retrieved the access code for the key box"
     },
+    "MEMBER_ACTIVITY_UPDATE": {
+      "duration": {
+        "FULL": "a full day",
+        "HALF": "a half day",
+        "NONE": "absent"
+      },
+      "message": "{author} has changed the activity of {member} from {date} to {duration} instead of {previousDuration}",
+      "self": "{author} has changed their activity from {date} to {duration} instead of {previousDuration}"
+    },
     "MEMBER_CAPABILITIES_UPDATE": {
       "message": "{author} has changed the capabilities of {member}",
       "self": "{author} has changed their capabilities"

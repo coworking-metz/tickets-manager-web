@@ -265,7 +265,7 @@ const filteredList = computed(() => {
         !state.search ||
         searchIn(
           state.search,
-          event.author?._id === event.context?.member._id
+          event.author && event.author._id === event.context?.member?._id
             ? i18n.t(`audit.action.${event.action}.self`)
             : i18n.t(`audit.action.${event.action}.message`),
           JSON.stringify(event),

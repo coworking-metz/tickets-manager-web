@@ -3,6 +3,15 @@
     "KEYS_ACCESS": {
       "message": "{author} a recupéré le code d'accès à la boîte à clés"
     },
+    "MEMBER_ACTIVITY_UPDATE": {
+      "duration": {
+        "FULL": "1 journée entière",
+        "HALF": "1 demi-journée",
+        "NONE": "absent"
+      },
+      "message": "{author} a modifié la présense de {member} du {date} à {duration} au lieu de {previousDuration}",
+      "self": "{author} a modifié sa présence du {date} à {duration} au lieu de {previousDuration}"
+    },
     "MEMBER_CAPABILITIES_UPDATE": {
       "message": "{author} a modifié les capacités de {member}",
       "self": "{author} a modifié ses capacités"
