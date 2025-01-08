@@ -230,6 +230,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
+import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
@@ -250,6 +251,7 @@ import {
   mdiChevronRight,
   mdiClose,
 } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -257,12 +259,6 @@ import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-
-enum ActivityDuration {
-  'NONE' = 0,
-  'HALF' = 0.5,
-  'FULL' = 1,
-}
 
 const router = useRouter();
 const i18n = useI18n();
@@ -290,6 +286,7 @@ const props = defineProps({
   },
 });
 
+const queryClient = useQueryClient();
 const state = reactive({
   type: 'TICKET' as AttendanceType,
   duration: ActivityDuration.NONE as ActivityDuration,
@@ -341,7 +338,7 @@ const onSubmit = async () => {
     date: props.date,
     comment: state.comment as string,
   })
-    .then(() => {
+    .then(async () => {
       notificationsStore.addNotification({
         type: 'success',
         message: i18n.t('activity.detail.onUpdate.success', {
@@ -349,7 +346,16 @@ const onSubmit = async () => {
         }),
         timeout: 3_000,
       });
-      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'history'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['members', computed(() => props.memberId), 'activity'],
+      });
     })
     .catch(handleSilentError)
     .catch((error) => {
@@ -371,12 +377,7 @@ watch(
   (activity) => {
     if (activity) {
       state.type = activity.type;
-      state.duration =
-        activity.value === 1
-          ? ActivityDuration.FULL
-          : activity.value === 0.5
-            ? ActivityDuration.HALF
-            : ActivityDuration.NONE;
+      state.duration = getActivityDuration(activity.value);
       state.comment = null;
     }
   },

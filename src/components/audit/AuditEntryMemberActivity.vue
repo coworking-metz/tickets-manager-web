@@ -1,0 +1,96 @@
+<template>
+  <AuditEntryInline :event="event">
+    <template #message>
+      <i18n-t
+        :keypath="
+          event.author?._id && event.author._id === event.context?.member._id
+            ? `audit.action.${event.action}.self`
+            : `audit.action.${event.action}.message`
+        "
+        scope="global"
+        tag="p">
+        <template #author>
+          <RouterLink
+            v-if="event.author?._id && $route.params.id !== event.author._id"
+            class="font-medium text-indigo-600 hover:underline"
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+              params: { id: event.author._id },
+            }">
+            {{ event.author.name }}
+          </RouterLink>
+          <span v-else class="font-medium text-gray-900" :title="event.author?.email">
+            {{ event.author?.name || $t('audit.author.unknown') }}
+          </span>
+        </template>
+
+        <template #member v-if="event.context?.member">
+          <RouterLink
+            v-if="$route.params.id !== event.context.member._id"
+            class="font-medium text-indigo-600 hover:underline"
+            :to="{
+              name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+              params: { id: event.context.member._id },
+            }">
+            {{
+              [event.context.member.firstName, event.context.member.lastName]
+                .filter(Boolean)
+                .join(' ')
+            }}
+          </RouterLink>
+          <span v-else class="font-medium text-gray-900">
+            {{
+              [event.context.member.firstName, event.context.member.lastName]
+                .filter(Boolean)
+                .join(' ')
+            }}
+          </span>
+        </template>
+
+        <template #date>
+          <time v-if="activityDate" class="font-medium text-gray-900" :datetime="activityDate">
+            {{ dayjs(activityDate).format('ll') }}
+          </time>
+        </template>
+
+        <template #duration>
+          <strong class="font-medium text-gray-900">
+            {{
+              $t(
+                `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.activity?.value)]}`,
+              )
+            }}
+          </strong>
+        </template>
+
+        <template #previousDuration>
+          {{
+            $t(
+              `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.previousActivity.value)]}`,
+            )
+          }}
+        </template>
+      </i18n-t>
+    </template>
+  </AuditEntryInline>
+</template>
+
+<script setup lang="ts">
+import AuditEntryInline from './AuditEntryInline.vue';
+import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
+import { ROUTE_NAMES } from '@/router/names';
+import { AuditEvent } from '@/services/api/audit';
+import dayjs from 'dayjs';
+import { computed, PropType } from 'vue';
+
+const props = defineProps({
+  event: {
+    type: Object as PropType<AuditEvent>,
+    default: null,
+  },
+});
+
+const activityDate = computed(
+  () => props.event.context.previousActivity?.date ?? props.event.context.activity?.date,
+);
+</script>
