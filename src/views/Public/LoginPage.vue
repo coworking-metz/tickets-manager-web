@@ -52,7 +52,7 @@
             <div class="mt-10 flex items-center gap-x-6">
               <a
                 class="flex flex-row items-center gap-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                :href="HTTP.getUri({ url: '/api/auth/login', params: $route.query })"
+                :href="HTTP.getUri({ url: '/api/auth/login', params: route.query })"
                 @click="state.isLoggingIn = true">
                 <LoadingSpinner v-if="state.isLoggingIn" class="size-5" />
                 {{ $t('action.login') }}
@@ -87,12 +87,14 @@ import HTTP from '@/services/http';
 import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
 const PHOTOS = [
   'https://www.coworking-metz.fr/wp-content/uploads/2020/05/20200524_120319.jpg',
   'https://www.coworking-metz.fr/wp-content/uploads/2023/05/signal-2022-06-23-213951_002-scaled-e1683722217483.jpeg',
 ];
 
+const route = useRoute();
 const state = reactive({
   isLoggingIn: false,
   selectedPhoto: PHOTOS[Math.floor(Math.random() * PHOTOS.length)],

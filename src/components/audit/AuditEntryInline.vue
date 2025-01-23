@@ -55,7 +55,7 @@
               tag="p">
               <template #author>
                 <RouterLink
-                  v-if="event.author?._id && $route.params.id !== event.author._id"
+                  v-if="event.author?._id && route.params.id !== event.author._id"
                   class="font-medium text-indigo-600 hover:underline"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -70,7 +70,7 @@
 
               <template #member v-if="event.context?.member">
                 <RouterLink
-                  v-if="$route.params.id !== event.context.member._id"
+                  v-if="route.params.id !== event.context.member._id"
                   class="font-medium text-indigo-600 hover:underline"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -159,7 +159,9 @@ import {
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { PropType, computed } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const props = defineProps({
   event: {
     type: Object as PropType<AuditEvent>,

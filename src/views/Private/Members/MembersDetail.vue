@@ -413,9 +413,9 @@
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
-        ].includes($route.name as string)
+        ].includes(route.name as string)
       "
-      @close="$router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
+      @close="router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
       <RouterView
         :activity="activity"
         :loading="
@@ -464,6 +464,7 @@ import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
 
 const props = defineProps({
   id: {
@@ -480,6 +481,8 @@ const props = defineProps({
   },
 });
 
+const route = useRoute();
+const router = useRouter();
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({

@@ -24,9 +24,9 @@
       </router-link>
 
       <router-link
-        :aria-current="$route.name === ROUTE_NAMES.USER.PROFILE ? 'page' : undefined"
+        :aria-current="route.name === ROUTE_NAMES.USER.PROFILE ? 'page' : undefined"
         :class="[
-          $route.name === ROUTE_NAMES.USER.PROFILE
+          route.name === ROUTE_NAMES.USER.PROFILE
             ? 'bg-amber-600 text-white'
             : 'text-amber-100 hover:bg-amber-600 hover:text-white',
           'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline',

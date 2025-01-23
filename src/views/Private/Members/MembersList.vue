@@ -21,8 +21,8 @@
           ]"
           replace
           :to="{
-            ...$route,
-            query: { ...$route.query, slice: undefined },
+            ...route,
+            query: { ...route.query, slice: undefined },
             hash: listTab.hash ? `#${listTab.hash}` : '',
           }">
           {{
@@ -98,9 +98,9 @@
                         ]"
                         replace
                         :to="{
-                          ...$route,
+                          ...route,
                           query: {
-                            ...$route.query,
+                            ...route.query,
                             sort: listSorter.key !== sort ? listSorter.key : undefined,
                           },
                         }"
@@ -231,6 +231,7 @@ import {
   MemberListItem,
   getAllMembers,
   getVotingMembers,
+  isMemberBalanceInsufficient,
   isMembershipNonCompliant,
 } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
@@ -243,7 +244,7 @@ import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 interface Tab {
   key: string;
@@ -302,6 +303,7 @@ const props = defineProps({
   },
 });
 
+const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
@@ -351,7 +353,7 @@ const filteredList = computed(() => {
         dayjs().isSame(member.lastSeen, 'day')
           ? dayjs(member.lastSeen).fromNow()
           : dayjs(member.lastSeen).calendar(dayjs()),
-        member.balance < 0 &&
+        isMemberBalanceInsufficient(member) &&
           i18n.t('members.detail.orders.tickets.overconsumed', {
             count: Math.abs(member.balance),
           }),
