@@ -105,7 +105,9 @@ const options = computed<
           : '#fca5a5' // even tho it could be a full day, the most important is its non compliant period
         : value === 1
           ? theme.meatBrown
-          : theme.peachYellow;
+          : value === 0.5
+            ? theme.peachYellow
+            : theme.papayaWhip;
 
       return {
         value: [dayjs(date).format('YYYY-MM-DD'), value],

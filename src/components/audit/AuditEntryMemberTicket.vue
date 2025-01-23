@@ -11,7 +11,7 @@
         tag="p">
         <template #author>
           <RouterLink
-            v-if="event.author?._id && $route.params.id !== event.author._id"
+            v-if="event.author?._id && route.params.id !== event.author._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -26,7 +26,7 @@
 
         <template #member v-if="event.context?.member">
           <RouterLink
-            v-if="$route.params.id !== event.context.member._id"
+            v-if="route.params.id !== event.context.member._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -66,7 +66,9 @@ import AuditEntryInline from './AuditEntryInline.vue';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent } from '@/services/api/audit';
 import { PropType } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 defineProps({
   event: {
     type: Object as PropType<AuditEvent>,

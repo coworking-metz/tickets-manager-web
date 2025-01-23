@@ -103,9 +103,9 @@
                         ]"
                         replace
                         :to="{
-                          ...$route,
+                          ...route,
                           query: {
-                            ...$route.query,
+                            ...route.query,
                             sort: listSorter.key !== sort ? listSorter.key : undefined,
                           },
                         }"
@@ -176,7 +176,7 @@ import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 
 interface ListSorter {
@@ -229,6 +229,7 @@ const props = defineProps({
 });
 
 const { width } = useWindowSize();
+const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
 const now = dayjs();

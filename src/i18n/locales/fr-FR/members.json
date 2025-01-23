@@ -80,7 +80,7 @@
         "onFetch": {
           "fail": "Impossible de récupérer ses commandes de tickets"
         },
-        "overconsumed": "{count} surconsommé | {count} surconsommés",
+        "overconsumed": "Solde insuffisant (0 tickets) | {count} surconsommé | {count} surconsommés",
         "purchased": "Commandé le {date} | Commandé le {date} | Commandés le {date}",
         "remaining": "Aucun disponible | {count} restant | {count} restants",
         "title": "Tickets à l'unité",

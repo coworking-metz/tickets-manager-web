@@ -45,8 +45,8 @@
                 ]"
                 :disabled="!previousPeriod"
                 :to="{
-                  ...$route,
-                  query: { ...$route.query, from: previousPeriod?.start, to: previousPeriod?.end },
+                  ...route,
+                  query: { ...route.query, from: previousPeriod?.start, to: previousPeriod?.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
@@ -64,8 +64,8 @@
                 ]"
                 :disabled="!nextPeriod"
                 :to="{
-                  ...$route,
-                  query: { ...$route.query, from: nextPeriod?.start, to: nextPeriod?.end },
+                  ...route,
+                  query: { ...route.query, from: nextPeriod?.start, to: nextPeriod?.end },
                 }">
                 <SvgIcon
                   aria-hidden="true"
@@ -111,7 +111,7 @@
                     'text-sm font-medium',
                   ]"
                   replace
-                  :to="{ ...$route, ...frequency.to }">
+                  :to="{ ...route, ...frequency.to }">
                   {{ frequency.label }}
                 </router-link>
               </div>

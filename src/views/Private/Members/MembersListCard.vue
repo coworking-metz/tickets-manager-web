@@ -22,10 +22,10 @@
             </p>
 
             <div
-              v-if="member.balance < 0 || isMembershipNonCompliant(member)"
+              v-if="isMemberBalanceInsufficient(member) || isMembershipNonCompliant(member)"
               class="mt-3 flex shrink flex-row items-center gap-1">
               <span
-                v-if="member.balance < 0"
+                v-if="isMemberBalanceInsufficient(member)"
                 class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
                 {{
                   $t('members.detail.orders.tickets.overconsumed', {
@@ -92,7 +92,11 @@
 
 <script setup lang="ts">
 import MembersThumbnail from './MembersThumbnail.vue';
-import { MemberListItem, isMembershipNonCompliant } from '@/services/api/members';
+import {
+  MemberListItem,
+  isMemberBalanceInsufficient,
+  isMembershipNonCompliant,
+} from '@/services/api/members';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';
 

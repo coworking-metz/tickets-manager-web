@@ -11,7 +11,7 @@
         tag="p">
         <template #author>
           <RouterLink
-            v-if="event.author?._id && $route.params.id !== event.author._id"
+            v-if="event.author?._id && route.params.id !== event.author._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -26,7 +26,7 @@
 
         <template #member v-if="event.context?.member">
           <RouterLink
-            v-if="$route.params.id !== event.context.member._id"
+            v-if="route.params.id !== event.context.member._id"
             class="font-medium text-indigo-600 hover:underline"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
@@ -57,7 +57,7 @@
           <strong class="font-medium text-gray-900">
             {{
               $t(
-                `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.activity?.value)]}`,
+                `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.activity?.overrideValue ?? event.context.activity?.value)]}`,
               )
             }}
           </strong>
@@ -66,7 +66,7 @@
         <template #previousDuration>
           {{
             $t(
-              `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.previousActivity.value)]}`,
+              `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.previousActivity.overrideValue ?? event.context.previousActivity.value)]}`,
             )
           }}
         </template>
@@ -82,7 +82,9 @@ import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent } from '@/services/api/audit';
 import dayjs from 'dayjs';
 import { computed, PropType } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const props = defineProps({
   event: {
     type: Object as PropType<AuditEvent>,
