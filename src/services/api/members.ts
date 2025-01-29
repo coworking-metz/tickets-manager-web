@@ -63,11 +63,8 @@ export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
 };
 
 export const isMemberBalanceInsufficient = (member: Member | MemberListItem) => {
-  return (
-    member.lastSeen &&
-    (dayjs().isBefore(member.lastSeen) || dayjs().isSame(member.lastSeen)) &&
-    member.balance <= 0
-  );
+  // const isPresentWithoutEnoughBalance = member.attending && member.balance <= 0 && !member.hasActiveSubscription;
+  return member.balance < 0;
 };
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
