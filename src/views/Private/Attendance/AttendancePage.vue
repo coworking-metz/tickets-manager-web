@@ -32,6 +32,7 @@
                 type="mdi" />
             </RouterLink>
             <time
+              v-if="state.selectedMonth"
               class="flex flex-row items-center border-y border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 focus:relative"
               :datetime="state.selectedMonth">
               {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
@@ -74,6 +75,7 @@
       <div class="relative border border-gray-200">
         <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-px w-full" />
         <div
+          v-if="calendarPeriod"
           class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
           <div v-for="weekIndex in 7" :key="`weekday-${weekIndex}`" class="bg-white py-2">
             {{
@@ -98,8 +100,12 @@
               <AttendanceCalendarTile
                 :attendance="day.attendance"
                 :date="day.date"
-                :selected="day.isSelected"
-                :selected-month="state.selectedMonth" />
+                :in-current-month="
+                  Boolean(
+                    state.selectedMonth && dayjs(day.date).isSame(state.selectedMonth, 'month'),
+                  )
+                "
+                :selected="day.isSelected" />
             </RouterLink>
           </div>
         </div>
@@ -130,14 +136,14 @@ import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
   month: {
     type: String,
-    default: () => dayjs().format().substring(0, 7),
+    default: null,
   },
   date: {
     type: String,
@@ -157,11 +163,14 @@ const currentRoute = useRoute();
 const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
-  selectedMonth: (props.date ? dayjs(props.date) : dayjs()).format().substring(0, 7) as string,
+  selectedMonth: null as string | null,
   selectedAttendance: null as AttendancePeriod<'day'> | null,
 });
 
 const calendarPeriod = computed(() => {
+  if (!state.selectedMonth) {
+    return null;
+  }
   const startOfMonth = dayjs(state.selectedMonth).startOf('month');
   const start = startOfMonth.day() === 0 ? startOfMonth.day(-6) : startOfMonth.day(1);
   const end = start.add(5, 'weeks').day(7);
@@ -178,17 +187,19 @@ const {
   error: attendanceError,
 } = useQuery(
   computed(() => ({
-    queryKey: ['attendance', calendarPeriod.value.start, calendarPeriod.value.end],
-    queryFn: () => getAttendancePerDay(calendarPeriod.value.start, calendarPeriod.value.end),
+    queryKey: ['attendance', calendarPeriod.value?.start, calendarPeriod.value?.end],
+    queryFn: ({ queryKey: [_attendance, start, end] }: { queryKey: any[] }) =>
+      getAttendancePerDay(start, end),
     staleTime: 300_000,
+    enabled: !!calendarPeriod.value?.start && !!calendarPeriod.value?.end,
   })),
 );
 
 const calendar = computed(() => {
   return Array.from({
-    length: dayjs(calendarPeriod.value.end).diff(calendarPeriod.value.start, 'days') + 1,
+    length: dayjs(calendarPeriod.value?.end).diff(calendarPeriod.value?.start, 'days') + 1,
   }).map((_, index) => {
-    const date = dayjs(calendarPeriod.value.start).add(index, 'day').format().substring(0, 10);
+    const date = dayjs(calendarPeriod.value?.start).add(index, 'day').format().substring(0, 10);
     const attendanceForThisDate = attendance.value?.find((day) => day.date === date);
 
     return {
@@ -198,16 +209,6 @@ const calendar = computed(() => {
     };
   });
 });
-
-watch(
-  () => props.month,
-  (month) => {
-    if (month && dayjs(month, 'YYYY-MM', true).isValid()) {
-      state.selectedMonth = month;
-    }
-  },
-  { immediate: true },
-);
 
 watch(
   [() => props.date, () => attendance.value],
@@ -233,10 +234,29 @@ watch(
       notificationsStore.addErrorNotification(
         error,
         i18n.t('attendance.onFetch.fail', {
-          start: dayjs(calendarPeriod.value.start).format('L'),
-          end: dayjs(calendarPeriod.value.end).format('L'),
+          start: dayjs(calendarPeriod.value?.start).format('L'),
+          end: dayjs(calendarPeriod.value?.end).format('L'),
         }),
       );
+    }
+  },
+);
+
+onMounted(() => {
+  if (props.month && dayjs(props.month, 'YYYY-MM', true).isValid()) {
+    state.selectedMonth = props.month;
+  } else if (props.date) {
+    state.selectedMonth = dayjs(props.date).format('YYYY-MM');
+  } else {
+    state.selectedMonth = dayjs().format('YYYY-MM');
+  }
+});
+
+watch(
+  () => props.month,
+  (month) => {
+    if (month && dayjs(month, 'YYYY-MM', true).isValid()) {
+      state.selectedMonth = month;
     }
   },
 );

@@ -4,7 +4,7 @@
       'flex h-14 flex-col items-center overflow-hidden py-2 focus:z-10 max-lg:justify-center lg:h-20 lg:items-start',
       selected
         ? 'bg-amber-500 text-white shadow-inner hover:bg-amber-700 active:bg-amber-800'
-        : isCurrentMonth
+        : inCurrentMonth
           ? 'bg-white hover:bg-gray-100'
           : 'bg-gray-50 hover:bg-gray-100',
     ]">
@@ -58,10 +58,10 @@ const props = defineProps({
     type: Object as PropType<AttendancePeriod<'day'>>,
     default: null,
   },
-});
-
-const isCurrentMonth = computed(() => {
-  return props.selectedMonth && dayjs(props.date).isSame(props.selectedMonth, 'month');
+  inCurrentMonth: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const debtCount = computed(() => {
