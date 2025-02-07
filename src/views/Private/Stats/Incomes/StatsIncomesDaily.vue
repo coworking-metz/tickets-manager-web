@@ -5,8 +5,8 @@
     </Head>
     <section class="flex min-h-[320px] grow flex-col">
       <StatsIncomesPeriodGraph
-        :incomes="state.incomes"
-        :loading="state.isFetchingIncomes"
+        :incomes="incomes"
+        :loading="isFetchingIncomes"
         :options="options"
         :threshold-formatter="
           ({ value }) =>
@@ -30,7 +30,7 @@
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
-              v-if="state.isFetchingIncomes"
+              v-if="isFetchingIncomes"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
@@ -41,10 +41,10 @@
           </dd>
 
           <div
-            v-if="state.isFetchingIncomes"
+            v-if="isFetchingIncomes"
             class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
           <div
-            v-else-if="state.incomes.length"
+            v-else-if="incomes?.length"
             class="flex flex-row items-baseline justify-between text-sm">
             <span class="shrink grow basis-0 truncate font-normal text-gray-500">
               {{
@@ -76,7 +76,7 @@
           </dt>
           <dd class="mt-1 flex flex-col">
             <div
-              v-if="state.isFetchingIncomes"
+              v-if="isFetchingIncomes"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
@@ -86,10 +86,10 @@
               :to="totalIncome" />
 
             <div
-              v-if="state.isFetchingIncomes"
+              v-if="isFetchingIncomes"
               class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
             <div
-              v-else-if="state.incomes.length"
+              v-else-if="incomes?.length"
               class="flex flex-row items-baseline justify-between text-sm">
               <span class="shrink grow basis-0 truncate font-normal text-gray-500">
                 {{
@@ -123,7 +123,7 @@
           </dt>
           <dd class="mt-1 flex flex-col">
             <div
-              v-if="state.isFetchingIncomes"
+              v-if="isFetchingIncomes"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
@@ -133,10 +133,10 @@
               :to="totalDebtAmount" />
 
             <div
-              v-if="state.isFetchingIncomes"
+              v-if="isFetchingIncomes"
               class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
             <div
-              v-else-if="state.incomes.length"
+              v-else-if="incomes?.length"
               class="flex flex-row items-baseline justify-between text-sm">
               <span class="shrink grow basis-0 truncate font-normal text-gray-500">
                 {{
@@ -161,14 +161,15 @@
 import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { handleSilentError } from '@/helpers/errors';
+import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import { IncomePeriodWithTotal, getIncomesPerDay } from '@/services/api/incomes';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
+import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, reactive, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
@@ -195,35 +196,47 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
-const state = reactive({
-  isFetchingIncomes: false,
-  incomes: [] as IncomePeriodWithTotal<'day'>[],
-});
+
+const {
+  isFetching: isFetchingIncomes,
+  data: incomes,
+  error: incomesError,
+} = useQuery<IncomePeriodWithTotal<'day'>[]>(
+  computed(() => ({
+    queryKey: ['stats', 'incomes', props.from, props.to],
+    queryFn: () => getIncomesPerDay(props.from, props.to),
+    staleTime: 300_000,
+  })),
+);
 
 const totalIncome = computed(() =>
-  state.incomes
+  (incomes.value ?? [])
     .map(({ data }) => data.tickets.amount + data.subscriptions.amount)
     .reduce((acc, income) => acc + income, 0),
 );
 
 const totalCharges = computed(() => {
-  return state.incomes.map(({ data }) => data.charges).reduce((acc, charges) => acc + charges, 0);
+  return (incomes.value ?? [])
+    .map(({ data }) => data.charges)
+    .reduce((acc, charges) => acc + charges, 0);
 });
 
 const averageIncome = computed(() => {
-  return totalIncome.value / state.incomes.length || 0;
+  return totalIncome.value / (incomes.value ?? []).length || 0;
 });
 
 const averageCharges = computed(() => {
-  return totalCharges.value / state.incomes.length || 0;
+  return totalCharges.value / (incomes.value ?? []).length || 0;
 });
 
 const totalDebtCount = computed(() =>
-  state.incomes.map(({ data }) => data.tickets.debt.count).reduce((acc, count) => acc + count, 0),
+  (incomes.value ?? [])
+    .map(({ data }) => data.tickets.debt.count)
+    .reduce((acc, count) => acc + count, 0),
 );
 
 const totalDebtAmount = computed(() =>
-  state.incomes
+  (incomes.value ?? [])
     .map(({ data }) => data.tickets.debt.amount)
     .reduce((acc, amount) => acc + amount, 0),
 );
@@ -232,9 +245,9 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
   tooltip: {
     formatter: (params) => {
       const {
-        data: { incomes, tickets, subscriptions, charges },
+        data: { incomes: incomeAmount, tickets, subscriptions, charges },
         date, // @ts-ignore
-      } = state.incomes[params[0].dataIndex];
+      } = (incomes.value ?? [])[params[0].dataIndex];
       return `
         <dl class="flex flex-col gap-1">
           <dt class="ml-auto truncate font-medium text-gray-500 sm:text-sm">
@@ -286,7 +299,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           </div>
 
           <dd class="ml-auto text-3xl font-semibold text-gray-900">
-            ${fractionAmount(incomes)}
+            ${fractionAmount(incomeAmount)}
           </dd>
 
           <div class="flex flex-row justify-between place-items-end">
@@ -300,9 +313,9 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           </div>
 
           <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
-            incomes > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            incomeAmount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
-            ${incomes > charges ? '+' : ''}${fractionAmount(incomes - charges)}
+            ${incomeAmount > charges ? '+' : ''}${fractionAmount(incomeAmount - charges)}
           </div>
         </dl>
       `;
@@ -316,29 +329,29 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
   },
 }));
 
-const fetchIncomes = (from: string, to: string) => {
-  state.isFetchingIncomes = true;
-  Promise.all([
-    getIncomesPerDay(from, to)
-      .then((incomes) => {
-        state.incomes = incomes;
-      })
-      .catch(handleSilentError)
-      .catch((error) => {
-        notificationsStore.addErrorNotification(error, i18n.t('stats.incomes.daily.onFetch.fail'));
-        return Promise.reject(error);
-      }),
-    // wait at least 500ms
-    // because the is the time for the transition to fully animate
-    // and it needs to be done before echarts can be rendered
-    new Promise((resolve) => setTimeout(resolve, 400)),
-  ]).finally(() => {
-    state.isFetchingIncomes = false;
-  });
-};
+// const fetchIncomes = (from: string, to: string) => {
+//   state.isFetchingIncomes = true;
+//   Promise.all([
+//     getIncomesPerDay(from, to)
+//       .then((incomes) => {
+//         state.incomes = incomes;
+//       })
+//       .catch(handleSilentError)
+//       .catch((error) => {
+//         notificationsStore.addErrorNotification(error, i18n.t('stats.incomes.daily.onFetch.fail'));
+//         return Promise.reject(error);
+//       }),
+//     // wait at least 500ms
+//     // because the is the time for the transition to fully animate
+//     // and it needs to be done before echarts can be rendered
+//     new Promise((resolve) => setTimeout(resolve, 400)),
+//   ]).finally(() => {
+//     state.isFetchingIncomes = false;
+//   });
+// };
 
 const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
-  const { date } = state.incomes[dataIndex];
+  const { date } = (incomes.value ?? [])[dataIndex];
   router.push({
     name: ROUTE_NAMES.ATTENDANCE,
     params: {
@@ -351,9 +364,24 @@ watch(
   [() => props.from, () => props.to],
   ([from, to]) => {
     if (dayjs(from).isValid() || dayjs(to).isValid()) {
-      fetchIncomes(from, to);
+      // fetchIncomes(from, to);
     }
   },
   { immediate: true },
+);
+
+watch(
+  () => incomesError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('stats.incomes.daily.onFetch.fail', {
+          start: dayjs(props.from).format('L'),
+          end: dayjs(props.to).format('L'),
+        }),
+      );
+    }
+  },
 );
 </script>
