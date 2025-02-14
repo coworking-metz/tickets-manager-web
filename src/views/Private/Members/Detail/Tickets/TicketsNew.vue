@@ -119,7 +119,8 @@ const onSubmit = async () => {
     count: state.count as number,
     comment: state.comment as string,
   })
-    .then(() => {
+    .then(async () => {
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
       notificationsStore.addNotification({
         type: 'success',
         message: i18n.t('tickets.new.onAdd.success'),
@@ -134,7 +135,6 @@ const onSubmit = async () => {
       queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
-      router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
     })
     .catch(handleSilentError)
     .catch((error) => {

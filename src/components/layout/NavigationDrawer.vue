@@ -12,7 +12,7 @@
           item.active
             ? 'bg-amber-600 text-white'
             : 'text-amber-100 hover:bg-amber-600 hover:text-white',
-          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors',
+          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
         ]"
         :to="item.to">
         <SvgIcon
@@ -29,7 +29,7 @@
           route.name === ROUTE_NAMES.USER.PROFILE
             ? 'bg-amber-600 text-white'
             : 'text-amber-100 hover:bg-amber-600 hover:text-white',
-          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline',
+          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <MembersThumbnail

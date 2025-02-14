@@ -24,6 +24,7 @@ const auditComponent = computed(() => {
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
       return AuditEntryMemberSubscription;
     case AuditAction.MEMBER_TICKET_UPDATE:
+    case AuditAction.MEMBER_TICKET_ADD:
       return AuditEntryMemberTicket;
     default:
       return AuditEntryInline;

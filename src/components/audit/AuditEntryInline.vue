@@ -144,7 +144,7 @@ import { AuditAction, AuditEvent } from '@/services/api/audit';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import {
   mdiCalendarEditOutline,
-  mdiCalendarStartOutline,
+  mdiCalendarRangeOutline,
   mdiChevronDown,
   mdiChevronUp,
   mdiDevices,
@@ -187,7 +187,8 @@ const icon = computed(() => {
     case AuditAction.MEMBER_ACTIVITY_UPDATE:
       return mdiCalendarEditOutline;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
-      return mdiCalendarStartOutline;
+      return mdiCalendarRangeOutline;
+    case AuditAction.MEMBER_TICKET_ADD:
     case AuditAction.MEMBER_TICKET_UPDATE:
       return mdiTicket;
     case AuditAction.KEYS_ACCESS:

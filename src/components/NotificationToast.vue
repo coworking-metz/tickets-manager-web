@@ -1,75 +1,71 @@
 <template>
-  <Teleport to="body">
-    <div
-      aria-live="assertive"
-      class="pointer-events-none fixed inset-0 z-[100] flex items-start px-4 py-6 sm:items-end sm:p-6">
-      <div class="flex w-full flex-col-reverse items-center gap-4 sm:items-start">
-        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-        <TransitionGroup
-          enter-active-class="transform ease-out duration-300 transition"
-          enter-from-class="max-sm:-translate-y-2 opacity-0 sm:-translate-x-2"
-          enter-to-class="max-sm:translate-y-0 opacity-100 sm:translate-x-0"
-          leave-active-class="transform ease-out duration-150 transition"
-          leave-from-class="translate-y-0 opacity-100"
-          leave-to-class="-translate-y-2 sm:translate-y-2 opacity-0">
-          <div
-            v-for="notification in notificationsStore.history.filter(({ dismissed }) => !dismissed)"
-            :key="`notification-${notification.id}`"
-            class="app-notification pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white p-4 shadow-lg ring-1 ring-black ring-opacity-[5%]"
-            :style="{
-              ...(notification.timeout && {
-                ['--notification-timeout']: `${notification.timeout}ms`,
-              }),
-            }"
-            :temporary="!!notification.timeout"
-            @animationend="() => onTimeoutAnimationEnd(notification)">
-            <div class="flex items-start">
-              <SvgIcon
-                aria-hidden="true"
-                :class="['size-6 shrink-0', getIconColorFromType(notification.type)]"
-                :path="notification.icon || getIconFromType(notification.type)"
-                type="mdi" />
-              <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-medium text-gray-900">{{ getMessage(notification) }}</p>
-                <p
-                  v-if="notification.description"
-                  class="mt-1 whitespace-pre-line text-sm text-gray-500">
-                  {{ notification.description }}
-                </p>
-                <div v-if="notification.actions?.length" class="-ml-2 mt-3 flex flex-row gap-6">
-                  <AppButton
-                    v-for="(action, index) in notification.actions"
-                    :key="`notification-${notification.id}-action-${action.label}`"
-                    :class="[
-                      'whitespace-nowrap !px-2 !py-1 ',
-                      index === 0
-                        ? 'text-indigo-600 hover:bg-indigo-50 hover:text-indigo-500 focus:ring-indigo-500'
-                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-500 focus:ring-gray-500',
-                    ]"
-                    type="button"
-                    @click="action.onClick">
-                    {{ action.label }}
-                  </AppButton>
-                </div>
-              </div>
-              <button
-                :id="`notification-${notification.id}-close`"
-                class="ml-4 inline-flex shrink-0 rounded-md bg-white p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="button"
-                @click="notificationsStore.dismissNotification(notification.id)">
-                <span class="sr-only">{{ $t('action.close') }}</span>
-                <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
-              </button>
-            </div>
-          </div>
-        </TransitionGroup>
+  <div
+    class="app-notification pointer-events-auto w-96 overflow-hidden rounded-lg bg-slate-800 p-4 shadow-lg max-sm:mx-auto dark:border dark:border-gray-700 dark:bg-gray-950"
+    :style="{
+      ...(notification.timeout && {
+        ['--notification-timeout']: `${notification.timeout}ms`,
+      }),
+    }"
+    :temporary="!!notification.timeout"
+    @animationend="() => onTimeoutAnimationEnd(notification)">
+    <div class="flex items-start">
+      <SvgIcon
+        aria-hidden="true"
+        :class="['mt-1 size-6 shrink-0', getIconColorFromType(notification.type)]"
+        :path="notification.icon || getIconFromType(notification.type)"
+        type="mdi" />
+      <div class="ml-3 w-0 flex-1 pt-1.5">
+        <p class="text-sm font-medium text-gray-100">
+          {{ getMessage(notification) }}
+        </p>
+        <p
+          v-if="notification.description"
+          class="mt-1 whitespace-pre-line pb-1.5 text-sm text-gray-400">
+          {{ notification.description }}
+        </p>
+        <div v-if="notification.actions?.length" class="-ml-2 flex flex-row gap-6">
+          <AppButtonText
+            v-for="(action, index) in notification.actions"
+            :key="`notification-${notification.id}-action-${action.label}`"
+            :class="[
+              'whitespace-nowrap !px-2 !py-1',
+              index === 0
+                ? `text-sky-600 hover:bg-sky-950 hover:text-sky-500 focus:ring-sky-500
+                  focus:ring-offset-sky-950`
+                : `text-gray-400 hover:bg-gray-700 hover:text-gray-300 focus:ring-gray-500
+                  focus:ring-offset-sky-950`,
+            ]"
+            color="none"
+            type="button"
+            @click="
+              () => {
+                emit('closeToast');
+                action.onClick?.();
+              }
+            ">
+            {{ action.label }}
+          </AppButtonText>
+        </div>
       </div>
+      <AppButtonIcon
+        :id="`notification-${notification.id}-close`"
+        class="ml-4 shrink-0 rounded-md text-gray-400 hover:bg-gray-400/30 hover:text-gray-300 active:bg-gray-400/40 active:text-gray-100"
+        :icon="mdiClose"
+        :title="$t('action.close')"
+        type="button"
+        @click="
+          () => {
+            notificationsStore.dismissNotification(notification.id);
+            emit('closeToast');
+          }
+        " />
     </div>
-  </Teleport>
+  </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from './form/AppButton.vue';
+import AppButtonIcon from './form/AppButtonIcon.vue';
+import AppButtonText from './form/AppButtonText.vue';
 import { AppErrorCode } from '@/helpers/errors';
 import { AppNotification, StoreNotification, useNotificationsStore } from '@/store/notifications';
 import {
@@ -80,10 +76,21 @@ import {
   mdiHelpCircle,
   mdiInformation,
 } from '@mdi/js';
+import { random } from 'lodash';
+import { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+
+// https://github.com/xiaoluoboding/vue-sonner/issues/63#issuecomment-2060782447
+const emit = defineEmits(['closeToast']);
+defineProps({
+  notification: {
+    type: Object as PropType<StoreNotification>,
+    required: true,
+  },
+});
 
 const getIconFromType = (type: AppNotification['type']) => {
   switch (type) {
@@ -118,6 +125,7 @@ const getIconColorFromType = (type: AppNotification['type']) => {
 const onTimeoutAnimationEnd = (notification: StoreNotification) => {
   if (!!notification.timeout && !notification.dismissed) {
     notificationsStore.dismissNotification(notification.id);
+    emit('closeToast');
   }
 };
 
@@ -133,7 +141,12 @@ const getMessage = (notification: AppNotification) => {
       case AppErrorCode.FORBIDDEN:
         return i18n.t('errors.onForbidden.message');
       default:
-        return i18n.t('errors.onUnknown.message');
+        const defaultErrorMessages = [
+          i18n.t('errors.onUnknown.message.corporate'),
+          i18n.t('errors.onUnknown.message.funny'),
+          i18n.t('errors.onUnknown.message.oops'),
+        ];
+        return defaultErrorMessages[random(0, defaultErrorMessages.length - 1)];
     }
   }
 };
@@ -149,7 +162,7 @@ const getMessage = (notification: AppNotification) => {
   content: '';
   display: block;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   height: 0.25rem;

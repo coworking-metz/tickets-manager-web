@@ -5,7 +5,14 @@
   </Head>
   <LoadingSpinner v-if="state.isLoading" class="m-auto size-16" />
   <router-view v-else />
-  <NotificationToast />
+  <Teleport to="body">
+    <Toaster
+      :position="width <= 600 ? 'top-center' : 'bottom-left'"
+      :toast-options="{
+        unstyled: true,
+      }"
+      :visible-toasts="5"></Toaster>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>
@@ -14,10 +21,14 @@ import { useNotificationsStore } from './store/notifications';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
-import { reactive } from 'vue';
+import { useWindowSize } from '@vueuse/core';
+import { isNil } from 'lodash';
+import { markRaw, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { Toaster, toast } from 'vue-sonner';
 
+const { width } = useWindowSize();
 const i18n = useI18n();
 const router = useRouter();
 const notificationsStore = useNotificationsStore();
@@ -58,4 +69,25 @@ router.onError((error) => {
     });
   }
 });
+
+watch(
+  () => notificationsStore.history.length,
+  (_historyLength) => {
+    const history = notificationsStore.history;
+    const allNotificationsNotDismissed = history.filter(({ dismissed }) => isNil(dismissed));
+    const allNotificationsNotDismissedSorted = allNotificationsNotDismissed.sort(
+      (first, second) => new Date(second.created).getTime() - new Date(first.created).getTime(),
+    );
+    const [notification] = allNotificationsNotDismissedSorted;
+    if (notification) {
+      toast.custom(markRaw(NotificationToast), {
+        duration: Infinity,
+        componentProps: {
+          notification,
+        },
+      });
+    }
+  },
+  { immediate: true, deep: true },
+);
 </script>
