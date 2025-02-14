@@ -1,5 +1,6 @@
 import { AuditEvent } from './audit';
 import { UserCapabilities } from './auth';
+import { Subscription } from './subscriptions';
 import HTTP from '../http';
 import dayjs from 'dayjs';
 
@@ -41,6 +42,8 @@ export interface MemberListItem {
   picture?: string;
   thumbnail?: string;
   location?: MemberLocation;
+  hasActiveSubscription: boolean;
+  activeSubscriptions: Subscription[];
 }
 
 export interface Member extends MemberListItem {
@@ -63,8 +66,9 @@ export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
 };
 
 export const isMemberBalanceInsufficient = (member: Member | MemberListItem) => {
-  // const isPresentWithoutEnoughBalance = member.attending && member.balance <= 0 && !member.hasActiveSubscription;
-  return member.balance < 0;
+  const isAttendingWithoutSufficientBalance =
+    member.attending && !member.balance && !member.hasActiveSubscription;
+  return member.balance < 0 || isAttendingWithoutSufficientBalance;
 };
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {

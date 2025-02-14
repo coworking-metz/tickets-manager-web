@@ -141,7 +141,7 @@
             :title="$t('members.list.empty.title')" />
           <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
             <RouterLink
-              class="block hover:bg-gray-50"
+              class="block transition-colors hover:bg-gray-50 active:bg-gray-100"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                 params: { id: member._id },

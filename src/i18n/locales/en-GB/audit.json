@@ -24,6 +24,10 @@
       "message": "{author} updated the subscription for {member} to start on {started} instead of {previouslyStarted}",
       "self": "{author} updated their subscription to start on {started} instead of {previouslyStarted}"
     },
+    "MEMBER_TICKET_ADD": {
+      "message": "{author} added an order of {count} tickets to {member}",
+      "self": "{author} added an order {count} tickets to themselves"
+    },
     "MEMBER_TICKET_UPDATE": {
       "message": "{author} modified the number of tickets in an order, from previously {previousCount} to now {count} for {member}",
       "self": "{author} modified the number of tickets in one of their orders, from previously {previousCount} to now {count}"
