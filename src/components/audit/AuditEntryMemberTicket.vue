@@ -7,6 +7,7 @@
             ? `audit.action.${event.action}.self`
             : `audit.action.${event.action}.message`
         "
+        plural="event.context?.count"
         scope="global"
         tag="p">
         <template #author>

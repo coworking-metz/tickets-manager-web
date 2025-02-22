@@ -160,7 +160,7 @@ const rules = computed(() => ({
   count: {
     required: withAppI18nMessage(required),
     decimal: withAppI18nMessage(numeric),
-    minValue: withAppI18nMessage(minValue(0.5)),
+    minValue: withAppI18nMessage(minValue(0)),
   },
   comment: { required: withAppI18nMessage(required) },
 }));

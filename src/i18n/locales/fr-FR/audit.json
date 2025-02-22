@@ -25,8 +25,8 @@
       "self": "{author} a modifié son abonnement pour débuter au {started} au lieu du {previouslyStarted}"
     },
     "MEMBER_TICKET_ADD": {
-      "message": "{author} a ajouté une commande de {count} tickets pour {member}",
-      "self": "{author} s'est ajouté lui-même une commande de {count} tickets"
+      "message": "{author} a ajouté une commande de {count} tickets pour {member} | {author} a ajouté une commande de {count} ticket pour {member} | {author} a ajouté une commande de {count} tickets pour {member}",
+      "self": "{author} s'est ajouté lui-même une commande de {count} tickets | {author} s'est ajouté lui-même une commande de {count} ticket | {author} s'est ajouté lui-même une commande de {count} tickets"
     },
     "MEMBER_TICKET_UPDATE": {
       "message": "{author} a modifié le nombre de tickets d'une commande, de précédemment {previousCount} à désormais {count} pour {member}",
