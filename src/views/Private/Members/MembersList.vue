@@ -375,9 +375,10 @@ const ALL_TABS = computed<Tab[]>(() => [
   {
     key: 'nonCompliant',
     hash: 'non-compliant',
-    filter: (member: MemberListItem) => member.balance < 0 || isMembershipNonCompliant(member),
+    filter: (member: MemberListItem) =>
+      isMemberBalanceInsufficient(member) || isMembershipNonCompliant(member),
     count: filteredList.value.filter(
-      (member) => member.balance < 0 || isMembershipNonCompliant(member),
+      (member) => isMemberBalanceInsufficient(member) || isMembershipNonCompliant(member),
     ).length,
   },
   {

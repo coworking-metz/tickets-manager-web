@@ -139,6 +139,7 @@
         "label": "Last Name"
       },
       "location": {
+        "cantina": "{' '}inside Cantina",
         "poulailler": "{' '}inside Poulailler",
         "pti-poulailler": "{' '}inside P'ti Poulailler",
         "racine": "{' '}inside Racine"
