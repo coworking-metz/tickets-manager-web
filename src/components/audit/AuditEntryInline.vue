@@ -145,6 +145,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import {
   mdiCalendarEditOutline,
   mdiCalendarRangeOutline,
+  mdiCardAccountDetailsOutline,
   mdiChevronDown,
   mdiChevronUp,
   mdiDevices,
@@ -191,6 +192,9 @@ const icon = computed(() => {
     case AuditAction.MEMBER_TICKET_ADD:
     case AuditAction.MEMBER_TICKET_UPDATE:
       return mdiTicket;
+    case AuditAction.MEMBER_MEMBERSHIP_ADD:
+    case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
+      return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:
       return mdiKeyChainVariant;
     case AuditAction.UNLOCK_DECK_DOOR:

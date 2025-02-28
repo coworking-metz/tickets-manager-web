@@ -76,6 +76,21 @@ export const routes: RouteRecordRaw[] = [
                 }),
               },
               {
+                path: 'memberships/new',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW,
+                component: () =>
+                  import('@/views/Private/Members/Detail/Memberships/MembershipsNew.vue'),
+              },
+              {
+                path: 'memberships/:membershipId',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL,
+                component: () =>
+                  import('@/views/Private/Members/Detail/Memberships/MembershipsDetail.vue'),
+                props: (route) => ({
+                  id: route.params.membershipId,
+                }),
+              },
+              {
                 path: 'activity/:date',
                 name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
                 component: () =>

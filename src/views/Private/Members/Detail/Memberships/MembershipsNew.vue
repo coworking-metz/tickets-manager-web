@@ -1,9 +1,9 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
+  <div class="flex min-h-full flex-col bg-white shadow-xl">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
-          {{ $t('tickets.new.title') }}
+          {{ $t('memberships.new.title') }}
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
@@ -17,31 +17,28 @@
     </div>
     <form class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
       <Head>
-        <title>{{ $t('tickets.new.head.title') }}</title>
+        <title>{{ $t('memberships.new.head.title') }}</title>
       </Head>
       <AppTextField
-        id="ticket-count"
-        v-model.number="state.count"
-        :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
-        :label="$t('tickets.detail.count.label')"
-        min="0.5"
-        :prepend-icon="mdiTicket"
+        id="membership-started"
+        v-model="state.started"
+        :errors="vuelidate.started.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.started.label')"
+        :prepend-icon="mdiCalendarStartOutline"
         required
-        step="0.5"
-        type="number">
-        <template #append>
-          <span class="pointer-events-none z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
-            {{ $t('tickets.detail.count.unit', { count: state.count }) }}
-          </span>
-        </template>
-      </AppTextField>
+        type="date" />
+      <AppTextField
+        id="membership-reference"
+        v-model="state.orderReference"
+        :label="$t('memberships.detail.reference.label')"
+        :placeholder="$t('memberships.detail.reference.placeholder')" />
 
       <AppTextareaField
         id="comment"
         v-model="state.comment"
         :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
-        :label="$t('tickets.detail.comment.label')"
-        :placeholder="$t('tickets.detail.comment.placeholder')"
+        :label="$t('memberships.detail.comment.label')"
+        :placeholder="$t('memberships.detail.comment.placeholder')"
         required />
 
       <AppButton
@@ -63,15 +60,16 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
-import { addMemberTicket } from '@/services/api/tickets';
+import { addMemberMembership } from '@/services/api/memberships';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiPlus, mdiClose, mdiTicket } from '@mdi/js';
+import { mdiPlus, mdiClose, mdiCalendarStartOutline } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { minValue, numeric, required } from '@vuelidate/validators';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { required } from '@vuelidate/validators';
+import dayjs from 'dayjs';
+import { PropType, computed, nextTick, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -91,17 +89,14 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
-  count: null as null | number,
+  started: dayjs().format('YYYY-MM-DD') as string | null,
+  orderReference: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
 });
 
 const rules = computed(() => ({
-  count: {
-    required: withAppI18nMessage(required),
-    decimal: withAppI18nMessage(numeric),
-    minValue: withAppI18nMessage(minValue(0.5)),
-  },
+  started: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -115,15 +110,18 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  addMemberTicket(props.memberId, {
-    count: state.count as number,
+  addMemberMembership(props.memberId, {
+    membershipStart: state.started as string,
+    orderReference: state.orderReference,
     comment: state.comment as string,
   })
-    .then(async () => {
+    .then(async (newMembership) => {
       await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('tickets.new.onAdd.success'),
+        message: i18n.t('memberships.new.onAdd.success', {
+          year: dayjs(newMembership.membershipStart).year(),
+        }),
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
@@ -133,7 +131,7 @@ const onSubmit = async () => {
         queryKey: ['members', computed(() => props.memberId), 'history'],
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'tickets'],
+        queryKey: ['members', computed(() => props.memberId), 'memberships'],
       });
       queryClient.invalidateQueries({
         queryKey: ['members', computed(() => props.memberId), 'activity'],
@@ -141,21 +139,11 @@ const onSubmit = async () => {
     })
     .catch(handleSilentError)
     .catch((error) => {
-      notificationsStore.addErrorNotification(error, i18n.t('tickets.new.onAdd.fail'));
+      notificationsStore.addErrorNotification(error, i18n.t('memberships.new.onAdd.fail'));
       return Promise.reject(error);
     })
     .finally(() => {
       state.isSubmitting = false;
     });
 };
-
-watch(
-  () => props.member,
-  (member) => {
-    if (member?.balance < 0) {
-      state.count = Math.abs(member.balance);
-    }
-  },
-  { immediate: true },
-);
 </script>

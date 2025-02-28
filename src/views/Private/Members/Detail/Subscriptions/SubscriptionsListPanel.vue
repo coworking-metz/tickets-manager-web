@@ -76,7 +76,7 @@
           </RouterLink>
         </li>
         <button
-          v-if="!state.shouldScroll && subscriptions.length > 5"
+          v-if="!state.shouldScroll && subscriptions.length >= 4"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
           @click="state.shouldScroll = true">
           <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />

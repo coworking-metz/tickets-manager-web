@@ -20,6 +20,14 @@
       "message": "{author} a modifié les appareils de {member}",
       "self": "{author} a modifié ses appareils"
     },
+    "MEMBER_MEMBERSHIP_ADD": {
+      "message": "{author} a ajouté une adhésion démarrant au {started} pour {member}",
+      "self": "{author} s'est ajouté lui-même une adhésion démarrant au {started}"
+    },
+    "MEMBER_MEMBERSHIP_UPDATE": {
+      "message": "{author} a modifié une adhésion, démarrant précédemment le {previousStarted} au désormais {started} pour {member}",
+      "self": "{author} a modifié une de ses adhésions, démarrant précédemment le {previousStarted} au désormais {started}"
+    },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}",
       "self": "{author} a modifié son abonnement pour débuter au {started} au lieu du {previouslyStarted}"

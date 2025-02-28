@@ -12,3 +12,4 @@ export { default as activity } from './activity.json';
 export { default as errors } from './errors.json';
 export { default as audit } from './audit.json';
 export { default as attendance } from './attendance.json';
+export { default as memberships } from './memberships.json';

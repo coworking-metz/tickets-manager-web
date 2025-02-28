@@ -1,0 +1,50 @@
+{
+  "delete": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de cette suppression"
+    },
+    "description": "Êtes-vous sûr de vouloir supprimer cette adhésion ? Vous ne pourrez pas revenir en arrière.",
+    "onDelete": {
+      "fail": "Impossible de supprimer cette adhésion",
+      "success": "Adhésion supprimée"
+    },
+    "title": "Suppression de l'adhésion"
+  },
+  "detail": {
+    "comment": {
+      "label": "Motif",
+      "placeholder": "Expliquez la raison de ce changement"
+    },
+    "description": "Commandée le {purchasedDate} à {purchasedTime}",
+    "empty": {
+      "description": "Assurez-vous que l'adhésion est bien rattachée à ce membre.",
+      "title": "Adhésion introuvable"
+    },
+    "head": {
+      "title": "@:memberships.detail.title"
+    },
+    "onUpdate": {
+      "fail": "Impossible de modifier cette adhésion",
+      "success": "Adhésion {year} modifiée"
+    },
+    "reference": {
+      "label": "Référence de la commande",
+      "placeholder": "POUL-12345"
+    },
+    "started": {
+      "label": "Débutant le"
+    },
+    "title": "Adhésion {year}"
+  },
+  "new": {
+    "head": {
+      "title": "@:memberships.new.title"
+    },
+    "onAdd": {
+      "fail": "Impossible d'ajouter l'adhésion",
+      "success": "Adhésion {year} ajoutée"
+    },
+    "title": "Nouvelle adhésion"
+  }
+}

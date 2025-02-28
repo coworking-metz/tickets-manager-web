@@ -7,7 +7,6 @@
             ? `audit.action.${event.action}.self`
             : `audit.action.${event.action}.message`
         "
-        :plural="event.context?.count"
         scope="global"
         tag="p">
         <template #author>
@@ -40,14 +39,14 @@
           </span>
         </template>
 
-        <template #count>
+        <template #started>
           <strong class="font-bold text-gray-900">
-            {{ event.context?.count }}
+            {{ dayjs(event.context?.membershipStart).format('LL') }}
           </strong>
         </template>
 
-        <template #previousCount>
-          {{ event.context?.previousCount }}
+        <template #previousStarted>
+          {{ dayjs(event.context?.previousMembershipStart).format('LL') }}
         </template>
       </i18n-t>
     </template>
@@ -58,6 +57,7 @@
 import AuditEntryInline from './AuditEntryInline.vue';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent } from '@/services/api/audit';
+import dayjs from 'dayjs';
 import { computed, PropType } from 'vue';
 import { useRoute } from 'vue-router';
 
