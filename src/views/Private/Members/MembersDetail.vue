@@ -265,7 +265,7 @@
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                {{ dayjs(member.created).format('YYYY') }}
+                {{ dayjs(member.created).year() }}
               </dd>
             </div>
 
@@ -344,7 +344,7 @@
 
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
-            class="max-h-[40rem] min-w-64 shrink grow basis-0"
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
             :loading="isFetchingTickets"
             :remaining="member.balance"
             :tickets="tickets" />
@@ -354,9 +354,13 @@
                 dayjs().isBetween(started, ended, 'day', '[]'),
               )
             "
-            class="max-h-[40rem] min-w-64 shrink grow basis-0"
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
             :loading="isFetchingSubscriptions"
             :subscriptions="subscriptions" />
+          <MembershipsListPanel
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
+            :loading="isFetchingMemberships"
+            :memberships="memberships" />
         </div>
 
         <template #append>
@@ -412,6 +416,8 @@
           ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW,
+          ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         ].includes(route.name as string)
       "
@@ -419,10 +425,15 @@
       <RouterView
         :activity="activity"
         :loading="
-          isFetchingMember || isFetchingActivity || isFetchingSubscriptions || isFetchingTickets
+          isFetchingMember ||
+          isFetchingActivity ||
+          isFetchingSubscriptions ||
+          isFetchingTickets ||
+          isFetchingMemberships
         "
         :member="member"
         :member-id="id"
+        :memberships="memberships"
         :non-compliant-activity="nonCompliantActivity"
         :subscriptions="subscriptions"
         :tickets="tickets" />
@@ -437,6 +448,7 @@ import MemberDevicesPanel from './Detail/MemberDevicesPanel.vue';
 import MemberHistoryPanel from './Detail/MemberHistoryPanel.vue';
 import MemberProfilePanel from './Detail/MemberProfilePanel.vue';
 import MemberWordpressPanel from './Detail/MemberWordpressPanel.vue';
+import MembershipsListPanel from './Detail/Memberships/MembershipsListPanel.vue';
 import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
@@ -453,6 +465,7 @@ import {
   getMemberActivity,
   isMemberBalanceInsufficient,
 } from '@/services/api/members';
+import { getAllMemberMemberships } from '@/services/api/memberships';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
@@ -581,6 +594,30 @@ watch(
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.orders.subscriptions.onFetch.fail'),
+      );
+    }
+  },
+);
+
+const {
+  isFetching: isFetchingMemberships,
+  data: memberships,
+  error: membershipsError,
+} = useQuery({
+  queryKey: ['members', computed(() => props.id), 'memberships'],
+  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberMemberships(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+watch(
+  () => membershipsError.value,
+  (error) => {
+    if (error && !isSilentError(error)) {
+      notificationsStore.addErrorNotification(
+        error,
+        i18n.t('members.detail.orders.memberships.onFetch.fail'),
       );
     }
   },

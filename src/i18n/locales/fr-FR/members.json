@@ -51,6 +51,15 @@
     },
     "orders": {
       "description": "Toutes les commandes passées par ce membre, ainsi que leur montant.\nLes commandes de café et autres joyeusetés comme les dons sont exclues.",
+      "memberships": {
+        "add": "Ajouter une adhésion",
+        "more": "Plus",
+        "onFetch": {
+          "fail": "Impossible de récupérer ses adhésions"
+        },
+        "purchased": "Commandée le {date}",
+        "title": "Adhésions"
+      },
       "spent": {
         "monthly": {
           "label": "En moyenne",

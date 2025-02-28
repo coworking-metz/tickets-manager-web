@@ -17,10 +17,10 @@
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.author._id },
             }">
-            {{ event.author.name }}
+            {{ authorName }}
           </RouterLink>
           <span v-else class="font-medium text-gray-900" :title="event.author?.email">
-            {{ event.author?.name || $t('audit.author.unknown') }}
+            {{ authorName || $t('audit.author.unknown') }}
           </span>
         </template>
 
@@ -32,18 +32,10 @@
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.context.member._id },
             }">
-            {{
-              [event.context.member.firstName, event.context.member.lastName]
-                .filter(Boolean)
-                .join(' ')
-            }}
+            {{ memberName || $t('audit.author.unknown') }}
           </RouterLink>
           <span v-else class="font-medium text-gray-900">
-            {{
-              [event.context.member.firstName, event.context.member.lastName]
-                .filter(Boolean)
-                .join(' ')
-            }}
+            {{ memberName || $t('audit.author.unknown') }}
           </span>
         </template>
 
@@ -94,5 +86,13 @@ const props = defineProps({
 
 const activityDate = computed(
   () => props.event.context.previousActivity?.date ?? props.event.context.activity?.date,
+);
+
+const authorName = computed(() => props.event.author?.name || props.event.author?.email);
+const memberName = computed(
+  () =>
+    [props.event.context?.member.firstName, props.event.context?.member.lastName]
+      .filter(Boolean)
+      .join(' ') || props.event.context?.member.email,
 );
 </script>

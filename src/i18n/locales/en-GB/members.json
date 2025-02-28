@@ -51,6 +51,15 @@
     },
     "orders": {
       "description": "All orders placed by this member, along with their amounts.\nOrders for coffee and other goodies like donations are excluded.",
+      "memberships": {
+        "add": "Add new membership",
+        "more": "More",
+        "onFetch": {
+          "fail": "Unable to fetch member's memberships"
+        },
+        "purchased": "Purcharsed on {date}",
+        "title": "Memberships"
+      },
       "spent": {
         "monthly": {
           "label": "On average",
@@ -70,7 +79,7 @@
           "fail": "Unable to fetch member's subscriptions"
         },
         "period": "from {startDate} to {endDate}",
-        "purchased": "Ordered on {date}",
+        "purchased": "Purcharsed on {date}",
         "title": "Subscriptions"
       },
       "tickets": {
@@ -81,7 +90,7 @@
           "fail": "Unable to fetch member's ticket orders"
         },
         "overconsumed": "1 overconsumed | {count} overconsumed",
-        "purchased": "Ordered on {date}",
+        "purchased": "Purcharsed on {date}",
         "remaining": "None available | {count} remaining | {count} remaining",
         "title": "Individual Tickets",
         "used": {

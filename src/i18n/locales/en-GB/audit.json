@@ -20,6 +20,14 @@
       "message": "{author} has changed the devices of {member}",
       "self": "{author} has changed their devices"
     },
+    "MEMBER_MEMBERSHIP_ADD": {
+      "message": "{author} added a membership starting on {started} for {member}",
+      "self": "{author} added a membership starting on {started}"
+    },
+    "MEMBER_MEMBERSHIP_UPDATE": {
+      "message": "{author} updated a membership, starting previously {previousStarted} to now {started} for {member}",
+      "self": "{author} updated one of their memberships, starting previously {previousStarted} to now {started}"
+    },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} updated the subscription for {member} to start on {started} instead of {previouslyStarted}",
       "self": "{author} updated their subscription to start on {started} instead of {previouslyStarted}"

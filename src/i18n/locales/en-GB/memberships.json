@@ -1,0 +1,50 @@
+{
+  "delete": {
+    "comment": {
+      "label": "Reason",
+      "placeholder": "Explain the reason for this deletion"
+    },
+    "description": "Are you sure you want to delete this membership? You will not be able to undo this action.",
+    "onDelete": {
+      "fail": "Unable to delete this membership",
+      "success": "Membership deleted"
+    },
+    "title": "Membership deletion"
+  },
+  "detail": {
+    "comment": {
+      "label": "Reason",
+      "placeholder": "Explain the reason for this change"
+    },
+    "description": "Ordered on {purchasedDate} at {purchasedTime}",
+    "empty": {
+      "description": "Make sure the membership is properly linked to this member.",
+      "title": "Membership not found"
+    },
+    "head": {
+      "title": "@:memberships.detail.title"
+    },
+    "onUpdate": {
+      "fail": "Unable to update this membership",
+      "success": "Membership {year} updated"
+    },
+    "reference": {
+      "label": "Order reference",
+      "placeholder": "POUL-12345"
+    },
+    "started": {
+      "label": "Starting on"
+    },
+    "title": "Membership {year}"
+  },
+  "new": {
+    "head": {
+      "title": "@:memberships.new.title"
+    },
+    "onAdd": {
+      "fail": "Unable to add the membership",
+      "success": "Membership {year} added"
+    },
+    "title": "New Membership"
+  }
+}
