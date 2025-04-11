@@ -203,7 +203,10 @@ const icon = computed(() => {
       return mdiDoorbell;
     case AuditAction.PARKING_ACCESS:
       return mdiGateOpen;
+    case AuditAction.MEMBER_DEVICE_ADD:
     case AuditAction.MEMBER_DEVICE_UPDATE:
+    case AuditAction.MEMBER_DEVICE_REMOVE:
+    case AuditAction.MEMBER_DEVICES_UPDATE:
       return mdiDevices;
     case AuditAction.MEMBER_CAPABILITIES_UPDATE:
       return mdiHeadCogOutline;

@@ -16,9 +16,21 @@
       "message": "{author} has changed the capabilities of {member}",
       "self": "{author} has changed their capabilities"
     },
-    "MEMBER_DEVICE_UPDATE": {
+    "MEMBER_DEVICES_UPDATE": {
       "message": "{author} has changed the devices of {member}",
       "self": "{author} has changed their devices"
+    },
+    "MEMBER_DEVICE_ADD": {
+      "message": "{author} added a device to {member}",
+      "self": "{author} added a device"
+    },
+    "MEMBER_DEVICE_REMOVE": {
+      "message": "{author} removed a device from {member}",
+      "self": "{author} removed a device"
+    },
+    "MEMBER_DEVICE_UPDATE": {
+      "message": "{author} has changed one device of {member}",
+      "self": "{author} has changed one of their devices"
     },
     "MEMBER_MEMBERSHIP_ADD": {
       "message": "{author} added a membership starting on {started} for {member}",

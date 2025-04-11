@@ -16,9 +16,21 @@
       "message": "{author} a modifié les capacités de {member}",
       "self": "{author} a modifié ses capacités"
     },
-    "MEMBER_DEVICE_UPDATE": {
+    "MEMBER_DEVICES_UPDATE": {
       "message": "{author} a modifié les appareils de {member}",
       "self": "{author} a modifié ses appareils"
+    },
+    "MEMBER_DEVICE_ADD": {
+      "message": "{author} a ajouté un appareil à {member}",
+      "self": "{author} a ajouté un appareil"
+    },
+    "MEMBER_DEVICE_REMOVE": {
+      "message": "{author} a retiré un appareil à {member}",
+      "self": "{author} a retiré un appareil"
+    },
+    "MEMBER_DEVICE_UPDATE": {
+      "message": "{author} a modifié un appareil de {member}",
+      "self": "{author} a modifié un de appareils"
     },
     "MEMBER_MEMBERSHIP_ADD": {
       "message": "{author} a ajouté une adhésion démarrant au {started} pour {member}",
