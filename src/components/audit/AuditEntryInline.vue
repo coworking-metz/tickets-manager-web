@@ -206,7 +206,7 @@ const icon = computed(() => {
     case AuditAction.MEMBER_DEVICE_ADD:
     case AuditAction.MEMBER_DEVICE_UPDATE:
     case AuditAction.MEMBER_DEVICE_REMOVE:
-    case AuditAction.MEMBER_DEVICES_UPDATE:
+    case AuditAction.MEMBER_MAC_ADDRESSES_UPDATE:
       return mdiDevices;
     case AuditAction.MEMBER_CAPABILITIES_UPDATE:
       return mdiHeadCogOutline;
