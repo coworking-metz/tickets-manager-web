@@ -3,6 +3,15 @@
     "KEYS_ACCESS": {
       "message": "{author} retrieved the access code for the key box"
     },
+    "MEMBER_ACTIVITY_ADD": {
+      "duration": {
+        "FULL": "a full day",
+        "HALF": "a half day",
+        "NONE": "none"
+      },
+      "message": "{author} added an attendance of {duration} on {date} for {member}",
+      "self": "{author} added an attendance of {duration} on {date}"
+    },
     "MEMBER_ACTIVITY_UPDATE": {
       "duration": {
         "FULL": "a full day",

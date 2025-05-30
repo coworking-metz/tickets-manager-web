@@ -147,6 +147,14 @@
           :activity="activity"
           class="max-sm:overflow-x-auto"
           :non-compliant-activity="nonCompliantActivity" />
+
+        <RouterLink
+          class="mx-3 flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-6 sm:text-sm"
+          replace
+          :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
+          <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
+          {{ $t('members.detail.attendance.add') }}
+        </RouterLink>
         <template #title>
           <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
@@ -242,7 +250,7 @@
       </SectionRow>
 
       <SectionRow
-        class="mt-16 px-3 sm:px-0"
+        class="mt-8 px-3 sm:px-0"
         :description="$t('members.detail.audit.description')"
         :title="$t('members.detail.audit.title')">
         <MemberHistoryPanel :member="member" />
@@ -418,6 +426,7 @@
           ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
           ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL,
+          ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW,
           ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         ].includes(route.name as string)
       "
@@ -470,7 +479,7 @@ import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiInformationOutline, mdiOpenInNew } from '@mdi/js';
+import { mdiInformationOutline, mdiOpenInNew, mdiPlus } from '@mdi/js';
 import { useQuery } from '@tanstack/vue-query';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';

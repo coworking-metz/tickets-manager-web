@@ -26,10 +26,6 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selected" class="text-sm text-indigo-300">
-        {{ $t('activity.detail.description') }}
-      </p>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto size-16" />
     <EmptyState

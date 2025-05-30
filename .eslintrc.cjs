@@ -162,5 +162,5 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ['**/*.scss', 'node_modules', 'build', 'dist', 'yarn.lock'],
+  ignorePatterns: ['**/*.scss', 'node_modules', 'build', 'dist'],
 };

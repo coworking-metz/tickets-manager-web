@@ -144,6 +144,7 @@ import { AuditAction, AuditEvent } from '@/services/api/audit';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import {
   mdiCalendarEditOutline,
+  mdiCalendarPlusOutline,
   mdiCalendarRangeOutline,
   mdiCardAccountDetailsOutline,
   mdiChevronDown,
@@ -185,6 +186,8 @@ const essentialContext = computed(() => {
 
 const icon = computed(() => {
   switch (props.event?.action) {
+    case AuditAction.MEMBER_ACTIVITY_ADD:
+      return mdiCalendarPlusOutline;
     case AuditAction.MEMBER_ACTIVITY_UPDATE:
       return mdiCalendarEditOutline;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
