@@ -21,23 +21,29 @@ A step by step series of examples that tell you how to get a development environ
 ```bash
 git clone git@github.com:coworking-metz/tickets-manager-web.git
 cd tickets-manager-web
-yarn
+npm i
 ```
 
 ### Start the project
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 ### Build locally
 
 ```bash
-yarn build
-yarn serve
+npm run build
+npm run serve
 ```
 
 Then go to http://localhost:9090
+
+### Update dependencies
+
+```bash
+npx npm-check-updates -i
+```
 
 ## Deploy
 
@@ -80,7 +86,7 @@ If you are having problem during build, use [`patch-package`](https://github.com
 
 - Then run
 ```bash
-npx patch-package vue-echarts --exclude 'nothing' --use-yarn
+npx patch-package vue-echarts --exclude 'nothing'
 ```
 
 ## License
