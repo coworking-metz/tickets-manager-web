@@ -91,6 +91,11 @@ export const routes: RouteRecordRaw[] = [
                 }),
               },
               {
+                path: 'activity/new',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW,
+                component: () => import('@/views/Private/Members/Detail/Activity/ActivityNew.vue'),
+              },
+              {
                 path: 'activity/:date',
                 name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
                 component: () =>

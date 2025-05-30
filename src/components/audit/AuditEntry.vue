@@ -20,6 +20,7 @@ const props = defineProps({
 
 const auditComponent = computed(() => {
   switch (props.event?.action) {
+    case AuditAction.MEMBER_ACTIVITY_ADD:
     case AuditAction.MEMBER_ACTIVITY_UPDATE:
       return AuditEntryMemberActivity;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:

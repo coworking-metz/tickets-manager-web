@@ -55,7 +55,7 @@
           </strong>
         </template>
 
-        <template #previousDuration>
+        <template v-if="event.context.previousActivity" #previousDuration>
           {{
             $t(
               `audit.action.${event.action}.duration.${ActivityDuration[getActivityDuration(event.context.previousActivity.overrideValue ?? event.context.previousActivity.value)]}`,

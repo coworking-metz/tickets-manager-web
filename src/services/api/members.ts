@@ -95,6 +95,13 @@ export const getMemberActivity = (id: string): Promise<Attendance[]> => {
   return HTTP.get(`/api/members/${id}/activity`).then(({ data }) => data);
 };
 
+export const addMemberActivity = (
+  memberId: string,
+  activity: Omit<Attendance, 'type'> & { comment: string },
+): Promise<Attendance> => {
+  return HTTP.post(`/api/members/${memberId}/activity`, activity).then(({ data }) => data);
+};
+
 export const updateMemberActivity = (
   memberId: string,
   activityId: string,

@@ -4,7 +4,6 @@
       "label": "Reason",
       "placeholder": "Explain the reason for this change"
     },
-    "description": "",
     "duration": {
       "label": "Duration",
       "value": {
@@ -43,5 +42,18 @@
         }
       }
     }
+  },
+  "new": {
+    "date": {
+      "label": "What day?"
+    },
+    "head": {
+      "title": "@:activity.new.title"
+    },
+    "onAdd": {
+      "fail": "Unable to create attendance on {date}",
+      "success": "Attendance on {date} has been created"
+    },
+    "title": "New attendance"
   }
 }

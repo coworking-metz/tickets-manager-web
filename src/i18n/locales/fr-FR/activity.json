@@ -4,7 +4,6 @@
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"
     },
-    "description": "",
     "duration": {
       "label": "Durée",
       "value": {
@@ -43,5 +42,18 @@
         }
       }
     }
+  },
+  "new": {
+    "date": {
+      "label": "Quel jour ?"
+    },
+    "head": {
+      "title": "@:activity.new.title"
+    },
+    "onAdd": {
+      "fail": "Impossible de créer la présence du {date}",
+      "success": "Présence du {date} créée"
+    },
+    "title": "Nouvelle présence"
   }
 }

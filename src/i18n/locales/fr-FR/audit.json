@@ -3,6 +3,15 @@
     "KEYS_ACCESS": {
       "message": "{author} a recupéré le code d'accès à la boîte à clés"
     },
+    "MEMBER_ACTIVITY_ADD": {
+      "duration": {
+        "FULL": "1 journée entière",
+        "HALF": "1 demi-journée",
+        "NONE": "0 journée"
+      },
+      "message": "{author} a ajouté une présence de {duration} le {date} pour {member}",
+      "self": "{author} s'est ajouté une présence de {duration} le {date}"
+    },
     "MEMBER_ACTIVITY_UPDATE": {
       "duration": {
         "FULL": "1 journée entière",
