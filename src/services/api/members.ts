@@ -53,6 +53,7 @@ export interface Member extends MemberListItem {
   memberships: Membership[];
   trustedUser: boolean; // with at least 10 days of totalActivity
   activeUser: boolean; // with at least 20 days of activity (in the last 180 days)
+  badgeId?: string;
 }
 
 export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
@@ -85,6 +86,13 @@ export const getMember = (id: string): Promise<Member> => {
 
 export const updateMember = (id: string, member: Member): Promise<Member> => {
   return HTTP.put(`/api/members/${id}`, member).then(({ data }) => data);
+};
+
+export const updateMemberBagdeId = (
+  id: string,
+  badgeId: string,
+): Promise<{ memberId: string; badgeId: string }> => {
+  return HTTP.put(`/api/members/${id}/badgeId`, { badgeId }).then(({ data }) => data);
 };
 
 export const updateMemberMacAddresses = (id: string, macAddresses: string[]): Promise<Member> => {

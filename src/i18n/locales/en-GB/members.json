@@ -104,6 +104,10 @@
     },
     "profile": {
       "attending": "Currently attending{location}",
+      "badge": {
+        "description": "The number or identifier of the badge assigned by Bliiida and used to access the location.",
+        "label": "Badge Number"
+      },
       "birthdate": {
         "label": "Birthdate"
       },

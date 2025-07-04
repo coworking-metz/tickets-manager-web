@@ -52,6 +52,17 @@
           :prepend-icon="mdiCakeVariantOutline"
           type="date" />
       </div>
+
+      <AppTextField
+        id="badge"
+        v-model="state.badgeId"
+        class="min-w-48 shrink grow basis-0"
+        :description="$t('members.detail.profile.badge.description')"
+        :label="$t('members.detail.profile.badge.label')"
+        name="badge"
+        placeholder="A1:2B:C3:4D"
+        :prepend-icon="mdiCreditCardOutline"
+        type="text" />
     </div>
 
     <div
@@ -81,14 +92,14 @@ import AppAlert from '@/components/form/AppAlert.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import {
+  getVuelidateErrorFieldsCount,
   handleSilentError,
   scrollToFirstError,
-  getVuelidateErrorFieldsCount,
 } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { Member, updateMember } from '@/services/api/members';
+import { Member, updateMemberBagdeId } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiCakeVariantOutline, mdiCheckAll } from '@mdi/js';
+import { mdiCakeVariantOutline, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
@@ -110,6 +121,7 @@ const state = reactive({
   lastname: null as string | null,
   email: null as string | null,
   birthdate: null as string | null,
+  badgeId: null as string | null,
 
   isSubmitting: false as boolean,
   hasFailValidationOnce: false as boolean,
@@ -139,12 +151,7 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  updateMember(props.member._id, {
-    firstName: state.firstname,
-    lastName: state.lastname,
-    email: state.email,
-    birthdate: state.birthdate,
-  } as never)
+  updateMemberBagdeId(props.member._id, state.badgeId as string)
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
@@ -183,6 +190,7 @@ watch(
       state.lastname = member.lastName || null;
       state.email = member.email || null;
       state.birthdate = member.birthDate || null;
+      state.badgeId = member.badgeId || null;
     }
   },
   { immediate: true },
