@@ -1,9 +1,12 @@
 <template>
-  <div class="flex flex-col gap-1">
+  <div class="flex flex-col">
     <label v-if="label" class="block font-medium text-gray-900 sm:text-sm" :for="id">
       {{ label }}
     </label>
-    <div class="flex flex-row rounded-md shadow-sm">
+    <span v-if="description" class="mb-1 whitespace-pre-line text-sm text-gray-500">
+      {{ description }}
+    </span>
+    <div class="mt-1 flex flex-row rounded-md shadow-sm">
       <slot name="before" />
       <div class="relative flex grow flex-row items-stretch gap-3">
         <slot name="prepend">
@@ -79,6 +82,10 @@ const props = defineProps({
     default: null,
   },
   label: {
+    type: String,
+    default: null,
+  },
+  description: {
     type: String,
     default: null,
   },
