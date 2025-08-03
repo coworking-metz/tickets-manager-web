@@ -1,7 +1,10 @@
 {
   "action": {
     "KEYS_ACCESS": {
-      "message": "{author} a recupéré le code d'accès à la boîte à clés"
+      "message": "{author} a recupéré le code d'accès de la boîte à clés"
+    },
+    "KEYS_ACCESS_DECK": {
+      "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte de la terrasse"
     },
     "MEMBER_ACTIVITY_ADD": {
       "duration": {

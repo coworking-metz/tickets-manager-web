@@ -199,6 +199,7 @@ const icon = computed(() => {
     case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
       return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:
+    case AuditAction.KEYS_ACCESS_DECK:
       return mdiKeyChainVariant;
     case AuditAction.UNLOCK_DECK_DOOR:
       return mdiLockOpenOutline;
