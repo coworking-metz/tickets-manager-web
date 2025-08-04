@@ -62,7 +62,21 @@
         name="badge"
         placeholder="A1:2B:C3:4D"
         :prepend-icon="mdiCreditCardOutline"
-        type="text" />
+        type="text">
+        <template #after>
+          <button
+            class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            type="button"
+            @click="state.isScannerVisible = true">
+            <SvgIcon aria-hidden="true" class="size-5" :path="mdiCellphoneNfc" type="mdi" />
+            <span>{{ $t('members.detail.profile.badge.scan') }}</span>
+          </button>
+        </template>
+      </AppTextField>
+
+      <NFCScannerBottomSheet
+        v-model="state.isScannerVisible"
+        @update:identifier="(id) => (state.badgeId = id)" />
     </div>
 
     <div
@@ -88,6 +102,7 @@
 </template>
 
 <script setup lang="ts">
+import NFCScannerBottomSheet from '@/components/NFCScannerBottomSheet.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -99,7 +114,7 @@ import {
 import { withAppI18nMessage } from '@/i18n';
 import { Member, updateMemberBagdeId } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiCakeVariantOutline, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
+import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
@@ -125,6 +140,8 @@ const state = reactive({
 
   isSubmitting: false as boolean,
   hasFailValidationOnce: false as boolean,
+
+  isScannerVisible: false,
 });
 
 const rules = computed(() => ({

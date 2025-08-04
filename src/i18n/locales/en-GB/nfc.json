@@ -1,0 +1,20 @@
+{
+  "scan": {
+    "onRead": {
+      "connected": "Card recognized…",
+      "fail": "Unable to retrieve ID ❌",
+      "processing": "Processing…",
+      "reading": "Bring the card close to the device",
+      "retrying": "Retrying…",
+      "success": "ID retrieved ✅",
+      "waiting": "Ready to read the card"
+    },
+    "onUnavailable": {
+      "description": "Your device does not support NFC card reading.\n\nWe recommend using Chrome on an Android phone.",
+      "title": "NFC unavailable"
+    },
+    "start": "Start",
+    "stop": "Stop",
+    "title": "Read an NFC Card"
+  }
+}

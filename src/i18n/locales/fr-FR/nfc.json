@@ -1,0 +1,20 @@
+{
+  "scan": {
+    "onRead": {
+      "connected": "Carte reconnue…",
+      "fail": "Impossible de récupérer l'identifiant ❌",
+      "processing": "Traitement en cours…",
+      "reading": "Approcher la carte de l'appareil",
+      "retrying": "Nouvelle tentative en cours…",
+      "success": "Identifiant récupéré ✅",
+      "waiting": "Prêt à lire la carte"
+    },
+    "onUnavailable": {
+      "description": "Votre appareil ne supporte pas la lecture de cartes NFC.\n\nNous recommandons d'utiliser Chrome sur un téléphone Android.",
+      "title": "NFC indisponible"
+    },
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "title": "Lire une carte NFC"
+  }
+}

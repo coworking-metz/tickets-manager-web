@@ -106,7 +106,8 @@
       "attending": "Actuellement présent⸱e{location}",
       "badge": {
         "description": "Le numéro ou identifiant du badge attribué par Bliiida et utilisé pour accéder au tiers lieu.",
-        "label": "Numéro de badge"
+        "label": "Numéro de badge",
+        "scan": "Scanner"
       },
       "birthdate": {
         "label": "Date de naissance"

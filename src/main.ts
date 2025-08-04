@@ -12,7 +12,6 @@ import { useHttpStore } from './store/http';
 import { useNotificationsStore } from './store/notifications';
 import { useSettingsStore } from './store/settings';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { DotLottiePlayer } from '@johanaarstein/dotlottie-player-light';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue';
 import FloatingVue from 'floating-vue';
@@ -28,7 +27,6 @@ app.use(router);
 app.use(head);
 app.use(VueQueryPlugin);
 app.use(FloatingVue);
-app.component('DotLottiePlayer', DotLottiePlayer);
 app.component('AnimatedCounter', VueNumberAnimation);
 app.component('SvgIcon', SvgIcon);
 

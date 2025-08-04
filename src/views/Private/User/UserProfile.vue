@@ -5,7 +5,7 @@
     </Head>
     <section class="my-auto flex w-full flex-col items-start sm:flex-row">
       <div class="mb-6 shrink grow basis-0">
-        <dotlottie-player autoplay="true" class="h-24 min-w-40" loop :src="RollingTumbleweed" />
+        <LottiePlayer autoplay class="h-24 min-w-40" loop :src="RollingTumbleweed" />
       </div>
       <div class="flex w-full flex-col sm:ml-6">
         <div class="sm:border-l sm:border-gray-200 sm:pl-6">
@@ -107,6 +107,7 @@
 
 <script lang="ts" setup>
 import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
+import LottiePlayer from '@/components/LottiePlayer.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';

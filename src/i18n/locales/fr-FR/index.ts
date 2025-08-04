@@ -13,3 +13,4 @@ export { default as errors } from './errors.json';
 export { default as audit } from './audit.json';
 export { default as attendance } from './attendance.json';
 export { default as memberships } from './memberships.json';
+export { default as nfc } from './nfc.json';
