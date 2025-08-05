@@ -10,7 +10,7 @@
       "waiting": "Ready to read the card"
     },
     "onUnavailable": {
-      "description": "Your device does not support NFC card reading.\n\nWe recommend using Chrome on an Android phone.",
+      "description": "Your device does not support NFC card reading.\n\nWe recommend using Chrome on an Android phone through a secure protocol (https).",
       "title": "NFC unavailable"
     },
     "start": "Start",

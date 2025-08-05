@@ -10,7 +10,7 @@
       "waiting": "Prêt à lire la carte"
     },
     "onUnavailable": {
-      "description": "Votre appareil ne supporte pas la lecture de cartes NFC.\n\nNous recommandons d'utiliser Chrome sur un téléphone Android.",
+      "description": "Votre appareil ne supporte pas la lecture de cartes NFC.\n\nNous recommandons d'utiliser Chrome sur un téléphone Android au travers d'un procotole sécurisé (https).",
       "title": "NFC indisponible"
     },
     "start": "Démarrer",

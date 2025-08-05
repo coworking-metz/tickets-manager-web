@@ -96,6 +96,7 @@
           <AppButton
             class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
             :icon="mdiLockOutline"
+            :loading="state.isLoggingOut"
             @click="onLogout">
             {{ $t('action.logout') }}
           </AppButton>
@@ -111,19 +112,34 @@ import LottiePlayer from '@/components/LottiePlayer.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';
+import { ROUTE_NAMES } from '@/router/names';
+import HTTP from '@/services/http';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { mdiLockOutline } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const router = useRouter();
 const settingsStore = useSettingsStore();
+const router = useRouter();
+const state = reactive({
+  isLoggingOut: false,
+});
 
-const onLogout = () => {
+const onLogout = async () => {
+  state.isLoggingOut = true;
   authStore.logout();
-  router.push('/login');
+  const route = router.resolve({ name: ROUTE_NAMES.LOGIN });
+  const absoluteURL = new URL(route.href, window.location.origin).href;
+  window.location.href = HTTP.getUri({
+    url: '/api/auth/logout',
+    params: {
+      follow: absoluteURL,
+      loggedOut: true,
+    },
+  });
 };
 </script>

@@ -13,5 +13,8 @@
   "logo": {
     "label": "Coworking Metz"
   },
+  "onLoggedOut": {
+    "success": "Vous avez été déconnecté avec succès."
+  },
   "title": "Gestion du Coworking Metz"
 }
