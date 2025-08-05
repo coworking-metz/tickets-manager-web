@@ -24,6 +24,10 @@
       "message": "{author} has changed the activity of {member} from {date} to {duration} instead of {previousDuration}",
       "self": "{author} has changed their activity from {date} to {duration} instead of {previousDuration}"
     },
+    "MEMBER_BADGE_ID_UPDATE": {
+      "message": "{author} has changed the badge ID of {member}",
+      "self": "{author} has changed their badge ID"
+    },
     "MEMBER_CAPABILITIES_UPDATE": {
       "message": "{author} has changed the capabilities of {member}",
       "self": "{author} has changed their capabilities"

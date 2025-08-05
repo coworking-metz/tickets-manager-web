@@ -24,6 +24,10 @@
       "message": "{author} a modifié la présense de {member} du {date} à {duration} au lieu de {previousDuration}",
       "self": "{author} a modifié sa présence du {date} à {duration} au lieu de {previousDuration}"
     },
+    "MEMBER_BADGE_ID_UPDATE": {
+      "message": "{author} a modifié l'identifiant du badge de {member}",
+      "self": "{author} a modifié son identifiant de badge"
+    },
     "MEMBER_CAPABILITIES_UPDATE": {
       "message": "{author} a modifié les capacités de {member}",
       "self": "{author} a modifié ses capacités"

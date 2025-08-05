@@ -149,6 +149,7 @@ import {
   mdiCardAccountDetailsOutline,
   mdiChevronDown,
   mdiChevronUp,
+  mdiCreditCardOutline,
   mdiDevices,
   mdiDoorbell,
   mdiGateOpen,
@@ -190,6 +191,8 @@ const icon = computed(() => {
       return mdiCalendarPlusOutline;
     case AuditAction.MEMBER_ACTIVITY_UPDATE:
       return mdiCalendarEditOutline;
+    case AuditAction.MEMBER_BADGE_ID_UPDATE:
+      return mdiCreditCardOutline;
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
       return mdiCalendarRangeOutline;
     case AuditAction.MEMBER_TICKET_ADD:
