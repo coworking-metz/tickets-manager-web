@@ -16,6 +16,9 @@ export const routes: RouteRecordRaw[] = [
         path: 'login',
         name: ROUTE_NAMES.LOGIN,
         component: () => import('@/views/Public/LoginPage.vue'),
+        props: (route) => ({
+          loggedOut: route.query.loggedOut === 'true',
+        }),
       },
     ],
   },

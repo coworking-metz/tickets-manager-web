@@ -84,10 +84,19 @@ import monoLogo from '@/assets/logo-mono.png';
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import HTTP from '@/services/http';
+import { useNotificationsStore } from '@/store/notifications';
 import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  loggedOut: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const PHOTOS = [
   'https://www.coworking-metz.fr/wp-content/uploads/2020/05/20200524_120319.jpg',
@@ -95,8 +104,24 @@ const PHOTOS = [
 ];
 
 const route = useRoute();
+const i18n = useI18n();
+const notificationsStore = useNotificationsStore();
 const state = reactive({
   isLoggingIn: false,
   selectedPhoto: PHOTOS[Math.floor(Math.random() * PHOTOS.length)],
 });
+
+watch(
+  () => props.loggedOut,
+  (loggedOut) => {
+    if (loggedOut) {
+      notificationsStore.addNotification({
+        message: i18n.t('login.onLoggedOut.success'),
+        type: 'success',
+        timeout: 3_000,
+      });
+    }
+  },
+  { immediate: true },
+);
 </script>

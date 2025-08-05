@@ -4,8 +4,8 @@
       'flex gap-2',
       horizontal ? 'flex-row items-start' : 'max-w-xs flex-col items-center text-center',
     ]">
-    <dotlottie-player
-      autoplay="true"
+    <LottiePlayer
+      autoplay
       :class="[horizontal ? 'max-h-48 w-auto max-w-48' : 'mb-6 h-64', animationClass]"
       :loop="loop"
       :src="animation" />
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import LottiePlayer from './LottiePlayer.vue';
 import EmptyBox from '@/assets/animations/empty-box.lottie';
 
 defineProps({

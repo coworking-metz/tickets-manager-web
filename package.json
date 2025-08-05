@@ -13,10 +13,11 @@
     "serve": "docker run --rm --name tickets-manager-web-nginx -v $(pwd)/dist:/usr/share/nginx/html:ro -p9999:80 nginx"
   },
   "dependencies": {
+    "@dotlottie/player-component": "^2.7.12",
+    "@douxcode/vue-spring-bottom-sheet": "^2.4.2",
     "@headlessui/vue": "^1.7.23",
     "@intlify/unplugin-vue-i18n": "^4.0.0",
     "@jamescoyle/vue-icon": "^0.1.2",
-    "@johanaarstein/dotlottie-player-light": "^1.0.13",
     "@mdi/js": "^7.4.47",
     "@tanstack/vue-query": "^5.79.0",
     "@unhead/vue": "^1.11.14",

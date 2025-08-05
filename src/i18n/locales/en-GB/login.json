@@ -13,5 +13,8 @@
   "logo": {
     "label": "Coworking Metz"
   },
+  "onLoggedOut": {
+    "success": "You have been successfully logged out."
+  },
   "title": "Coworking Metz Management"
 }
