@@ -132,7 +132,7 @@ const state = reactive({
 const onLogout = async () => {
   state.isLoggingOut = true;
   authStore.logout();
-  const route = router.resolve({ name: ROUTE_NAMES.LOGIN });
+  const route = router.resolve({ name: ROUTE_NAMES.HOME });
   const absoluteURL = new URL(route.href, window.location.origin).href;
   window.location.href = HTTP.getUri({
     url: '/api/auth/logout',

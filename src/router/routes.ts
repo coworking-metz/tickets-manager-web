@@ -26,7 +26,7 @@ export const routes: RouteRecordRaw[] = [
     path: '',
     component: () => import('@/views/Private/PrivateLayout.vue'),
     children: [
-      { path: '', redirect: { name: ROUTE_NAMES.MEMBERS.LIST } },
+      { path: '', name: ROUTE_NAMES.HOME, redirect: { name: ROUTE_NAMES.MEMBERS.LIST } },
       {
         path: 'members',
         component: () => import('@/views/Private/Members/MembersPage.vue'),
