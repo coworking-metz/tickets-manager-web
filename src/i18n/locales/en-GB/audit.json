@@ -60,6 +60,14 @@
       "message": "{author} updated a membership, starting previously {previousStarted} to now {started} for {member}",
       "self": "{author} updated one of their memberships, starting previously {previousStarted} to now {started}"
     },
+    "MEMBER_SUBSCRIPTION_ADD": {
+      "message": "{author} added a subscription for {member} starting on {started}",
+      "self": "{author} added their subscription starting on {started}"
+    },
+    "MEMBER_SUBSCRIPTION_REMOVE": {
+      "message": "{author} removed the subscription for {member} starting on {started}",
+      "self": "{author} removed their subscription starting on {started}"
+    },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} updated the subscription for {member} to start on {started} instead of {previouslyStarted}",
       "self": "{author} updated their subscription to start on {started} instead of {previouslyStarted}"

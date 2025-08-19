@@ -1,4 +1,5 @@
 import '@/styles/main.css';
+import 'floating-vue/dist/style.css';
 import 'typeface-inter';
 import App from './App.vue';
 import { i18nInstance } from './i18n';
@@ -9,7 +10,6 @@ import createHttpInterceptors from './services/interceptors';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
-import { useNotificationsStore } from './store/notifications';
 import { useSettingsStore } from './store/settings';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { VueQueryPlugin } from '@tanstack/vue-query';
@@ -17,7 +17,6 @@ import { createHead } from '@unhead/vue';
 import FloatingVue from 'floating-vue';
 import { createApp } from 'vue';
 import VueNumberAnimation from 'vue-number-animation';
-import 'floating-vue/dist/style.css';
 
 const app = createApp(App);
 const head = createHead();
@@ -35,7 +34,6 @@ createHttpInterceptors(HTTP);
 router.beforeEach(async (to, from, next) => {
   const httpStore = useHttpStore();
   const authStore = useAuthStore();
-  const notificationsStore = useNotificationsStore();
 
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router

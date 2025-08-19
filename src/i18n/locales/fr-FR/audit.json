@@ -60,6 +60,14 @@
       "message": "{author} a modifié une adhésion, démarrant précédemment le {previousStarted} au désormais {started} pour {member}",
       "self": "{author} a modifié une de ses adhésions, démarrant précédemment le {previousStarted} au désormais {started}"
     },
+    "MEMBER_SUBSCRIPTION_ADD": {
+      "message": "{author} a ajouté un abonnement pour {member} démarrant le {started}",
+      "self": "{author} a ajouté son abonnement démarrant le {started}"
+    },
+    "MEMBER_SUBSCRIPTION_REMOVE": {
+      "message": "{author} a supprimé l'abonnement de {member} démarrant le {started}",
+      "self": "{author} a supprimé son abonnement démarrant le {started}"
+    },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}",
       "self": "{author} a modifié son abonnement pour débuter au {started} au lieu du {previouslyStarted}"

@@ -23,14 +23,16 @@ const auditComponent = computed(() => {
     case AuditAction.MEMBER_ACTIVITY_ADD:
     case AuditAction.MEMBER_ACTIVITY_UPDATE:
       return AuditEntryMemberActivity;
+    case AuditAction.MEMBER_SUBSCRIPTION_ADD:
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
+    case AuditAction.MEMBER_SUBSCRIPTION_REMOVE:
       return AuditEntryMemberSubscription;
-    case AuditAction.MEMBER_TICKET_UPDATE:
     case AuditAction.MEMBER_TICKET_ADD:
+    case AuditAction.MEMBER_TICKET_UPDATE:
     case AuditAction.MEMBER_TICKET_REMOVE:
       return AuditEntryMemberTicket;
-    case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
     case AuditAction.MEMBER_MEMBERSHIP_ADD:
+    case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
     case AuditAction.MEMBER_MEMBERSHIP_REMOVE:
       return AuditEntryMemberMembership;
     default:
