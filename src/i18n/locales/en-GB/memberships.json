@@ -7,9 +7,9 @@
     "description": "Are you sure you want to delete this membership? You will not be able to undo this action.",
     "onDelete": {
       "fail": "Unable to delete this membership",
-      "success": "Membership deleted"
+      "success": "Membership {year} deleted"
     },
-    "title": "Membership deletion"
+    "title": "Membership {year} deletion"
   },
   "detail": {
     "comment": {

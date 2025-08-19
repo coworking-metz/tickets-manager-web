@@ -52,7 +52,7 @@
             <div class="mt-10 flex items-center gap-x-6">
               <a
                 class="flex flex-row items-center gap-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                :href="HTTP.getUri({ url: '/api/auth/login', params: route.query })"
+                :href="HTTP.getUri({ url: '/api/auth/login', params: queryParams })"
                 @click="state.isLoggingIn = true">
                 <LoadingSpinner v-if="state.isLoggingIn" class="size-5" />
                 {{ $t('action.login') }}
@@ -87,7 +87,7 @@ import HTTP from '@/services/http';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { reactive, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -109,6 +109,11 @@ const notificationsStore = useNotificationsStore();
 const state = reactive({
   isLoggingIn: false,
   selectedPhoto: PHOTOS[Math.floor(Math.random() * PHOTOS.length)],
+});
+
+const queryParams = computed(() => {
+  const { loggedOut, ...others } = route.query;
+  return others;
 });
 
 watch(

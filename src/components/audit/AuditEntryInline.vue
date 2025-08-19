@@ -158,6 +158,7 @@ import {
   mdiKeyChainVariant,
   mdiLockOpenOutline,
   mdiTicket,
+  mdiTicketConfirmationOutline,
 } from '@mdi/js';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
@@ -197,8 +198,10 @@ const icon = computed(() => {
       return mdiCalendarRangeOutline;
     case AuditAction.MEMBER_TICKET_ADD:
     case AuditAction.MEMBER_TICKET_UPDATE:
+    case AuditAction.MEMBER_TICKET_REMOVE:
       return mdiTicket;
     case AuditAction.MEMBER_MEMBERSHIP_ADD:
+    case AuditAction.MEMBER_MEMBERSHIP_REMOVE:
     case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
       return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:

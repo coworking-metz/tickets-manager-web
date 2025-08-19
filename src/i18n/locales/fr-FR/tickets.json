@@ -7,9 +7,9 @@
     "description": "Êtes-vous sûr de vouloir supprimer cette commande de tickets ? Vous ne pourrez pas revenir en arrière.",
     "onDelete": {
       "fail": "Impossible de supprimer cette commande de tickets",
-      "success": "Commande de tickets supprimée"
+      "success": "Commande {reference} de {count} ticket supprimée | Commande {reference} de {count} ticket supprimée | Commande {reference} de {count} tickets supprimée"
     },
-    "title": "Suppression de la commande de tickets"
+    "title": "Suppression de la commande {reference} de {count} ticket | Suppression de la commande {reference} de {count} ticket | Suppression de la commande {reference} de {count} tickets"
   },
   "detail": {
     "comment": {

@@ -49,10 +49,7 @@ router.beforeEach(async (to, from, next) => {
   await (async () => {
     // retrieve tokens from query params
     if (accessToken) {
-      await authStore.setAccessToken(accessToken as string).catch((error) => {
-        notificationsStore.addErrorNotification(error);
-        return Promise.reject(error);
-      });
+      await authStore.setAccessToken(accessToken as string);
     }
 
     if (refreshToken) {

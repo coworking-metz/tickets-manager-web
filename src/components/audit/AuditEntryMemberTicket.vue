@@ -7,7 +7,7 @@
             ? `audit.action.${event.action}.self`
             : `audit.action.${event.action}.message`
         "
-        :plural="event.context?.count"
+        :plural="event.context?.count ?? event.context?.ticketsOrder?.count"
         scope="global"
         tag="p">
         <template #author>
@@ -42,7 +42,7 @@
 
         <template #count>
           <strong class="font-bold text-gray-900">
-            {{ event.context?.count }}
+            {{ event.context?.count ?? event.context?.ticketsOrder?.count }}
           </strong>
         </template>
 

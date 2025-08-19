@@ -88,13 +88,14 @@
           {{ $t('action.delete') }}
         </AppButton>
       </div>
-    </form>
 
-    <TicketsDeleteDialog
-      v-model="state.isDeleteDialogVisible"
-      :member-id="props.memberId"
-      :ticket-id="props.id"
-      @deleted="onChanged" />
+      <TicketsDeleteDialog
+        v-model="state.isDeleteDialogVisible"
+        :member-id="props.memberId"
+        :ticket="selectedTicket"
+        :ticket-id="props.id"
+        @deleted="onChanged" />
+    </form>
   </div>
 </template>
 

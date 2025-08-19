@@ -41,7 +41,11 @@
                     <DialogTitle
                       as="h3"
                       class="text-lg font-medium leading-6 text-gray-900 max-sm:text-center">
-                      {{ $t('memberships.delete.title') }}
+                      {{
+                        $t('memberships.delete.title', {
+                          year: dayjs(membership.membershipStart).year(),
+                        })
+                      }}
                     </DialogTitle>
                     <p class="mt-2 text-gray-500 sm:text-sm">
                       {{ $t('memberships.delete.description') }}
@@ -86,14 +90,14 @@ import AppButton from '@/components/form/AppButton.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { deleteMemberMembership } from '@/services/api/memberships';
+import { deleteMemberMembership, Membership } from '@/services/api/memberships';
 import { useNotificationsStore } from '@/store/notifications';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { mdiAlertOutline } from '@mdi/js';
-import { useQueryClient } from '@tanstack/vue-query';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { computed, nextTick, reactive } from 'vue';
+import dayjs from 'dayjs';
+import { computed, nextTick, PropType, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['update:modelValue', 'deleted']);
@@ -110,11 +114,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  membership: {
+    type: Object as PropType<Membership>,
+    required: true,
+  },
 });
 
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
-const queryClient = useQueryClient();
 const state = reactive({
   comment: null as string | null,
   isDeleting: false,
@@ -137,17 +144,10 @@ const onDelete = async () => {
     .then(() => {
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('memberships.delete.onDelete.success'),
+        message: i18n.t('memberships.delete.onDelete.success', {
+          year: dayjs(props.membership.membershipStart).year(),
+        }),
         timeout: 3_000,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'memberships'],
       });
       emit('update:modelValue', false);
       emit('deleted');
