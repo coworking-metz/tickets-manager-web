@@ -52,9 +52,21 @@
       "message": "{author} added a membership starting on {started} for {member}",
       "self": "{author} added a membership starting on {started}"
     },
+    "MEMBER_MEMBERSHIP_REMOVE": {
+      "message": "{author} removed the membership starting on {started} for {member}",
+      "self": "{author} removed their membership starting on {started}"
+    },
     "MEMBER_MEMBERSHIP_UPDATE": {
       "message": "{author} updated a membership, starting previously {previousStarted} to now {started} for {member}",
       "self": "{author} updated one of their memberships, starting previously {previousStarted} to now {started}"
+    },
+    "MEMBER_SUBSCRIPTION_ADD": {
+      "message": "{author} added a subscription for {member} starting on {started}",
+      "self": "{author} added their subscription starting on {started}"
+    },
+    "MEMBER_SUBSCRIPTION_REMOVE": {
+      "message": "{author} removed the subscription for {member} starting on {started}",
+      "self": "{author} removed their subscription starting on {started}"
     },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} updated the subscription for {member} to start on {started} instead of {previouslyStarted}",
@@ -63,6 +75,10 @@
     "MEMBER_TICKET_ADD": {
       "message": "{author} added an order of {count} tickets to {member}",
       "self": "{author} added an order {count} tickets to themselves"
+    },
+    "MEMBER_TICKET_REMOVE": {
+      "message": "{author} removed an order of {count} tickets from {member}",
+      "self": "{author} removed an order of {count} tickets from themselves"
     },
     "MEMBER_TICKET_UPDATE": {
       "message": "{author} modified the number of tickets in an order, from previously {previousCount} to now {count} for {member}",

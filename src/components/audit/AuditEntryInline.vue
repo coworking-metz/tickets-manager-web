@@ -193,13 +193,17 @@ const icon = computed(() => {
       return mdiCalendarEditOutline;
     case AuditAction.MEMBER_BADGE_ID_UPDATE:
       return mdiCreditCardOutline;
+    case AuditAction.MEMBER_SUBSCRIPTION_ADD:
     case AuditAction.MEMBER_SUBSCRIPTION_UPDATE:
+    case AuditAction.MEMBER_SUBSCRIPTION_REMOVE:
       return mdiCalendarRangeOutline;
     case AuditAction.MEMBER_TICKET_ADD:
     case AuditAction.MEMBER_TICKET_UPDATE:
+    case AuditAction.MEMBER_TICKET_REMOVE:
       return mdiTicket;
     case AuditAction.MEMBER_MEMBERSHIP_ADD:
     case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
+    case AuditAction.MEMBER_MEMBERSHIP_REMOVE:
       return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:
     case AuditAction.KEYS_ACCESS_DECK:

@@ -98,13 +98,14 @@
           {{ $t('action.delete') }}
         </AppButton>
       </div>
-    </form>
 
-    <SubscriptionsDeleteDialog
-      v-model="state.isDeleteDialogVisible"
-      :member-id="props.memberId"
-      :subscription-id="props.id"
-      @deleted="onChanged" />
+      <SubscriptionsDeleteDialog
+        v-model="state.isDeleteDialogVisible"
+        :member-id="props.memberId"
+        :subscription="selectedSubscription"
+        :subscription-id="props.id"
+        @deleted="onChanged" />
+    </form>
   </div>
 </template>
 

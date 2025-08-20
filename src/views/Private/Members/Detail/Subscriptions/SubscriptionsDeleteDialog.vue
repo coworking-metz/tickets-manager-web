@@ -86,14 +86,13 @@ import AppButton from '@/components/form/AppButton.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { deleteMemberSubscription } from '@/services/api/subscriptions';
+import { deleteMemberSubscription, Subscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { mdiAlertOutline } from '@mdi/js';
-import { useQueryClient } from '@tanstack/vue-query';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { computed, nextTick, reactive } from 'vue';
+import { computed, nextTick, PropType, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['update:modelValue', 'deleted']);
@@ -110,11 +109,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  subscription: {
+    type: Object as PropType<Subscription>,
+    required: true,
+  },
 });
 
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
-const queryClient = useQueryClient();
 const state = reactive({
   comment: null as string | null,
   isDeleting: false,
@@ -140,15 +142,6 @@ const onDelete = async () => {
         type: 'success',
         message: i18n.t('subscriptions.delete.onDelete.success'),
         timeout: 3_000,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
       });
       emit('update:modelValue', false);
       emit('deleted');

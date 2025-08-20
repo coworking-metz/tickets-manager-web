@@ -52,9 +52,21 @@
       "message": "{author} a ajouté une adhésion démarrant au {started} pour {member}",
       "self": "{author} s'est ajouté lui-même une adhésion démarrant au {started}"
     },
+    "MEMBER_MEMBERSHIP_REMOVE": {
+      "message": "{author} a supprimé l'adhésion démarrant au {started} de {member}",
+      "self": "{author} s'est supprimé l'adhésion démarrant au {started}"
+    },
     "MEMBER_MEMBERSHIP_UPDATE": {
       "message": "{author} a modifié une adhésion, démarrant précédemment le {previousStarted} au désormais {started} pour {member}",
       "self": "{author} a modifié une de ses adhésions, démarrant précédemment le {previousStarted} au désormais {started}"
+    },
+    "MEMBER_SUBSCRIPTION_ADD": {
+      "message": "{author} a ajouté un abonnement pour {member} démarrant le {started}",
+      "self": "{author} a ajouté son abonnement démarrant le {started}"
+    },
+    "MEMBER_SUBSCRIPTION_REMOVE": {
+      "message": "{author} a supprimé l'abonnement de {member} démarrant le {started}",
+      "self": "{author} a supprimé son abonnement démarrant le {started}"
     },
     "MEMBER_SUBSCRIPTION_UPDATE": {
       "message": "{author} a modifié l'abonnement de {member} pour débuter au {started} au lieu du {previouslyStarted}",
@@ -63,6 +75,10 @@
     "MEMBER_TICKET_ADD": {
       "message": "{author} a ajouté une commande de {count} tickets pour {member} | {author} a ajouté une commande de {count} ticket pour {member} | {author} a ajouté une commande de {count} tickets pour {member}",
       "self": "{author} s'est ajouté lui-même une commande de {count} tickets | {author} s'est ajouté lui-même une commande de {count} ticket | {author} s'est ajouté lui-même une commande de {count} tickets"
+    },
+    "MEMBER_TICKET_REMOVE": {
+      "message": "{author} a supprimé une commande de {count} tickets pour {member} | {author} a supprimé une commande de {count} ticket pour {member} | {author} a supprimé une commande de {count} tickets pour {member}",
+      "self": "{author} s'est supprimé lui-même une commande de {count} tickets | {author} s'est supprimé lui-même une commande de {count} ticket | {author} s'est supprimé lui-même une commande de {count} tickets"
     },
     "MEMBER_TICKET_UPDATE": {
       "message": "{author} a modifié le nombre de tickets d'une commande, de précédemment {previousCount} à désormais {count} pour {member}",
