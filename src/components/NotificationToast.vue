@@ -1,14 +1,20 @@
 <template>
   <div
-    class="app-notification pointer-events-auto w-96 overflow-hidden rounded-lg bg-slate-800 p-4 shadow-lg max-sm:mx-auto dark:border dark:border-gray-700 dark:bg-gray-950"
-    :style="{
-      ...(notification.timeout && {
-        ['--notification-timeout']: `${notification.timeout}ms`,
-      }),
-    }"
-    :temporary="!!notification.timeout"
+    v-if="notification"
+    :class="[
+      'app-notification group pointer-events-auto relative w-screen max-w-96 max-sm:mx-auto',
+      notification.type === 'error' && '2xl:max-w-[512px]',
+    ]"
     @animationend="() => onTimeoutAnimationEnd(notification)">
-    <div class="flex items-start">
+    <div
+      class="flex flex-row items-start rounded-lg bg-slate-800 p-4 shadow-lg dark:border dark:border-gray-700 dark:bg-gray-950"
+      :style="{
+        ...(notification.timeout && {
+          ['--notification-timeout']: `${notification.timeout}ms`,
+          // ['--notification-progress-color']: getProgressColorFromType(notification.type),
+        }),
+      }"
+      :temporary="!!notification.timeout">
       <SvgIcon
         aria-hidden="true"
         :class="['mt-1 size-6 shrink-0', getIconColorFromType(notification.type)]"
@@ -55,11 +61,21 @@
         type="button"
         @click="
           () => {
-            notificationsStore.dismissNotification(notification.id);
+            notificationsStore.dismissNotification(notificationId);
             emit('closeToast');
           }
         " />
     </div>
+    <AppButtonIcon
+      v-if="
+        notificationsStore?.openCount > 1 && notificationsStore.lastOpen?.id === notification.id
+      "
+      :id="`notification-close-all`"
+      class="absolute -right-2.5 -top-2.5 bg-slate-800 text-gray-400 opacity-0 transition hover:text-gray-300 active:text-gray-100 group-hover:opacity-100 dark:bg-gray-950 dark:hover:bg-gray-950"
+      :icon="mdiNotificationClearAll"
+      :title="$t('action.closeAll')"
+      type="button"
+      @click="notificationsStore.dismissAllNotifications" />
   </div>
 </template>
 
@@ -75,9 +91,11 @@ import {
   mdiClose,
   mdiHelpCircle,
   mdiInformation,
+  mdiNotificationClearAll,
 } from '@mdi/js';
 import { random } from 'lodash';
-import { PropType } from 'vue';
+// import colors from 'tailwindcss/colors';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const i18n = useI18n();
@@ -85,12 +103,16 @@ const notificationsStore = useNotificationsStore();
 
 // https://github.com/xiaoluoboding/vue-sonner/issues/63#issuecomment-2060782447
 const emit = defineEmits(['closeToast']);
-defineProps({
-  notification: {
-    type: Object as PropType<StoreNotification>,
+const props = defineProps({
+  notificationId: {
+    type: String,
     required: true,
   },
 });
+
+const notification = computed(() =>
+  notificationsStore.history.find(({ id }) => id === props.notificationId),
+);
 
 const getIconFromType = (type: AppNotification['type']) => {
   switch (type) {
@@ -112,9 +134,9 @@ const getIconColorFromType = (type: AppNotification['type']) => {
     case 'info':
       return 'text-blue-500';
     case 'success':
-      return 'text-green-500';
+      return 'text-emerald-500';
     case 'warning':
-      return 'text-orange-400';
+      return 'text-amber-400';
     case 'error':
       return 'text-red-500';
     default:
@@ -122,8 +144,23 @@ const getIconColorFromType = (type: AppNotification['type']) => {
   }
 };
 
-const onTimeoutAnimationEnd = (notification: StoreNotification) => {
-  if (!!notification.timeout && !notification.dismissed) {
+// const getProgressColorFromType = (type: AppNotification['type']) => {
+//   switch (type) {
+//     case 'info':
+//       return colors['blue'][500];
+//     case 'success':
+//       return colors['emerald'][500];
+//     case 'warning':
+//       return colors['amber'][400];
+//     case 'error':
+//       return colors['red'][500];
+//     default:
+//       return colors['gray'][400];
+//   }
+// };
+
+const onTimeoutAnimationEnd = (notification?: StoreNotification) => {
+  if (!!notification?.timeout && !notification?.dismissed) {
     notificationsStore.dismissNotification(notification.id);
     emit('closeToast');
   }
@@ -153,12 +190,12 @@ const getMessage = (notification: AppNotification) => {
 </script>
 
 <style scoped>
-.app-notification[temporary='true'] {
+[temporary='true'] {
   position: relative;
   overflow: hidden;
 }
 
-.app-notification[temporary='true']::after {
+[temporary='true']::after {
   content: '';
   display: block;
   position: absolute;
@@ -166,9 +203,8 @@ const getMessage = (notification: AppNotification) => {
   left: 0;
   right: 0;
   height: 0.25rem;
-  border-radius: 0.125rem;
   z-index: 1;
-  background: #bdc3c7;
+  background: var(--notification-progress-color, #bdc3c7);
   overflow: hidden;
   animation-name: decrease;
   animation-duration: var(--notification-timeout, 5s);
@@ -177,11 +213,11 @@ const getMessage = (notification: AppNotification) => {
   animation-fill-mode: both;
 }
 
-.app-notification[temporary='true']:hover::after {
+.app-notification:hover [temporary='true']::after {
   animation-play-state: paused;
 }
 
-.app-notification[temporary='true']:not(:hover) button[id$='-close'] {
+.app-notification:not(:hover) [temporary='true'] button[id$='-close'] {
   opacity: 0;
 }
 

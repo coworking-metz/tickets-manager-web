@@ -84,7 +84,7 @@ watch(
       toast.custom(markRaw(NotificationToast), {
         duration: Infinity,
         componentProps: {
-          notification,
+          notificationId: notification.id,
         },
       });
     }

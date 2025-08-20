@@ -40,6 +40,16 @@ export const useNotificationsStore = defineStore('notifications', {
       const [first] = allNotificationsNotDismissedSorted;
       return first;
     },
+    lastOpen: (state) => {
+      const allNotificationsNotDismissed = state.history.filter(({ dismissed }) =>
+        isNil(dismissed),
+      );
+      const allNotificationsNotDismissedSorted = allNotificationsNotDismissed.sort(
+        (first, second) => new Date(first.created).getTime() - new Date(second.created).getTime(),
+      );
+      const [last] = allNotificationsNotDismissedSorted.slice(-1);
+      return last;
+    },
     openCount: (state) => state.history.filter(({ dismissed }) => isNil(dismissed)).length,
   },
   actions: {
@@ -53,9 +63,18 @@ export const useNotificationsStore = defineStore('notifications', {
       this.history.push(storeNotification);
       return storeNotification;
     },
+    addSuccessNotification(message: string, options?: Omit<AppNotification, 'type' | 'message'>) {
+      return this.addNotification({
+        message,
+        type: 'success',
+        timeout: 3_000,
+        ...options,
+      });
+    },
     async addErrorNotification(
       error: AxiosError | (Error & { code?: AppErrorCode }),
       message?: string,
+      options?: Omit<AppNotification, 'type' | 'message' | 'description' | 'errorCode'>,
     ) {
       const errorText = await parseErrorText(error);
       return this.addNotification({
@@ -63,6 +82,7 @@ export const useNotificationsStore = defineStore('notifications', {
         message: message,
         description: errorText,
         errorCode: error.code,
+        ...options,
       });
     },
     removeNotification(notificationId: string) {
@@ -85,6 +105,12 @@ export const useNotificationsStore = defineStore('notifications', {
         ...notification,
         dismissed: notification.dismissed || new Date().toISOString(),
       }));
+      // because toast.dismissALl() does not work in sonner-toaster
+      // we need to manually close all toasts by clicking on their close button
+      const closeButtons = document.querySelectorAll(
+        'ol[data-sonner-toaster] li button[id^="notification-"]',
+      );
+      closeButtons.forEach((link) => (link as HTMLAnchorElement).click());
     },
   },
 });
