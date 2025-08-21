@@ -28,6 +28,9 @@
     "head": {
       "title": "@:subscriptions.detail.title"
     },
+    "onFetch": {
+      "fail": "Unable to fetch the subscription"
+    },
     "onUpdate": {
       "fail": "Unable to modify this subscription",
       "success": "Subscription modified"

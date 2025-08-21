@@ -24,6 +24,9 @@
       "emphasized": "overconsumption of {count} ticket | overconsumption of {count} tickets",
       "title": "Non-compliant attendance"
     },
+    "onFetch": {
+      "fail": "Unable to fetch attendance on {date}"
+    },
     "onUpdate": {
       "fail": "Unable to update attendance on {date}",
       "success": "Attendance on {date} has been updated"

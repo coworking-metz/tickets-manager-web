@@ -1,9 +1,10 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
-    <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
+  <div class="flex min-h-full flex-col bg-white pb-6">
+    <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
-        <DialogTitle :class="['text-lg font-medium text-white', loading && 'animate-pulse']">
-          <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
+        <DialogTitle
+          :class="['text-lg font-medium text-white', isFetchingTickets && 'animate-pulse']">
+          <div v-if="isFetchingTickets" class="h-4 w-48 rounded-full bg-slate-300" />
           <template v-else-if="!selectedTicket">
             {{ $t('tickets.detail.empty.title') }}
           </template>
@@ -20,7 +21,7 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
+      <div v-if="isFetchingTickets" class="h-3 w-64 rounded-full bg-slate-400" />
       <p v-else-if="selectedTicket" class="text-indigo-300 sm:text-sm">
         {{
           $t('tickets.detail.description', {
@@ -29,8 +30,13 @@
           })
         }}
       </p>
-    </div>
-    <LoadingSpinner v-if="loading" class="m-auto size-16" />
+    </header>
+    <LoadingSpinner v-if="isFetchingTickets" class="m-auto size-16" />
+    <ErrorState
+      v-else-if="ticketsErrorText"
+      class="m-auto"
+      :description="ticketsErrorText"
+      :title="$t('tickets.detail.onFetch.fail')" />
     <EmptyState
       v-else-if="!selectedTicket"
       class="m-auto"
@@ -38,7 +44,7 @@
       :title="$t('tickets.detail.empty.title')" />
     <form
       v-else-if="selectedTicket"
-      class="flex h-full flex-col px-4 py-6 sm:px-6"
+      class="flex flex-col px-4 pt-6 sm:px-6"
       @submit.prevent="onSubmit">
       <Head>
         <title>{{ $t('tickets.detail.head.title', { count: selectedTicket.count }) }}</title>
@@ -102,6 +108,7 @@
 <script setup lang="ts">
 import TicketsDeleteDialog from './TicketsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -109,7 +116,8 @@ import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Ticket, updateMemberTicket } from '@/services/api/tickets';
+import { getAllMemberTickets, Ticket, updateMemberTicket } from '@/services/api/tickets';
+import { useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiDeleteOutline, mdiTicket } from '@mdi/js';
@@ -118,8 +126,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { nextTick, reactive } from 'vue';
-import { PropType, computed, watch } from 'vue';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -127,14 +134,6 @@ const props = defineProps({
   memberId: {
     type: String,
     required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  tickets: {
-    type: Array as PropType<Ticket[]>,
-    default: () => [],
   },
   id: {
     type: String,
@@ -153,8 +152,20 @@ const state = reactive({
   isDeleteDialogVisible: false as boolean,
 });
 
+const {
+  isFetching: isFetchingTickets,
+  data: tickets,
+  errorText: ticketsErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'tickets'],
+  queryFn: () => getAllMemberTickets(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
 const selectedTicket = computed<Ticket | null>(() => {
-  return props.tickets.find((ticket) => `${ticket._id}` === `${props.id}`) ?? null;
+  return tickets.value?.find((ticket) => `${ticket._id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({

@@ -13,7 +13,7 @@ import { useHttpStore } from './store/http';
 import { useSettingsStore } from './store/settings';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { VueQueryPlugin } from '@tanstack/vue-query';
-import { createHead } from '@unhead/vue';
+import { createHead } from '@unhead/vue/client';
 import FloatingVue from 'floating-vue';
 import { createApp } from 'vue';
 import VueNumberAnimation from 'vue-number-animation';

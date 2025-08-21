@@ -4,7 +4,7 @@
     <div class="flex flex-row flex-wrap items-center justify-between gap-1 px-4 py-5 sm:p-6">
       <h4 class="text-lg font-medium">{{ $t('members.detail.orders.memberships.title') }}</h4>
       <span
-        v-if="!memberships.length"
+        v-if="!memberships?.length"
         class="rounded-full bg-gray-500/10 px-3 py-1 leading-6 text-gray-400 ring-1 ring-inset ring-gray-500/20 sm:text-sm">
         {{ $t('members.detail.membership.none') }}
       </span>
@@ -16,7 +16,7 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="loading" class="m-auto size-16" />
+      <LoadingSpinner v-if="isFetchingMemberships" class="m-auto size-16" />
       <template v-else>
         <li
           v-for="membership in memberships"
@@ -55,7 +55,7 @@
           </RouterLink>
         </li>
         <button
-          v-if="!state.shouldScroll && memberships.length >= 6"
+          v-if="!state.shouldScroll && memberships && memberships.length >= 6"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
           @click="state.shouldScroll = true">
           <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
@@ -78,25 +78,34 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { Membership } from '@/services/api/memberships';
+import { getAllMemberMemberships } from '@/services/api/memberships';
+import { useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { PropType, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  memberships: {
-    type: Array as PropType<Membership[]>,
-    default: () => [],
+const props = defineProps({
+  memberId: {
+    type: String,
+    required: true,
   },
 });
 
 const route = useRoute();
 const state = reactive({
   shouldScroll: false,
+});
+
+const {
+  isFetching: isFetchingMemberships,
+  data: memberships,
+  errorText: membershipsErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'memberships'],
+  queryFn: () => getAllMemberMemberships(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
 });
 </script>

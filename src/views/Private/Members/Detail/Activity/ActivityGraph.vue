@@ -44,7 +44,7 @@ const router = useRouter();
 const props = defineProps({
   activity: {
     type: Array as PropType<Attendance[]>,
-    required: true,
+    default: () => [],
   },
   startDate: {
     type: String,

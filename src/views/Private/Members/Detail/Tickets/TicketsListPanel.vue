@@ -26,7 +26,7 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="loading" class="m-auto size-16" />
+      <LoadingSpinner v-if="isFetchingTickets" class="m-auto size-16" />
       <template v-else>
         <li
           v-for="ticket in tickets"
@@ -72,7 +72,7 @@
           </RouterLink>
         </li>
         <button
-          v-if="!state.shouldScroll && tickets.length >= 5"
+          v-if="!state.shouldScroll && tickets && tickets.length >= 5"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
           @click="state.shouldScroll = true">
           <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
@@ -95,25 +95,34 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { Ticket } from '@/services/api/tickets';
+import { getAllMemberTickets, Ticket } from '@/services/api/tickets';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
+import { useQuery } from '@tanstack/vue-query';
 import dayjs from 'dayjs';
-import { PropType, reactive } from 'vue';
+import { computed, PropType, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  tickets: {
-    type: Array as PropType<Ticket[]>,
-    default: () => [],
+const props = defineProps({
+  memberId: {
+    type: String,
+    required: true,
   },
   remaining: {
     type: Number,
     default: 0,
   },
+});
+
+const {
+  isFetching: isFetchingTickets,
+  data: tickets,
+  error: ticketsError,
+} = useQuery({
+  queryKey: ['members', computed(() => props.memberId), 'tickets'],
+  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberTickets(memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
 });
 
 const route = useRoute();

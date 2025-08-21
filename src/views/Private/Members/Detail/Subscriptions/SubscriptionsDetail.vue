@@ -1,9 +1,10 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
-    <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
+  <div class="flex min-h-full flex-col bg-white pb-6">
+    <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
-        <DialogTitle :class="['text-lg font-medium text-white', loading && 'animate-pulse']">
-          <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
+        <DialogTitle
+          :class="['text-lg font-medium text-white', isFetchingSubscriptions && 'animate-pulse']">
+          <div v-if="isFetchingSubscriptions" class="h-4 w-48 rounded-full bg-slate-300" />
           <template v-else-if="!selectedSubscription">
             {{ $t('subscriptions.detail.empty.title') }}
           </template>
@@ -24,7 +25,7 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
+      <div v-if="isFetchingSubscriptions" class="h-3 w-64 rounded-full bg-slate-400" />
       <p v-else-if="selectedSubscription" class="text-sm text-indigo-300">
         {{
           $t('subscriptions.detail.description', {
@@ -33,14 +34,19 @@
           })
         }}
       </p>
-    </div>
-    <LoadingSpinner v-if="loading" class="m-auto size-16" />
+    </header>
+    <LoadingSpinner v-if="isFetchingSubscriptions" class="m-auto size-16" />
+    <ErrorState
+      v-else-if="subscriptionsErrorText"
+      class="m-auto"
+      :description="subscriptionsErrorText"
+      :title="$t('subscriptions.detail.onFetch.fail')" />
     <EmptyState
       v-else-if="!selectedSubscription"
       class="m-auto"
       :description="$t('subscriptions.detail.empty.description')"
       :title="$t('subscriptions.detail.empty.title')" />
-    <form v-else class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
+    <form v-else class="flex flex-col px-4 pt-6 sm:px-6" @submit.prevent="onSubmit">
       <Head>
         <title>
           {{
@@ -112,6 +118,7 @@
 <script setup lang="ts">
 import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -119,7 +126,12 @@ import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Subscription, updateMemberSubscription } from '@/services/api/subscriptions';
+import {
+  getAllMemberSubscriptions,
+  Subscription,
+  updateMemberSubscription,
+} from '@/services/api/subscriptions';
+import { useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import {
@@ -134,7 +146,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -146,14 +158,6 @@ const props = defineProps({
   id: {
     type: String,
     required: true,
-  },
-  subscriptions: {
-    type: Array as PropType<Subscription[]>,
-    default: () => [],
-  },
-  loading: {
-    type: Boolean,
-    default: false,
   },
 });
 
@@ -168,8 +172,20 @@ const state = reactive({
   isDeleteDialogVisible: false as boolean,
 });
 
+const {
+  isFetching: isFetchingSubscriptions,
+  data: subscriptions,
+  errorText: subscriptionsErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+  queryFn: () => getAllMemberSubscriptions(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
 const selectedSubscription = computed<Subscription | null>(() => {
-  return props.subscriptions.find(({ _id }) => `${_id}` === `${props.id}`) ?? null;
+  return subscriptions.value?.find(({ _id }) => `${_id}` === `${props.id}`) ?? null;
 });
 
 const computedEnded = computed(() => {

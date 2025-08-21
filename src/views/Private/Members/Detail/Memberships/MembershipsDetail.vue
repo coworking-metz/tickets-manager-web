@@ -1,9 +1,10 @@
 <template>
-  <div class="flex min-h-full flex-col bg-white shadow-xl">
-    <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
+  <div class="flex min-h-full flex-col bg-white pb-6">
+    <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
-        <DialogTitle :class="['text-lg font-medium text-white', loading && 'animate-pulse']">
-          <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
+        <DialogTitle
+          :class="['text-lg font-medium text-white', isFetchingMemberships && 'animate-pulse']">
+          <div v-if="isFetchingMemberships" class="h-4 w-48 rounded-full bg-slate-300" />
           <template v-else-if="!selectedMembership">
             {{ $t('memberships.detail.empty.title') }}
           </template>
@@ -24,7 +25,7 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="loading" class="h-3 w-64 rounded-full bg-slate-400" />
+      <div v-if="isFetchingMemberships" class="h-3 w-64 rounded-full bg-slate-400" />
       <p v-else-if="selectedMembership" class="text-indigo-300 sm:text-sm">
         {{
           $t('memberships.detail.description', {
@@ -33,8 +34,13 @@
           })
         }}
       </p>
-    </div>
-    <LoadingSpinner v-if="loading" class="m-auto size-16" />
+    </header>
+    <LoadingSpinner v-if="isFetchingMemberships" class="m-auto size-16" />
+    <ErrorState
+      v-else-if="membershipsErrorText"
+      class="m-auto"
+      :description="membershipsErrorText"
+      :title="$t('memberships.detail.onFetch.fail')" />
     <EmptyState
       v-else-if="!selectedMembership"
       class="m-auto"
@@ -42,7 +48,7 @@
       :title="$t('memberships.detail.empty.title')" />
     <form
       v-else-if="selectedMembership"
-      class="flex h-full flex-col px-4 py-6 sm:px-6"
+      class="flex h-full flex-col px-4 pt-6 sm:px-6"
       @submit.prevent="onSubmit">
       <Head>
         <title>
@@ -105,6 +111,7 @@
 <script setup lang="ts">
 import MembershipsDeleteDialog from './MembershipsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -112,7 +119,12 @@ import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Membership, updateMemberMembership } from '@/services/api/memberships';
+import {
+  getAllMemberMemberships,
+  Membership,
+  updateMemberMembership,
+} from '@/services/api/memberships';
+import { useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarStartOutline, mdiCheck, mdiClose, mdiDeleteOutline } from '@mdi/js';
@@ -121,8 +133,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { nextTick, reactive } from 'vue';
-import { PropType, computed, watch } from 'vue';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -130,14 +141,6 @@ const props = defineProps({
   memberId: {
     type: String,
     required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  memberships: {
-    type: Array as PropType<Membership[]>,
-    default: () => [],
   },
   id: {
     type: String,
@@ -156,8 +159,20 @@ const state = reactive({
   isDeleteDialogVisible: false as boolean,
 });
 
+const {
+  isFetching: isFetchingMemberships,
+  data: memberships,
+  errorText: membershipsErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'memberships'],
+  queryFn: () => getAllMemberMemberships(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
 const selectedMembership = computed<Membership | null>(() => {
-  return props.memberships.find((membership) => `${membership._id}` === `${props.id}`) ?? null;
+  return memberships.value?.find((membership) => `${membership._id}` === `${props.id}`) ?? null;
 });
 
 const rules = computed(() => ({

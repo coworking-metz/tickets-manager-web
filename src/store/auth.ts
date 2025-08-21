@@ -2,6 +2,7 @@ import { useHttpStore } from './http';
 import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, decodeToken, refreshTokens } from '@/services/api/auth';
 import dayjs from 'dayjs';
+import { includes } from 'lodash';
 import { defineStore } from 'pinia';
 
 const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
@@ -23,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async setAccessToken(accessToken: string) {
       const user = decodeToken(accessToken);
-      if (!user || !user.roles.includes('admin')) {
+      if (!user || !includes(user.roles, 'admin')) {
         const error = new Error('Missing admin role') as AppError;
         error.code = AppErrorCode.FORBIDDEN;
         throw error;

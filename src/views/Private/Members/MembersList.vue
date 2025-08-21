@@ -244,7 +244,7 @@ import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 interface Tab {
   key: string;
@@ -419,9 +419,9 @@ const missingMembershipsCount = computed(() =>
   filteredList.value.reduce((acc, member) => acc + Number(isMembershipNonCompliant(member)), 0),
 );
 
-const documentElement = ref<Document>();
+const scrollElement = ref<Document>();
 useInfiniteScroll(
-  documentElement,
+  scrollElement,
   () => {
     // load more
     if (tabFilteredList.value.length && state.slice < tabFilteredList.value.length) {
@@ -431,7 +431,7 @@ useInfiniteScroll(
   { distance: 100 },
 );
 
-onMounted(() => (documentElement.value = document));
+onMounted(() => (scrollElement.value = document));
 
 watch(
   () => props.search,
@@ -461,6 +461,7 @@ watch(
           ...router.currentRoute.value.query,
           search: search || undefined,
         },
+        replace: true,
       });
     }
   },

@@ -3,9 +3,9 @@
     class="mx-auto mb-12 flex w-full max-w-7xl flex-col max-sm:grow sm:mb-24 sm:min-h-full sm:px-6 lg:px-8">
     <LoadingSpinner v-if="isPendingMember" class="m-auto size-16" />
     <ErrorState
-      v-else-if="memberError"
+      v-else-if="memberErrorText"
       class="m-auto"
-      :description="memberError"
+      :description="memberErrorText"
       :title="$t('members.detail.onFetch.fail')" />
     <template v-else-if="member">
       <!-- trick to trigger useHead.titleTemplate -->
@@ -130,11 +130,11 @@
       <SectionRow class="mt-6">
         <LoadingSpinner v-if="isFetchingActivity" class="m-auto size-12" />
         <ActivityGraph
-          v-else-if="activity"
+          v-else
           :key="`activity-graph-${state.shouldRenderAllActivity}`"
           v-bind="
             state.shouldRenderAllActivity &&
-            activity.length && {
+            activity?.length && {
               class: 'overflow-x-auto',
               endDate: dayjs(Math.max(...activity.map(({ date }) => dayjs(date).valueOf()))).format(
                 'YYYY-MM-DD',
@@ -148,13 +148,21 @@
           class="max-sm:overflow-x-auto"
           :non-compliant-activity="nonCompliantActivity" />
 
-        <RouterLink
-          class="mx-3 flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-6 sm:text-sm"
-          replace
-          :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
-          <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
-          {{ $t('members.detail.attendance.add') }}
-        </RouterLink>
+        <div class="mx-3 flex flex-row flex-wrap gap-3">
+          <RouterLink
+            class="flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-6 sm:text-sm"
+            replace
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
+            <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
+            {{ $t('members.detail.attendance.add') }}
+          </RouterLink>
+          <AppAlert
+            v-if="activityErrorText"
+            :description="activityErrorText"
+            :title="$t('members.detail.attendance.onFetch.fail')"
+            type="error" />
+        </div>
+
         <template #title>
           <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
             {{ $t('members.detail.attendance.title') }}
@@ -353,22 +361,14 @@
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
           <TicketsListPanel
             class="max-h-[32rem] min-w-64 shrink grow basis-0"
-            :loading="isFetchingTickets"
-            :remaining="member.balance"
-            :tickets="tickets" />
+            :member-id="id"
+            :remaining="member.balance" />
           <SubscriptionsListPanel
-            :active="
-              subscriptions?.some(({ started, ended }) =>
-                dayjs().isBetween(started, ended, 'day', '[]'),
-              )
-            "
             class="max-h-[32rem] min-w-64 shrink grow basis-0"
-            :loading="isFetchingSubscriptions"
-            :subscriptions="subscriptions" />
+            :member-id="id" />
           <MembershipsListPanel
             class="max-h-[32rem] min-w-64 shrink grow basis-0"
-            :loading="isFetchingMemberships"
-            :memberships="memberships" />
+            :member-id="id" />
         </div>
 
         <template #append>
@@ -430,22 +430,8 @@
           ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
         ].includes(route.name as string)
       "
-      @close="router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
-      <RouterView
-        :activity="activity"
-        :loading="
-          isFetchingMember ||
-          isFetchingActivity ||
-          isFetchingSubscriptions ||
-          isFetchingTickets ||
-          isFetchingMemberships
-        "
-        :member="member"
-        :member-id="id"
-        :memberships="memberships"
-        :non-compliant-activity="nonCompliantActivity"
-        :subscriptions="subscriptions"
-        :tickets="tickets" />
+      @update:model-value="router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
+      <RouterView :member="member" :member-id="id" :non-compliant-activity="nonCompliantActivity" />
     </SideDialog>
   </article>
 </template>
@@ -464,9 +450,9 @@ import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
 import MembersThumbnail from './MembersThumbnail.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAlert from '@/components/form/AppAlert.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
-import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import {
   buildMemberWordpressOrdersUrl,
@@ -474,39 +460,28 @@ import {
   getMemberActivity,
   isMemberBalanceInsufficient,
 } from '@/services/api/members';
-import { getAllMemberMemberships } from '@/services/api/memberships';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
-import { useNotificationsStore } from '@/store/notifications';
+import { useAppQuery } from '@/services/query';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { mdiInformationOutline, mdiOpenInNew, mdiPlus } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
-  ticketId: {
-    type: String,
-    default: null,
-  },
-  subscriptionId: {
-    type: String,
-    default: null,
-  },
 });
 
 const route = useRoute();
 const router = useRouter();
-const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   shouldRenderAllActivity: false as boolean,
@@ -525,12 +500,11 @@ useHead({
 
 const {
   isPending: isPendingMember,
-  isFetching: isFetchingMember,
   data: member,
-  error: memberError,
-} = useQuery({
+  errorText: memberErrorText,
+} = useAppQuery({
   queryKey: ['members', computed(() => props.id)],
-  queryFn: ({ queryKey: [_, memberId] }) => getMember(memberId),
+  queryFn: () => getMember(props.id),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
@@ -539,98 +513,30 @@ const {
 const {
   isFetching: isFetchingActivity,
   data: activity,
-  error: activityError,
-} = useQuery({
+  errorText: activityErrorText,
+} = useAppQuery({
   queryKey: ['members', computed(() => props.id), 'activity'],
-  queryFn: ({ queryKey: [_, memberId] }) => getMemberActivity(memberId),
+  queryFn: () => getMemberActivity(props.id),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 });
 
-watch(
-  () => activityError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.attendance.onFetch.fail'),
-      );
-    }
-  },
-);
-
-const {
-  isFetching: isFetchingTickets,
-  data: tickets,
-  error: ticketsError,
-} = useQuery({
+const { data: tickets } = useAppQuery({
   queryKey: ['members', computed(() => props.id), 'tickets'],
-  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberTickets(memberId),
+  queryFn: () => getAllMemberTickets(props.id),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 });
 
-watch(
-  () => ticketsError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.orders.tickets.onFetch.fail'),
-      );
-    }
-  },
-);
-
-const {
-  isFetching: isFetchingSubscriptions,
-  data: subscriptions,
-  error: subscriptionsError,
-} = useQuery({
+const { data: subscriptions } = useAppQuery({
   queryKey: ['members', computed(() => props.id), 'subscriptions'],
-  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberSubscriptions(memberId),
+  queryFn: () => getAllMemberSubscriptions(props.id),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 });
-
-watch(
-  () => subscriptionsError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.orders.subscriptions.onFetch.fail'),
-      );
-    }
-  },
-);
-
-const {
-  isFetching: isFetchingMemberships,
-  data: memberships,
-  error: membershipsError,
-} = useQuery({
-  queryKey: ['members', computed(() => props.id), 'memberships'],
-  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberMemberships(memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
-
-watch(
-  () => membershipsError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.orders.memberships.onFetch.fail'),
-      );
-    }
-  },
-);
 
 const fullname = computed<string>(() =>
   [member.value?.firstName, member.value?.lastName].filter(Boolean).join(' '),

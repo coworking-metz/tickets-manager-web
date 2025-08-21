@@ -24,6 +24,9 @@
     "head": {
       "title": "@:memberships.detail.title"
     },
+    "onFetch": {
+      "fail": "Impossible de récupérer l'adhésion"
+    },
     "onUpdate": {
       "fail": "Impossible de modifier cette adhésion",
       "success": "Adhésion {year} modifiée"

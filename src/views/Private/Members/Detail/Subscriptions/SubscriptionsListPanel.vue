@@ -6,11 +6,11 @@
       <span
         :class="[
           'rounded-full px-3 py-1 leading-6 ring-1 ring-inset sm:text-sm',
-          active
+          hasActiveSubscription
             ? 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20'
             : 'bg-gray-500/10 text-gray-400 ring-gray-500/20',
         ]">
-        {{ $t('members.detail.orders.subscriptions.active', { count: +active }) }}
+        {{ $t('members.detail.orders.subscriptions.active', { count: +hasActiveSubscription }) }}
       </span>
     </div>
     <ul
@@ -19,7 +19,7 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="loading" class="m-auto size-16" />
+      <LoadingSpinner v-if="isFetchingSubscriptions" class="m-auto size-16" />
       <template v-else>
         <li
           v-for="subscription in subscriptions"
@@ -76,7 +76,7 @@
           </RouterLink>
         </li>
         <button
-          v-if="!state.shouldScroll && subscriptions.length >= 4"
+          v-if="!state.shouldScroll && subscriptions && subscriptions.length >= 4"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700"
           @click="state.shouldScroll = true">
           <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
@@ -99,27 +99,39 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { Subscription } from '@/services/api/subscriptions';
+import { getAllMemberSubscriptions, Subscription } from '@/services/api/subscriptions';
+import { useAppQuery } from '@/services/query';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { PropType, reactive } from 'vue';
+import { computed, PropType, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  subscriptions: {
-    type: Array as PropType<Subscription[]>,
-    default: () => [],
-  },
-  active: {
-    type: Boolean,
-    default: false,
+const props = defineProps({
+  memberId: {
+    type: String,
+    required: true,
   },
 });
+
+const {
+  isFetching: isFetchingSubscriptions,
+  data: subscriptions,
+  errorText: subscriptionsErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+  queryFn: () => getAllMemberSubscriptions(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+const hasActiveSubscription = computed(
+  () =>
+    subscriptions.value?.some(({ started, ended }) =>
+      dayjs().isBetween(started, ended, 'day', '[]'),
+    ) ?? false,
+);
 
 const route = useRoute();
 const state = reactive({

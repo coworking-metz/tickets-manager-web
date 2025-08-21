@@ -28,6 +28,9 @@
     "head": {
       "title": "@:tickets.detail.title"
     },
+    "onFetch": {
+      "fail": "Impossible de récupérer cette commande de tickets"
+    },
     "onUpdate": {
       "fail": "Impossible de modifier cette commande de tickets",
       "success": "Commande de tickets modifiée"

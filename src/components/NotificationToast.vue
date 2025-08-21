@@ -58,7 +58,6 @@
         class="ml-4 shrink-0 rounded-md text-gray-400 hover:bg-gray-400/30 hover:text-gray-300 active:bg-gray-400/40 active:text-gray-100"
         :icon="mdiClose"
         :title="$t('action.close')"
-        type="button"
         @click="
           () => {
             notificationsStore.dismissNotification(notificationId);

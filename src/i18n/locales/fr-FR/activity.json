@@ -24,6 +24,9 @@
       "emphasized": "surconsommation de {count} ticket | surconsommation de {count} tickets",
       "title": "Présence non conforme"
     },
+    "onFetch": {
+      "fail": "Impossible de récupérer la présence du {date}"
+    },
     "onUpdate": {
       "fail": "Impossible de mettre à jour la présence du {date}",
       "success": "Présence du {date} modifiée"

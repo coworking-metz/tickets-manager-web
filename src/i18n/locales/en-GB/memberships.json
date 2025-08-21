@@ -24,6 +24,9 @@
     "head": {
       "title": "@:memberships.detail.title"
     },
+    "onFetch": {
+      "fail": "Unable to fetch the membership"
+    },
     "onUpdate": {
       "fail": "Unable to update this membership",
       "success": "Membership {year} updated"

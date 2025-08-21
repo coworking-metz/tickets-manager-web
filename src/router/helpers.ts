@@ -1,5 +1,5 @@
 import { ROUTE_NAMES, ROUTE_NAME_SEPARATOR } from '@/router/names';
-import { isObject } from 'lodash';
+import { includes, isObject } from 'lodash';
 import { RouteLocation } from 'vue-router';
 
 /**
@@ -23,7 +23,7 @@ export const isRouteAfter = (to: RouteLocation, from: RouteLocation) => {
           (value, index) => fromNameParts.indexOf(value) === index,
         );
         const commonParent = commonNameParts.reduce(
-          (acc: any, part) => (Object.keys(acc).includes(part) ? acc[part] : acc),
+          (acc: any, part) => (includes(Object.keys(acc), part) ? acc[part] : acc),
           ROUTE_NAMES,
         );
         // compare indexes from the common parent children
@@ -31,12 +31,12 @@ export const isRouteAfter = (to: RouteLocation, from: RouteLocation) => {
         const toIndexInCommonParent = childrenNames.findIndex(([childNamePart, childValue]) =>
           typeof childValue === 'string'
             ? to.name === childValue
-            : toNameParts.includes(childNamePart),
+            : includes(toNameParts, childNamePart),
         );
         const fromIndexInCommonParent = childrenNames.findIndex(([childNamePart, childValue]) =>
           typeof childValue === 'string'
             ? from.name === childValue
-            : fromNameParts.includes(childNamePart),
+            : includes(fromNameParts, childNamePart),
         );
         // should not be the case but I don't trust my future self
         if (toIndexInCommonParent !== fromIndexInCommonParent) {

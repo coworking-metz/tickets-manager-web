@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot as="template" :show="modelValue">
-    <Dialog as="div" class="relative z-40" @close="$emit('update:model-value', false)">
+  <TransitionRoot as="template" :show="isVisible">
+    <Dialog as="div" class="relative z-40" @close="() => (isVisible = false)">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -31,12 +31,11 @@
 </template>
 <script lang="ts" setup>
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { useHead } from '@unhead/vue';
+import { Head } from '@unhead/vue/components';
 
-defineEmits(['update:model-value']);
-defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
+const isVisible = defineModel({
+  type: Boolean,
+  default: false,
 });
 </script>

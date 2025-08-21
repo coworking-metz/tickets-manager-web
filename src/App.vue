@@ -11,7 +11,7 @@
       :toast-options="{
         unstyled: true,
       }"
-      :visible-toasts="5"></Toaster>
+      :visible-toasts="5" />
   </Teleport>
 </template>
 

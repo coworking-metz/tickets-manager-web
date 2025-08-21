@@ -1,10 +1,13 @@
 <template>
-  <div class="flex h-full flex-col">
-    <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
+  <div class="flex min-h-full flex-col bg-white pb-6">
+    <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle
-          :class="['shrink truncate text-lg font-medium text-white', loading && 'animate-pulse']">
-          <div v-if="loading" class="h-4 w-48 rounded-full bg-slate-300" />
+          :class="[
+            'shrink truncate text-lg font-medium text-white',
+            isFetchingActivity && 'animate-pulse',
+          ]">
+          <div v-if="isFetchingActivity" class="h-4 w-48 rounded-full bg-slate-300" />
           <template v-else-if="!selected">
             {{ $t('activity.detail.empty.title') }}
           </template>
@@ -26,14 +29,19 @@
           </RouterLink>
         </div>
       </div>
-    </div>
-    <LoadingSpinner v-if="loading" class="m-auto size-16" />
+    </header>
+    <LoadingSpinner v-if="isFetchingActivity" class="m-auto size-16" />
+    <ErrorState
+      v-else-if="activityErrorText"
+      class="m-auto"
+      :description="activityErrorText"
+      :title="$t('activity.detail.onFetch.fail', { date: dayjs(date).format('LL') })" />
     <EmptyState
       v-else-if="!selected"
       class="m-auto"
       :description="$t('activity.detail.empty.description')"
       :title="$t('activity.detail.empty.title')" />
-    <div v-else class="flex flex-col px-4 py-6 sm:px-6">
+    <div v-else class="flex flex-col px-4 pt-6 sm:px-6">
       <nav class="flex flex-row">
         <RouterLink
           v-if="previous"
@@ -223,6 +231,7 @@
 <script setup lang="ts">
 // import DailyActivityGraph from './DailyActivityGraph.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButton from '@/components/form/AppButton.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
@@ -230,7 +239,13 @@ import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance, AttendanceType, updateMemberActivity } from '@/services/api/members';
+import {
+  Attendance,
+  AttendanceType,
+  getMemberActivity,
+  updateMemberActivity,
+} from '@/services/api/members';
+import { useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import {
   DialogTitle,
@@ -260,14 +275,6 @@ const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  activity: {
-    type: Array as PropType<Attendance[]>,
-    default: () => [],
-  },
   date: {
     type: String,
     required: true,
@@ -290,21 +297,35 @@ const state = reactive({
   isSubmitting: false as boolean,
 });
 
+const {
+  isFetching: isFetchingActivity,
+  data: activity,
+  errorText: activityErrorText,
+} = useAppQuery({
+  queryKey: ['members', computed(() => props.memberId), 'activity'],
+  queryFn: () => getMemberActivity(props.memberId),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
 const selected = computed<Attendance | null>(() => {
-  return props.activity.find(({ date }) => `${date}` === `${props.date}`) ?? null;
+  return activity.value?.find(({ date }) => `${date}` === `${props.date}`) ?? null;
 });
 
 const previous = computed<Attendance | null>(() => {
-  const [latestDate] = props.activity
-    .filter(({ date }) => dayjs(date).isBefore(selected.value?.date))
-    .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
+  const [latestDate] =
+    activity.value
+      ?.filter(({ date }) => dayjs(date).isBefore(selected.value?.date))
+      .sort((a, b) => dayjs(b.date).diff(dayjs(a.date))) ?? [];
   return latestDate ?? null;
 });
 
 const next = computed<Attendance | null>(() => {
-  const [earliestDate] = props.activity
-    .filter(({ date }) => dayjs(date).isAfter(selected.value?.date))
-    .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
+  const [earliestDate] =
+    activity.value
+      ?.filter(({ date }) => dayjs(date).isAfter(selected.value?.date))
+      .sort((a, b) => dayjs(a.date).diff(dayjs(b.date))) ?? [];
   return earliestDate ?? null;
 });
 

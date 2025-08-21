@@ -1,6 +1,6 @@
 import { ErrorObject } from '@vuelidate/core';
 import { AxiosError } from 'axios';
-import { isNil } from 'lodash';
+import { includes, isNil } from 'lodash';
 
 export enum ApiErrorCode {
   EXPIRED_ACCESS_TOKEN = 'EXPIRED_ACCESS_TOKEN',
@@ -26,8 +26,9 @@ export interface AppError extends Error {
 export type AnyError = AppError | AxiosError<ApiError> | Error;
 
 export const isSilentError = (error: AnyError): boolean =>
-  [AppErrorCode.DISCONNECTED, AppErrorCode.CANCELED].includes((error as AppError)?.code) ||
-  [ApiErrorCode.EXPIRED_ACCESS_TOKEN].includes(
+  includes([AppErrorCode.DISCONNECTED, AppErrorCode.CANCELED], (error as AppError)?.code) ||
+  includes(
+    [ApiErrorCode.EXPIRED_ACCESS_TOKEN],
     ((error as AxiosError).response?.data as ApiError)?.code,
   );
 
