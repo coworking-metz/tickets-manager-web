@@ -281,7 +281,7 @@
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
               <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                {{ dayjs(member.created).year() }}
+                {{ dayjs(member.created).format('ll') }}
               </dd>
             </div>
 
@@ -597,7 +597,7 @@ const nonCompliantActivity = computed(() => {
   const balance = member.value?.balance || 0;
   if (balance < 0 && activity.value?.length) {
     const ticketActivities = activity.value
-      .filter(({ type }) => type === 'ticket')
+      .filter(({ type, value }) => type === 'ticket' && value > 0)
       .sort((a, b) => dayjs(b.date).diff(a.date));
 
     let remainingDebt = Math.abs(balance);

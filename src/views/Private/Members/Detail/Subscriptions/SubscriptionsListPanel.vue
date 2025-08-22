@@ -19,7 +19,7 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="isFetchingSubscriptions" class="m-auto size-16" />
+      <LoadingSpinner v-if="isFetchingSubscriptions" class="mx-auto my-16 size-16" />
       <template v-else>
         <li
           v-for="subscription in subscriptions"

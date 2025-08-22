@@ -1,11 +1,13 @@
 import { useHttpStore } from './http';
 import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, decodeToken, refreshTokens } from '@/services/api/auth';
+import { useSessionStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { includes } from 'lodash';
 import { defineStore } from 'pinia';
 
 const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
+const SESSION_STORAGE_ACCESS_TOKEN_NAME = 'at';
 
 /**
  * In order to avoid asking for multiple refresh tokens at the same time when it has expired,
@@ -15,27 +17,27 @@ let refreshPromise: Promise<void> | null = null;
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    accessToken: null as string | null,
-    user: null as User | null,
+    accessToken: useSessionStorage(SESSION_STORAGE_ACCESS_TOKEN_NAME, null as string | null),
   }),
+  getters: {
+    user: (state) => (state.accessToken ? decodeToken(state.accessToken) : null) as User | null,
+  },
   actions: {
     setRefreshToken(refreshToken: string) {
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
     async setAccessToken(accessToken: string) {
-      const user = decodeToken(accessToken);
-      if (!user || !includes(user.roles, 'admin')) {
+      this.accessToken = accessToken || null;
+
+      if (!this.user || !includes(this.user.roles, 'admin')) {
         const error = new Error('Missing admin role') as AppError;
         error.code = AppErrorCode.FORBIDDEN;
         throw error;
       }
-
-      this.user = user;
-      this.accessToken = accessToken || null;
     },
     async getOrRefreshAccessToken() {
-      if (this.accessToken) {
-        const { exp } = decodeToken(this.accessToken);
+      if (this.user) {
+        const { exp } = this.user;
         if (exp && dayjs().isAfter(dayjs.unix(exp))) {
           await this.fetchTokens();
         }
@@ -60,7 +62,6 @@ export const useAuthStore = defineStore('auth', {
     },
     disconnect() {
       this.accessToken = null;
-      this.user = null;
       localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
       const http = useHttpStore();
       http.cancelAllRequests();

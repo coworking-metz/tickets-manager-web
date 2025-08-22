@@ -70,7 +70,7 @@
         notificationsStore?.openCount > 1 && notificationsStore.lastOpen?.id === notification.id
       "
       :id="`notification-close-all`"
-      class="absolute -right-2.5 -top-2.5 bg-slate-800 text-gray-400 opacity-0 transition hover:text-gray-300 active:text-gray-100 group-hover:opacity-100 dark:bg-gray-950 dark:hover:bg-gray-950"
+      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 text-gray-400 opacity-0 transition hover:text-gray-300 active:text-gray-100 group-hover:opacity-100"
       :icon="mdiNotificationClearAll"
       :title="$t('action.closeAll')"
       type="button"
