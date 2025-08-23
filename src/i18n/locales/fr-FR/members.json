@@ -43,12 +43,12 @@
       "title": "Historique"
     },
     "impersonation": {
-      "description": "Récupère un accès en tant que la personne puis ouvre l'application mobile.\nL'impersonification ne sera effective que pendant une courte période (environ 30 minutes).",
+      "description": "Récupère un accès en tant que la personne sur l'application mobile.\nLes actions continuent d'être auditées sous votre nom.\nL'impersonification ne sera effective que pendant une courte période (environ 30 minutes). Pour revenir à votre compte, videz le cache dans les réglages avancés.",
       "impersonate": "Impersonifier",
       "onImpersonate": {
         "fail": "Impossible d'impersonifier {name}"
       },
-      "title": "Se connecter en tant que, sur l'application mobile"
+      "title": "Se connecter en tant que"
     },
     "membership": {
       "current": "Adhérent⸱e {year}",

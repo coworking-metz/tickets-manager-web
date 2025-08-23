@@ -9,7 +9,7 @@
     <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
       <AppButton
         class="border border-transparent bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        :icon="mdiNinja"
+        :icon="mdiDramaMasks"
         :loading="state.isImpersonating"
         @click="onImpersonate">
         {{ $t('members.detail.impersonation.impersonate') }}
@@ -20,20 +20,12 @@
 
 <script setup lang="ts">
 import AppButton from '@/components/form/AppButton.vue';
-import {
-  Member,
-  buildMemberWordpressProfileUrl,
-  impersonateMember,
-  syncMember,
-} from '@/services/api/members';
+import { Member, impersonateMember } from '@/services/api/members';
 import { useAuthStore } from '@/store/auth';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiNinja, mdiOpenInNew } from '@mdi/js';
-import { useQueryClient } from '@tanstack/vue-query';
-import { isNil } from 'lodash';
-import { PropType, computed, reactive } from 'vue';
+import { mdiDramaMasks } from '@mdi/js';
+import { PropType, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { on } from 'events';
 
 const props = defineProps({
   member: {
@@ -51,12 +43,12 @@ const state = reactive({
 
 const onImpersonate = () => {
   state.isImpersonating = true;
-  impersonateMember(props.member._id)
-    .then(({ accessToken }) => {
+  impersonateMember(props.member._id, authStore.getRefreshToken() as string)
+    .then(({ accessToken, refreshToken }) => {
+      authStore.setRefreshToken(refreshToken);
       const url = new URL('/home', 'poulailler:///');
       url.searchParams.set('accessToken', accessToken);
-      const refreshToken = authStore.getRefreshToken();
-      url.searchParams.set('refreshToken', `${refreshToken}`);
+      url.searchParams.set('refreshToken', refreshToken);
       window.open(url);
     })
     .catch((error) => {

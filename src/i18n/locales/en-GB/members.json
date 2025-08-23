@@ -43,12 +43,12 @@
       "title": "History"
     },
     "impersonation": {
-      "description": "Retrieve access as the person then open the mobile app.\nImpersonation will only be effective for a short period (about 30 minutes).",
+      "description": "Retrieve access as the person on the mobile app.\nActions will still be audited under your name.\nImpersonation will only be effective for a short period (about 30 minutes). To return to your account, clear the cache in advanced settings.",
       "impersonate": "Impersonate",
       "onImpersonate": {
         "fail": "Unable to impersonate {name}"
       },
-      "title": "Log in as, on the mobile app"
+      "title": "Log in as"
     },
     "membership": {
       "current": "{year} membership",
