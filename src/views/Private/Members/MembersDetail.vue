@@ -272,6 +272,7 @@
         <MemberDevicesPanel class="mt-3" :member="member" />
         <MemberCapabilitesPanel class="mt-3" :member="member" />
         <MemberWordpressPanel class="mt-3" :member="member" />
+        <MemberImpersonationPanel class="mt-3" :member="member" />
 
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
@@ -441,6 +442,7 @@ import ActivityGraph from './Detail/Activity/ActivityGraph.vue';
 import MemberCapabilitesPanel from './Detail/MemberCapabilitesPanel.vue';
 import MemberDevicesPanel from './Detail/MemberDevicesPanel.vue';
 import MemberHistoryPanel from './Detail/MemberHistoryPanel.vue';
+import MemberImpersonationPanel from './Detail/MemberImpersonationPanel.vue';
 import MemberProfilePanel from './Detail/MemberProfilePanel.vue';
 import MemberWordpressPanel from './Detail/MemberWordpressPanel.vue';
 import MembershipsListPanel from './Detail/Memberships/MembershipsListPanel.vue';

@@ -42,6 +42,14 @@
       },
       "title": "History"
     },
+    "impersonation": {
+      "description": "Retrieve access as the person then open the mobile app.\nImpersonation will only be effective for a short period (about 30 minutes).",
+      "impersonate": "Impersonate",
+      "onImpersonate": {
+        "fail": "Unable to impersonate {name}"
+      },
+      "title": "Log in as, on the mobile app"
+    },
     "membership": {
       "current": "{year} membership",
       "last": "Last membership in {year}",

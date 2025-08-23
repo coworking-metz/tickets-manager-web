@@ -42,6 +42,14 @@
       },
       "title": "Historique"
     },
+    "impersonation": {
+      "description": "Récupère un accès en tant que la personne puis ouvre l'application mobile.\nL'impersonification ne sera effective que pendant une courte période (environ 30 minutes).",
+      "impersonate": "Impersonifier",
+      "onImpersonate": {
+        "fail": "Impossible d'impersonifier {name}"
+      },
+      "title": "Se connecter en tant que, sur l'application mobile"
+    },
     "membership": {
       "current": "Adhérent⸱e {year}",
       "last": "Dernière adhésion en {year}",

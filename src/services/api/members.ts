@@ -156,3 +156,7 @@ export const updateMemberCapabilities = (
 ): Promise<MemberCapabilities> => {
   return HTTP.put(`/api/members/${id}/capabilities`, capabilities).then(({ data }) => data);
 };
+
+export const impersonateMember = (id: string): Promise<{ accessToken: string }> => {
+  return HTTP.get(`/api/members/${id}/impersonate`).then(({ data }) => data);
+};

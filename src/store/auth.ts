@@ -26,6 +26,9 @@ export const useAuthStore = defineStore('auth', {
     setRefreshToken(refreshToken: string) {
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
     },
+    getRefreshToken() {
+      return localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
+    },
     async setAccessToken(accessToken: string) {
       this.accessToken = accessToken || null;
 
