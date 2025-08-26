@@ -7,27 +7,33 @@
       {{ $t('members.detail.impersonation.description') }}
     </p>
     <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
-      <AppButton
-        class="border border-transparent bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        :icon="mdiDramaMasks"
-        :loading="state.isImpersonating"
-        @click="onImpersonate">
-        {{ $t('members.detail.impersonation.impersonate') }}
-      </AppButton>
+      <a
+        class="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-100 px-4 py-2 font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+        :href="
+          HTTP.getUri({
+            url: `/api/auth/impersonate/${member._id}`,
+            params: {
+              refreshToken: authStore.getRefreshToken(),
+              accessToken: authStore.accessToken,
+            },
+          })
+        "
+        target="_blank">
+        <SvgIcon aria-hidden="true" class="size-5" :path="mdiDramaMasks" type="mdi" />
+        <span>{{ $t('members.detail.impersonation.impersonate') }}</span>
+      </a>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from '@/components/form/AppButton.vue';
-import { Member, impersonateMember } from '@/services/api/members';
+import { Member } from '@/services/api/members';
+import HTTP from '@/services/http';
 import { useAuthStore } from '@/store/auth';
-import { useNotificationsStore } from '@/store/notifications';
 import { mdiDramaMasks } from '@mdi/js';
-import { PropType, reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { PropType } from 'vue';
 
-const props = defineProps({
+defineProps({
   member: {
     type: Object as PropType<Member>,
     required: true,
@@ -35,33 +41,4 @@ const props = defineProps({
 });
 
 const authStore = useAuthStore();
-const i18n = useI18n();
-const notificationsStore = useNotificationsStore();
-const state = reactive({
-  isImpersonating: false,
-});
-
-const onImpersonate = () => {
-  state.isImpersonating = true;
-  impersonateMember(props.member._id, authStore.getRefreshToken() as string)
-    .then(({ accessToken, refreshToken }) => {
-      authStore.setRefreshToken(refreshToken);
-      const url = new URL('/home', 'poulailler:///');
-      url.searchParams.set('accessToken', accessToken);
-      url.searchParams.set('refreshToken', refreshToken);
-      window.open(url);
-    })
-    .catch((error) => {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.detail.impersonation.onImpersonate.fail', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
-        }),
-      );
-      return Promise.reject(error);
-    })
-    .finally(() => {
-      state.isImpersonating = false;
-    });
-};
 </script>
