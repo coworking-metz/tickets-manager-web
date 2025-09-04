@@ -181,6 +181,9 @@ const props = defineProps({
 });
 
 const essentialContext = computed(() => {
+  if (!Object.keys(AuditAction).includes(props.event?.action)) {
+    return props.event;
+  }
   const { memberId, member, ...rest } = props.event.context || {};
   return !isEmpty(rest) ? rest : null;
 });
@@ -207,6 +210,8 @@ const icon = computed(() => {
       return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:
     case AuditAction.KEYS_ACCESS_DECK:
+    case AuditAction.KEYS_ACCESS_POULAILLER:
+    case AuditAction.KEYS_ACCESS_PTI_POULAILLER:
       return mdiKeyChainVariant;
     case AuditAction.UNLOCK_DECK_DOOR:
       return mdiLockOpenOutline;

@@ -6,6 +6,12 @@
     "KEYS_ACCESS_DECK": {
       "message": "{author} retrieved the access code for the deck door key box"
     },
+    "KEYS_ACCESS_POULAILLER": {
+      "message": "{author} retrieved the access code for the Poulailler door key box"
+    },
+    "KEYS_ACCESS_PTI_POULAILLER": {
+      "message": "{author} retrieved the access code for the P'ti Poulailler door key box"
+    },
     "MEMBER_ACTIVITY_ADD": {
       "duration": {
         "FULL": "a full day",

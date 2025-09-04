@@ -6,6 +6,12 @@
     "KEYS_ACCESS_DECK": {
       "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte de la terrasse"
     },
+    "KEYS_ACCESS_POULAILLER": {
+      "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte du Poulailler"
+    },
+    "KEYS_ACCESS_PTI_POULAILLER": {
+      "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte du P'ti Poulailler"
+    },
     "MEMBER_ACTIVITY_ADD": {
       "duration": {
         "FULL": "1 journée entière",
