@@ -313,16 +313,13 @@ const onStopScan = () => {
 
 onUnmounted(onStopScan);
 
-watch(
-  () => isVisible.value,
-  (visible) => {
-    if (visible) {
-      onStartScan();
-    } else {
-      onStopScan();
-    }
-  },
-);
+watch([isVisible, isUnavailable], ([visible, unavailable]) => {
+  if (visible && !unavailable) {
+    onStartScan();
+  } else if (!visible) {
+    onStopScan();
+  }
+});
 </script>
 
 <style scoped>
