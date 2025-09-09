@@ -163,7 +163,7 @@
 
     <template #footer>
       <AppButton
-        v-if="DEBUG || nfc.status.value === NFCStatus.IDLE"
+        v-if="nfc.status.value === NFCStatus.IDLE || (DEBUG && !isScanning)"
         class="self-center border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
         :icon="mdiNfcSearchVariant"
         type="button"
@@ -171,7 +171,7 @@
         {{ $t('nfc.scan.start') }}
       </AppButton>
       <AppButton
-        v-else-if="nfc.status.value === NFCStatus.READING"
+        v-else-if="nfc.status.value === NFCStatus.READING || (DEBUG && isScanning)"
         class="self-center border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
         :icon="mdiStop"
         type="button"
@@ -234,6 +234,10 @@ const state = reactive({
   isRetrying: false,
   hasSucceeded: false,
 });
+
+const isScanning = computed(
+  () => state.isReading || state.isConnected || state.isProcessing || state.isRetrying,
+);
 
 const reset = () => {
   state.isReading = false;
@@ -312,7 +316,9 @@ onUnmounted(onStopScan);
 watch(
   () => isVisible.value,
   (visible) => {
-    if (!visible) {
+    if (visible) {
+      onStartScan();
+    } else {
       onStopScan();
     }
   },
