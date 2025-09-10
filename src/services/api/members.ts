@@ -39,6 +39,7 @@ export interface MemberListItem {
   lastMembership: number;
   attending: boolean;
   wpUserId?: number;
+  badgeId?: string;
   picture?: string;
   thumbnail?: string;
   location?: MemberLocation;
