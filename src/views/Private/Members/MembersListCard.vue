@@ -15,6 +15,14 @@
           <template v-if="member">
             <p class="shrink-0 font-medium text-indigo-600 sm:text-sm">
               {{ fullname }}
+              <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+              <span
+                v-if="member?.badgeId"
+                aria-label="badge"
+                class="ml-1"
+                role="img"
+                :title="member.badgeId"
+                v-text="badgeEmoji" />
             </p>
 
             <p class="mt-1 flex w-full items-center text-sm text-gray-500">
@@ -114,4 +122,6 @@ const props = defineProps({
 const fullname = computed<string>(() =>
   [props.member?.firstName, props.member?.lastName].filter(Boolean).join(' '),
 );
+
+const badgeEmoji = '🪪';
 </script>
