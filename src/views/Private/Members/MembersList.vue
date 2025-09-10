@@ -348,6 +348,7 @@ const filteredList = computed(() => {
         [member.firstName, member.lastName].filter(Boolean).join(' '),
         [member.lastName, member.firstName].filter(Boolean).join(' '),
         member.email,
+        member.badgeId,
         member.attending && i18n.t('members.detail.profile.attending'),
         member.location && i18n.t(`members.detail.profile.location.${member.location}`),
         dayjs().isSame(member.lastSeen, 'day')
