@@ -24,16 +24,17 @@
           :id="id"
           :aria-invalid="isInvalid"
           :autocomplete="autocomplete"
-          :class="{
-            ['block min-h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
-            ['rounded-none']: slots.after || slots.before,
-            ['rounded-l-md']: !slots.before,
-            ['rounded-r-md']: !slots.after,
-            ['pl-10']: slots.prepend || prependIcon,
-            ['border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500']:
-              isInvalid,
-            ['text-right']: type === 'number',
-          }"
+          :class="[
+            'block min-h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+            (slots.after || slots.before) && 'rounded-none',
+            !slots.before && 'rounded-l-md',
+            !slots.after && 'rounded-r-md',
+            (slots.prepend || prependIcon) && 'pl-10',
+            isInvalid &&
+              'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500',
+            type === 'number' && 'text-right',
+            inputClass,
+          ]"
           :disabled="disabled"
           :max="max"
           :maxlength="maxLength"
@@ -166,6 +167,10 @@ const props = defineProps({
     default: null,
   },
   pattern: {
+    type: String,
+    default: null,
+  },
+  inputClass: {
     type: String,
     default: null,
   },
