@@ -97,7 +97,7 @@
             :datetime="event.occurred"
             :title="dayjs(event.occurred).format('llll')">
             {{
-              dayjs().diff(event.occurred, 'hour') < 2
+              dayjs().diff(event.occurred, 'hour') < 1
                 ? dayjs(event.occurred).fromNow()
                 : dayjs(event.occurred).calendar()
             }}
