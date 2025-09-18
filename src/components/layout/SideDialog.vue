@@ -31,8 +31,6 @@
 </template>
 <script lang="ts" setup>
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { useHead } from '@unhead/vue';
-import { Head } from '@unhead/vue/components';
 
 const isVisible = defineModel({
   type: Boolean,

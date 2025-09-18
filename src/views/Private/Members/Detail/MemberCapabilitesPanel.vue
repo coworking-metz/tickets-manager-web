@@ -32,8 +32,8 @@
         :label="$t('members.detail.profile.capabilities.keysAccess.label')"
         :loading="isFetchingCapabilites" />
       <AppAlert
-        v-if="capabilitiesError"
-        :description="capabilitiesError.message"
+        v-if="capabilitiesErrorText"
+        :description="capabilitiesErrorText"
         :title="$t('members.detail.profile.capabilities.onFetch.fail')"
         type="error">
         <template #action>
@@ -80,9 +80,10 @@ import {
 } from '@/helpers/errors';
 import { UserCapabilities } from '@/services/api/auth';
 import { Member, getMemberCapabilities, updateMemberCapabilities } from '@/services/api/members';
+import { useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiCheckAll } from '@mdi/js';
-import { useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -111,11 +112,11 @@ const state = reactive({
 const {
   isFetching: isFetchingCapabilites,
   data: capabilities,
-  error: capabilitiesError,
+  errorText: capabilitiesErrorText,
   refetch: refetchCapabilities,
-} = useQuery({
+} = useAppQuery({
   queryKey: ['members', computed(() => props.member._id), 'capabilities'],
-  queryFn: ({ queryKey: [_, memberId] }) => getMemberCapabilities(memberId),
+  queryFn: () => getMemberCapabilities(props.member._id),
   retry: false,
   refetchOnWindowFocus: false,
 });
