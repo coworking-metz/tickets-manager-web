@@ -1,7 +1,7 @@
 <template>
   <Head>
-    <meta :content="$t('head.meta.content')" :name="$t('head.meta.description')" />
     <html :lang="$i18n.locale.substring(0, 2)" />
+    <meta :content="$t('head.meta.content')" name="description" />
   </Head>
   <LoadingSpinner v-if="state.isLoading" class="m-auto size-16" />
   <router-view v-else />
