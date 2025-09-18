@@ -1,9 +1,7 @@
-import activity from './activity.json';
-import incomes from './incomes.json';
-import stats from './stats.json';
+import { mergeJSONFiles } from '@/helpers/merge-json-files';
 
-export default {
-  ...stats,
-  activity,
-  incomes,
-};
+// dynamically import json and subdirectories
+const jsonFiles = import.meta.glob('./*.json', { eager: true, import: 'default' });
+const directories = import.meta.glob('./*/index.ts', { eager: true });
+
+export default mergeJSONFiles(jsonFiles, directories);

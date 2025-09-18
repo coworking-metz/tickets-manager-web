@@ -3,6 +3,8 @@
   "close": "Fermer le menu",
   "history": "@:audit.list.title",
   "members": "@:members.list.title",
+  "miscellaneous": "@:miscellaneous.head.title",
   "open": "Ouvrir le menu",
+  "settings": "@:settings.title",
   "stats": "@:stats.title"
 }

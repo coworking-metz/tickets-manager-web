@@ -48,7 +48,7 @@
                   class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-indigo-600 hover:underline max-sm:hidden sm:text-sm"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
-                  {{ $t('members.detail.profile.macAddresses.check') }}
+                  {{ $t('members.detail.profile.macAddresses.verify') }}
                   <SvgIcon
                     aria-hidden="true"
                     class="ml-1 inline-block size-5"

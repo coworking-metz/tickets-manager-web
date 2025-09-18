@@ -1,0 +1,33 @@
+{
+  "description": "Un peu de ci, un peu de ça à savoir pour administrer le fonctionnement du Poulailler.",
+  "digitalSignage": {
+    "description": "Gérer le contenu affiché sur les écrans du Poulailler.\n\nVous pouvez créer, modifier et planifier des messages, des annonces ou des événements pour tenir les membres informés. Le service est protégé par un mot de passe.",
+    "navigate": "Accéder aux écrans",
+    "title": "Écrans"
+  },
+  "events": {
+    "description": "Organiser les évènements affichés dans l'application mobile, gérés au travers de Google Calendar.",
+    "features": {
+      "label": "Comment ça fonctionne ?",
+      "list": [
+        "Le calendrier n'est modifiable qu'avec le compte \"coworking-metz@gmail.com\".",
+        "Le format Markdown est supporté dans la description des évènements.",
+        "Pour ajouter des images, coller dans la description des liens qui finissent par \".png\" ou \".jpg\" (ils seront cachés une fois la description affichée).",
+        "Le premier lien qui n'est pas une image et qui n'est pas au format Markdown sera utilisé pour le bouton \"Consulter\".\nTous les autres liens (hors format Markdown) seront cachés.",
+        "Les évènements avec la période \"Toute la journée\" ne sont pas très bien supportés."
+      ]
+    },
+    "navigate": "Consulter le calendrier",
+    "title": "Évènements",
+    "writeMarkdown": "Écrire en Markdown"
+  },
+  "guide": {
+    "description": "Document collaboratif qui rassemble toutes les informations importantes pour les membres du conseil d'admnistration.\n\nIl est régulièrement mis à jour et contient des sections sur la gestion des membres, l'organisation des évènements, les procédures administratives, et bien plus encore.",
+    "navigate": "Consulter le guide",
+    "title": "Mémo pour l'équipe"
+  },
+  "head": {
+    "title": "Autres"
+  },
+  "title": "Mais encore"
+}

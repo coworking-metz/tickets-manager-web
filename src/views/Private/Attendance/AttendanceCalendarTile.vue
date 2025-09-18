@@ -1,12 +1,12 @@
 <template>
   <div
     :class="[
-      'flex h-14 flex-col items-center justify-center overflow-hidden py-2 focus:z-10 lg:h-20',
+      'group flex h-14 flex-col items-center justify-center overflow-hidden py-2 transition-colors focus:z-10 lg:h-20',
       selected
         ? 'bg-amber-500 text-white shadow-inner hover:bg-amber-700 active:bg-amber-800'
         : inCurrentMonth
-          ? 'bg-white hover:bg-gray-100'
-          : 'bg-gray-50 hover:bg-gray-100',
+          ? 'bg-white hover:bg-gray-200 active:bg-gray-300'
+          : 'bg-gray-100/80 hover:bg-gray-200 active:bg-gray-300',
     ]">
     <CircularProgress
       class="relative flex size-10 items-center justify-center"
@@ -18,14 +18,14 @@
       </time>
       <div class="absolute inset-0 flex items-center justify-center">
         <CircularProgress
-          class="size-7 text-gray-400"
+          :class="['size-7', selected ? 'text-gray-600' : 'text-gray-400']"
           :progress="(daysCount / MAX_ATTENDANCE) * 100"
           :style="`--mask-color: transparent; --progress-color: currentColor;`"
           thickness="0.25rem" />
       </div>
       <div v-if="debtCount" class="absolute inset-0 flex items-center justify-center">
         <CircularProgress
-          class="size-7 text-red-500"
+          :class="['size-7', selected ? 'text-red-600' : 'text-red-400']"
           :progress="attendance?.data.members.length ? (debtCount / MAX_ATTENDANCE) * 100 : 0"
           :style="`--mask-color: transparent; --progress-color: currentColor;`"
           thickness="0.25rem" />

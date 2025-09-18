@@ -8,7 +8,7 @@
     </p>
     <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
       <a
-        class="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-100 px-4 py-2 font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+        class="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-100 px-4 py-2 font-medium text-indigo-700 transition-colors hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
         :href="
           HTTP.getUri({
             url: `/api/auth/impersonate/${member._id}`,

@@ -83,10 +83,10 @@
         "active": "Actif | Inactif",
         "add": "Ajouter un abonnement",
         "coverage": {
-          "attendance": "{count} journée | {count} journée | {count} journées",
+          "attendance": "Aucune | {count} journée | {count} journées",
           "label": "Abonnements",
-          "orders": "{count} abonnement | {count} abonnement | {count} abonnements",
-          "text": "{attendance} couverte par {orders} | {attendance} couverte par {orders} | {attendance} couvertes par {orders}"
+          "orders": "aucun abonnement | {count} abonnement | {count} abonnements",
+          "text": "{attendance} journée couverte par {orders} | {attendance} couverte par {orders} | {attendance} couvertes par {orders}"
         },
         "days": "{count} jour | {count} jour | {count} jours",
         "more": "Plus",
@@ -106,10 +106,10 @@
         "remaining": "Aucun disponible | {count} restant | {count} restants",
         "title": "Tickets à l'unité",
         "used": {
-          "count": "{count} ticket | {count} ticket | {count} tickets",
+          "count": "Aucun | {count} ticket | {count} tickets",
           "label": "Consommation",
           "orders": "{count} commandé | {count} commandé | {count} commandés",
-          "text": "{count} utilisé sur {orders} | {count} utilisé sur {orders} | {count} utilisés sur {orders}"
+          "text": "{count} ticket utilisé sur {orders} | {count} utilisé sur {orders} | {count} utilisés sur {orders}"
         }
       },
       "title": "Commandes"
@@ -174,17 +174,17 @@
       "macAddresses": {
         "add": "Spécifier un appareil | Ajouter un autre appareil | Ajouter un autre appareil",
         "apply": "Modifier les appareils",
-        "check": "Vérifier",
         "description": {
           "link": "adresse MAC",
           "text": "Permet de connaître la présence au travers d'une {link}"
         },
-        "label": "Appareil | Appareil | Appareils",
+        "label": "Appareil | Appareil | {count} appareils",
         "onUpdate": {
           "fail": "Impossible de mettre à jour les appareils de {name}",
           "success": "Appareils de {name} mis à jour"
         },
-        "remove": "Retirer"
+        "remove": "Retirer",
+        "verify": "Vérifier"
       },
       "onUpdate": {
         "fail": "Impossible de mettre à jour {name}",
@@ -209,8 +209,8 @@
       }
     },
     "wordpress": {
-      "check": "Consulter le profil",
       "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets et d'abonnement se mettront à jour.",
+      "navigate": "Consulter le profil",
       "onSync": {
         "fail": "Impossible de synchroniser {name}",
         "success": "{name} synchronisé"

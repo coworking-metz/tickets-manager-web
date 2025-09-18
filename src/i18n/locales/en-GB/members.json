@@ -177,17 +177,17 @@
       "macAddresses": {
         "add": "Specify a device | Add another device | Add other devices",
         "apply": "Change devices",
-        "check": "Check",
         "description": {
           "link": "MAC address",
           "text": "Allows knowing the presence through a {link}"
         },
-        "label": "Device | Device | Devices",
+        "label": "Device | Device | {count} devices",
         "onUpdate": {
           "fail": "Unable to update devices of {name}",
           "success": "Devices of {name} updated"
         },
-        "remove": "Remove"
+        "remove": "Remove",
+        "verify": "Check"
       },
       "onUpdate": {
         "fail": "Unable to update {name}",
@@ -212,8 +212,8 @@
       }
     },
     "wordpress": {
-      "check": "View Profile",
       "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket and subscription orders will be updated.",
+      "navigate": "View Profile",
       "onSync": {
         "fail": "Unable to synchronize {name}",
         "success": "{name} synchronized"

@@ -94,7 +94,7 @@
 
         <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
           <AppButton
-            class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+            class="border border-transparent bg-indigo-600 text-white shadow-sm transition-colors hover:bg-indigo-700 focus:ring-indigo-500"
             :icon="mdiLockOutline"
             :loading="state.isLoggingOut"
             @click="onLogout">

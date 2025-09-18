@@ -20,7 +20,7 @@
       "title": "@:activity.detail.title"
     },
     "nonCompliant": {
-      "description": "La personne s'est présenté au Coworking mais :\n- n'avait pas d'abonnement actif,\n- n'avait pas un solde de tickets suffisant.\nCela a donc entraîné une {emphasized}.\n\nPour régulariser la situation, il faut ajouter un ticket ou activer un abonnement couvrant cette date.",
+      "description": "La personne s'est présenté au Poulailler mais :\n- n'avait pas d'abonnement actif,\n- n'avait pas un solde de tickets suffisant.\nCela a donc entraîné une {emphasized}.\n\nPour régulariser la situation, il faut ajouter un ticket ou activer un abonnement couvrant cette date.",
       "emphasized": "surconsommation de {count} ticket | surconsommation de {count} tickets",
       "title": "Présence non conforme"
     },
