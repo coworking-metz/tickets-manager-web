@@ -293,23 +293,29 @@
               </dt>
               <i18n-t
                 class="mt-1"
-                keypath="members.detail.orders.tickets.used.value"
+                keypath="members.detail.orders.tickets.used.text"
                 :plural="totalTicketsUsed"
                 scope="global"
                 tag="dd">
                 <template #count>
-                  <AnimatedCounter
+                  <i18n-t
                     class="block text-3xl font-semibold tracking-tight text-gray-900"
-                    :duration="1"
-                    :format="
-                      (count: number) =>
-                        formatAmount(count, {
-                          style: 'decimal',
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 1,
-                        })
-                    "
-                    :to="totalTicketsUsed" />
+                    keypath="members.detail.orders.tickets.used.count"
+                    :plural="totalTicketsUsed"
+                    scope="global"
+                    tag="strong">
+                    <AnimatedCounter
+                      :duration="1"
+                      :format="
+                        (count: number) =>
+                          formatAmount(count, {
+                            style: 'decimal',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 1,
+                          })
+                      "
+                      :to="totalTicketsUsed" />
+                  </i18n-t>
                 </template>
                 <template #orders>
                   <i18n-t
@@ -330,6 +336,62 @@
                             })
                         "
                         :to="totalTicketsCount" />
+                    </template>
+                  </i18n-t>
+                </template>
+              </i18n-t>
+            </div>
+
+            <div
+              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+                {{ $t('members.detail.orders.subscriptions.coverage.label') }}
+              </dt>
+              <i18n-t
+                class="mt-1"
+                keypath="members.detail.orders.subscriptions.coverage.text"
+                :plural="totalTicketsUsed"
+                scope="global"
+                tag="dd">
+                <template #attendance>
+                  <i18n-t
+                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    keypath="members.detail.orders.subscriptions.coverage.attendance"
+                    :plural="attendanceCoveredBySubscriptions"
+                    scope="global"
+                    tag="strong">
+                    <AnimatedCounter
+                      :duration="1"
+                      :format="
+                        (count: number) =>
+                          formatAmount(count, {
+                            style: 'decimal',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 1,
+                          })
+                      "
+                      :to="attendanceCoveredBySubscriptions" />
+                  </i18n-t>
+                </template>
+                <template #orders>
+                  <i18n-t
+                    keypath="members.detail.orders.subscriptions.coverage.orders"
+                    :plural="totalSubscriptionsCount"
+                    scope="global"
+                    tag="span">
+                    <template #count>
+                      <AnimatedCounter
+                        class="inline-block font-bold tracking-tight text-gray-900"
+                        :duration="1"
+                        :format="
+                          (count: number) =>
+                            formatAmount(count, {
+                              style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
+                            })
+                        "
+                        :to="totalSubscriptionsCount" />
                     </template>
                   </i18n-t>
                 </template>
@@ -462,6 +524,7 @@ import {
   getMemberActivity,
   isMemberBalanceInsufficient,
 } from '@/services/api/members';
+import { getAllMemberMemberships } from '@/services/api/memberships';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { useAppQuery } from '@/services/query';
@@ -540,6 +603,14 @@ const { data: subscriptions } = useAppQuery({
   refetchOnWindowFocus: false,
 });
 
+const { data: memberships } = useAppQuery({
+  queryKey: ['members', computed(() => props.id), 'memberships'],
+  queryFn: () => getAllMemberMemberships(props.id),
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
 const fullname = computed<string>(() =>
   [member.value?.firstName, member.value?.lastName].filter(Boolean).join(' '),
 );
@@ -562,6 +633,18 @@ const totalTicketsUsed = computed<number>(() => {
   );
 });
 
+const attendanceCoveredBySubscriptions = computed<number>(() => {
+  return (
+    activity.value
+      ?.filter(({ type }) => type === 'subscription')
+      .reduce((total, { value }) => total + value, 0) || 0
+  );
+});
+
+const totalSubscriptionsCount = computed<number>(() => {
+  return subscriptions.value?.length || 0;
+});
+
 const totalAmountSpent = computed<number>(() => {
   const totalTicketsAmount = (tickets.value || []).reduce((total, ticket) => {
     return total + ticket.amount;
@@ -569,8 +652,11 @@ const totalAmountSpent = computed<number>(() => {
   const totalSubscriptionsAmount = (subscriptions.value || []).reduce((total, subscription) => {
     return total + subscription.amount;
   }, 0);
+  const totalMembershipsAmount = (memberships.value || []).reduce((total, membership) => {
+    return total + membership.amount;
+  }, 0);
 
-  return totalTicketsAmount + totalSubscriptionsAmount;
+  return totalTicketsAmount + totalSubscriptionsAmount + totalMembershipsAmount;
 });
 
 const monthlyAmountSpent = computed<number>(() => {

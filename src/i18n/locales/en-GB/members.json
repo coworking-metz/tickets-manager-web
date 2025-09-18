@@ -82,6 +82,12 @@
       "subscriptions": {
         "active": "Active | Inactive",
         "add": "Add a subscription",
+        "coverage": {
+          "attendance": "{count} day | {count} day | {count} days",
+          "label": "Subscriptions",
+          "orders": "{count} subscription | {count} subscription | {count} subscriptions",
+          "text": "{attendance} covered by {orders} | {attendance} covered by {orders} | {attendance} covered by {orders}"
+        },
         "days": "{count} day | {count} day | {count} days",
         "more": "More",
         "onFetch": {
@@ -103,9 +109,10 @@
         "remaining": "None available | {count} remaining | {count} remaining",
         "title": "Individual Tickets",
         "used": {
+          "count": "{count} tickets | {count} ticket | {count} tickets",
           "label": "Consumption",
           "orders": "{count} ordered | {count} ordered | {count} ordered",
-          "value": "{count} used ticket over {orders} | {count} used ticket over {orders} | {count} used tickets over {orders}"
+          "text": "{count} used over {orders} | {count} used over {orders} | {count} used over {orders}"
         }
       },
       "title": "Orders"
