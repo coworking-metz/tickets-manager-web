@@ -248,6 +248,16 @@ export const routes: RouteRecordRaw[] = [
         }),
       },
       {
+        path: 'settings',
+        name: ROUTE_NAMES.SETTINGS,
+        component: () => import('@/views/Private/Settings/SettingsPage.vue'),
+      },
+      {
+        path: 'miscellaneous',
+        name: ROUTE_NAMES.MISCELLANEOUS,
+        component: () => import('@/views/Private/Miscellaneous/MiscellaneousPage.vue'),
+      },
+      {
         path: 'profile',
         name: ROUTE_NAMES.USER.PROFILE,
         component: () => import('@/views/Private/User/UserProfile.vue'),

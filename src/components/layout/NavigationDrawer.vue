@@ -24,12 +24,34 @@
       </router-link>
 
       <router-link
-        :aria-current="route.name === ROUTE_NAMES.USER.PROFILE ? 'page' : undefined"
+        :aria-current="doesRouteBelongsTo(route, ROUTE_NAMES.MISCELLANEOUS) ? 'page' : undefined"
         :class="[
-          route.name === ROUTE_NAMES.USER.PROFILE
+          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+          doesRouteBelongsTo(route, ROUTE_NAMES.MISCELLANEOUS)
             ? 'bg-amber-600 text-white'
             : 'text-amber-100 hover:bg-amber-600 hover:text-white',
-          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+        ]"
+        :to="{ name: ROUTE_NAMES.MISCELLANEOUS }">
+        <SvgIcon
+          aria-hidden="true"
+          :class="[
+            doesRouteBelongsTo(route, ROUTE_NAMES.MISCELLANEOUS)
+              ? 'text-white'
+              : 'text-amber-100 group-hover:text-white',
+            'size-6',
+          ]"
+          :path="mdiViewGridPlusOutline"
+          type="mdi" />
+        <span class="mt-2">{{ $t('navigation.miscellaneous') }}</span>
+      </router-link>
+
+      <router-link
+        :aria-current="doesRouteBelongsTo(route, ROUTE_NAMES.USER) ? 'page' : undefined"
+        :class="[
+          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+          doesRouteBelongsTo(route, ROUTE_NAMES.USER)
+            ? 'bg-amber-600 text-white'
+            : 'text-amber-100 hover:bg-amber-600 hover:text-white',
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <MembersThumbnail
@@ -48,7 +70,14 @@ import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
 import MembersThumbnail from '@/views/Private/Members/MembersThumbnail.vue';
-import { mdiAccountGroup, mdiCalendarMultiselect, mdiFinance, mdiHistory } from '@mdi/js';
+import {
+  mdiAccountGroup,
+  mdiCalendarMultiselect,
+  mdiCogOutline,
+  mdiFinance,
+  mdiHistory,
+  mdiViewGridPlusOutline,
+} from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw, useRoute } from 'vue-router';
@@ -95,6 +124,14 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     },
     icon: mdiCalendarMultiselect,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.ATTENDANCE),
+  },
+  {
+    label: i18n.t('navigation.settings'),
+    to: {
+      name: ROUTE_NAMES.SETTINGS,
+    },
+    icon: mdiCogOutline,
+    active: doesRouteBelongsTo(route, ROUTE_NAMES.SETTINGS),
   },
 ]);
 </script>

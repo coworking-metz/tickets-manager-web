@@ -45,6 +45,8 @@ const RAW_ROUTE_NAMES = {
       },
     },
   },
+  SETTINGS: 'SETTINGS',
+  MISCELLANEOUS: 'MISCELLANEOUS',
   USER: {
     PROFILE: 'USER.PROFILE',
   },

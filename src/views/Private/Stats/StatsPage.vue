@@ -4,7 +4,7 @@
       <!-- Mobile navigation -->
       <Menu as="nav" class="relative inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-3 py-4 text-gray-700 hover:bg-gray-200 sm:px-6">
+          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6">
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"

@@ -13,7 +13,7 @@ export const useSettingsStore = defineStore('settings', {
     async setLocale(locale: (typeof SUPPORTED_LOCALES)[number]) {
       if (!Object.keys(i18nInstance.global.messages).includes(locale)) {
         const messages = await import(`@/i18n/locales/${locale}/index.ts`);
-        i18nInstance.global.setLocaleMessage(locale, messages);
+        i18nInstance.global.setLocaleMessage(locale, messages.default);
       }
 
       const language = locale.substring(0, 2);

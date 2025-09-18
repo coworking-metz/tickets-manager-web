@@ -363,7 +363,7 @@
               <i18n-t
                 class="mt-1"
                 keypath="members.detail.orders.subscriptions.coverage.text"
-                :plural="totalTicketsUsed"
+                :plural="attendanceCoveredBySubscriptions"
                 scope="global"
                 tag="dd">
                 <template #attendance>

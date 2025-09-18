@@ -3,7 +3,7 @@
     <img
       v-if="thumbnail && !state.hasFailedLoadingThumbnail"
       :alt="`${$t('members.detail.profile.picture.label')} - ${name || email}`"
-      class="size-full rounded-full object-cover object-top"
+      class="size-full rounded-full object-cover object-center"
       loading="lazy"
       :src="thumbnail"
       @error="onLoadingThumbnailFail"
