@@ -136,9 +136,9 @@
           </li>
         </template>
         <ErrorState
-          v-else-if="historyError"
+          v-else-if="historyErrorText"
           class="m-auto"
-          :description="historyError"
+          :description="historyErrorText"
           :title="$t('audit.list.onFetch.fail')" />
         <EmptyState
           v-else-if="!slicedList.length"
@@ -167,16 +167,16 @@ import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
+import { useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import { useDebounceFn, useInfiniteScroll, useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 
 interface ListSorter {
@@ -247,8 +247,8 @@ const {
   isPending: isPendingHistory,
   isFetching: isFetchingHistory,
   data: history,
-  error: historyError,
-} = useQuery(
+  errorText: historyErrorText,
+} = useAppQuery(
   computed(() => ({
     queryKey: ['history', state.period.start, state.period.end],
     queryFn: () => getAllAuditEvents(state.period.start, state.period.end),

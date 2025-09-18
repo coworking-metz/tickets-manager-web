@@ -95,11 +95,11 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { getAllMemberTickets, Ticket } from '@/services/api/tickets';
+import { getAllMemberTickets } from '@/services/api/tickets';
+import { useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import dayjs from 'dayjs';
-import { computed, PropType, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -116,10 +116,10 @@ const props = defineProps({
 const {
   isFetching: isFetchingTickets,
   data: tickets,
-  error: ticketsError,
-} = useQuery({
+  errorText: ticketsErrorText,
+} = useAppQuery({
   queryKey: ['members', computed(() => props.memberId), 'tickets'],
-  queryFn: ({ queryKey: [_, memberId] }) => getAllMemberTickets(memberId),
+  queryFn: () => getAllMemberTickets(props.memberId),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,

@@ -12,9 +12,9 @@
       role="list">
       <LoadingSpinner v-if="isPendingHistory" class="m-auto size-16" />
       <ErrorState
-        v-else-if="historyError"
+        v-else-if="historyErrorText"
         class="m-auto"
-        :description="historyError"
+        :description="historyErrorText"
         :title="$t('members.detail.audit.onFetch.fail')" />
       <EmptyState
         v-else-if="!history?.length"
@@ -51,8 +51,8 @@ import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
 import { Member, getMemberAuditEvents } from '@/services/api/members';
+import { useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import { PropType, computed, reactive } from 'vue';
 
 const MIN_HISTORY_EVENTS = 3;
@@ -72,10 +72,10 @@ const {
   isPending: isPendingHistory,
   isFetching: isFetchingHistory,
   data: history,
-  error: historyError,
-} = useQuery({
+  errorText: historyErrorText,
+} = useAppQuery({
   queryKey: ['members', computed(() => props.member._id), 'history'],
-  queryFn: ({ queryKey: [_, memberId] }) => getMemberAuditEvents(memberId),
+  queryFn: () => getMemberAuditEvents(props.member._id),
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,

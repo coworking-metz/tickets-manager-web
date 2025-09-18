@@ -99,12 +99,12 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { getAllMemberSubscriptions, Subscription } from '@/services/api/subscriptions';
+import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { useAppQuery } from '@/services/query';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { computed, PropType, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
