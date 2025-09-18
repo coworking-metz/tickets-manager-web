@@ -30,7 +30,7 @@
                   class="absolute inset-0 flex rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-80 group-active:opacity-40">
                   <SvgIcon
                     aria-hidden="true"
-                    class="m-auto size-8 text-gray-200"
+                    class="m-auto size-8 text-white"
                     :path="mdiMagnifyPlusOutline"
                     type="mdi" />
                 </div>

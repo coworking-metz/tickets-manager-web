@@ -10,7 +10,8 @@
         <StatsActivityPeriodGraph
           :activities="dailyActivities"
           :loading="state.isFetchingActivities"
-          :options="options" />
+          :options="options"
+          @click="onBarSelect" />
       </div>
 
       <div class="flex shrink basis-0 flex-col items-start min-[1680px]:grow">
@@ -156,7 +157,9 @@
 <script lang="ts" setup>
 import StatsActivityPeriodGraph from './StatsActivityPeriodGraph.vue';
 import { formatAmount, fractionPercentage } from '@/helpers/currency';
+import { DATE_FORMAT } from '@/helpers/dates';
 import { handleSilentError } from '@/helpers/errors';
+import { ROUTE_NAMES } from '@/router/names';
 import { ActivityPeriod, getActivityPerDay, MAX_ATTENDANCE } from '@/services/api/activity';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
@@ -164,6 +167,7 @@ import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
@@ -181,6 +185,7 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -299,6 +304,16 @@ const fetchActivities = (from: string, to: string) => {
     new Promise((resolve) => setTimeout(resolve, 400)),
   ]).finally(() => {
     state.isFetchingActivities = false;
+  });
+};
+
+const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
+  const { date } = (dailyActivities.value ?? [])[dataIndex];
+  router.push({
+    name: ROUTE_NAMES.ATTENDANCE,
+    params: {
+      date: dayjs(date).format(DATE_FORMAT),
+    },
   });
 };
 
