@@ -3,7 +3,7 @@
     <EmptyState
       v-if="!date"
       :animation="SelectCalendarDate"
-      class="mx-auto lg:my-32"
+      class="mx-auto mb-16 lg:my-32"
       :description="$t('attendance.detail.select.description')"
       loop
       :title="$t('attendance.detail.select.title')" />

@@ -6,7 +6,7 @@
     <span v-if="description" class="mb-1 whitespace-pre-line text-sm text-gray-500">
       {{ description }}
     </span>
-    <div class="mt-1 flex flex-row rounded-md shadow-sm">
+    <div :class="['flex flex-row rounded-md shadow-sm', (label || description) && 'mt-1']">
       <slot name="before" />
       <div class="relative flex grow flex-row items-stretch gap-3">
         <slot name="prepend">
