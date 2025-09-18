@@ -141,7 +141,7 @@
       </section>
 
       <SectionRow class="mt-6">
-        <LoadingSpinner v-if="isFetchingActivity" class="m-auto size-12" />
+        <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-[172px] w-12" />
         <ActivityGraph
           v-else
           :key="`activity-graph-${state.shouldRenderAllActivity}`"
@@ -158,7 +158,7 @@
             }
           "
           :activity="activity"
-          class="max-sm:overflow-x-auto"
+          class="px-2 max-sm:overflow-x-auto"
           :non-compliant-activity="nonCompliantActivity" />
 
         <div class="mx-3 flex flex-row flex-wrap gap-3">
@@ -547,7 +547,7 @@ import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -721,4 +721,14 @@ const nonCompliantActivity = computed(() => {
 
   return [];
 });
+
+watch(
+  () => props.id,
+  (newId, oldId) => {
+    // scroll to top to let the user know that member has changed
+    if (newId !== oldId) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  },
+);
 </script>

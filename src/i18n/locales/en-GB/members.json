@@ -4,7 +4,7 @@
       "add": "Add attendance",
       "description": "Attendance is automatically recorded when the member connects to the coworking's wifi network.",
       "graph": {
-        "tooltip": "{date}: {amount}{suffix}",
+        "tooltip": "{date}\n{amount}{suffix}",
         "value": {
           "FULL": "full day",
           "HALF": "half day",

@@ -53,12 +53,14 @@
         id="ticket-count"
         v-model.number="state.count"
         :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
+        input-class="!pr-16"
         :label="$t('tickets.detail.count.label')"
         :prepend-icon="mdiTicket"
         required
         type="number">
         <template #append>
-          <span class="pointer-events-none z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
+          <span
+            class="pointer-events-none absolute inset-y-0 right-0 z-20 flex w-14 items-center text-gray-500 sm:text-sm">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>

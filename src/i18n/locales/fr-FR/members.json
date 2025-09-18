@@ -4,7 +4,7 @@
       "add": "Ajouter une présence",
       "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
       "graph": {
-        "tooltip": "{date} : {amount}{suffix}",
+        "tooltip": "{date}\n{amount}{suffix}",
         "value": {
           "FULL": "journée complète",
           "HALF": "demi-journée",
