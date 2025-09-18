@@ -13,10 +13,17 @@
       }"
       :visible-toasts="5" />
   </Teleport>
+
+  <small
+    v-if="ENVIRONMENT"
+    class="fixed -right-6 top-3 z-50 flex h-5 w-24 rotate-45 items-center justify-center overflow-hidden truncate bg-indigo-700 text-xs lowercase text-white shadow sm:-left-6 sm:-rotate-45">
+    {{ ENVIRONMENT }}
+  </small>
 </template>
 
 <script lang="ts" setup>
 import NotificationToast from './components/NotificationToast.vue';
+import { ENVIRONMENT } from './helpers/environment';
 import { useNotificationsStore } from './store/notifications';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { useHead } from '@unhead/vue';
