@@ -82,6 +82,12 @@
       "subscriptions": {
         "active": "Actif | Inactif",
         "add": "Ajouter un abonnement",
+        "coverage": {
+          "attendance": "{count} journée | {count} journée | {count} journées",
+          "label": "Abonnements",
+          "orders": "{count} abonnement | {count} abonnement | {count} abonnements",
+          "text": "{attendance} couverte par {orders} | {attendance} couverte par {orders} | {attendance} couvertes par {orders}"
+        },
         "days": "{count} jour | {count} jour | {count} jours",
         "more": "Plus",
         "onFetch": {
@@ -100,9 +106,10 @@
         "remaining": "Aucun disponible | {count} restant | {count} restants",
         "title": "Tickets à l'unité",
         "used": {
+          "count": "{count} ticket | {count} ticket | {count} tickets",
           "label": "Consommation",
           "orders": "{count} commandé | {count} commandé | {count} commandés",
-          "value": "{count} ticket utilisé sur {orders} | {count} ticket utilisé sur {orders} | {count} tickets utilisés sur {orders}"
+          "text": "{count} utilisé sur {orders} | {count} utilisé sur {orders} | {count} utilisés sur {orders}"
         }
       },
       "title": "Commandes"

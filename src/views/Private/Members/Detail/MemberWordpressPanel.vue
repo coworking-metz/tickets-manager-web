@@ -65,7 +65,7 @@ const onSync = () => {
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id), 'history'],
+        queryKey: ['members', computed(() => props.member._id)],
       });
     })
     .catch((error) => {
