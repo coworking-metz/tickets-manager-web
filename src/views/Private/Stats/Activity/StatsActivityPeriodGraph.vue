@@ -12,7 +12,7 @@
     ref="chart"
     class="size-full"
     :option="options"
-    @click="$emit('click')" />
+    @click="(event) => $emit('click', event)" />
 </template>
 
 <script lang="ts" setup>
@@ -54,6 +54,10 @@ const props = defineProps({
     type: Object as PropType<ComposeOption<GridComponentOption | TooltipComponentOption>>,
     default: null,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const chart = ref();
@@ -79,11 +83,12 @@ const options = computed<
     axisLabel: {
       formatter: (value: number) => value,
       align: 'right',
+      clickable: true,
     },
   },
   series: [
     {
-      silent: true,
+      silent: props.disabled,
       name: 'members',
       data: props.activities.map(({ data }) => ({
         value: data.coworkersCount - data.newCoworkersCount,
@@ -96,9 +101,10 @@ const options = computed<
       emphasis: {
         focus: 'series',
       },
+      triggerLineEvent: true,
     },
     {
-      silent: true,
+      silent: props.disabled,
       name: 'new-members',
       data: props.activities.map(({ data }) => ({
         value: data.newCoworkersCount,
@@ -111,6 +117,7 @@ const options = computed<
       emphasis: {
         focus: 'series',
       },
+      triggerLineEvent: true,
     },
   ],
 }));
