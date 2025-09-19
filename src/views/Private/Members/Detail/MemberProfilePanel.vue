@@ -65,7 +65,7 @@
         type="text">
         <template #after>
           <button
-            class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            class="relative -ml-px mt-1 inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
             type="button"
             @click="state.isScannerVisible = true">
             <SvgIcon aria-hidden="true" class="size-5" :path="mdiCellphoneNfc" type="mdi" />

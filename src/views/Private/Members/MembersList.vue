@@ -125,10 +125,13 @@
 
     <div class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
       <div
-        class="relative flex grow flex-col overflow-hidden border-t border-gray-200 bg-white shadow sm:rounded-md">
-        <LoadingProgressBar
+        class="relative flex grow flex-col border-t border-gray-200 bg-white shadow sm:rounded-md">
+        <div
           v-if="isFetching || isFetchingVotingMembers"
-          class="absolute top-0 h-px w-full" />
+          class="sticky top-[67px] w-full sm:top-[3px]">
+          <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
+        </div>
+
         <ul class="grow divide-y divide-gray-200" role="list">
           <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
             <li v-for="index in 10" :key="`loading-member-card-${index}`">

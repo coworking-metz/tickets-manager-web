@@ -1,0 +1,16 @@
+{
+  "shortcuts": {
+    "currentMonth": "This month",
+    "currentWeek": "This week",
+    "currentYear": "This year",
+    "last30days": "Last 30 days",
+    "last6Months": "Last 6 months",
+    "last7days": "Last 7 days",
+    "lastYear": "Last year",
+    "sinceFirstDay": "Since the first day",
+    "sinceYearStart": "Since the beginning of the year",
+    "today": "Today"
+  },
+  "value": "From {start} to {end}",
+  "valueFr": "Du {start} au {end}"
+}

@@ -5,5 +5,6 @@
   "macAddress": "This doesn't look like a MAC address",
   "minValue": "This should be greater than or equal to {min}",
   "numeric": "This doesn't look like an integer",
+  "optional": "optional",
   "required": "This information is required"
 }

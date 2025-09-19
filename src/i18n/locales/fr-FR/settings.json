@@ -1,4 +1,24 @@
 {
+  "computeAttendance": {
+    "description": "Les présences sont automatiquement synchronisées/calculées chaque nuit à 01h00 à partir des traces des addresses MAC scannées sur le réseau. Ce qui signifie que tous les appareils connectés sont tracés, même si ils ne sont pas encore dans le système.\n\nVous pouvez lancer manuellement une synchronisation entre les traces et les présences en précisant une période particulière et/ou une adresse MAC.",
+    "macAddress": {
+      "label": "Adresse MAC",
+      "placeholder": "Toutes"
+    },
+    "onCompute": {
+      "fail": "Impossible de synchroniser la présence",
+      "success": "Présences synchronisées"
+    },
+    "period": {
+      "description": "Préciser une période MAC à synchroniser en particulier. Laisser vide pour toutes les adresses.",
+      "label": "Période",
+      "placeholder": "Depuis toujours",
+      "value": "Du {start} au {end}"
+    },
+    "submit": "Synchroniser",
+    "title": "Synchroniser les présences"
+  },
+  "description": "C'est ici qu'on blidouille le système.",
   "head": {
     "title": "@:settings.title"
   },

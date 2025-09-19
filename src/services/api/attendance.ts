@@ -40,3 +40,15 @@ export const getAttendancePerDay = (
     timeout: 30_000,
   }).then(({ data }) => data);
 };
+
+export const computeAttendance = (options: {
+  macAddress: string | null;
+  start: string;
+  end: string;
+}): Promise<unknown> => {
+  return HTTP.post('/api/attendance/compute', {
+    macAddress: options.macAddress,
+    start: options.start,
+    end: options.end,
+  }).then(({ data }) => data);
+};

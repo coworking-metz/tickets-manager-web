@@ -16,34 +16,148 @@
 
       <section class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
         <h3 class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900">
-          <SvgIcon aria-hidden="true" class="size-5" :path="mdiBookOpenVariantOutline" type="mdi" />
-          {{ $t('miscellaneous.guide.title') }}
+          {{ $t('settings.computeAttendance.title') }}
         </h3>
         <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500">
-          {{ $t('miscellaneous.guide.description') }}
+          {{ $t('settings.computeAttendance.description') }}
         </p>
-        <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
-          <!-- <AppButton
-            class="border border-transparent bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            :loading="state.isSyncing"
-            @click="onSync">
-            {{ $t('members.detail.wordpress.sync') }}
-          </AppButton> -->
-          <a
-            class="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-indigo-100 px-4 py-2 font-medium text-indigo-700 transition-colors hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-            href="https://docs.google.com/document/d/1R4OQZbcFHjU2ORNHwoiRjtMUAj16mCX9"
-            referrerpolicy="no-referrer"
-            target="_blank">
-            <SvgIcon aria-hidden="true" class="size-5" :path="mdiOpenInNew" type="mdi" />
-            <span>{{ $t('miscellaneous.guide.navigate') }}</span>
-          </a>
-        </div>
+        <form class="mt-6 flex flex-col" @submit.prevent="onSubmit">
+          <div class="flex flex-row flex-wrap items-start gap-x-3">
+            <AppPeriodField
+              v-model="state.period"
+              class="min-w-52 shrink grow basis-0"
+              :errors="vuelidate.period.start.$errors.map(({ $message }) => $message as string)"
+              :label="$t('settings.computeAttendance.period.label')"
+              :optional="!!state.macAddress"
+              :placeholder="$t('settings.computeAttendance.period.placeholder')" />
+            <AppTextField
+              v-model="state.macAddress"
+              class="min-w-52 shrink grow basis-0"
+              clearable
+              :errors="vuelidate.macAddress.$errors.map(({ $message }) => $message as string)"
+              :label="$t('settings.computeAttendance.macAddress.label')"
+              max-length="17"
+              :optional="Boolean(state.period.start && state.period.end)"
+              :placeholder="$t('settings.computeAttendance.macAddress.placeholder')"
+              :prepend-icon="mdiDevices" />
+          </div>
+          <div class="flex flex-row flex-wrap items-center gap-3">
+            <AppButton
+              class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+              :icon="mdiSync"
+              :loading="state.isComputingAttendance"
+              type="submit">
+              {{ $t('settings.computeAttendance.submit') }}
+            </AppButton>
+            <AppAlert
+              v-if="state.hasFailValidationOnce"
+              class="truncate"
+              :title="
+                $t('validations.invalidFields', {
+                  count: getVuelidateErrorFieldsCount(vuelidate.$errors),
+                })
+              "
+              :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
+          </div>
+        </form>
       </section>
     </div>
   </article>
 </template>
 
 <script lang="ts" setup>
-import { mdiBookOpenVariantOutline, mdiOpenInNew } from '@mdi/js';
+import AppAlert from '@/components/form/AppAlert.vue';
+import AppButton from '@/components/form/AppButton.vue';
+import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppTextField from '@/components/form/AppTextField.vue';
+import { DATE_FORMAT } from '@/helpers/dates';
+import { getVuelidateErrorFieldsCount, scrollToFirstError } from '@/helpers/errors';
+import { withAppI18nMessage } from '@/i18n';
+import { computeAttendance } from '@/services/api/attendance';
+import { useNotificationsStore } from '@/store/notifications';
+import { mdiDevices, mdiSync } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
+import useVuelidate from '@vuelidate/core';
+import { helpers, requiredIf, macAddress as vuelidateMacAddress } from '@vuelidate/validators';
+import dayjs from 'dayjs';
+import { computed, nextTick, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const props = defineProps({
+  macAddress: {
+    type: String,
+    default: null,
+  },
+});
+
+const now = dayjs();
+const i18n = useI18n();
+const notificationStore = useNotificationsStore();
+const state = reactive({
+  isComputingAttendance: false,
+  macAddress: null as string | null,
+  period: {
+    start: now.subtract(7, 'days').format(DATE_FORMAT) as string,
+    end: now.format(DATE_FORMAT) as string,
+  },
+  hasFailValidationOnce: false,
+});
+
+const rules = computed(() => ({
+  macAddress: {
+    required: withAppI18nMessage(requiredIf(() => !state.period.start || !state.period.end)),
+    macAddress: helpers.withMessage(
+      i18n.t('validations.macAddress') as string,
+      vuelidateMacAddress(':'),
+    ),
+  },
+  period: {
+    start: {
+      required: withAppI18nMessage(requiredIf(() => !state.macAddress)),
+    },
+  },
+}));
+
+const vuelidate = useVuelidate(rules, state);
+
+const onSubmit = async () => {
+  const isValid = await vuelidate.value.$validate();
+  if (!isValid) {
+    state.hasFailValidationOnce = true;
+    nextTick(scrollToFirstError);
+    return;
+  }
+
+  vuelidate.value.$reset();
+
+  state.isComputingAttendance = true;
+  computeAttendance({
+    macAddress: state.macAddress,
+    start: state.period.start,
+    end: state.period.end,
+  })
+    .then(() => {
+      notificationStore.addSuccessNotification(
+        i18n.t('settings.computeAttendance.onCompute.success'),
+      );
+    })
+    .catch((error) => {
+      notificationStore.addErrorNotification(
+        error,
+        i18n.t('settings.computeAttendance.onCompute.fail'),
+      );
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isComputingAttendance = false;
+    });
+};
+
+watch(
+  () => props.macAddress,
+  (newMacAddress) => {
+    state.macAddress = newMacAddress;
+  },
+  { immediate: true },
+);
 </script>

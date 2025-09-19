@@ -251,6 +251,9 @@ export const routes: RouteRecordRaw[] = [
         path: 'settings',
         name: ROUTE_NAMES.SETTINGS,
         component: () => import('@/views/Private/Settings/SettingsPage.vue'),
+        props: (route) => ({
+          macAddress: route.query.macAddress,
+        }),
       },
       {
         path: 'miscellaneous',
