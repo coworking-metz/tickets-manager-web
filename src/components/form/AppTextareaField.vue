@@ -59,16 +59,15 @@
       <slot name="after" />
     </div>
 
-    <ul v-if="!hideDetails" class="min-h-[1.4rem] px-3 text-xs">
-      <li v-if="!errors.length && hint">{{ hint }}</li>
-      <li v-for="error in errors" :key="`error-${error}`" class="text-red-600">
-        {{ error }}
-      </li>
-    </ul>
+    <slot name="hint">
+      <AppFieldHint v-if="!hideDetails" :errors="errors" :hint="hint" />
+    </slot>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppFieldHint from './AppFieldHint.vue';
+import { type ErrorMessage } from './AppFieldHint.vue';
 import { useSlots, PropType, computed } from 'vue';
 
 defineEmits(['blur', 'update:modelValue']);
@@ -114,7 +113,7 @@ const props = defineProps({
     default: null,
   },
   errors: {
-    type: Array as PropType<String[]>,
+    type: Array as PropType<ErrorMessage[]>,
     default: () => [],
   },
   prependIcon: {

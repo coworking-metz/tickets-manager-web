@@ -337,18 +337,15 @@
                     scope="global"
                     tag="span">
                     <template #count>
-                      <AnimatedCounter
-                        class="inline-block font-bold tracking-tight text-gray-900"
-                        :duration="1"
-                        :format="
-                          (count: number) =>
-                            formatAmount(count, {
-                              style: 'decimal',
-                              minimumFractionDigits: 0,
-                              maximumFractionDigits: 1,
-                            })
-                        "
-                        :to="totalTicketsCount" />
+                      <span class="inline-block font-bold tracking-tight text-gray-900">
+                        {{
+                          formatAmount(totalTicketsCount, {
+                            style: 'decimal',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 1,
+                          })
+                        }}
+                      </span>
                     </template>
                   </i18n-t>
                 </template>
@@ -393,18 +390,15 @@
                     scope="global"
                     tag="span">
                     <template #count>
-                      <AnimatedCounter
-                        class="inline-block font-bold tracking-tight text-gray-900"
-                        :duration="1"
-                        :format="
-                          (count: number) =>
-                            formatAmount(count, {
-                              style: 'decimal',
-                              minimumFractionDigits: 0,
-                              maximumFractionDigits: 1,
-                            })
-                        "
-                        :to="totalSubscriptionsCount" />
+                      <span class="inline-block font-bold tracking-tight text-gray-900">
+                        {{
+                          formatAmount(totalSubscriptionsCount, {
+                            style: 'decimal',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 1,
+                          })
+                        }}
+                      </span>
                     </template>
                   </i18n-t>
                 </template>

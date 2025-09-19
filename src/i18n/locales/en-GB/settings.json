@@ -1,4 +1,24 @@
 {
+  "computeAttendance": {
+    "description": "Attendance is automatically synchronized/computed every night at 1 AM from the traces of MAC addresses scanned on the network. This means that all connected devices are tracked, even if they are not yet in the system.\n\nYou can manually trigger a synchronization between the traces and the attendance by specifying a particular period and/or a MAC address.",
+    "macAddress": {
+      "label": "MAC Address",
+      "placeholder": "All"
+    },
+    "onCompute": {
+      "fail": "Unable to synchronize attendance",
+      "success": "Attendance synchronized"
+    },
+    "period": {
+      "description": "Specify a particular MAC period to synchronize. Leave empty for all addresses.",
+      "label": "Period",
+      "placeholder": "Since forever",
+      "value": "From {start} to {end}"
+    },
+    "submit": "Synchronize",
+    "title": "Synchronize attendance"
+  },
+  "description": "This is where you tinker with the system.",
   "head": {
     "title": "@:settings.title"
   },

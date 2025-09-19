@@ -16,6 +16,12 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
+      <AppAlert
+        v-if="membershipsErrorText"
+        class="m-4"
+        :description="membershipsErrorText"
+        :title="$t('members.detail.orders.memberships.onFetch.fail')"
+        type="error" />
       <LoadingSpinner v-if="isFetchingMemberships" class="mx-auto my-16 size-16" />
       <template v-else>
         <li
@@ -76,6 +82,7 @@
 </template>
 <script setup lang="ts">
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAlert from '@/components/form/AppAlert.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberMemberships } from '@/services/api/memberships';

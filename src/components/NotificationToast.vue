@@ -55,7 +55,7 @@
       </div>
       <AppButtonIcon
         :id="`notification-${notification.id}-close`"
-        class="ml-4 shrink-0 rounded-md text-gray-400 hover:bg-gray-400/30 hover:text-gray-300 active:bg-gray-400/40 active:text-gray-100"
+        class="ml-4 shrink-0 rounded-md !text-gray-400 hover:!bg-gray-400/30 hover:!text-gray-300 active:!bg-gray-400/40 active:!text-gray-100"
         :icon="mdiClose"
         :title="$t('action.close')"
         @click="
@@ -70,7 +70,7 @@
         notificationsStore?.openCount > 1 && notificationsStore.lastOpen?.id === notification.id
       "
       :id="`notification-close-all`"
-      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 text-gray-400 opacity-0 transition hover:text-gray-300 active:text-gray-100 group-hover:opacity-100"
+      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 !text-gray-400 opacity-0 transition hover:!bg-slate-700 hover:!text-gray-300 active:!bg-slate-900 active:!text-gray-100 group-hover:opacity-100"
       :icon="mdiNotificationClearAll"
       :title="$t('action.closeAll')"
       type="button"

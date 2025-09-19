@@ -13,12 +13,19 @@
         {{ $t('members.detail.orders.subscriptions.active', { count: +hasActiveSubscription }) }}
       </span>
     </div>
+
     <ul
       :class="[
         'relative flex shrink grow flex-col',
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
+      <AppAlert
+        v-if="subscriptionsErrorText"
+        class="m-4"
+        :description="subscriptionsErrorText"
+        :title="$t('members.detail.orders.subscriptions.onFetch.fail')"
+        type="error" />
       <LoadingSpinner v-if="isFetchingSubscriptions" class="mx-auto my-16 size-16" />
       <template v-else>
         <li
@@ -97,6 +104,7 @@
 </template>
 <script setup lang="ts">
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAlert from '@/components/form/AppAlert.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';

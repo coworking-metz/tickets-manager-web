@@ -58,6 +58,24 @@
               </template>
 
               <template #after>
+                <RouterLink
+                  v-if="device.id"
+                  class="relative -ml-px inline-flex items-center gap-x-2 border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                  :to="{
+                    name: ROUTE_NAMES.SETTINGS,
+                    query: {
+                      macAddress: device.macAddress,
+                    },
+                  }">
+                  <SvgIcon
+                    aria-hidden="true"
+                    class="size-5 text-gray-400"
+                    :path="mdiSync"
+                    type="mdi" />
+                  <span class="max-sm:hidden">
+                    {{ $t('members.detail.profile.macAddresses.compute') }}
+                  </span>
+                </RouterLink>
                 <button
                   class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                   type="button"
@@ -67,7 +85,9 @@
                     class="size-5 text-gray-400"
                     :path="mdiClose"
                     type="mdi" />
-                  <span>{{ $t('members.detail.profile.macAddresses.remove') }}</span>
+                  <span class="max-sm:hidden">
+                    {{ $t('members.detail.profile.macAddresses.remove') }}
+                  </span>
                 </button>
               </template>
             </AppTextField>
@@ -115,9 +135,10 @@ import {
   handleSilentError,
   scrollToFirstError,
 } from '@/helpers/errors';
+import { ROUTE_NAMES } from '@/router/names';
 import { Device, Member, updateMemberMacAddresses } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiCheckAll, mdiClose, mdiLaptop, mdiOpenInNew, mdiPlus } from '@mdi/js';
+import { mdiCheckAll, mdiClose, mdiLaptop, mdiOpenInNew, mdiPlus, mdiSync } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, macAddress, required } from '@vuelidate/validators';

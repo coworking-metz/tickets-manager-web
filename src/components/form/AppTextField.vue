@@ -1,82 +1,123 @@
 <template>
-  <div class="flex flex-col">
-    <label v-if="label" class="block font-medium text-gray-900 sm:text-sm" :for="id">
-      {{ label }}
-    </label>
-    <span v-if="description" class="mb-1 whitespace-pre-line text-sm text-gray-500">
-      {{ description }}
-    </span>
-    <div :class="['flex flex-row rounded-md shadow-sm', (label || description) && 'mt-1']">
+  <div class="flex flex-col items-start">
+    <slot :for-id="id" :label="label" name="label" :optional="optional">
+      <label
+        v-if="label"
+        class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100"
+        :for="id">
+        {{
+          [label, optional && `(${$t('validations.optional').toLocaleLowerCase()})`]
+            .filter(Boolean)
+            .join(' ')
+        }}
+      </label>
+    </slot>
+    <slot :description="description" name="description">
+      <span v-if="description" class="text-sm text-slate-500 dark:text-slate-400">
+        {{ description }}
+      </span>
+    </slot>
+    <div class="flex flex-row self-stretch rounded-md">
       <slot name="before" />
-      <div class="relative flex grow flex-row items-stretch gap-3">
+      <div
+        :class="[
+          'group relative flex grow flex-row items-stretch gap-3',
+          (label || description) && 'mt-1',
+        ]">
         <slot name="prepend">
           <SvgIcon
             v-if="prependIcon"
             aria-hidden="true"
-            :class="{
-              ['pointer-events-none absolute inset-y-0 left-0 z-20 ml-3 h-full w-5 text-gray-400']: true,
-              ['text-red-500']: isInvalid,
-            }"
+            :class="[
+              'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
+              isInvalid && 'text-red-500',
+            ]"
             :path="prependIcon"
             type="mdi" />
         </slot>
-        <input
-          :id="id"
-          :aria-invalid="isInvalid"
-          :autocomplete="autocomplete"
+        <slot :append-icon="appendIcon" :is-invalid="isInvalid" :prepend-icon="prependIcon">
+          <input
+            :id="id"
+            :aria-invalid="isInvalid"
+            :autocomplete="autocomplete"
+            :class="[
+              `block min-h-10 w-full rounded-md border-gray-300 shadow-sm transition-colors
+              placeholder:text-gray-400/80 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500
+              disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50
+              disabled:text-gray-500 sm:text-sm dark:border-gray-600 dark:bg-slate-800
+              dark:text-gray-100 dark:disabled:border-gray-700 dark:disabled:bg-slate-700
+              disabled:dark:text-gray-400`,
+              (slots.after || slots.before) && 'rounded-none',
+              !slots.before && 'rounded-l-md',
+              !slots.after && 'rounded-r-md',
+              (slots.prepend || prependIcon) && 'pl-10',
+              slots.append || (appendIcon && 'pr-10'),
+              type === 'number' && 'text-right',
+              type !== 'search' && 'pr-0',
+              isInvalid &&
+                `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
+                focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
+                dark:placeholder:text-red-300/50 dark:focus:border-red-600 dark:focus:ring-red-600`,
+              inputClass,
+            ]"
+            :disabled="disabled"
+            :max="max"
+            :maxlength="maxLength"
+            :min="min"
+            :name="name"
+            :pattern="pattern"
+            :placeholder="placeholder"
+            :readonly="readonly"
+            :required="required"
+            :step="step"
+            :tabindex="tabindex"
+            :type="type"
+            :value="modelValue"
+            @blur="(event) => emit('blur', event)"
+            @input="
+              (event) => emit('update:modelValue', (event.currentTarget as HTMLInputElement).value)
+            " />
+        </slot>
+        <AppButtonIcon
+          v-if="modelValue && clearable"
           :class="[
-            'block min-h-10 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
-            (slots.after || slots.before) && 'rounded-none',
-            !slots.before && 'rounded-l-md',
-            !slots.after && 'rounded-r-md',
-            (slots.prepend || prependIcon) && 'pl-10',
-            isInvalid &&
-              'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500',
-            type === 'number' && 'text-right',
-            inputClass,
+            `absolute top-1/2 z-10 size-7 -translate-y-1/2 bg-white/10 opacity-0 backdrop-blur-md
+            transition-opacity focus:opacity-100 group-hover:opacity-100 dark:bg-slate-900/10`,
+            $slots.append || appendIcon ? 'right-9' : 'right-1.5',
           ]"
-          :disabled="disabled"
-          :max="max"
-          :maxlength="maxLength"
-          :min="min"
-          :name="name"
-          :pattern="pattern"
-          :placeholder="placeholder"
-          :readonly="readonly"
-          :required="required"
-          :step="step"
-          :tabindex="tabindex"
-          :type="type"
-          :value="modelValue"
-          @blur="(event) => $emit('blur', event)"
-          @input="
-            (event) => $emit('update:modelValue', (event.currentTarget as HTMLInputElement).value)
-          " />
+          :icon="mdiClose"
+          :title="$t('action.clear')"
+          @click.prevent.stop="onClear" />
+
         <slot name="append">
           <SvgIcon
             v-if="appendIcon"
             aria-hidden="true"
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 h-full w-5 text-gray-400"
+            class="pointer-events-none absolute inset-y-0 right-0 z-[11] mr-3 min-h-10 w-5 text-gray-400"
             :path="appendIcon"
             type="mdi" />
         </slot>
+
+        <LoadingProgressBar v-if="loading" class="absolute inset-x-1 bottom-0 h-px" />
       </div>
       <slot name="after" />
     </div>
 
-    <ul v-if="!hideDetails" class="min-h-[1.4rem] px-3 text-xs">
-      <li v-if="!errors.length && hint">{{ hint }}</li>
-      <li v-for="error in errors" :key="`error-${error}`" class="text-red-600">
-        {{ error }}
-      </li>
-    </ul>
+    <slot name="hint">
+      <AppFieldHint v-if="!hideDetails" :errors="errors" :hint="hint" />
+    </slot>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppButtonIcon from './AppButtonIcon.vue';
+import AppFieldHint from './AppFieldHint.vue';
+import { ErrorMessage } from './AppFieldHint.vue';
+import LoadingProgressBar from '../LoadingProgressBar.vue';
+import { mdiClose } from '@mdi/js';
 import { useSlots, PropType, computed } from 'vue';
 
-defineEmits(['blur', 'update:modelValue']);
+const emit = defineEmits(['blur', 'update:modelValue', 'clear']);
 const props = defineProps({
   modelValue: {
     type: [String, Number] as PropType<String | Number | null>,
@@ -88,7 +129,7 @@ const props = defineProps({
   },
   description: {
     type: String,
-    default: null,
+    default: '',
   },
   id: {
     type: String,
@@ -106,6 +147,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  invalid: {
+    type: Boolean,
+    default: false,
+  },
   name: {
     type: String,
     default: null,
@@ -119,7 +164,7 @@ const props = defineProps({
     default: null,
   },
   errors: {
-    type: Array as PropType<String[]>,
+    type: Array as PropType<ErrorMessage[]>,
     default: () => [],
   },
   prependIcon: {
@@ -137,10 +182,6 @@ const props = defineProps({
   hint: {
     type: String,
     default: '',
-  },
-  horizontal: {
-    type: Boolean,
-    default: false,
   },
   tabindex: {
     type: String,
@@ -162,6 +203,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  optional: {
+    type: Boolean,
+    default: false,
+  },
+  clearable: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   maxLength: {
     type: [String, Number],
     default: null,
@@ -172,13 +225,20 @@ const props = defineProps({
   },
   inputClass: {
     type: String,
-    default: null,
+    default: '',
   },
 });
 
 const slots = useSlots();
 
-const isInvalid = computed(() => props.errors && props.errors.length > 0);
+const isInvalid = computed(
+  () => props.invalid || (props.errors && props.errors.filter(Boolean).length > 0),
+);
+
+const onClear = () => {
+  emit('clear');
+  emit('update:modelValue', null);
+};
 </script>
 
 <style scoped>
