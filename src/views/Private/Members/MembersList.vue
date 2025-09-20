@@ -133,7 +133,7 @@
         </div>
 
         <ul class="grow divide-y divide-gray-200" role="list">
-          <template v-if="isPending || (tab === 'voting' && isFetchingVotingMembers)">
+          <template v-if="isPending || (tab === 'voting' && isPendingVotingMembers)">
             <li v-for="index in 10" :key="`loading-member-card-${index}`">
               <MembersListCard loading />
             </li>
@@ -149,7 +149,7 @@
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                 params: { id: member._id },
               }">
-              <MembersListCard :loading="isFetching || isFetchingVotingMembers" :member="member" />
+              <MembersListCard :member="member" />
             </RouterLink>
           </li>
         </ul>
@@ -335,7 +335,7 @@ const {
   data: votingMembers,
   error: votingMembersError,
 } = useQuery({
-  queryKey: ['voting-members'],
+  queryKey: ['members/voting'],
   queryFn: () => getVotingMembers(),
   refetchOnMount: false,
   refetchOnWindowFocus: false,

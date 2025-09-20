@@ -3,6 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 import type { Config } from 'tailwindcss';
 
 export default {
+  darkMode: 'selector',
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
   content: [
     './index.html',
@@ -15,7 +16,7 @@ export default {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'vtd-primary': colors.sky, // Light mode Datepicker color
+        'vtd-primary': colors.indigo, // Light mode Datepicker color
         'vtd-secondary': colors.gray, // Dark mode Datepicker color
       },
     },

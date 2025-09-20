@@ -1,5 +1,5 @@
 <template>
-  <div :class="['flex items-center p-4 sm:px-6', !member && loading && 'animate-pulse']">
+  <div :class="['flex items-center p-4 sm:px-6', loading && 'animate-pulse']">
     <div class="flex min-w-0 flex-1 items-start">
       <MembersThumbnail
         class="shrink-0"
