@@ -114,25 +114,22 @@ const options = computed<
         itemStyle: {
           color,
         },
-        tooltip: `<span class="whitespace-pre-line">${i18n.t(
-          'members.detail.attendance.graph.tooltip',
-          {
-            date: dayjs(date).format('ll'),
-            amount:
-              value === 1
-                ? i18n.t('members.detail.attendance.graph.value.FULL')
-                : value === 0.5
-                  ? i18n.t('members.detail.attendance.graph.value.HALF')
-                  : i18n.t('members.detail.attendance.graph.value.NONE'),
-            ...(nonCompliant &&
-              nonCompliant.value !== value && {
-                suffix:
-                  nonCompliant.value === 1
-                    ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
-                    : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
-              }),
-          },
-        )}</span>`,
+        tooltip: i18n.t('members.detail.attendance.graph.tooltip', {
+          date: dayjs(date).format('ll') + '<br />',
+          amount:
+            value === 1
+              ? i18n.t('members.detail.attendance.graph.value.FULL')
+              : value === 0.5
+                ? i18n.t('members.detail.attendance.graph.value.HALF')
+                : i18n.t('members.detail.attendance.graph.value.NONE'),
+          ...(nonCompliant &&
+            nonCompliant.value !== value && {
+              suffix:
+                nonCompliant.value === 1
+                  ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
+                  : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
+            }),
+        }),
       };
     }),
   },
