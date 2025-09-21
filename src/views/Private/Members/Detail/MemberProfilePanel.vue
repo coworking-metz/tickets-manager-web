@@ -1,6 +1,6 @@
 <template>
-  <form class="shadow sm:overflow-hidden sm:rounded-md" @submit.prevent="onSubmit">
-    <div class="flex flex-col items-stretch bg-white px-4 pt-5 sm:px-6 sm:pt-6">
+  <AppPanel body-class="!pb-1" @submit.prevent="onSubmit">
+    <div class="flex flex-col items-stretch">
       <div class="flex flex-row flex-wrap gap-x-6">
         <AppTextField
           id="first-name"
@@ -43,14 +43,15 @@
           @blur="vuelidate.email.$touch()" />
         <AppTextField
           id="birthdate"
-          v-model="state.birthdate"
           autocomplete="bday"
           class="min-w-48 shrink grow basis-0"
           disabled
           :label="$t('members.detail.profile.birthdate.label')"
+          :model-value="dayjs(state.birthdate).format('L')"
           name="birthdate"
           :prepend-icon="mdiCakeVariantOutline"
-          type="date" />
+          type="date"
+          @update:model-value="(birthdate) => (state.birthdate = birthdate)" />
       </div>
 
       <AppTextField
@@ -74,20 +75,20 @@
         </template>
       </AppTextField>
 
-      <NFCScannerBottomSheet
+      <NFCScannerDialog
         v-model="state.isScannerVisible"
         @update:identifier="(id) => (state.badgeId = id)" />
     </div>
 
-    <div
-      class="flex flex-row flex-wrap gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-      <AppButton
-        class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+    <template #footer>
+      <AppButtonPlain
+        class="dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiCheckAll"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('action.apply') }}
-      </AppButton>
+      </AppButtonPlain>
       <AppAlert
         v-if="state.hasFailValidationOnce"
         class="truncate"
@@ -97,15 +98,16 @@
           })
         "
         :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
-    </div>
-  </form>
+    </template>
+  </AppPanel>
 </template>
 
 <script setup lang="ts">
-import NFCScannerBottomSheet from '@/components/NFCScannerBottomSheet.vue';
+import NFCScannerDialog from '@/components/NFCScannerDialog.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import {
   getVuelidateErrorFieldsCount,
   handleSilentError,
@@ -118,6 +120,7 @@ import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutli
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
+import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 

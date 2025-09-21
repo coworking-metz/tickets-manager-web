@@ -36,7 +36,8 @@
       "success": "Commande de tickets modifiée"
     },
     "reference": {
-      "label": "Référence de la commande"
+      "label": "Référence de la commande",
+      "placeholder": "POUL-12345"
     },
     "title": "Commande de {count} ticket | Commande d'un ticket | Commande de {count} tickets"
   },

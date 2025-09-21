@@ -27,10 +27,12 @@ import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NotificationToast from '@/components/NotificationToast.vue';
 import { ENVIRONMENT } from '@/helpers/environment';
+import { applyTheme, useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
+import { useSettingsStore } from '@/store/settings';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
-import { useWindowSize } from '@vueuse/core';
+import { useMagicKeys, useWindowSize, whenever } from '@vueuse/core';
 import { isNil } from 'lodash';
 import { markRaw, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -117,4 +119,12 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+const theme = useTheme();
+watch(theme, applyTheme, { immediate: true });
+const settingsStore = useSettingsStore();
+const { meta_shift_a } = useMagicKeys();
+whenever(meta_shift_a, () => {
+  settingsStore.setTheme(theme.value === 'dark' ? 'light' : 'dark');
+});
 </script>

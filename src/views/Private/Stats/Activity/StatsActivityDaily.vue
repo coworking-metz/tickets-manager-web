@@ -17,7 +17,9 @@
       <div class="flex shrink basis-0 flex-col items-start min-[1680px]:grow">
         <fieldset class="mx-auto w-full min-w-16 max-w-5xl px-3 pb-6 sm:px-6 min-[1680px]:px-0">
           <legend class="sr-only">{{ $t('stats.activity.daily.weekDays.label') }}</legend>
-          <p aria-hidden="true" class="block font-medium text-gray-900 sm:text-sm">
+          <p
+            aria-hidden="true"
+            class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
             {{ $t('stats.activity.daily.weekDays.label') }}
           </p>
           <ul
@@ -29,12 +31,12 @@
                 'flex flex-row items-center gap-2 rounded-full px-3 ring-1 ring-inset transition-colors',
                 weekDay.value
                   ? 'bg-indigo-500/10 text-indigo-700 ring-indigo-500/20 hover:bg-indigo-500/20 active:bg-indigo-500/30'
-                  : 'bg-white text-gray-700 ring-gray-500/20 hover:bg-gray-200 active:bg-gray-300',
+                  : 'bg-white text-gray-700 ring-gray-500/20 hover:bg-gray-200 active:bg-gray-300 dark:bg-neutral-800',
               ]">
               <input
                 :id="`day-${weekDay.index}`"
                 v-model="weekDay.value"
-                class="size-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                class="size-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:text-indigo-500"
                 :name="`day-${weekDay.index}`"
                 type="checkbox" />
               <label
@@ -49,13 +51,13 @@
     </section>
 
     <section class="mx-auto w-full max-w-5xl px-3 sm:px-6">
-      <h3 class="text-lg font-medium leading-6 text-gray-900">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
         {{ $t('stats.activity.daily.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.activity.daily.summary.average.people.label') }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
@@ -64,7 +66,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="
                 (count: number) =>
@@ -88,7 +90,7 @@
           <div
             v-else-if="state.activities.length"
             class="flex flex-row items-baseline justify-between text-sm">
-            <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+            <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{
                 $t('stats.activity.daily.summary.average.people.threshold', {
                   threshold: MAX_ATTENDANCE,
@@ -116,7 +118,7 @@
         </div>
 
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.activity.daily.summary.average.attendance.label') }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
@@ -125,7 +127,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="
                 (count: number) =>
@@ -144,7 +146,7 @@
           <div
             v-else-if="state.activities.length"
             class="flex flex-row items-baseline justify-between text-sm">
-            <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+            <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{ $t('stats.activity.daily.summary.average.attendance.description') }}
             </span>
           </div>
@@ -228,12 +230,12 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       } = dailyActivities.value[params[0].dataIndex];
       return `
         <dl class="flex flex-col min-w-48 items-end gap-1">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('dddd LL')}
           </dt>
 
           <dd class="flex flex-col items-end">
-            <span class="text-3xl font-semibold text-gray-900">${
+            <span class="text-3xl font-semibold text-gray-900 dark:text-gray-100">${
               coworkersCount ||
               i18n.t('stats.activity.daily.graph.tooltip.total', {
                 count: coworkersCount,

@@ -4,13 +4,13 @@
       <slot name="icon">
         <div
           :class="[
-            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200',
-            loading && ' animate-pulse',
+            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700/50',
+            loading && 'animate-pulse',
           ]">
           <SvgIcon
             v-if="!loading"
             aria-hidden="true"
-            class="size-5 text-gray-500"
+            class="size-5 text-gray-500 dark:text-gray-400"
             :path="icon"
             type="mdi" />
         </div>
@@ -18,29 +18,30 @@
 
       <template v-if="withTimeline">
         <slot name="timeline">
-          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200" />
+          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200 dark:bg-gray-600" />
         </slot>
       </template>
     </div>
 
     <div v-if="loading" class="flex w-full flex-col items-start pb-6">
       <div
-        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200"
+        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50"
         :style="{
           maxWidth: `${Math.floor(Math.random() * 256) + 128}px`,
         }" />
-      <div class="mt-2 h-3 w-20 animate-pulse rounded-3xl bg-slate-200" />
+      <div class="mt-2 h-3 w-20 animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50" />
     </div>
 
     <Disclosure
       v-else-if="event"
       as="div"
       v-slot="{ open }"
-      class="flex grow flex-col gap-1 overflow-hidden pb-6 text-sm text-slate-500">
+      class="flex grow flex-col gap-1 overflow-hidden pb-6 text-sm text-slate-500 dark:text-slate-400">
       <DisclosureButton
         :class="[
           'flex flex-row justify-between rounded-md px-2 py-1.5',
-          !!essentialContext && 'transition-colors hover:bg-gray-200 active:bg-gray-300',
+          !!essentialContext &&
+            'transition-colors hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-stone-700/40 dark:active:bg-stone-600/50',
         ]"
         :disabled="!essentialContext">
         <div class="flex flex-col text-start">
@@ -56,14 +57,17 @@
               <template #author>
                 <RouterLink
                   v-if="event.author?._id && route.params.id !== event.author._id"
-                  class="font-medium text-indigo-600 hover:underline"
+                  class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                     params: { id: event.author._id },
                   }">
                   {{ event.author.name }}
                 </RouterLink>
-                <span v-else class="font-medium text-gray-900" :title="event.author?.email">
+                <span
+                  v-else
+                  class="font-medium text-gray-900 dark:text-gray-100"
+                  :title="event.author?.email">
                   {{ event.author?.name || $t('audit.author.unknown') }}
                 </span>
               </template>
@@ -71,7 +75,7 @@
               <template #member v-if="event.context?.member">
                 <RouterLink
                   v-if="route.params.id !== event.context.member._id"
-                  class="font-medium text-indigo-600 hover:underline"
+                  class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                     params: { id: event.context.member._id },
@@ -82,7 +86,7 @@
                       .join(' ')
                   }}
                 </RouterLink>
-                <span v-else class="font-medium text-gray-900">
+                <span v-else class="font-medium text-gray-900 dark:text-gray-100">
                   {{
                     [event.context.member.firstName, event.context.member.lastName]
                       .filter(Boolean)
@@ -93,7 +97,7 @@
             </i18n-t>
           </slot>
           <time
-            class="whitespace-nowrap text-xs font-light lowercase text-gray-500"
+            class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
             :datetime="event.occurred"
             :title="dayjs(event.occurred).format('llll')">
             {{
@@ -113,7 +117,7 @@
       </DisclosureButton>
 
       <div v-if="event.context?.comment" class="prose mt-1">
-        <blockquote class="whitespace-pre-line text-sm">
+        <blockquote class="whitespace-pre-line text-sm text-gray-900 dark:text-gray-100">
           {{ event.context.comment }}
         </blockquote>
       </div>
@@ -128,7 +132,7 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0">
           <DisclosurePanel
-            class="mt-1 select-text rounded-md bg-slate-800 px-2 py-1 text-gray-200"
+            class="mt-1 select-text rounded-md bg-slate-800 px-2 py-1 text-gray-200 dark:bg-stone-950"
             tag="pre">
             <code class="whitespace-pre-wrap">{{ JSON.stringify(essentialContext, null, 2) }}</code>
           </DisclosurePanel>

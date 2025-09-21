@@ -21,6 +21,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { IncomePeriodWithTotal } from '@/services/api/incomes';
+import { useTheme } from '@/services/theme';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -74,6 +75,7 @@ const props = defineProps({
 
 const chart = ref();
 const { width } = useWindowSize();
+const currentTheme = useTheme();
 
 const firstCharge = computed(() => props.incomes.map(({ data }) => data.charges).shift());
 const lastCharge = computed(() => props.incomes.map(({ data }) => data.charges).pop());
@@ -195,12 +197,12 @@ const options = computed<
         scale: false,
       },
       itemStyle: {
-        color: theme.charlestonGreen,
+        color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
         width: 2,
         opacity: 1,
       },
       lineStyle: {
-        color: theme.charlestonGreen,
+        color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
         width: 2,
       },
       data: props.incomes.map(({ data }) => ({ value: data.charges || '-' })),
@@ -222,6 +224,8 @@ const options = computed<
                   label: {
                     position: 'start',
                     show: true,
+                    color:
+                      currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
                     formatter: ({ value }: { value: number }) => fractionAmount(value),
                     overflow: 'break',
                     lineHeight: 16,
@@ -235,6 +239,7 @@ const options = computed<
               show: true,
               overflow: 'break',
               lineHeight: 16,
+              color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
               ...(props.thresholdFormatter
                 ? {
                     formatter: props.thresholdFormatter,

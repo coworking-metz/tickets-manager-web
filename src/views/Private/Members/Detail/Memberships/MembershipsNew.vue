@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-full flex-col bg-white shadow-xl">
+  <div class="flex min-h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
@@ -28,7 +28,7 @@
         required
         type="date" />
       <AppTextField
-        id="membership-reference"
+        id="order-reference"
         v-model="state.orderReference"
         :label="$t('memberships.detail.reference.label')"
         :placeholder="$t('memberships.detail.reference.placeholder')" />
@@ -41,19 +41,20 @@
         :placeholder="$t('memberships.detail.comment.placeholder')"
         required />
 
-      <AppButton
-        class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+      <AppButtonPlain
+        class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiPlus"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('action.add') }}
-      </AppButton>
+      </AppButtonPlain>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -63,7 +64,7 @@ import { Member } from '@/services/api/members';
 import { addMemberMembership } from '@/services/api/memberships';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiPlus, mdiClose, mdiCalendarStartOutline } from '@mdi/js';
+import { mdiCalendarStartOutline, mdiClose, mdiPlus } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';

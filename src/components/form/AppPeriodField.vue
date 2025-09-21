@@ -2,7 +2,6 @@
   <VueTailwindDatepicker
     v-model="period"
     :as-single="width < 640"
-    v-bind="$attrs"
     :formatter="{
       date: DATE_FORMAT,
       month: 'MMM',
@@ -18,13 +17,13 @@
     "
     :shortcuts="shortcuts"
     v-slot="{ placeholder, clear }"
-    use-range>
+    use-range
+    v-bind="$attrs">
     <AppTextField
       :id="id"
       :append-icon="appendIcon"
       :autocomplete="autocomplete"
-      class="w-full"
-      clearable
+      :clearable="clearable"
       :description="description"
       :disabled="disabled"
       :errors="errors"
@@ -54,7 +53,11 @@
           onClear();
           clear();
         }
-      " />
+      ">
+      <template v-for="(_, slot) of $slots" #[slot]="scope">
+        <slot :name="slot" v-bind="scope" />
+      </template>
+    </AppTextField>
   </VueTailwindDatepicker>
 </template>
 
@@ -112,6 +115,10 @@ defineProps({
   type: {
     type: String,
     default: 'text',
+  },
+  clearable: {
+    type: Boolean,
+    default: false,
   },
   errors: {
     type: Array as PropType<ErrorMessage[]>,

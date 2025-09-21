@@ -237,7 +237,7 @@
         "value": "{count} missing | {count} missing | {count} missing"
       },
       "totalDebt": {
-        "label": "Total debt",
+        "label": "Indebted",
         "value": "None | {count} ticket | {count} tickets"
       }
     },

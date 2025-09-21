@@ -13,26 +13,23 @@
 import AppButton from './AppButton.vue';
 import { PropType, computed } from 'vue';
 
-export type TextColor = 'sky' | 'amber' | 'gray' | 'none';
-
 const props = defineProps({
   color: {
-    type: String as PropType<TextColor>,
-    default: 'sky',
+    type: String as PropType<'indigo' | 'amber' | 'gray' | 'none'>,
+    default: 'indigo',
   },
 });
 
 const colors = computed(() => {
   switch (props.color) {
+    case 'indigo':
+      return 'text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:ring-indigo-500 dark:text-indigo-400 dark:hover:bg-indigo-950 dark:hover:text-indigo-300';
+    case 'amber':
+      return 'text-amber-600 hover:bg-amber-50 hover:text-amber-700 focus:ring-amber-500 dark:text-amber-400 dark:hover:bg-amber-950 dark:hover:text-amber-300';
     case 'none':
       return '';
-    case 'sky':
-      return 'text-sky-600 hover:bg-sky-50 hover:text-sky-700 focus:ring-sky-500 dark:hover:bg-sky-950 dark:hover:text-sky-500';
-    case 'amber':
-      return 'text-amber-600 hover:bg-amber-50 hover:text-amber-700 focus:ring-amber-500 dark:hover:bg-amber-950 dark:hover:text-amber-500';
-    case 'gray':
     default:
-      return 'text-gray-600 hover:bg-gray-50 hover:text-gray-700 focus:ring-gray-500 dark:hover:bg-gray-950 dark:hover:text-gray-500';
+      return 'text-gray-600 hover:bg-gray-50 hover:text-gray-700 focus:ring-gray-500 dark:text-gray-400 dark:hover:bg-gray-950 dark:hover:text-gray-300';
   }
 });
 </script>

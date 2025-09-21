@@ -10,12 +10,12 @@
     <template v-else>
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ capitalize(dayjs(date).format('dddd LL')) }}
         </h1>
         <p
           v-if="attendance?.date && attendance.date === date"
-          class="mt-1 truncate text-base text-slate-500">
+          class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
           {{ $t('attendance.detail.attending', { count: attendance?.data.members.length }) }}
         </p>
 
@@ -65,7 +65,7 @@
                   leave-from-class="transform opacity-100 scale-100"
                   leave-to-class="transform opacity-0 scale-95">
                   <MenuItems
-                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none">
+                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:bg-neutral-800">
                     <div class="py-1">
                       <MenuItem
                         v-for="listSorter in ALL_LIST_SORTERS"
@@ -73,7 +73,9 @@
                         v-slot="{ active, close }">
                         <RouterLink
                           :class="[
-                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                            active
+                              ? 'bg-gray-100 text-gray-900 dark:text-gray-100'
+                              : 'text-gray-700',
                             'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                           ]"
                           replace
@@ -118,13 +120,10 @@
           :title="$t('attendance.detail.search.empty.title')" />
         <ol
           v-else-if="filteredList.length"
-          class="mb-16 divide-y divide-gray-100 bg-white text-sm ring-1 ring-black/5">
-          <li
-            v-for="member in filteredList"
-            :key="member._id"
-            class="flex focus-within:bg-gray-50 hover:bg-gray-50">
+          class="mb-16 divide-y divide-gray-200 bg-white text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:bg-neutral-800">
+          <li v-for="member in filteredList" :key="member._id">
             <RouterLink
-              class="flex w-full hover:bg-gray-50"
+              class="flex w-full transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                 params: { id: member._id },
@@ -133,7 +132,7 @@
                 <template #append>
                   <SvgIcon
                     aria-hidden="true"
-                    class="ml-auto mr-1.5 size-6 shrink-0"
+                    class="ml-auto mr-1.5 size-6 shrink-0 text-gray-400 dark:text-gray-500"
                     :path="mdiChevronRight"
                     type="mdi" />
                 </template>

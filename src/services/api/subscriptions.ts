@@ -6,7 +6,7 @@ export interface Subscription {
   ended: string;
   purchased: string;
   amount: number;
-  orderReference?: string;
+  orderReference?: string | null;
 }
 
 export const getAllMemberSubscriptions = (memberId: string): Promise<Subscription[]> => {
@@ -22,7 +22,7 @@ export const getMemberSubscription = (
   );
 };
 
-export type SubscriptionChange = Pick<Subscription, 'started'> & {
+export type SubscriptionChange = Pick<Subscription, 'started' | 'orderReference'> & {
   comment: string; // comment is mandatory to audit what happened
 };
 

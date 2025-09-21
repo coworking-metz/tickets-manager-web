@@ -1,9 +1,11 @@
 <template>
-  <div class="relative size-12 rounded-full bg-slate-200" role="figure">
+  <div
+    class="relative size-12 overflow-hidden rounded-full bg-slate-200 text-base dark:bg-slate-800"
+    role="figure">
     <img
       v-if="thumbnail && !state.hasFailedLoadingThumbnail"
       :alt="`${$t('members.detail.profile.picture.label')} - ${name || email}`"
-      class="size-full rounded-full object-cover object-center"
+      class="size-full object-cover object-center"
       loading="lazy"
       :src="thumbnail"
       @error="onLoadingThumbnailFail"
@@ -11,7 +13,7 @@
       @loadstart="state.isLoadingThumbnail = true" />
     <span
       v-if="(name || email) && (state.hasFailedLoadingThumbnail || state.isLoadingThumbnail)"
-      class="absolute inset-0 flex items-center justify-center text-base font-medium text-gray-900">
+      class="absolute inset-0 flex items-center justify-center font-medium text-gray-900 dark:text-gray-100">
       {{ getInitials(name, email) }}
     </span>
     <LoadingSpinner v-if="thumbnail && state.isLoadingThumbnail" class="absolute inset-0" />

@@ -1,18 +1,42 @@
 <template>
-  <article class="mx-auto flex max-h-[840px] w-full max-w-3xl grow flex-col px-6 py-12 lg:px-8">
+  <article class="mx-auto flex w-full max-w-6xl grow flex-col px-3 py-12 sm:px-6 sm:pt-40 lg:px-8">
     <Head>
       <title>{{ $t('user.profile.head.title') }}</title>
     </Head>
-    <section class="my-auto flex w-full flex-col items-start sm:flex-row">
+    <section class="flex w-full max-w-3xl flex-col items-start sm:flex-row">
       <div class="mb-6 shrink grow basis-0">
-        <LottiePlayer autoplay class="h-24 min-w-40" loop :src="RollingTumbleweed" />
+        <RouterLink
+          v-if="authStore.user?.id"
+          class="group relative block shrink-0 self-start overflow-hidden rounded-lg"
+          :to="{
+            name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+            params: { id: authStore.user.id },
+          }">
+          <MembersThumbnail
+            class="size-32 rounded-none text-5xl"
+            :email="authStore.user.email"
+            :name="authStore.user.name"
+            :thumbnail="authStore.user.picture">
+            <div
+              class="absolute inset-0 flex bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-60">
+              <SvgIcon aria-hidden="true" class="m-auto size-16" :path="mdiAccountEye" type="mdi" />
+            </div>
+          </MembersThumbnail>
+        </RouterLink>
+        <MembersThumbnail
+          v-else
+          class="size-32 overflow-hidden rounded-lg text-5xl"
+          :email="authStore.user?.email"
+          :name="authStore.user?.name"
+          :thumbnail="authStore.user?.picture" />
       </div>
       <div class="flex w-full flex-col sm:ml-6">
-        <div class="sm:border-l sm:border-gray-200 sm:pl-6">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <div class="sm:border-l sm:border-gray-200 sm:pl-6 dark:border-gray-700">
+          <h1
+            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
             {{ $t('user.profile.title') }}
           </h1>
-          <p class="mt-1 text-base text-gray-500">
+          <p class="mt-1 text-base text-gray-500 dark:text-gray-400">
             {{ $t('user.profile.description') }}
           </p>
         </div>
@@ -38,7 +62,7 @@
             type="email" />
 
           <div class="flex flex-col gap-1">
-            <p class="block font-medium text-gray-900 sm:text-sm">
+            <p class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
               {{ $t('user.profile.roles.label') }}
             </p>
             <ul class="flex flex-row flex-wrap gap-2">
@@ -52,54 +76,37 @@
           </div>
         </div>
 
-        <RadioGroup
+        <AppRadioGroup
+          id="locale"
           class="mt-6 sm:pl-6"
+          :format="(locale) => $t(`user.profile.locale.value.${locale}`)"
+          hide-details
+          :label="$t('user.profile.locale.label')"
           :model-value="$i18n.locale"
-          @update:model-value="settingsStore.setLocale">
-          <RadioGroupLabel class="font-medium">
-            {{ $t('user.profile.locale.label') }}
-          </RadioGroupLabel>
-          <div class="relative mt-1 -space-y-px rounded-md bg-white">
-            <RadioGroupOption
-              v-for="(locale, index) in SUPPORTED_LOCALES"
-              :key="`locale-${locale}`"
-              as="template"
-              :value="locale"
-              v-slot="{ checked, active }">
-              <div
-                :class="[
-                  index === 0 ? 'rounded-t-md' : '',
-                  index === SUPPORTED_LOCALES.length - 1 ? 'rounded-b-md' : '',
-                  checked ? 'z-10 border-orange-200 bg-orange-50' : 'border-gray-200',
-                  'relative flex cursor-pointer flex-col border p-4 focus:outline-none md:grid md:grid-cols-3 md:pl-4 md:pr-6',
-                ]">
-                <span class="flex items-center sm:text-sm">
-                  <span
-                    aria-hidden="true"
-                    :class="[
-                      checked ? 'border-transparent bg-orange-500' : 'border-gray-300 bg-white',
-                      active ? 'ring-2 ring-gray-900 ring-offset-2' : '',
-                      'flex size-4 items-center justify-center rounded-full border',
-                    ]">
-                    <span class="size-1.5 rounded-full bg-white" />
-                  </span>
-                  <RadioGroupLabel as="span" class="ml-3 font-medium text-gray-900">
-                    {{ $t(`user.profile.locale.value.${locale}`) }}
-                  </RadioGroupLabel>
-                </span>
-              </div>
-            </RadioGroupOption>
-          </div>
-        </RadioGroup>
+          name="locale"
+          :options="SUPPORTED_LOCALES"
+          @update:model-value="settingsStore.setLocale" />
 
-        <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-          <AppButton
-            class="border border-transparent bg-indigo-600 text-white shadow-sm transition-colors hover:bg-indigo-700 focus:ring-indigo-500"
+        <AppRadioGroup
+          id="theme"
+          class="mt-6 sm:pl-6"
+          :format="(theme) => $t(`user.profile.theme.value.${theme}`)"
+          hide-details
+          :label="$t('user.profile.theme.label')"
+          :model-value="settingsStore.theme"
+          name="theme"
+          :options="SUPPORTED_THEMES"
+          @update:model-value="settingsStore.setTheme" />
+
+        <div class="mt-8 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+          <AppButtonPlain
+            class="dark:focus:ring-offset-stone-900"
+            color="indigo"
             :icon="mdiLockOutline"
             :loading="state.isLoggingOut"
             @click="onLogout">
             {{ $t('action.logout') }}
-          </AppButton>
+          </AppButtonPlain>
         </div>
       </div>
     </section>
@@ -107,17 +114,17 @@
 </template>
 
 <script lang="ts" setup>
-import RollingTumbleweed from '@/assets/animations/tumbleweed-rolling.lottie';
-import LottiePlayer from '@/components/LottiePlayer.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import MembersThumbnail from '../Members/MembersThumbnail.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppRadioGroup from '@/components/form/AppRadioGroup.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import HTTP from '@/services/http';
+import { SUPPORTED_THEMES } from '@/services/theme';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';
-import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiLockOutline } from '@mdi/js';
+import { mdiAccountEye, mdiLockOutline } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';

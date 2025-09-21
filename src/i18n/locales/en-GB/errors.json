@@ -10,6 +10,10 @@
     "message": "Unable to load the page"
   },
   "onUnknown": {
-    "message": "An unexpected error has occurred"
+    "message": [
+      "An unknown error has occurred",
+      "Oh dear, what a mess is this?! 🤯",
+      "Oops 🫢 another unexpected error"
+    ]
   }
 }

@@ -33,7 +33,7 @@
           type="date" />
 
         <RadioGroup v-model="state.duration">
-          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
+          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
             {{ $t('activity.detail.duration.label') }}
           </RadioGroupLabel>
           <div class="mt-1 flex flex-row gap-3">
@@ -52,7 +52,7 @@
                   active && 'ring-2 ring-indigo-500 ring-offset-2',
                   checked
                     ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
-                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
+                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-100',
                   'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm',
                 ]">
                 <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
@@ -77,13 +77,14 @@
           :placeholder="$t('activity.detail.comment.placeholder')"
           required />
 
-        <AppButton
-          class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
-          :icon="mdiCheck"
+        <AppButtonPlain
+          class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+          color="indigo"
+          :icon="mdiPlus"
           :loading="state.isSubmitting"
           type="submit">
-          {{ $t('action.edit') }}
-        </AppButton>
+          {{ $t('action.add') }}
+        </AppButtonPlain>
       </form>
     </div>
   </div>
@@ -91,7 +92,7 @@
 
 <script setup lang="ts">
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { ActivityDuration } from '@/helpers/activity';
@@ -101,7 +102,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { addMemberActivity } from '@/services/api/members';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle, RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
-import { mdiCalendar, mdiCheck, mdiClose } from '@mdi/js';
+import { mdiCalendar, mdiClose, mdiPlus } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';

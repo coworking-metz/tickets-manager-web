@@ -1,5 +1,5 @@
 <template>
-  <article class="relative flex grow flex-col bg-white">
+  <article class="relative flex grow flex-col">
     <Head>
       <title>{{ $t('login.head.title') }}</title>
     </Head>
@@ -7,7 +7,7 @@
       <div class="relative z-10 flex grow flex-col lg:w-full lg:max-w-2xl">
         <svg
           aria-hidden="true"
-          class="absolute inset-y-0 right-8 hidden h-full w-80 translate-x-1/2 fill-white lg:block"
+          class="absolute inset-y-0 right-8 hidden h-full w-80 translate-x-1/2 fill-slate-50 lg:block dark:fill-stone-900"
           preserveAspectRatio="none"
           viewBox="0 0 100 100">
           <polygon points="0,0 90,0 50,100 0,100" />
@@ -29,10 +29,10 @@
           <div class="m-auto max-w-2xl lg:mx-0 lg:max-w-xl">
             <div class="hidden sm:mb-10 sm:flex">
               <div
-                class="relative rounded-full px-3 py-1 leading-6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20 sm:text-sm">
+                class="relative rounded-full px-3 py-1 leading-6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20 sm:text-sm dark:text-gray-400 dark:ring-gray-100/10 dark:hover:ring-gray-100/20">
                 {{ $t('login.headline.text') }}
                 <a
-                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600"
+                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500"
                   href="https://www.coworking-metz.fr/">
                   {{ $t('login.headline.readMore') }}
                   <SvgIcon
@@ -43,20 +43,23 @@
                 </a>
               </div>
             </div>
-            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1
+              class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl dark:text-gray-100">
               {{ $t('login.title') }}
             </h1>
-            <p class="mt-6 whitespace-pre-line text-lg leading-8 text-gray-600">
+            <p class="mt-6 whitespace-pre-line text-lg leading-8 text-gray-600 dark:text-gray-400">
               {{ $t('login.description') }}
             </p>
             <div class="mt-10 flex items-center gap-x-6">
-              <a
-                class="flex flex-row items-center gap-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              <AppButtonPlain
+                class="dark:ring-offset-stone-900"
+                color="indigo"
                 :href="HTTP.getUri({ url: '/api/auth/login', params: queryParams })"
+                :loading="state.isLoggingIn"
+                target="_self"
                 @click="state.isLoggingIn = true">
-                <LoadingSpinner v-if="state.isLoggingIn" class="size-5" />
                 {{ $t('action.login') }}
-              </a>
+              </AppButtonPlain>
             </div>
           </div>
         </div>
@@ -82,7 +85,7 @@
 <script setup lang="ts">
 import monoLogo from '@/assets/logo-mono.png';
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import HTTP from '@/services/http';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiArrowRight } from '@mdi/js';

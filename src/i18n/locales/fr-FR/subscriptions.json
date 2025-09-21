@@ -36,7 +36,8 @@
       "success": "Abonnement modifié"
     },
     "reference": {
-      "label": "Référence de la commande"
+      "label": "Référence de la commande",
+      "placeholder": "POUL-12345"
     },
     "started": {
       "label": "Débutant le"

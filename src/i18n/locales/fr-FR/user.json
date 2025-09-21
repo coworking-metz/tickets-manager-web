@@ -26,6 +26,14 @@
         "guest": "Visiteur⸱se"
       }
     },
+    "theme": {
+      "label": "Thème",
+      "value": {
+        "auto": "Automatique",
+        "dark": "Sombre",
+        "light": "Clair"
+      }
+    },
     "title": "Mon profil"
   }
 }

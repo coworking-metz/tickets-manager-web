@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-full flex-col bg-white pb-6">
+  <div class="flex min-h-full flex-col bg-white pb-6 dark:bg-neutral-800">
     <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle
@@ -43,36 +43,30 @@
       :title="$t('activity.detail.empty.title')" />
     <div v-else class="flex flex-col px-4 pt-6 sm:px-6">
       <nav class="flex flex-row">
-        <RouterLink
+        <AppButtonText
           v-if="previous"
-          class="mr-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          class="mr-auto dark:focus:ring-offset-neutral-800"
+          color="gray"
+          :icon="mdiChevronLeft"
           replace
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
             params: { date: previous.date },
           }">
-          <SvgIcon
-            aria-hidden="true"
-            class="mr-1 size-5 text-gray-400"
-            :path="mdiChevronLeft"
-            type="mdi" />
           {{ dayjs(previous.date).format('dddd DD/MM') }}
-        </RouterLink>
-        <RouterLink
+        </AppButtonText>
+        <AppButtonText
           v-if="next"
-          class="ml-auto inline-flex items-center rounded-md p-2 font-medium text-gray-500 transition-colors hover:border-gray-200 hover:bg-slate-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          class="ml-auto dark:focus:ring-offset-neutral-800"
+          color="gray"
           replace
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
             params: { date: next.date },
           }">
           {{ dayjs(next.date).format('dddd DD/MM') }}
-          <SvgIcon
-            aria-hidden="true"
-            class="ml-1 size-5 text-gray-400"
-            :path="mdiChevronRight"
-            type="mdi" />
-        </RouterLink>
+          <SvgIcon aria-hidden="true" class="size-5" :path="mdiChevronRight" type="mdi" />
+        </AppButtonText>
       </nav>
       <form class="mt-6 flex h-full flex-col" @submit.prevent="onSubmit">
         <Head>
@@ -85,36 +79,33 @@
           </title>
         </Head>
 
-        <!-- <p class="font-medium text-gray-900 sm:text-sm">
+        <!-- <p class="font-medium text-gray-900 dark:text-gray-100 sm:text-sm">
           {{ $t('activity.detail.daily.label') }}
         </p>
         <DailyActivityGraph class="mb-4" /> -->
-        <div v-if="nonCompliant" class="mb-5 flex flex-row rounded-lg bg-red-50 p-4">
-          <SvgIcon
-            aria-hidden="true"
-            class="size-5 shrink-0 text-red-700"
-            :path="mdiAlertCircle"
-            type="mdi" />
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">
-              {{ $t('activity.detail.nonCompliant.title') }}
-            </h3>
+        <AppAlert
+          v-if="nonCompliant"
+          class="mb-5 rounded-xl"
+          :icon="mdiAlertCircle"
+          :title="$t('activity.detail.nonCompliant.title')"
+          type="error">
+          <template #description>
             <i18n-t
-              class="mt-2 whitespace-pre-line text-sm text-red-700"
+              class="whitespace-pre-line text-sm text-red-700 dark:text-red-400"
               keypath="activity.detail.nonCompliant.description"
               scope="global"
               tag="p">
               <template #emphasized>
-                <span class="font-semibold">
+                <span class="font-semibold text-red-800 dark:text-red-300">
                   {{ $t('activity.detail.nonCompliant.emphasized', { count: nonCompliant.value }) }}
                 </span>
               </template>
             </i18n-t>
-          </div>
-        </div>
+          </template>
+        </AppAlert>
 
         <RadioGroup v-model="state.type" disabled>
-          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
+          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
             {{ $t('activity.detail.type.label') }}
           </RadioGroupLabel>
 
@@ -129,25 +120,27 @@
                 :class="[
                   checked ? 'border-transparent' : 'border-gray-300',
                   active && 'border-indigo-500 ring-2 ring-indigo-500',
-                  'relative flex flex-1 rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
+                  'relative flex flex-1 rounded-lg border bg-white p-4 shadow-sm focus:outline-none dark:bg-neutral-800',
                   disabled && 'cursor-not-allowed',
                   disabled && !checked && 'opacity-50',
                 ]">
                 <span class="flex flex-1">
                   <span class="flex flex-col">
-                    <RadioGroupLabel as="span" class="block font-medium text-gray-900 sm:text-sm">
+                    <RadioGroupLabel
+                      as="span"
+                      class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
                       {{ $t(`activity.detail.type.value.${typeOption}.label`) }}
                     </RadioGroupLabel>
                     <RadioGroupDescription
                       as="span"
-                      class="mt-1 flex items-center text-sm text-gray-500">
+                      class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
                       {{ $t(`activity.detail.type.value.${typeOption}.description`) }}
                     </RadioGroupDescription>
                   </span>
                 </span>
                 <SvgIcon
                   aria-hidden="true"
-                  :class="[!checked && 'invisible', 'size-5 text-indigo-600']"
+                  :class="[!checked && 'invisible', 'size-5 text-indigo-600 dark:text-indigo-500']"
                   :path="mdiCheckCircle"
                   type="mdi" />
                 <span
@@ -171,7 +164,7 @@
         </ul>
 
         <RadioGroup v-model="state.duration">
-          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm">
+          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
             {{ $t('activity.detail.duration.label') }}
           </RadioGroupLabel>
           <div class="mt-1 flex flex-row gap-3">
@@ -190,9 +183,9 @@
                   'cursor-pointer text-center focus:outline-none',
                   active && 'ring-2 ring-indigo-500 ring-offset-2',
                   checked
-                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
-                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm',
+                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
+                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-100',
+                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm dark:hover:bg-neutral-700 dark:focus:ring-offset-neutral-800',
                 ]">
                 <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
               </div>
@@ -216,13 +209,14 @@
           :placeholder="$t('activity.detail.comment.placeholder')"
           required />
 
-        <AppButton
-          class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+        <AppButtonPlain
+          class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+          color="indigo"
           :icon="mdiCheck"
           :loading="state.isSubmitting"
           type="submit">
           {{ $t('action.edit') }}
-        </AppButton>
+        </AppButtonPlain>
       </form>
     </div>
   </div>
@@ -233,7 +227,9 @@
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppAlert from '@/components/form/AppAlert.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';

@@ -51,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (refreshToken) {
-      authStore.setRefreshToken(refreshToken as string);
+      authStore.refreshToken = refreshToken as string;
     }
 
     if (!to.meta.allowAnonymous) {

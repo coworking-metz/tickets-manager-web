@@ -4,19 +4,19 @@
       <title>{{ $t('members.list.head.title') }}</title>
     </Head>
     <h1
-      class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+      class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
       {{ $t('members.list.title') }}
     </h1>
     <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <nav class="flex flex-row gap-x-3 overflow-x-auto px-3 sm:px-0">
-        <router-link
+        <RouterLink
           v-for="listTab in ALL_TABS"
           :key="`list-tab-${listTab.key}`"
           :aria-current="listTab.hash === tab ? 'page' : undefined"
           :class="[
             listTab.hash === tab
-              ? 'border-indigo-500 text-indigo-600'
-              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+              ? 'border-indigo-500 text-indigo-600 dark:text-indigo-500'
+              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 hover:dark:border-gray-600 hover:dark:text-gray-200',
             'whitespace-nowrap border-b-2 px-1 pb-4 pt-2.5 text-sm font-medium',
           ]"
           replace
@@ -33,12 +33,14 @@
           <span
             v-if="!isNil(listTab.count)"
             :class="[
-              listTab.hash === tab ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-900',
+              listTab.hash === tab
+                ? 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300'
+                : 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100',
               'ml-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium',
             ]">
             {{ listTab.count }}
           </span>
-        </router-link>
+        </RouterLink>
       </nav>
 
       <div class="mx-3 w-full max-w-lg sm:mx-0">
@@ -85,7 +87,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none">
+                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-gray-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -93,7 +95,8 @@
                       v-slot="{ active, close }">
                       <RouterLink
                         :class="[
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                          active &&
+                            'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
                           'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
                         replace
@@ -125,14 +128,14 @@
 
     <div class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
       <div
-        class="relative flex grow flex-col border-t border-gray-200 bg-white shadow sm:rounded-md">
+        class="relative flex grow flex-col border-t border-gray-200 bg-white shadow sm:rounded-md dark:border-gray-700 dark:bg-neutral-800">
         <div
           v-if="isFetching || isFetchingVotingMembers"
           class="sticky top-[67px] w-full sm:top-[3px]">
           <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
         </div>
 
-        <ul class="grow divide-y divide-gray-200" role="list">
+        <ul class="grow divide-y divide-gray-200 dark:divide-gray-700" role="list">
           <template v-if="isPending || (tab === 'voting' && isPendingVotingMembers)">
             <li v-for="index in 10" :key="`loading-member-card-${index}`">
               <MembersListCard loading />
@@ -144,7 +147,7 @@
             :title="$t('members.list.empty.title')" />
           <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
             <RouterLink
-              class="block transition-colors hover:bg-gray-50 active:bg-gray-100"
+              class="block transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                 params: { id: member._id },
@@ -157,20 +160,19 @@
 
       <aside v-if="selectedTab?.key === 'nonCompliant'" class="flex flex-col">
         <dl class="flex flex-row flex-wrap gap-3 max-sm:px-3 md:sticky md:top-3 md:max-w-48">
-          <div
-            class="min-w-32 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <AppPanel class="min-w-32 shrink grow basis-0">
+            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
               {{ $t('members.list.nonCompliant.totalDebt.label') }}
             </dt>
             <i18n-t
-              class="mt-1"
+              class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.list.nonCompliant.totalDebt.value"
               :plural="totalDebt"
               scope="global"
               tag="dd">
               <template #count>
                 <AnimatedCounter
-                  class="block text-3xl font-semibold tracking-tight text-gray-900"
+                  class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="
                     (count: number) =>
@@ -182,10 +184,9 @@
                   :to="totalDebt" />
               </template>
             </i18n-t>
-          </div>
-          <div
-            class="min-w-32 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          </AppPanel>
+          <AppPanel class="min-w-32 shrink grow basis-0">
+            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
               {{
                 $t('members.list.nonCompliant.missingMemberships.label', {
                   count: missingMembershipsCount,
@@ -193,14 +194,14 @@
               }}
             </dt>
             <i18n-t
-              class="mt-1"
+              class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.list.nonCompliant.missingMemberships.value"
               :plural="missingMembershipsCount"
               scope="global"
               tag="dd">
               <template #count>
                 <AnimatedCounter
-                  class="block text-3xl font-semibold tracking-tight text-gray-900"
+                  class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="
                     (count: number) =>
@@ -214,7 +215,7 @@
                   :to="missingMembershipsCount" />
               </template>
             </i18n-t>
-          </div>
+          </AppPanel>
         </dl>
       </aside>
     </div>
@@ -226,6 +227,7 @@ import MembersListCard from './MembersListCard.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import { formatAmount } from '@/helpers/currency';
 import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';

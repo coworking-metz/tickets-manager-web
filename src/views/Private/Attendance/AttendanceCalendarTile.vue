@@ -5,7 +5,7 @@
       selected
         ? 'bg-amber-500 text-white shadow-inner hover:bg-amber-700 active:bg-amber-800'
         : inCurrentMonth
-          ? 'bg-white hover:bg-gray-200 active:bg-gray-300'
+          ? 'bg-white hover:bg-gray-200 active:bg-gray-300 dark:bg-neutral-800'
           : 'bg-gray-100/80 hover:bg-gray-200 active:bg-gray-300',
     ]">
     <CircularProgress

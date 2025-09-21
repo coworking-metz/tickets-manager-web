@@ -2,89 +2,61 @@
   <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
     <div
       class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6 sm:px-3">
-      <div class="mx-3">
-        <!-- @vue-ignore -->
-        <vue-tailwind-datepicker
-          id="incomes-period"
-          v-model="state.period"
-          :as-single="width < 640"
-          :formatter="{
-            date: DATE_FORMAT,
-            month: 'MMM',
-          }"
-          :i18n="i18n.locale.value.substring(0, 2)"
-          :options="{
-            footer: {
-              apply: $t('action.apply'),
-              cancel: $t('action.cancel'),
-            },
-          }"
-          :shortcuts="shortcuts"
-          v-slot="{}"
-          use-range>
-          <AppTextField
-            class="w-full"
-            hide-details
-            :label="$t('stats.incomes.period.label')"
-            :model-value="
-              state.period.start && state.period.end
-                ? $t('stats.incomes.period.value', {
-                    start: dayjs(state.period.start).format('ll'),
-                    end: dayjs(state.period.end).format('ll'),
-                  })
-                : ''
-            "
-            :placeholder="$t('stats.incomes.period.placeholder')"
-            readonly>
-            <template #before>
-              <component
-                :is="previousPeriod ? 'RouterLink' : 'button'"
-                :class="[
-                  'relative -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
-                  previousPeriod && 'hover:bg-gray-100',
-                ]"
-                :disabled="!previousPeriod"
-                :to="{
-                  ...route,
-                  query: { ...route.query, from: previousPeriod?.start, to: previousPeriod?.end },
-                }">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="size-6 text-gray-400"
-                  :path="mdiChevronLeft"
-                  type="mdi" />
-              </component>
-            </template>
-            <template #after>
-              <component
-                :is="nextPeriod ? 'RouterLink' : 'button'"
-                :class="[
-                  'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
-                  nextPeriod && 'hover:bg-gray-100',
-                ]"
-                :disabled="!nextPeriod"
-                :to="{
-                  ...route,
-                  query: { ...route.query, from: nextPeriod?.start, to: nextPeriod?.end },
-                }">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="size-6 text-gray-400"
-                  :path="mdiChevronRight"
-                  type="mdi" />
-              </component>
-            </template>
-          </AppTextField>
-        </vue-tailwind-datepicker>
-      </div>
+      <AppPeriodField
+        id="incomes-period"
+        v-model="state.period"
+        class="mx-3 max-w-96 grow-0"
+        hide-details
+        :label="$t('stats.incomes.period.label')"
+        :placeholder="$t('stats.incomes.period.placeholder')"
+        :shortcuts="shortcuts">
+        <template #before>
+          <component
+            :is="previousPeriod ? 'RouterLink' : 'button'"
+            :class="[
+              'relative -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+              previousPeriod && 'hover:bg-gray-100',
+            ]"
+            :disabled="!previousPeriod"
+            :to="{
+              ...route,
+              query: { ...route.query, from: previousPeriod?.start, to: previousPeriod?.end },
+            }">
+            <SvgIcon
+              aria-hidden="true"
+              class="size-6 text-gray-400"
+              :path="mdiChevronLeft"
+              type="mdi" />
+          </component>
+        </template>
+        <template #after>
+          <component
+            :is="nextPeriod ? 'RouterLink' : 'button'"
+            :class="[
+              'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+              nextPeriod && 'hover:bg-gray-100',
+            ]"
+            :disabled="!nextPeriod"
+            :to="{
+              ...route,
+              query: { ...route.query, from: nextPeriod?.start, to: nextPeriod?.end },
+            }">
+            <SvgIcon
+              aria-hidden="true"
+              class="size-6 text-gray-400"
+              :path="mdiChevronRight"
+              type="mdi" />
+          </component>
+        </template>
+      </AppPeriodField>
 
       <div class="flex flex-col gap-1">
-        <p class="mx-3 block font-medium text-gray-900 sm:text-sm">
+        <p class="mx-3 block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
           {{ $t('stats.incomes.frequency.label') }}
         </p>
         <nav aria-label="Breadcrumb" class="flex overflow-x-auto px-3 max-sm:w-screen">
           <ol
-            class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm"
+            class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:bg-neutral-800"
             role="list">
             <li
               v-for="(frequency, index) in frequencies"
@@ -106,7 +78,7 @@
                   :class="[
                     route.name === frequency.to.name
                       ? 'text-indigo-500 hover:text-indigo-700'
-                      : 'text-gray-500 hover:text-gray-700',
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400',
                     ,
                     'text-sm font-medium',
                   ]"
@@ -120,25 +92,16 @@
         </nav>
       </div>
 
-      <RouterLink
-        :class="[
-          'mx-3 flex h-10 items-center justify-center rounded-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium transition-colors focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
-          net ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'text-gray-700 hover:bg-gray-100',
-        ]"
+      <AppButtonPlain
+        class="mx-3 dark:focus:ring-offset-stone-900"
+        :color="net ? 'indigo' : 'neutral'"
+        :icon="mdiChartWaterfall"
         :to="{
           ...route,
           query: { ...route.query, net: `${!net}` },
         }">
-        <SvgIcon
-          aria-hidden="true"
-          :class="['size-6', net ? 'text-current' : 'text-gray-400']"
-          :path="mdiChartWaterfall"
-          type="mdi" />
-
-        <span class="ml-2 sm:text-sm">
-          {{ $t('stats.incomes.mode.waterfall.label') }}
-        </span>
-      </RouterLink>
+        {{ $t('stats.incomes.mode.waterfall.label') }}
+      </AppButtonPlain>
     </div>
 
     <RouterViewSlideTransition :from="state.period.start" :net="net" :to="state.period.end" />
@@ -146,17 +109,16 @@
 </template>
 
 <script lang="ts" setup>
-import AppTextField from '@/components/form/AppTextField.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { ROUTE_NAMES } from '@/router/names';
 import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 
 const props = defineProps({
   from: {
@@ -173,7 +135,6 @@ const props = defineProps({
   },
 });
 
-const { width } = useWindowSize();
 const i18n = useI18n();
 const router = useRouter();
 const route = useRoute();

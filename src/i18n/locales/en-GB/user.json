@@ -26,6 +26,14 @@
         "guest": "Guest"
       }
     },
+    "theme": {
+      "label": "Theme",
+      "value": {
+        "auto": "Auto",
+        "dark": "Dark",
+        "light": "Light"
+      }
+    },
     "title": "My Profile"
   }
 }

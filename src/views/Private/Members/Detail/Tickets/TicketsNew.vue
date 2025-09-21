@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
+  <div class="flex h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
@@ -23,6 +23,7 @@
         id="ticket-count"
         v-model.number="state.count"
         :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
+        input-class="!pr-16"
         :label="$t('tickets.detail.count.label')"
         min="0.5"
         :prepend-icon="mdiTicket"
@@ -30,11 +31,18 @@
         step="0.5"
         type="number">
         <template #append>
-          <span class="pointer-events-none z-20 mr-3 flex items-center text-gray-400 sm:text-sm">
+          <span
+            class="pointer-events-none absolute inset-y-0 right-0 z-20 flex w-14 items-center text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>
       </AppTextField>
+
+      <AppTextField
+        id="order-reference"
+        v-model="state.orderReference"
+        :label="$t('tickets.detail.reference.label')"
+        :placeholder="$t('tickets.detail.reference.placeholder')" />
 
       <AppTextareaField
         id="comment"
@@ -44,19 +52,20 @@
         :placeholder="$t('tickets.detail.comment.placeholder')"
         required />
 
-      <AppButton
-        class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+      <AppButtonPlain
+        class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiPlus"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('action.add') }}
-      </AppButton>
+      </AppButtonPlain>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -66,7 +75,7 @@ import { Member } from '@/services/api/members';
 import { addMemberTicket } from '@/services/api/tickets';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiPlus, mdiClose, mdiTicket } from '@mdi/js';
+import { mdiClose, mdiPlus, mdiTicket } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
@@ -92,6 +101,7 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
+  orderReference: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
 });
@@ -117,6 +127,7 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   addMemberTicket(props.memberId, {
     count: state.count as number,
+    orderReference: state.orderReference,
     comment: state.comment as string,
   })
     .then(async () => {

@@ -1,17 +1,19 @@
 <template>
   <section class="flex flex-col items-start">
     <slot name="title">
-      <h2 v-if="title" class="text-3xl font-bold tracking-tight text-gray-900">
+      <h2 v-if="title" class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
         {{ title }}
       </h2>
     </slot>
 
-    <hr class="my-3 w-full border-t border-gray-200" />
+    <AppDivider class="my-3 w-full" />
 
     <div class="flex w-full flex-row flex-wrap gap-3">
       <aside class="flex min-w-48 shrink grow basis-0 flex-col">
         <slot name="description">
-          <p v-if="description" class="mt-1 whitespace-pre-line text-sm text-gray-500">
+          <p
+            v-if="description"
+            class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
             {{ description }}
           </p>
         </slot>
@@ -31,6 +33,8 @@
 </template>
 
 <script setup lang="ts">
+import AppDivider from '@/components/layout/AppDivider.vue';
+
 defineProps({
   title: {
     type: String,

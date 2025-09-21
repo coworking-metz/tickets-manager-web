@@ -43,16 +43,15 @@
             :class="[
               `block min-h-10 w-full rounded-md border-gray-300 shadow-sm transition-colors
               placeholder:text-gray-400/80 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500
-              disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50
-              disabled:text-gray-500 sm:text-sm dark:border-gray-600 dark:bg-slate-800
-              dark:text-gray-100 dark:disabled:border-gray-700 dark:disabled:bg-slate-700
+              disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500
+              sm:text-sm dark:border-gray-700 dark:bg-slate-800 dark:text-gray-100 dark:disabled:border-gray-700 dark:disabled:bg-slate-700
               disabled:dark:text-gray-400`,
               (slots.after || slots.before) && 'rounded-none',
               !slots.before && 'rounded-l-md',
               !slots.after && 'rounded-r-md',
               (slots.prepend || prependIcon) && 'pl-10',
               slots.append || (appendIcon && 'pr-10'),
-              type === 'number' && 'text-right',
+              type === 'number' && 'pr-3 text-right',
               type !== 'search' && 'pr-0',
               isInvalid &&
                 `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
@@ -81,8 +80,8 @@
         <AppButtonIcon
           v-if="modelValue && clearable"
           :class="[
-            `absolute top-1/2 z-10 size-7 -translate-y-1/2 bg-white/10 opacity-0 backdrop-blur-md
-            transition-opacity focus:opacity-100 group-hover:opacity-100 dark:bg-slate-900/10`,
+            `absolute top-1/2 z-10 size-7 -translate-y-1/2 bg-white opacity-0 backdrop-blur-md transition-opacity
+            focus:opacity-100 group-hover:opacity-100 dark:bg-neutral-800/10`,
             $slots.append || appendIcon ? 'right-9' : 'right-1.5',
           ]"
           :icon="mdiClose"

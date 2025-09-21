@@ -36,7 +36,8 @@
       "success": "Subscription modified"
     },
     "reference": {
-      "label": "Order reference"
+      "label": "Order reference",
+      "placeholder": "POUL-12345"
     },
     "started": {
       "label": "Starting on"

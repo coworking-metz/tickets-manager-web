@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-full flex-col bg-white pb-6">
+  <div class="flex min-h-full flex-col bg-white pb-6 dark:bg-neutral-800">
     <header class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
         <DialogTitle
@@ -89,20 +89,22 @@
         required />
 
       <div class="mt-1 flex flex-row justify-between gap-3">
-        <AppButton
-          class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+        <AppButtonPlain
+          class="dark:focus:ring-offset-neutral-800"
+          color="indigo"
           :icon="mdiCheck"
           :loading="state.isSubmitting"
           type="submit">
           {{ $t('action.edit') }}
-        </AppButton>
+        </AppButtonPlain>
 
-        <AppButton
-          class="border border-red-300 bg-white text-red-500 shadow-sm hover:bg-red-50 focus:!ring-red-500"
+        <AppButtonOutline
+          class="bg-white dark:bg-neutral-800 dark:focus:ring-offset-neutral-800"
+          color="red"
           :icon="mdiDeleteOutline"
           @click.prevent="state.isDeleteDialogVisible = true">
           {{ $t('action.delete') }}
-        </AppButton>
+        </AppButtonOutline>
       </div>
 
       <SubscriptionsDeleteDialog
@@ -120,7 +122,8 @@ import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -190,7 +193,7 @@ const selectedSubscription = computed<Subscription | null>(() => {
 
 const computedEnded = computed(() => {
   return state.started
-    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').format('YYYY-MM-DD')
+    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').toISOString().slice(0, 10)
     : null;
 });
 

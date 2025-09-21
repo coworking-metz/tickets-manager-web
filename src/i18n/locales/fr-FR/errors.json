@@ -10,6 +10,10 @@
     "message": "Impossible de charger la page"
   },
   "onUnknown": {
-    "message": "Une erreur inconnue est survenue"
+    "message": [
+      "Une erreur inconnue est survenue",
+      "Ohlala, mais c'est quoi ce bazar ?! 🤯",
+      "Oups 🫢 encore une erreur imprévue"
+    ]
   }
 }

@@ -8,15 +8,17 @@
     <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 sm:pt-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('attendance.title') }}
         </h1>
-        <p class="mt-1 truncate text-base text-slate-500">{{ $t('attendance.description') }}</p>
+        <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
+          {{ $t('attendance.description') }}
+        </p>
 
         <div class="my-4 flex w-full flex-row items-center justify-between">
           <div class="flex h-10 items-stretch rounded-md shadow-sm md:items-stretch">
             <RouterLink
-              class="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
+              class="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400"
               :to="{
                 ...currentRoute,
                 query: {
@@ -33,12 +35,12 @@
             </RouterLink>
             <time
               v-if="state.selectedMonth"
-              class="flex flex-row items-center border-y border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 focus:relative"
+              class="flex flex-row items-center border-y border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 focus:relative dark:bg-neutral-800 dark:text-gray-100"
               :datetime="state.selectedMonth">
               {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
             </time>
             <RouterLink
-              class="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
+              class="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400"
               :to="{
                 ...currentRoute,
                 query: {
@@ -55,8 +57,9 @@
             </RouterLink>
           </div>
 
-          <RouterLink
-            class="h-10 rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          <AppButtonPlain
+            class="min-h-10 dark:focus:ring-offset-stone-900"
+            color="neutral"
             :to="{
               params: {
                 ...currentRoute.params,
@@ -68,16 +71,19 @@
               },
             }">
             {{ $t('attendance.navigation.today') }}
-          </RouterLink>
+          </AppButtonPlain>
         </div>
       </header>
 
-      <div class="relative border border-gray-200">
-        <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-px w-full" />
+      <div class="relative border border-gray-200 dark:border-gray-700">
+        <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-[2px] w-full" />
         <div
           v-if="calendarPeriod"
           class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
-          <div v-for="weekIndex in 7" :key="`weekday-${weekIndex}`" class="bg-white py-2">
+          <div
+            v-for="weekIndex in 7"
+            :key="`weekday-${weekIndex}`"
+            class="bg-white py-2 dark:bg-neutral-800">
             {{
               dayjs(calendarPeriod.start)
                 .add(weekIndex - 1, 'day')
@@ -128,6 +134,7 @@
 import AttendanceCalendarTile from './AttendanceCalendarTile.vue';
 import AttendanceDetail from './AttendanceDetail.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { isSilentError } from '@/helpers/errors';
 import { AttendancePeriod, getAttendancePerDay } from '@/services/api/attendance';
 import { useNotificationsStore } from '@/store/notifications';

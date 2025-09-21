@@ -12,13 +12,13 @@
     </section>
 
     <section class="mx-3 sm:mx-6">
-      <h3 class="text-lg font-medium leading-6 text-gray-900">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
         {{ $t('stats.activity.monthly.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.activity.monthly.summary.average.people.label') }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
@@ -27,7 +27,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="
                 (count: number) =>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.activity.monthly.summary.average.attendance.label') }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
@@ -56,7 +56,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="
                 (count: number) =>
@@ -74,7 +74,7 @@
             v-if="state.isFetchingActivities"
             class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
           <div v-else class="flex flex-row items-baseline justify-between text-sm">
-            <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+            <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{ $t('stats.activity.monthly.summary.average.attendance.description') }}
             </span>
           </div>
@@ -143,12 +143,12 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       } = state.activities[params[0].dataIndex];
       return `
         <dl class="flex flex-col min-w-48 items-end gap-1">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('MMMM YYYY')}
           </dt>
 
           <dd class="flex flex-col items-end">
-            <span class="text-3xl font-semibold text-gray-900">${
+            <span class="text-3xl font-semibold text-gray-900 dark:text-gray-100">${
               coworkersCount ||
               i18n.t('stats.activity.monthly.graph.tooltip.total', {
                 count: coworkersCount,
