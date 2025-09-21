@@ -1,3 +1,4 @@
+import { parseErrorText } from '@/helpers/errors';
 import { useAuthStore } from '@/store/auth';
 import { useHttpStore } from '@/store/http';
 import { useNotificationsStore } from '@/store/notifications';
@@ -10,6 +11,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import axiosRetry from 'axios-retry';
+import { compact } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { useI18n } from 'vue-i18n';
 
@@ -23,7 +25,18 @@ const MAX_REQUEST_RETRIES = 2;
 // to avoid dependency cycle @see https://stackoverflow.com/a/51048400/15183871
 const createHttpInterceptors = (httpInstance: AxiosInstance) => {
   httpInstance.interceptors.request.use(async (config: AppAxiosRequestConfig) => {
-    const accessToken = await useAuthStore().getOrRefreshAccessToken();
+    const accessToken = await useAuthStore()
+      .getOrRefreshAccessToken()
+      .catch(async (error) => {
+        // prefix a descriptive error message
+        // to let the user know that refreshing tokens failed
+        const errorMessage = await parseErrorText(error);
+        const i18n = useI18n();
+        const prefixedError = new Error(
+          compact([i18n.t('auth.onRefreshToken.fail'), errorMessage]).join('\n'),
+        );
+        return Promise.reject(prefixedError);
+      });
     const headers = {
       ...config.headers,
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
