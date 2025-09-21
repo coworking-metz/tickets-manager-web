@@ -3,7 +3,8 @@
     <html :lang="$i18n.locale.substring(0, 2)" />
     <meta :content="$t('head.meta.content')" name="description" />
   </Head>
-  <LoadingSpinner v-if="state.isLoading" class="m-auto size-16" />
+  <LoadingProgressBar v-if="state.isLoading" class="fixed inset-x-0 top-0 z-50 h-0.5" />
+  <LoadingSpinner v-if="!state.isReady" class="m-auto size-16" />
   <router-view v-else />
   <Teleport to="body">
     <Toaster
@@ -22,10 +23,11 @@
 </template>
 
 <script lang="ts" setup>
-import NotificationToast from './components/NotificationToast.vue';
-import { ENVIRONMENT } from './helpers/environment';
-import { useNotificationsStore } from './store/notifications';
+import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import NotificationToast from '@/components/NotificationToast.vue';
+import { ENVIRONMENT } from '@/helpers/environment';
+import { useNotificationsStore } from '@/store/notifications';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { useWindowSize } from '@vueuse/core';
@@ -41,7 +43,8 @@ const i18n = useI18n();
 const router = useRouter();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
-  isLoading: true as boolean,
+  isReady: false as boolean,
+  isLoading: false as boolean,
 });
 
 useHead({
@@ -49,10 +52,34 @@ useHead({
 });
 
 router.isReady().finally(() => {
+  state.isReady = true;
+});
+
+router.beforeEach((_to, _from, next) => {
+  state.isLoading = true;
+  next();
+});
+
+router.afterEach(() => {
   state.isLoading = false;
 });
 
 router.onError((error) => {
+  state.isLoading = false;
+  state.isReady = true;
+
+  const actions = [
+    {
+      label: i18n.t('action.reload'),
+      onClick: () => window.location.reload(),
+    },
+    {
+      label: i18n.t('action.help'),
+      onClick: () =>
+        window.open(`mailto:contact@coworking-metz.fr?body=${encodeURIComponent(error.message)}`),
+    },
+  ];
+
   if (
     error.message.includes('Failed to fetch dynamically imported module') ||
     error.message.includes('Importing a module script failed')
@@ -61,19 +88,11 @@ router.onError((error) => {
       message: i18n.t('errors.onImport.message'),
       description: i18n.t('errors.onImport.description'),
       type: 'error',
-      actions: [
-        {
-          label: i18n.t('action.reload'),
-          onClick: () => window.location.reload(),
-        },
-        {
-          label: i18n.t('action.help'),
-          onClick: () =>
-            window.open(
-              `mailto:contact@coworking-metz.fr?body=${encodeURIComponent(error.message)}`,
-            ),
-        },
-      ],
+      actions,
+    });
+  } else {
+    notificationsStore.addErrorNotification(error, '', {
+      actions,
     });
   }
 });
