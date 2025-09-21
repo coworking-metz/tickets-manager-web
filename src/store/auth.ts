@@ -1,13 +1,13 @@
 import { useHttpStore } from './http';
 import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, decodeToken, refreshTokens } from '@/services/api/auth';
-import { useSessionStorage } from '@vueuse/core';
+import { useLocalStorage, useSessionStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { includes } from 'lodash';
 import { defineStore } from 'pinia';
 
-const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'rt';
-const SESSION_STORAGE_ACCESS_TOKEN_NAME = 'at';
+const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'tickets-manager-web-rt';
+const SESSION_STORAGE_ACCESS_TOKEN_NAME = 'tickets-manager-web-at';
 
 /**
  * In order to avoid asking for multiple refresh tokens at the same time when it has expired,
@@ -17,18 +17,13 @@ let refreshPromise: Promise<void> | null = null;
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
+    refreshToken: useLocalStorage(LOCAL_STORAGE_REFRESH_TOKEN_NAME, null as string | null),
     accessToken: useSessionStorage(SESSION_STORAGE_ACCESS_TOKEN_NAME, null as string | null),
   }),
   getters: {
     user: (state) => (state.accessToken ? decodeToken(state.accessToken) : null) as User | null,
   },
   actions: {
-    setRefreshToken(refreshToken: string) {
-      localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME, refreshToken);
-    },
-    getRefreshToken() {
-      return localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
-    },
     async setAccessToken(accessToken: string) {
       this.accessToken = accessToken || null;
 
@@ -50,11 +45,10 @@ export const useAuthStore = defineStore('auth', {
     },
     fetchTokens() {
       if (!refreshPromise) {
-        const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
-        refreshPromise = refreshTokens(refreshToken)
+        refreshPromise = refreshTokens(this.refreshToken)
           .then(async ({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
             await this.setAccessToken(newAccessToken);
-            this.setRefreshToken(newRefresToken);
+            this.refreshToken = newRefresToken;
           })
           .finally(() => {
             refreshPromise = null;

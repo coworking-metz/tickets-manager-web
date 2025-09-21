@@ -19,13 +19,13 @@
     </section>
 
     <section class="mx-3 sm:mx-6">
-      <h3 class="text-lg font-medium leading-6 text-gray-900">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
         {{ $t('stats.incomes.daily.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.incomes.daily.summary.average.label') }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
@@ -34,7 +34,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="fractionAmount"
               :to="averageIncome" />
@@ -46,7 +46,7 @@
           <div
             v-else-if="incomes?.length"
             class="flex flex-row items-baseline justify-between text-sm">
-            <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+            <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{
                 $t('stats.incomes.daily.summary.average.threshold', {
                   amount: fractionAmount(averageCharges),
@@ -71,7 +71,7 @@
         </div>
 
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.incomes.daily.summary.total.label') }}
           </dt>
           <dd class="mt-1 flex flex-col">
@@ -80,7 +80,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="fractionAmount"
               :to="totalIncome" />
@@ -91,7 +91,8 @@
             <div
               v-else-if="incomes?.length"
               class="flex flex-row items-baseline justify-between text-sm">
-              <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+              <span
+                class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
                 {{
                   $t('stats.incomes.daily.summary.total.threshold', {
                     amount: fractionAmount(totalCharges),
@@ -118,7 +119,7 @@
         </div>
 
         <div class="px-4 py-5 sm:p-6">
-          <dt class="truncate font-medium text-gray-500 sm:text-sm">
+          <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.incomes.daily.summary.debt.label') }}
           </dt>
           <dd class="mt-1 flex flex-col">
@@ -127,7 +128,7 @@
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
-              class="block text-3xl font-semibold tracking-tight text-gray-900"
+              class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="fractionAmount"
               :to="totalDebtAmount" />
@@ -138,7 +139,8 @@
             <div
               v-else-if="incomes?.length"
               class="flex flex-row items-baseline justify-between text-sm">
-              <span class="shrink grow basis-0 truncate font-normal text-gray-500">
+              <span
+                class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
                 {{
                   $t('stats.incomes.daily.summary.debt.tickets', {
                     count: totalDebtCount,
@@ -164,6 +166,7 @@ import { DATE_FORMAT } from '@/helpers/dates';
 import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import { IncomePeriodWithTotal, getIncomesPerDay } from '@/services/api/incomes';
+import { useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { useQuery } from '@tanstack/vue-query';
@@ -196,6 +199,7 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const currentTheme = useTheme();
 
 const {
   isFetching: isFetchingIncomes,
@@ -243,14 +247,15 @@ const totalDebtAmount = computed(() =>
 
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
+    className: '!p-0 !border-0',
     formatter: (params) => {
       const {
         data: { incomes: incomeAmount, tickets, subscriptions, charges },
         date, // @ts-ignore
       } = (incomes.value ?? [])[params[0].dataIndex];
       return `
-        <dl class="flex flex-col gap-1">
-          <dt class="ml-auto truncate font-medium text-gray-500 sm:text-sm">
+        <dl class="flex flex-col gap-1 bg-white dark:bg-neutral-800 p-4 text-gray-700 dark:text-gray-300">
+          <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('dddd LL')}
           </dt>
 
@@ -280,7 +285,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: tickets.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
               tickets.amount,
             )}</dd>
           </div>
@@ -293,23 +298,23 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: subscriptions.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
               subscriptions.amount,
             )}</dd>
           </div>
 
-          <dd class="ml-auto text-3xl font-semibold text-gray-900">
+          <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
             ${fractionAmount(incomeAmount)}
           </dd>
 
           <div class="flex flex-row justify-between place-items-end">
             <dt class="flex flex-row gap-1 items-center text-base font-normal">
               <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                theme.charlestonGreen
+                currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite
               };"></span>
               ${i18n.t('stats.incomes.daily.graph.threshold')}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900">${fractionAmount(-charges)}</dd>
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(-charges)}</dd>
           </div>
 
           <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${

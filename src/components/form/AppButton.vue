@@ -1,33 +1,53 @@
 <template>
-  <button
+  <a
+    v-if="href"
     :class="[
-      'inline-flex items-center justify-center rounded-md px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm',
+      `relative inline-flex min-h-10 items-center justify-center gap-x-2 rounded-md px-4 py-2 font-medium
+      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      disabled:cursor-not-allowed sm:text-sm`,
       loading && 'pointer-events-none',
     ]"
-    :disabled="loading"
-    :type="type">
-    <LoadingSpinner v-if="loading" class="mr-2 size-5" />
-    <SvgIcon v-else-if="icon" aria-hidden="true" class="mr-2 size-5" :path="icon" type="mdi" />
-    <slot />
+    :href="href"
+    :target="target"
+    v-bind="$attrs">
+    <ButtonContent :icon="icon" :loading="loading">
+      <slot />
+    </ButtonContent>
+  </a>
+  <RouterLink
+    v-else-if="to"
+    :class="[
+      `relative inline-flex min-h-10 items-center justify-center gap-x-2 rounded-md px-4 py-2 font-medium
+      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      sm:text-sm`,
+      loading && 'pointer-events-none',
+    ]"
+    :to="to"
+    v-bind="$attrs">
+    <ButtonContent :icon="icon" :loading="loading">
+      <slot />
+    </ButtonContent>
+  </RouterLink>
+  <button
+    v-else
+    :class="[
+      `relative inline-flex min-h-10 items-center justify-center gap-x-2 rounded-md px-4 py-2 font-medium
+      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      sm:text-sm`,
+      loading && 'pointer-events-none',
+    ]"
+    :disabled="loading || disabled"
+    :type="type"
+    v-bind="$attrs">
+    <ButtonContent :icon="icon" :loading="loading">
+      <slot />
+    </ButtonContent>
   </button>
 </template>
 
 <script setup lang="ts">
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import { PropType } from 'vue';
+import ButtonContent from './ButtonContent.vue';
+import { buttonProps } from './buttonProps';
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  icon: {
-    type: String,
-    default: null,
-  },
-  type: {
-    type: String as PropType<'button' | 'submit' | 'reset'>,
-    default: 'button',
-  },
-});
+defineProps(buttonProps);
 </script>

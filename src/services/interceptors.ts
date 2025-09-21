@@ -1,4 +1,5 @@
 import { parseErrorText } from '@/helpers/errors';
+import { i18nInstance } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
 import { useHttpStore } from '@/store/http';
 import { useNotificationsStore } from '@/store/notifications';
@@ -13,7 +14,6 @@ import axios, {
 import axiosRetry from 'axios-retry';
 import { compact } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { useI18n } from 'vue-i18n';
 
 export interface AppAxiosRequestConfig<D = unknown> extends InternalAxiosRequestConfig<D> {
   id?: string;
@@ -31,9 +31,9 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         // prefix a descriptive error message
         // to let the user know that refreshing tokens failed
         const errorMessage = await parseErrorText(error);
-        const i18n = useI18n();
+
         const prefixedError = new Error(
-          compact([i18n.t('auth.onRefreshToken.fail'), errorMessage]).join('\n'),
+          compact([i18nInstance.global.t('auth.onRefreshToken.fail'), errorMessage]).join('\n'),
         );
         return Promise.reject(prefixedError);
       });
@@ -125,8 +125,10 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         await authStore.disconnect();
 
         const notificationsStore = useNotificationsStore();
-        const i18n = useI18n();
-        notificationsStore.addErrorNotification(error, i18n.t('errors.onDisconnect.message'));
+        notificationsStore.addErrorNotification(
+          error,
+          i18nInstance.global.t('errors.onDisconnect.message'),
+        );
 
         return Promise.reject(disconnectedError);
       }

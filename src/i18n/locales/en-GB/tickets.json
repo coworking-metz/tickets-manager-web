@@ -36,7 +36,8 @@
       "success": "Ticket order updated"
     },
     "reference": {
-      "label": "Order reference"
+      "label": "Order reference",
+      "placeholder": "POUL-12345"
     },
     "title": "Order for {count} ticket | Order for one ticket | Order for {count} tickets"
   },

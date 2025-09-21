@@ -5,10 +5,12 @@
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>
     <h1
-      class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+      class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
       {{ $t('audit.list.title') }}
     </h1>
-    <p class="mt-1 truncate text-base text-slate-500">{{ $t('audit.list.description') }}</p>
+    <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
+      {{ $t('audit.list.description') }}
+    </p>
     <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <div class="grow sm:max-w-64">
         <!-- @vue-ignore -->
@@ -90,7 +92,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none">
+                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:bg-neutral-800">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -98,7 +100,7 @@
                       v-slot="{ active, close }">
                       <RouterLink
                         :class="[
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                          active ? 'bg-gray-100 text-gray-900 dark:text-gray-100' : 'text-gray-700',
                           'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
                         replace

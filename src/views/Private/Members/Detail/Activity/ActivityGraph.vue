@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router/names';
 import { Attendance } from '@/services/api/members';
+import { useTheme } from '@/services/theme';
 import { theme } from '@/styles/colors';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
@@ -22,12 +23,13 @@ import { HeatmapChart } from 'echarts/charts.js';
 import { CalendarComponent, TooltipComponent, VisualMapComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
-import { ceil } from 'lodash';
+import { capitalize, ceil, range } from 'lodash';
 import { PropType, computed, reactive, ref } from 'vue';
 import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { HeatmapSeriesOption } from 'echarts/charts.js';
+
 import type {
   CalendarComponentOption,
   TooltipComponentOption,
@@ -66,6 +68,7 @@ const state = reactive({
 });
 const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 
+const currentTheme = useTheme();
 const options = computed<
   ComposeOption<
     | TooltipComponentOption
@@ -77,6 +80,11 @@ const options = computed<
   tooltip: {
     position: 'top',
     show: !state.shouldHideTooltip,
+    backgroundColor: theme.charlestonGreen,
+    textStyle: {
+      color: '#ffffff',
+    },
+    borderColor: 'transparent',
     formatter: ({ data: { tooltip } }: any) => tooltip,
   },
   visualMap: {
@@ -87,9 +95,25 @@ const options = computed<
     top: 20,
     left: 48,
     cellSize: 20,
+    splitLine: {
+      lineStyle: {
+        color: currentTheme.value === 'light' ? theme.charlestonGreen : '#e5e7eb',
+      },
+    },
+    monthLabel: {
+      nameMap: range(12).map((index) => capitalize(dayjs().set('month', index).format('MMMM'))),
+      color: currentTheme.value === 'light' ? theme.charlestonGreen : '#9ca3af',
+    },
+    dayLabel: {
+      firstDay: 0,
+      nameMap: range(7).map((index) => capitalize(dayjs().set('day', index).format('dd'))),
+      color: currentTheme.value === 'light' ? theme.charlestonGreen : '#9ca3af',
+    },
     range: [props.endDate, props.startDate],
     itemStyle: {
       borderWidth: 0.5,
+      borderColor: currentTheme.value === 'light' ? '#e5e7eb' : '#9ca3af',
+      color: currentTheme.value === 'light' ? '#ffffff' : '#000000',
     },
     yearLabel: { show: false },
   },
@@ -107,7 +131,9 @@ const options = computed<
           ? theme.meatBrown
           : value === 0.5
             ? theme.peachYellow
-            : theme.papayaWhip;
+            : currentTheme.value === 'light'
+              ? theme.papayaWhip
+              : theme.charlestonGreen;
 
       return {
         value: [dayjs(date).format('YYYY-MM-DD'), value],

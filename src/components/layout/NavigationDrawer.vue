@@ -1,5 +1,5 @@
 <template>
-  <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500">
+  <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500 dark:bg-amber-800">
     <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
       <img alt="Coworking Metz" class="h-16 w-auto" :src="monoLogo" />
     </div>
@@ -10,9 +10,9 @@
         :aria-current="item.active ? 'page' : undefined"
         :class="[
           item.active
-            ? 'bg-amber-600 text-white'
-            : 'text-amber-100 hover:bg-amber-600 hover:text-white',
-          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+            ? 'bg-amber-600 text-white dark:bg-amber-900'
+            : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-900',
+          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700 dark:active:bg-amber-950',
         ]"
         :to="item.to">
         <SvgIcon
@@ -26,10 +26,10 @@
       <router-link
         :aria-current="doesRouteBelongsTo(route, ROUTE_NAMES.MISCELLANEOUS) ? 'page' : undefined"
         :class="[
-          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+          'group mt-auto flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700 dark:active:bg-amber-950',
           doesRouteBelongsTo(route, ROUTE_NAMES.MISCELLANEOUS)
-            ? 'bg-amber-600 text-white'
-            : 'text-amber-100 hover:bg-amber-600 hover:text-white',
+            ? 'bg-amber-600 text-white dark:bg-amber-900'
+            : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-900',
         ]"
         :to="{ name: ROUTE_NAMES.MISCELLANEOUS }">
         <SvgIcon
@@ -48,10 +48,10 @@
       <router-link
         :aria-current="doesRouteBelongsTo(route, ROUTE_NAMES.USER) ? 'page' : undefined"
         :class="[
-          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700',
+          'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700 dark:active:bg-amber-950',
           doesRouteBelongsTo(route, ROUTE_NAMES.USER)
-            ? 'bg-amber-600 text-white'
-            : 'text-amber-100 hover:bg-amber-600 hover:text-white',
+            ? 'bg-amber-600 text-white dark:bg-amber-900'
+            : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-900',
         ]"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <MembersThumbnail

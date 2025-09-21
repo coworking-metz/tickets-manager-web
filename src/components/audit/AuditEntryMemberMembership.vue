@@ -12,14 +12,17 @@
         <template #author>
           <RouterLink
             v-if="event.author?._id && route.params.id !== event.author._id"
-            class="font-medium text-indigo-600 hover:underline"
+            class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.author._id },
             }">
             {{ authorName }}
           </RouterLink>
-          <span v-else class="font-medium text-gray-900" :title="event.author?.email">
+          <span
+            v-else
+            class="font-medium text-gray-900 dark:text-gray-100"
+            :title="event.author?.email">
             {{ authorName || $t('audit.author.unknown') }}
           </span>
         </template>
@@ -27,20 +30,20 @@
         <template #member v-if="event.context?.member">
           <RouterLink
             v-if="route.params.id !== event.context.member._id"
-            class="font-medium text-indigo-600 hover:underline"
+            class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { id: event.context.member._id },
             }">
             {{ memberName || $t('audit.author.unknown') }}
           </RouterLink>
-          <span v-else class="font-medium text-gray-900">
+          <span v-else class="font-medium text-gray-900 dark:text-gray-100">
             {{ memberName || $t('audit.author.unknown') }}
           </span>
         </template>
 
         <template #started>
-          <strong class="font-bold text-gray-900">
+          <strong class="font-bold text-gray-900 dark:text-gray-100">
             {{ dayjs(event.context?.membershipStart).format('LL') }}
           </strong>
         </template>

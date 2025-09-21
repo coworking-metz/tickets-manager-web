@@ -14,53 +14,58 @@
         <div class="min-w-48 shrink grow basis-0" />
         <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
           <div class="flex flex-row space-x-5 sm:ml-8">
-            <a
+            <component
+              :is="member.picture ? 'a' : 'figure'"
               class="group relative shrink-0 self-start rounded-full"
-              :href="member.picture"
-              target="_blank">
+              v-bind="{
+                ...(member.picture && {
+                  href: member.picture,
+                  target: '_blank',
+                }),
+              }">
               <MembersThumbnail
                 class="size-16"
                 :email="member.email"
                 :name="fullname"
-                :thumbnail="member.thumbnail">
-                <span
-                  v-if="member.attending"
-                  class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50" />
-                <div
-                  class="absolute inset-0 flex rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-80 group-active:opacity-40">
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="m-auto size-8 text-white"
-                    :path="mdiMagnifyPlusOutline"
-                    type="mdi" />
-                </div>
-              </MembersThumbnail>
-            </a>
+                :thumbnail="member.thumbnail" />
+              <div
+                v-if="member.picture"
+                class="absolute inset-0 flex rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-60">
+                <SvgIcon
+                  aria-hidden="true"
+                  class="m-auto size-8 text-white"
+                  :path="mdiMagnifyPlusOutline"
+                  type="mdi" />
+              </div>
+              <span
+                v-if="member.attending"
+                class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50" />
+            </component>
             <div class="flex flex-col gap-1">
-              <h1 class="text-2xl font-bold text-gray-900">
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {{ fullname || member.email }}
               </h1>
               <i18n-t
                 v-if="member?.attending"
-                class="text-sm font-medium text-gray-500"
+                class="text-sm font-medium text-gray-500 dark:text-gray-400"
                 keypath="members.detail.profile.attending"
                 scope="global"
                 tag="p">
                 <template v-if="!!member?.location" #location>
-                  <span class="font-medium text-gray-900">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">
                     {{ $t(`members.detail.profile.location.${member.location}`) }}
                   </span>
                 </template>
               </i18n-t>
               <i18n-t
                 v-else-if="!!member.lastSeen"
-                class="text-sm font-medium text-gray-500"
+                class="text-sm font-medium text-gray-500 dark:text-gray-400"
                 keypath="members.detail.profile.lastSeen"
                 scope="global"
                 tag="p">
                 <template #date>
                   <time
-                    class="lowercase text-gray-900"
+                    class="lowercase text-gray-900 dark:text-gray-100"
                     :datetime="member.lastSeen"
                     :title="dayjs(member.lastSeen).format('llll')">
                     {{
@@ -148,7 +153,7 @@
           v-bind="
             state.shouldRenderAllActivity &&
             activity?.length && {
-              class: 'overflow-x-auto',
+              class: 'overflow-x-scroll',
               endDate: dayjs(Math.max(...activity.map(({ date }) => dayjs(date).valueOf()))).format(
                 'YYYY-MM-DD',
               ),
@@ -158,46 +163,29 @@
             }
           "
           :activity="activity"
-          class="px-2 max-sm:overflow-x-auto"
+          class="px-2"
           :non-compliant-activity="nonCompliantActivity" />
 
-        <div class="mx-3 flex flex-row flex-wrap items-center justify-between gap-3 sm:mx-12">
-          <RadioGroup
+        <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
+          <AppSegmentedControl
             v-model="state.shouldRenderAllActivity"
-            class="flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
-            <RadioGroupOption
-              v-for="option in [false, true]"
-              :key="`activity-option-${option}`"
-              as="template"
-              :value="option"
-              v-slot="{ checked }">
-              <button
-                :class="[
-                  'flex items-center rounded-md py-2 pl-2.5 pr-3.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100',
-                  checked
-                    ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%]'
-                    : 'hover:bg-white/80',
-                ]">
-                <RadioGroupLabel
-                  as="span"
-                  :class="['text-gray-600 group-hover:text-gray-900', checked && 'text-gray-900']">
-                  {{
-                    option
-                      ? $t('members.detail.attendance.period.allTime')
-                      : $t('members.detail.attendance.period.last6Months')
-                  }}
-                </RadioGroupLabel>
-              </button>
-            </RadioGroupOption>
-          </RadioGroup>
+            :format="
+              (option: boolean) =>
+                option
+                  ? $t('members.detail.attendance.period.allTime')
+                  : $t('members.detail.attendance.period.last6Months')
+            "
+            hide-details
+            :options="[false, true]" />
 
-          <RouterLink
-            class="flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          <AppButtonPlain
+            class="self-start dark:focus:ring-offset-stone-900"
+            color="neutral"
+            :icon="mdiPlus"
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
-            <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
             {{ $t('members.detail.attendance.add') }}
-          </RouterLink>
+          </AppButtonPlain>
         </div>
         <AppAlert
           v-if="activityErrorText"
@@ -207,24 +195,24 @@
           type="error" />
 
         <template #title>
-          <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
+          <h2
+            class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0 dark:text-gray-100">
             {{ $t('members.detail.attendance.title') }}
           </h2>
         </template>
         <template #description>
-          <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0">
+          <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0 dark:text-gray-400">
             {{ $t('members.detail.attendance.description') }}
           </p>
         </template>
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3 px-3 sm:px-0">
-            <div
-              class="flex min-w-48 shrink grow basis-0 flex-col overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.attendance.summary.label') }}
               </dt>
               <i18n-t
-                class="mt-1"
+                class="mt-1 text-gray-800 dark:text-gray-200"
                 :keypath="
                   state.shouldRenderAllActivity
                     ? 'members.detail.attendance.summary.allTime'
@@ -238,12 +226,12 @@
                     class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
                   <span
                     v-else-if="!periodAttendance"
-                    class="block text-3xl font-semibold tracking-tight text-gray-900">
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
                     {{ $t('members.detail.attendance.summary.empty') }}
                   </span>
                   <i18n-t
                     v-else
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                     keypath="members.detail.attendance.summary.value"
                     :plural="periodAttendance"
                     scope="global"
@@ -263,7 +251,7 @@
                   </i18n-t>
                 </template>
               </i18n-t>
-            </div>
+            </AppPanel>
           </dl>
         </template>
       </SectionRow>
@@ -287,30 +275,29 @@
 
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
-            <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.profile.since.label') }}
               </dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              <dd
+                class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
                 {{ dayjs(member.created).format('ll') }}
               </dd>
-            </div>
+            </AppPanel>
 
-            <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.orders.tickets.used.label') }}
               </dt>
               <i18n-t
-                class="mt-1"
+                class="mt-1 text-gray-800 dark:text-gray-200"
                 keypath="members.detail.orders.tickets.used.text"
                 :plural="totalTicketsUsed"
                 scope="global"
                 tag="dd">
                 <template #count>
                   <i18n-t
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                     keypath="members.detail.orders.tickets.used.count"
                     :plural="totalTicketsUsed"
                     scope="global"
@@ -335,7 +322,8 @@
                     scope="global"
                     tag="span">
                     <template #count>
-                      <span class="inline-block font-bold tracking-tight text-gray-900">
+                      <span
+                        class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
                         {{
                           formatAmount(totalTicketsCount, {
                             style: 'decimal',
@@ -348,22 +336,21 @@
                   </i18n-t>
                 </template>
               </i18n-t>
-            </div>
+            </AppPanel>
 
-            <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.orders.subscriptions.coverage.label') }}
               </dt>
               <i18n-t
-                class="mt-1"
+                class="mt-1 text-gray-800 dark:text-gray-200"
                 keypath="members.detail.orders.subscriptions.coverage.text"
                 :plural="attendanceCoveredBySubscriptions"
                 scope="global"
                 tag="dd">
                 <template #attendance>
                   <i18n-t
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                     keypath="members.detail.orders.subscriptions.coverage.attendance"
                     :plural="attendanceCoveredBySubscriptions"
                     scope="global"
@@ -388,7 +375,8 @@
                     scope="global"
                     tag="span">
                     <template #count>
-                      <span class="inline-block font-bold tracking-tight text-gray-900">
+                      <span
+                        class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
                         {{
                           formatAmount(totalSubscriptionsCount, {
                             style: 'decimal',
@@ -401,29 +389,26 @@
                   </i18n-t>
                 </template>
               </i18n-t>
-            </div>
+            </AppPanel>
           </dl>
         </template>
       </SectionRow>
 
       <SectionRow class="mt-16 px-3 sm:px-0" :title="$t('members.detail.orders.title')">
         <template #description>
-          <p class="mt-1 whitespace-pre-line text-sm text-gray-500">
+          <p class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
             {{ $t('members.detail.orders.description') }}
           </p>
 
-          <a
+          <AppButtonText
             v-if="!isNil(member.wpUserId)"
-            class="group mt-5 flex flex-row items-center gap-x-3 self-start rounded-md border border-transparent px-4 py-2 font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+            class="mt-5 self-start dark:focus:ring-offset-stone-900"
+            color="indigo"
             :href="buildMemberWordpressOrdersUrl(member.wpUserId)"
+            :icon="mdiOpenInNew"
             target="_blank">
-            <SvgIcon
-              aria-hidden="true"
-              class="size-5 text-indigo-500 group-hover:text-indigo-700"
-              :path="mdiOpenInNew"
-              type="mdi" />
-            <span>{{ $t('members.detail.wordpress.orders') }}</span>
-          </a>
+            {{ $t('members.detail.wordpress.orders') }}
+          </AppButtonText>
         </template>
 
         <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
@@ -441,45 +426,43 @@
 
         <template #append>
           <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
-            <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.orders.spent.monthly.label') }}
               </dt>
               <i18n-t
-                class="mt-1"
+                class="mt-1 text-gray-800 dark:text-gray-200"
                 keypath="members.detail.orders.spent.monthly.value"
                 scope="global"
                 tag="dd">
                 <template #amount>
                   <AnimatedCounter
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                     :duration="1"
                     :format="fractionAmount"
                     :to="monthlyAmountSpent" />
                 </template>
               </i18n-t>
-            </div>
-            <div
-              class="min-w-48 shrink grow basis-0 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate font-medium text-gray-500 sm:text-sm">
+            </AppPanel>
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
                 {{ $t('members.detail.orders.spent.total.label') }}
               </dt>
               <i18n-t
-                class="mt-1"
+                class="mt-1 text-gray-800 dark:text-gray-200"
                 keypath="members.detail.orders.spent.total.value"
                 :plural="totalAmountSpent"
                 scope="global"
                 tag="dd">
                 <template #count>
                   <AnimatedCounter
-                    class="block text-3xl font-semibold tracking-tight text-gray-900"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                     :duration="1"
                     :format="fractionAmount"
                     :to="totalAmountSpent" />
                 </template>
               </i18n-t>
-            </div>
+            </AppPanel>
           </dl>
         </template>
       </SectionRow>
@@ -520,6 +503,10 @@ import MembersThumbnail from './MembersThumbnail.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
+import AppSegmentedControl from '@/components/form/AppSegmentedControl.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
 import { formatAmount, fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
@@ -533,7 +520,6 @@ import { getAllMemberMemberships } from '@/services/api/memberships';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { useAppQuery } from '@/services/query';
-import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { mdiInformationOutline, mdiMagnifyPlusOutline, mdiOpenInNew, mdiPlus } from '@mdi/js';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';

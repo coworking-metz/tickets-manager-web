@@ -29,6 +29,10 @@
         "label": "Average Daily Revenue",
         "threshold": "on {amount} of daily fixed charges"
       },
+      "debt": {
+        "label": "Indebted",
+        "tickets": "{''} | {count} ticket in debt | {count} tickets in debt"
+      },
       "label": "In a few figures",
       "total": {
         "label": "Total",

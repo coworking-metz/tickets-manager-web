@@ -1,43 +1,54 @@
 <template>
-  <BottomSheet
-    ref="bottomSheet"
-    v-model="isVisible"
-    content-class="flex flex-col items-stretch !pb-3"
-    footer-class="flex flex-row justify-center gap-3"
-    header-class="flex flex-row justify-center !pt-6">
-    <template #header>
-      <h2 class="mx-auto text-3xl font-bold tracking-tight text-gray-900">
+  <AppDialog v-model="isVisible" dialog-class="flex flex-col py-4 sm:max-w-lg">
+    <header class="mx-3 flex flex-row items-start sm:mx-6">
+      <div class="shrink grow basis-0" />
+      <h2
+        class="shrink grow text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
         {{ $t('nfc.scan.title') }}
       </h2>
-    </template>
+      <div class="flex shrink-0 grow basis-0 flex-row justify-end">
+        <AppButtonIcon
+          class="shrink-0"
+          :icon="mdiClose"
+          :title="$t('action.close')"
+          @click="
+            () => {
+              onStopScan();
+              isVisible = false;
+            }
+          " />
+      </div>
+    </header>
 
     <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-    <dl v-if="DEBUG" class="mt-4">
-      <div class="flex flex-row justify-between">
+    <dl v-if="DEBUG" class="mx-3 mt-4 flex flex-col gap-1 text-gray-900 sm:mx-6 dark:text-gray-100">
+      <div class="flex flex-row flex-wrap justify-between gap-1">
         <dt>status</dt>
-        <dd>{{ Object.values(NFCStatus)[nfc.status.value] }}</dd>
+        <dd class="text-gray-400 dark:text-gray-500">
+          {{ Object.values(NFCStatus)[nfc.status.value] }}
+        </dd>
       </div>
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row flex-wrap justify-between gap-1">
         <dt>latest</dt>
-        <dd>{{ latest }}</dd>
+        <dd class="text-gray-400 dark:text-gray-500">{{ latest }}</dd>
       </div>
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row flex-wrap justify-between gap-1">
         <dt>latestMessage</dt>
-        <dd class="text-gray-400">{{ latestMessage }}</dd>
+        <dd class="text-gray-400 dark:text-gray-500">{{ latestMessage }}</dd>
       </div>
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row flex-wrap justify-between gap-1">
         <dt>serialNumber</dt>
-        <dd>{{ serialNumber }}</dd>
+        <dd class="text-gray-400 dark:text-gray-500">{{ serialNumber }}</dd>
       </div>
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row flex-wrap justify-between gap-1">
         <dt>error</dt>
-        <dd>{{ nfc.error.value }}</dd>
+        <dd class="text-gray-400 dark:text-gray-500">{{ nfc.error.value }}</dd>
       </div>
 
-      <div class="mt-3 flex flex-row justify-end gap-3">
-        <AppButton
-          class="self-center border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
-          type="button"
+      <div class="mt-3 flex flex-row items-stretch justify-end gap-3">
+        <AppButtonPlain
+          class="dark:ring-offset-neutral-800"
+          color="neutral"
           @click="
             () => {
               nfc.debug._setStatus(NFCStatus.READING, true);
@@ -47,10 +58,10 @@
             }
           ">
           Mock card read
-        </AppButton>
-        <AppButton
-          class="self-center border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
-          type="button"
+        </AppButtonPlain>
+        <AppButtonPlain
+          class="dark:ring-offset-neutral-800"
+          color="neutral"
           @click="
             () => {
               nfc.debug._setStatus(NFCStatus.READING, true);
@@ -61,22 +72,22 @@
             }
           ">
           Mock error
-        </AppButton>
+        </AppButtonPlain>
       </div>
 
-      <hr class="m-6" />
+      <AppDivider class="my-3" />
     </dl>
     <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
 
     <ErrorState
       v-if="!DEBUG && isUnavailable"
-      class="m-auto mb-6"
+      class="m-auto"
       :description="$t('nfc.scan.onUnavailable.description')"
       :title="$t('nfc.scan.onUnavailable.title')">
       <template #action><i></i></template>
     </ErrorState>
     <template v-else>
-      <div class="relative flex h-72 flex-col overflow-hidden">
+      <div class="relative mx-3 flex h-72 flex-col overflow-hidden sm:mx-6">
         <transition-group
           enter-active-class="transition ease-in-out duration-350"
           enter-from-class="opacity-0"
@@ -88,7 +99,6 @@
             v-if="state.isConnected"
             autoplay
             class="absolute inset-0"
-            :loop="false"
             :src="NfcCardConnected"
             @complete="onConnectedComplete" />
           <LottiePlayer
@@ -125,7 +135,7 @@
         </transition-group>
       </div>
       <p
-        class="relative mt-4 h-12 overflow-hidden whitespace-pre-line text-center text-base font-medium text-gray-900">
+        class="relative mt-4 h-12 overflow-hidden whitespace-pre-line text-center text-base font-medium text-gray-900 dark:text-gray-100">
         <transition-group
           enter-active-class="transition ease-in-out duration-[1500ms]"
           enter-from-class="transform translate-x-[-100%] opacity-0"
@@ -144,7 +154,9 @@
           </span>
           <span v-else-if="state.hasFailed" class="absolute inset-0">
             {{ $t('nfc.scan.onRead.fail') }}
-            <p v-if="nfc.error.value" class="whitespace-pre-line text-sm font-normal text-gray-500">
+            <p
+              v-if="nfc.error.value"
+              class="whitespace-pre-line text-sm font-normal text-gray-500 dark:text-gray-400">
               {{ nfc.error.value }}
             </p>
           </span>
@@ -161,25 +173,25 @@
       </p>
     </template>
 
-    <template #footer>
-      <AppButton
+    <div class="mx-3 mt-6 flex flex-row flex-wrap items-center justify-center sm:mx-6">
+      <AppButtonPlain
         v-if="nfc.status.value === NFCStatus.IDLE || (DEBUG && !isScanning)"
-        class="self-center border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+        class="dark:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiNfcSearchVariant"
-        type="button"
         @click="onStartScan">
         {{ $t('nfc.scan.start') }}
-      </AppButton>
-      <AppButton
+      </AppButtonPlain>
+      <AppButtonPlain
         v-else-if="nfc.status.value === NFCStatus.READING || (DEBUG && isScanning)"
-        class="self-center border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
+        class="dark:ring-offset-neutral-800"
+        color="neutral"
         :icon="mdiStop"
-        type="button"
         @click="onStopScan">
         {{ $t('nfc.scan.stop') }}
-      </AppButton>
-    </template>
-  </BottomSheet>
+      </AppButtonPlain>
+    </div>
+  </AppDialog>
 </template>
 
 <script setup lang="ts">
@@ -191,12 +203,14 @@ import NfcCardRetry from '@/assets/animations/nfc-card/nfc-card-retry.lottie';
 import NfcCardSuccess from '@/assets/animations/nfc-card/nfc-card-success.lottie';
 import ErrorState from '@/components/ErrorState.vue';
 import LottiePlayer from '@/components/LottiePlayer.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppDialog from '@/components/layout/AppDialog.vue';
+import AppDivider from '@/components/layout/AppDivider.vue';
 import useNFC, { NFCStatus } from '@/helpers/useNFC';
 import { DotLottiePlayer } from '@dotlottie/player-component';
-import BottomSheet from '@douxcode/vue-spring-bottom-sheet';
 import '@douxcode/vue-spring-bottom-sheet/dist/style.css';
-import { mdiNfcSearchVariant, mdiStop } from '@mdi/js';
+import { mdiClose, mdiNfcSearchVariant, mdiStop } from '@mdi/js';
 import { computed, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -210,7 +224,6 @@ const emit = defineEmits(['update:identifier']);
 const HAS_NFC = 'NDEFReader' in window;
 const route = useRoute();
 const DEBUG = computed(() => Boolean(route.query.debug));
-const bottomSheet = ref<InstanceType<typeof BottomSheet> | null>(null);
 const nfc = useNFC();
 const isUnavailable = computed(() => !HAS_NFC || nfc.status.value === NFCStatus.NOT_SUPPORTED);
 const latest = computed(() =>
@@ -287,7 +300,7 @@ const onSuccessComplete = (_e: { target: DotLottiePlayer }) => {
   setTimeout(() => {
     if (isVisible.value) {
       state.hasSucceeded = false;
-      bottomSheet.value?.close();
+      isVisible.value = false;
       emit('update:identifier', serialNumber.value);
     }
   }, 2_000);

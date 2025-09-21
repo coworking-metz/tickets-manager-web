@@ -64,7 +64,7 @@ const backgroundColor = computed(() => {
     case 'warning':
       return 'bg-amber-50 dark:bg-amber-600/20';
     case 'error':
-      return 'bg-red-50 dark:bg-red-600/20';
+      return 'bg-red-50 dark:bg-red-800/20';
     default:
       return 'bg-gray-50 dark:bg-gray-600/20';
   }
@@ -81,7 +81,7 @@ const titleColor = computed(() => {
     case 'error':
       return 'text-red-800 dark:text-red-500';
     default:
-      return 'text-gray-800 dark:text-gray-500';
+      return 'text-gray-800 dark:text-gray-500 dark:text-gray-400';
   }
 });
 
@@ -90,13 +90,13 @@ const descriptionColor = computed(() => {
     case 'info':
       return 'text-sky-600/90 dark:text-sky-400/50';
     case 'success':
-      return 'text-green-700';
+      return 'text-green-700 dark:text-green-400';
     case 'warning':
-      return 'text-amber-700';
+      return 'text-amber-700 dark:text-amber-400';
     case 'error':
-      return 'text-red-700';
+      return 'text-red-700 dark:text-red-400';
     default:
-      return 'text-gray-700';
+      return 'text-gray-700 dark:text-gray-400';
   }
 });
 

@@ -92,7 +92,7 @@ import {
   mdiInformation,
   mdiNotificationClearAll,
 } from '@mdi/js';
-import { random } from 'lodash';
+import { sample } from 'lodash';
 // import colors from 'tailwindcss/colors';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -177,12 +177,7 @@ const getMessage = (notification: AppNotification) => {
       case AppErrorCode.FORBIDDEN:
         return i18n.t('errors.onForbidden.message');
       default:
-        const defaultErrorMessages = [
-          i18n.t('errors.onUnknown.message.corporate'),
-          i18n.t('errors.onUnknown.message.funny'),
-          i18n.t('errors.onUnknown.message.oops'),
-        ];
-        return defaultErrorMessages[random(0, defaultErrorMessages.length - 1)];
+        return sample(i18n.tm('errors.onUnknown.message'));
     }
   }
 };

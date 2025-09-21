@@ -1,94 +1,57 @@
 <template>
-  <div class="flex flex-col">
-    <label v-if="label" class="block font-medium text-gray-900 sm:text-sm" :for="id">
-      {{ label }}
-    </label>
-    <span v-if="description" class="whitespace-pre-line text-sm text-gray-500">
-      {{ description }}
-    </span>
-    <div class="mt-1 flex flex-row rounded-md shadow-sm">
-      <slot name="before" />
-      <div class="relative flex grow flex-row items-stretch gap-3">
-        <slot name="prepend">
-          <SvgIcon
-            v-if="prependIcon"
-            aria-hidden="true"
-            :class="{
-              ['pointer-events-none absolute inset-y-0 left-0 z-20 ml-3 h-full w-5 text-gray-400']: true,
-              ['text-red-500']: isInvalid,
-            }"
-            :path="prependIcon"
-            type="mdi" />
-        </slot>
-        <textarea
-          :id="id"
-          :aria-invalid="isInvalid"
-          :class="{
-            ['block min-h-24 w-full rounded-md border-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm']: true,
-            ['rounded-none']: slots.after || slots.before,
-            ['rounded-l-md']: !slots.before,
-            ['rounded-r-md']: !slots.after,
-            ['pl-10']: slots.prepend || prependIcon,
-            ['border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:ring-red-500']:
-              isInvalid,
-          }"
-          :disabled="disabled"
-          :maxlength="maxLength"
-          :name="name"
-          :pattern="pattern"
-          :placeholder="placeholder"
-          :readonly="readonly"
-          :required="required"
-          :rows="rows"
-          :tabindex="tabindex"
-          :type="type"
-          :value="modelValue"
-          @blur="(event) => $emit('blur', event)"
-          @input="
-            (event) => $emit('update:modelValue', (event.currentTarget as HTMLInputElement).value)
-          " />
-        <slot name="append">
-          <SvgIcon
-            v-if="appendIcon"
-            aria-hidden="true"
-            class="pointer-events-none absolute inset-y-0 right-0 z-20 mr-3 h-full w-5 text-gray-400"
-            :path="appendIcon"
-            type="mdi" />
-        </slot>
-      </div>
-      <slot name="after" />
-    </div>
+  <AppTextField :id="id">
+    <template v-for="(_, slot) of $slots" #[slot]="scope">
+      <slot :name="slot" v-bind="scope" />
+    </template>
 
-    <slot name="hint">
-      <AppFieldHint v-if="!hideDetails" :errors="errors" :hint="hint" />
-    </slot>
-  </div>
+    <template #default="{ isInvalid, prependIcon, appendIcon }">
+      <textarea
+        :id="id"
+        v-model="text"
+        :aria-invalid="isInvalid"
+        :class="[
+          `block min-h-24 w-full rounded-md border-gray-300 transition-colors
+          placeholder:text-gray-400/80 focus:border-indigo-500 focus:ring-indigo-500
+          disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50
+          disabled:text-gray-500 sm:text-sm dark:border-gray-600 dark:bg-slate-800
+          dark:text-gray-100 dark:disabled:border-gray-700 dark:disabled:bg-slate-700
+          disabled:dark:text-gray-400`,
+          ($slots.after || $slots.before) && 'rounded-none',
+          !$slots.before && 'rounded-l-md',
+          !$slots.after && 'rounded-r-md',
+          ($slots.prepend || prependIcon) && 'pl-10',
+          ($slots.append || appendIcon) && 'pr-10',
+          isInvalid &&
+            `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
+            focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
+            dark:placeholder:text-red-300/50 dark:focus:border-red-600 dark:focus:ring-red-600`,
+          inputClass,
+        ]"
+        :disabled="disabled"
+        :name="name"
+        :placeholder="placeholder"
+        :readonly="readonly"
+        :required="required"
+        :rows="rows"
+        :tabindex="tabindex"
+        :type="type"
+        @blur="(event) => $emit('blur', event)" />
+    </template>
+  </AppTextField>
 </template>
 
 <script setup lang="ts">
-import AppFieldHint from './AppFieldHint.vue';
-import { type ErrorMessage } from './AppFieldHint.vue';
-import { useSlots, PropType, computed } from 'vue';
+import AppTextField from './AppTextField.vue';
+import { PropType } from 'vue';
 
-defineEmits(['blur', 'update:modelValue']);
-const props = defineProps({
-  modelValue: {
-    type: String as PropType<string | null>,
-    default: null,
-  },
-  label: {
-    type: String,
-    default: null,
-  },
-  description: {
-    type: String,
-    default: null,
-  },
+const text = defineModel({
+  type: String as PropType<string | null>,
+  default: '',
+});
+
+defineEmits(['blur']);
+defineProps({
   id: {
-    type: String,
-    default: null,
-  },
-  autocomplete: {
     type: String,
     default: null,
   },
@@ -97,6 +60,10 @@ const props = defineProps({
     default: false,
   },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  readonly: {
     type: Boolean,
     default: false,
   },
@@ -112,59 +79,23 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  errors: {
-    type: Array as PropType<ErrorMessage[]>,
-    default: () => [],
-  },
-  prependIcon: {
-    type: String,
-    default: '',
-  },
-  appendIcon: {
-    type: String,
-    default: '',
-  },
-  hideDetails: {
-    type: Boolean,
-    default: false,
-  },
-  hint: {
-    type: String,
-    default: '',
-  },
-  horizontal: {
-    type: Boolean,
-    default: false,
+  rows: {
+    type: [String, Number],
+    default: 3,
   },
   tabindex: {
     type: String,
     default: null,
   },
-  readonly: {
-    type: Boolean,
-    default: false,
-  },
-  maxLength: {
-    type: [String, Number],
-    default: null,
-  },
-  pattern: {
+  inputClass: {
     type: String,
-    default: null,
-  },
-  rows: {
-    type: [String, Number],
-    default: 3,
+    default: '',
   },
 });
-
-const slots = useSlots();
-
-const isInvalid = computed(() => props.errors && props.errors.length > 0);
 </script>
 
 <style scoped>
-textarea {
+textarea[rows='3'] {
   field-sizing: content;
   height: max-content;
 }

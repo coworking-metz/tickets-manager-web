@@ -24,7 +24,7 @@
         "threshold": "sur {amount} de charges fixes journalières"
       },
       "debt": {
-        "label": "Dette recouvrable",
+        "label": "Recouvrable",
         "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
       "label": "En quelques chiffres",

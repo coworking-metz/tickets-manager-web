@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl">
+  <div class="flex h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
@@ -37,6 +37,12 @@
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />
 
+      <AppTextField
+        id="order-reference"
+        v-model="state.orderReference"
+        :label="$t('subscriptions.detail.reference.label')"
+        :placeholder="$t('subscriptions.detail.reference.placeholder')" />
+
       <AppTextareaField
         id="comment"
         v-model="state.comment"
@@ -45,19 +51,20 @@
         :placeholder="$t('subscriptions.detail.comment.placeholder')"
         required />
 
-      <AppButton
-        class="mt-1 self-start border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+      <AppButtonPlain
+        class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiPlus"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('action.add') }}
-      </AppButton>
+      </AppButtonPlain>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -66,7 +73,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { addMemberSubscription } from '@/services/api/subscriptions';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiPlus, mdiClose } from '@mdi/js';
+import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiClose, mdiPlus } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
@@ -89,6 +96,7 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
+  orderReference: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
 });
@@ -116,6 +124,7 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   addMemberSubscription(props.memberId, {
     started: state.started as string,
+    orderReference: state.orderReference,
     comment: state.comment as string,
   })
     .then(async () => {

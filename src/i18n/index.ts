@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY } from '@/store/settings';
+import { LOCALE_STORAGE_KEY } from '@/helpers/environment';
 import { createI18nMessage } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar.js';
@@ -28,13 +28,13 @@ dayjs.updateLocale('fr', {
     nextDay: '[Demain à] LT',
     lastWeek: 'dddd [dernier à] LT',
     nextWeek: 'dddd [prochain à] LT',
-    sameElse: '[Le] dddd LL',
+    sameElse: '[Le] dddd LL [à] LT',
   },
 });
 
 dayjs.updateLocale('en', {
   calendar: {
-    sameElse: '[on] dddd LL',
+    sameElse: '[on] dddd LL [at] LT',
   },
 });
 
@@ -147,6 +147,7 @@ const applyingDecimalsAsPluralForFrenchSpeakers: PluralizationRule = (count, cho
 
 export const DEFAULT_LOCALE = import.meta.env.VUE_APP_DEFAULT_LOCALE || 'fr-FR';
 export const SUPPORTED_LOCALES = ['fr-FR', 'en-GB'] as const;
+export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
 const initialLocale = localStorage.getItem(LOCALE_STORAGE_KEY) || DEFAULT_LOCALE;
 
 export const i18nInstance = createI18n({

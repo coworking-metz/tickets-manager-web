@@ -5,9 +5,9 @@
       ['max-sm:overflow-y-hidden']: state.isMenuOpen,
     }">
     <header
-      class="fixed top-0 z-30 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-[75%] shadow-sm backdrop-blur sm:hidden">
+      class="fixed top-0 z-30 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white bg-opacity-[75%] shadow-sm backdrop-blur sm:hidden dark:border-gray-700 dark:bg-neutral-800">
       <button
-        class="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+        class="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden dark:text-gray-400"
         type="button"
         @click="state.isMenuOpen = !state.isMenuOpen">
         <span class="sr-only">
@@ -22,7 +22,10 @@
           :path="state.isMenuOpen ? mdiMenuOpen : mdiMenu"
           type="mdi" />
       </button>
-      <img alt="Le Poulailler - Coworking Metz" class="h-full w-auto p-3" :src="typoLePoulailler" />
+      <img
+        alt="Le Poulailler - Coworking Metz"
+        class="h-full w-auto p-3 dark:invert"
+        :src="typoLePoulailler" />
     </header>
     <NavigationDrawer
       :class="[

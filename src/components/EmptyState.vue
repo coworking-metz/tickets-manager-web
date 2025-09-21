@@ -12,12 +12,16 @@
     <div
       :class="['flex flex-col', horizontal ? 'my-auto items-start' : 'items-center text-center']">
       <slot name="title">
-        <h3 v-if="title" class="whitespace-pre-line text-base font-medium text-gray-900">
+        <h3
+          v-if="title"
+          class="whitespace-pre-line text-base font-medium text-gray-900 dark:text-gray-100">
           {{ title }}
         </h3>
       </slot>
       <slot name="description">
-        <p v-if="description" class="mt-2 whitespace-pre-line text-sm text-gray-500">
+        <p
+          v-if="description"
+          class="mt-2 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
           {{ description }}
         </p>
       </slot>

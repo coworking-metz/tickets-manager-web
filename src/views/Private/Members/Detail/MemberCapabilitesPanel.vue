@@ -1,6 +1,6 @@
 <template>
-  <form class="shadow sm:overflow-hidden sm:rounded-md" @submit.prevent="onSubmit">
-    <ul class="flex flex-col gap-4 bg-white px-4 py-5 sm:p-6">
+  <AppPanel tag="form" @submit.prevent="onSubmit">
+    <ul class="flex flex-col gap-4">
       <AppSwitchField
         as="li"
         :description="$t('members.detail.profile.capabilities.manager.description')"
@@ -38,7 +38,7 @@
         type="error">
         <template #action>
           <AppButton
-            class="self-start border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm"
+            class="self-start border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm dark:bg-neutral-800"
             :loading="isFetchingCapabilites"
             @click="refetchCapabilities">
             {{ $t('action.retry') }}
@@ -47,15 +47,15 @@
       </AppAlert>
     </ul>
 
-    <div
-      class="flex flex-row flex-wrap gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-      <AppButton
-        class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+    <template #footer>
+      <AppButtonPlain
+        class="dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiCheckAll"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('members.detail.profile.capabilities.apply') }}
-      </AppButton>
+      </AppButtonPlain>
       <AppAlert
         v-if="state.hasFailValidationOnce"
         class="truncate"
@@ -65,14 +65,16 @@
           })
         "
         :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
-    </div>
-  </form>
+    </template>
+  </AppPanel>
 </template>
 
 <script setup lang="ts">
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSwitchField from '@/components/form/AppSwitchField.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import {
   getVuelidateErrorFieldsCount,
   handleSilentError,

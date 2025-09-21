@@ -238,7 +238,7 @@
         "value": "{count} manquante | {count} seule manquante | {count} manquantes"
       },
       "totalDebt": {
-        "label": "Dette totale",
+        "label": "Redevable",
         "value": "Aucune | {count} ticket | {count} tickets"
       }
     },

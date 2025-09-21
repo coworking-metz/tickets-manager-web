@@ -1,18 +1,18 @@
 <template>
-  <form class="shadow sm:overflow-hidden sm:rounded-md" @submit.prevent="onSubmit">
-    <div class="flex flex-col items-stretch bg-white px-4 py-5 sm:p-6">
+  <AppPanel @submit.prevent="onSubmit">
+    <div class="flex flex-col items-stretch">
       <fieldset class="flex flex-col">
-        <legend class="block font-medium text-gray-900 sm:text-sm">
+        <legend class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
           {{ $t('members.detail.profile.macAddresses.label', { count: state.devices.length }) }}
         </legend>
         <i18n-t
-          class="block text-sm text-gray-500"
+          class="block text-sm text-gray-500 dark:text-gray-400"
           keypath="members.detail.profile.macAddresses.description.text"
           scope="global"
           tag="span">
           <template #link>
             <a
-              class="font-medium text-indigo-600 hover:underline"
+              class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
               href="https://www.studentinternet.eu/fr/docs/nederlands/depannage/comment-puis-je-trouver-ladresse-mac-de-mon-appareil/"
               target="_blank">
               {{ $t('members.detail.profile.macAddresses.description.link') }}
@@ -45,7 +45,7 @@
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-indigo-600 hover:underline max-sm:hidden sm:text-sm"
+                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-indigo-600 hover:underline max-sm:hidden sm:text-sm dark:text-indigo-500"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.verify') }}
@@ -93,26 +93,27 @@
             </AppTextField>
           </li>
           <li>
-            <AppButton
-              class="border border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400"
+            <AppButtonPlain
+              class="dark:focus:ring-offset-neutral-800"
+              color="neutral"
+              :icon="mdiPlus"
               @click="onAddMacAddress">
-              <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
               {{ $t('members.detail.profile.macAddresses.add', { count: state.devices.length }) }}
-            </AppButton>
+            </AppButtonPlain>
           </li>
         </ul>
       </fieldset>
     </div>
 
-    <div
-      class="flex flex-row flex-wrap gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-      <AppButton
-        class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+    <template #footer>
+      <AppButtonPlain
+        class="dark:focus:ring-offset-neutral-800"
+        color="indigo"
         :icon="mdiCheckAll"
         :loading="state.isSubmitting"
         type="submit">
         {{ $t('members.detail.profile.macAddresses.apply') }}
-      </AppButton>
+      </AppButtonPlain>
       <AppAlert
         v-if="state.hasFailValidationOnce"
         class="truncate"
@@ -122,14 +123,15 @@
           })
         "
         :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
-    </div>
-  </form>
+    </template>
+  </AppPanel>
 </template>
 
 <script setup lang="ts">
 import AppAlert from '@/components/form/AppAlert.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import {
   getVuelidateErrorFieldsCount,
   handleSilentError,

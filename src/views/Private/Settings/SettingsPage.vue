@@ -8,17 +8,20 @@
     <div class="flex max-w-3xl shrink-0 grow flex-col gap-6 pb-6 pt-12 sm:pt-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight">
+          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('settings.title') }}
         </h1>
-        <p class="mt-1 truncate text-base text-slate-500">{{ $t('settings.description') }}</p>
+        <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
+          {{ $t('settings.description') }}
+        </p>
       </header>
 
-      <section class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
-        <h3 class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900">
+      <AppPanel body-class="rounded-lg" class="overflow-visible">
+        <h3
+          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
           {{ $t('settings.computeAttendance.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500">
+        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
           {{ $t('settings.computeAttendance.description') }}
         </p>
         <form class="mt-6 flex flex-col" @submit.prevent="onSubmit">
@@ -41,14 +44,16 @@
               :placeholder="$t('settings.computeAttendance.macAddress.placeholder')"
               :prepend-icon="mdiDevices" />
           </div>
+
           <div class="flex flex-row flex-wrap items-center gap-3">
-            <AppButton
-              class="border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+            <AppButtonPlain
+              class="dark:focus:ring-offset-neutral-800"
+              color="indigo"
               :icon="mdiSync"
               :loading="state.isComputingAttendance"
               type="submit">
               {{ $t('settings.computeAttendance.submit') }}
-            </AppButton>
+            </AppButtonPlain>
             <AppAlert
               v-if="state.hasFailValidationOnce"
               class="truncate"
@@ -60,16 +65,17 @@
               :type="vuelidate.$errors.length > 0 ? 'error' : 'success'" />
           </div>
         </form>
-      </section>
+      </AppPanel>
     </div>
   </article>
 </template>
 
 <script lang="ts" setup>
 import AppAlert from '@/components/form/AppAlert.vue';
-import AppButton from '@/components/form/AppButton.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { getVuelidateErrorFieldsCount, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
