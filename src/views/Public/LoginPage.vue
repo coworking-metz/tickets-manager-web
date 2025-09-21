@@ -89,7 +89,7 @@ import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   loggedOut: {
@@ -104,6 +104,7 @@ const PHOTOS = [
 ];
 
 const route = useRoute();
+const router = useRouter();
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
@@ -125,6 +126,7 @@ watch(
         type: 'success',
         timeout: 3_000,
       });
+      router.replace({ query: queryParams.value });
     }
   },
   { immediate: true },
