@@ -161,20 +161,50 @@
           class="px-2 max-sm:overflow-x-auto"
           :non-compliant-activity="nonCompliantActivity" />
 
-        <div class="mx-3 flex flex-row flex-wrap gap-3">
+        <div class="mx-3 flex flex-row flex-wrap items-center justify-between gap-3 sm:mx-12">
+          <RadioGroup
+            v-model="state.shouldRenderAllActivity"
+            class="flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
+            <RadioGroupOption
+              v-for="option in [false, true]"
+              :key="`activity-option-${option}`"
+              as="template"
+              :value="option"
+              v-slot="{ checked }">
+              <button
+                :class="[
+                  'flex items-center rounded-md py-2 pl-2.5 pr-3.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100',
+                  checked
+                    ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%]'
+                    : 'hover:bg-white/80',
+                ]">
+                <RadioGroupLabel
+                  as="span"
+                  :class="['text-gray-600 group-hover:text-gray-900', checked && 'text-gray-900']">
+                  {{
+                    option
+                      ? $t('members.detail.attendance.period.allTime')
+                      : $t('members.detail.attendance.period.last6Months')
+                  }}
+                </RadioGroupLabel>
+              </button>
+            </RadioGroupOption>
+          </RadioGroup>
+
           <RouterLink
-            class="flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-6 sm:text-sm"
+            class="flex flex-row items-center self-start rounded-md border border-gray-300 bg-white px-3 py-2 font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
             <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiPlus" type="mdi" />
             {{ $t('members.detail.attendance.add') }}
           </RouterLink>
-          <AppAlert
-            v-if="activityErrorText"
-            :description="activityErrorText"
-            :title="$t('members.detail.attendance.onFetch.fail')"
-            type="error" />
         </div>
+        <AppAlert
+          v-if="activityErrorText"
+          class="mx-3 mt-3 self-start sm:mx-12"
+          :description="activityErrorText"
+          :title="$t('members.detail.attendance.onFetch.fail')"
+          type="error" />
 
         <template #title>
           <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0">
@@ -233,38 +263,6 @@
                   </i18n-t>
                 </template>
               </i18n-t>
-
-              <RadioGroup
-                v-model="state.shouldRenderAllActivity"
-                class="mt-3 flex gap-1 self-start rounded-lg bg-slate-100 p-0.5 transition-colors sm:mx-0">
-                <RadioGroupOption
-                  v-for="option in [false, true]"
-                  :key="`activity-option-${option}`"
-                  as="template"
-                  :value="option"
-                  v-slot="{ checked }">
-                  <button
-                    :class="[
-                      'flex items-center rounded-md p-1.5 pl-2.5 pr-3.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100',
-                      checked
-                        ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%]'
-                        : 'hover:bg-white/80',
-                    ]">
-                    <RadioGroupLabel
-                      as="span"
-                      :class="[
-                        'text-gray-600 group-hover:text-gray-900',
-                        checked && 'text-gray-900',
-                      ]">
-                      {{
-                        option
-                          ? $t('members.detail.attendance.period.allTime')
-                          : $t('members.detail.attendance.period.last6Months')
-                      }}
-                    </RadioGroupLabel>
-                  </button>
-                </RadioGroupOption>
-              </RadioGroup>
             </div>
           </dl>
         </template>

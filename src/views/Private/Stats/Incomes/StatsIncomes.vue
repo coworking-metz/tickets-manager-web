@@ -40,7 +40,7 @@
               <component
                 :is="previousPeriod ? 'RouterLink' : 'button'"
                 :class="[
-                  'relative -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                  'relative -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
                   previousPeriod && 'hover:bg-gray-100',
                 ]"
                 :disabled="!previousPeriod"
@@ -59,7 +59,7 @@
               <component
                 :is="nextPeriod ? 'RouterLink' : 'button'"
                 :class="[
-                  'relative -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                  'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
                   nextPeriod && 'hover:bg-gray-100',
                 ]"
                 :disabled="!nextPeriod"

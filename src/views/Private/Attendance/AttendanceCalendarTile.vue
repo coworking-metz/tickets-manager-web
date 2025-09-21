@@ -18,14 +18,14 @@
       </time>
       <div class="absolute inset-0 flex items-center justify-center">
         <CircularProgress
-          :class="['size-7', selected ? 'text-gray-600' : 'text-gray-400']"
+          :class="['size-7', selected ? 'text-gray-300' : 'text-gray-400']"
           :progress="(daysCount / MAX_ATTENDANCE) * 100"
           :style="`--mask-color: transparent; --progress-color: currentColor;`"
           thickness="0.25rem" />
       </div>
       <div v-if="debtCount" class="absolute inset-0 flex items-center justify-center">
         <CircularProgress
-          :class="['size-7', selected ? 'text-red-600' : 'text-red-400']"
+          :class="['size-7', selected ? 'text-red-500' : 'text-red-600']"
           :progress="attendance?.data.members.length ? (debtCount / MAX_ATTENDANCE) * 100 : 0"
           :style="`--mask-color: transparent; --progress-color: currentColor;`"
           thickness="0.25rem" />
