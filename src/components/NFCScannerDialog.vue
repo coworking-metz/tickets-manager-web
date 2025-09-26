@@ -209,7 +209,6 @@ import AppDialog from '@/components/layout/AppDialog.vue';
 import AppDivider from '@/components/layout/AppDivider.vue';
 import useNFC, { NFCStatus } from '@/helpers/useNFC';
 import { DotLottiePlayer } from '@dotlottie/player-component';
-import '@douxcode/vue-spring-bottom-sheet/dist/style.css';
 import { mdiClose, mdiNfcSearchVariant, mdiStop } from '@mdi/js';
 import { computed, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
