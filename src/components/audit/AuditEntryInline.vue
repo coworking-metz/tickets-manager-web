@@ -18,7 +18,9 @@
 
       <template v-if="withTimeline">
         <slot name="timeline">
-          <span aria-hidden="true" class="w-0.5 shrink grow basis-0 bg-gray-200 dark:bg-gray-600" />
+          <span
+            aria-hidden="true"
+            class="w-0.5 shrink grow basis-0 bg-gray-200 dark:bg-stone-700" />
         </slot>
       </template>
     </div>

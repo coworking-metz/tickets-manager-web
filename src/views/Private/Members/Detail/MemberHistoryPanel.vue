@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'flex flex-col divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow dark:divide-gray-700 dark:bg-neutral-800',
+      'flex flex-col overflow-hidden rounded-lg bg-white shadow  dark:bg-neutral-800',
       (history?.length || 0) > MIN_HISTORY_EVENTS && 'max-h-[32rem]',
     ]">
     <ul

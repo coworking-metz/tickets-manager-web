@@ -4,7 +4,7 @@
       <!-- Mobile navigation -->
       <Menu as="nav" class="relative inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-gray-700 dark:bg-neutral-800">
+          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800">
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"
@@ -69,9 +69,9 @@
       <div class="flex flex-1 xl:overflow-hidden">
         <nav
           aria-label="Sections"
-          class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col dark:border-gray-700 dark:bg-neutral-800">
+          class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
           <div
-            class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6 dark:border-gray-700">
+            class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6 dark:border-stone-700">
             <h1
               class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
               {{ $t('stats.title') }}
@@ -86,7 +86,7 @@
                 tab.active
                   ? 'bg-indigo-50 bg-opacity-[50%]'
                   : 'hover:bg-indigo-50 hover:bg-opacity-[50%]',
-                'group flex border-b border-gray-200 p-6 pr-3 dark:border-gray-700',
+                'group flex border-b border-gray-200 p-6 pr-3 dark:border-stone-700',
               ]"
               :to="tab.to">
               <SvgIcon

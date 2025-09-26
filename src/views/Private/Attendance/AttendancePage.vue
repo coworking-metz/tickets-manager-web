@@ -75,7 +75,7 @@
         </div>
       </header>
 
-      <div class="relative border border-gray-200 dark:border-gray-700">
+      <div class="relative border border-gray-200 dark:border-stone-700">
         <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-[2px] w-full" />
         <div
           v-if="calendarPeriod"

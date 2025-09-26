@@ -31,7 +31,7 @@
           :thumbnail="authStore.user?.picture" />
       </div>
       <div class="flex w-full flex-col sm:ml-6">
-        <div class="sm:border-l sm:border-gray-200 sm:pl-6 dark:border-gray-700">
+        <div class="sm:border-l sm:border-gray-200 sm:pl-6 dark:border-stone-700">
           <h1
             class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
             {{ $t('user.profile.title') }}

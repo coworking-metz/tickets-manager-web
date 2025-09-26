@@ -9,7 +9,7 @@
           :thumbnail="member?.thumbnail" />
         <span
           v-if="member?.attending"
-          class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white" />
+          class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-neutral-800" />
       </div>
       <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">
         <div class="flex min-w-48 shrink grow basis-0 flex-col items-start">

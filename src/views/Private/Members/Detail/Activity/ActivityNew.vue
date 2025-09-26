@@ -51,9 +51,9 @@
                   'cursor-pointer text-center focus:outline-none',
                   active && 'ring-2 ring-indigo-500 ring-offset-2',
                   checked
-                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
+                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
                     : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-100',
-                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm',
+                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm dark:hover:bg-neutral-700 dark:focus:ring-offset-neutral-800',
                 ]">
                 <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
               </div>
