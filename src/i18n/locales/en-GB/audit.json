@@ -101,7 +101,10 @@
     }
   },
   "author": {
-    "unknown": "Someone"
+    "unknown": {
+      "hint": "The system received a request authenticated by a system token.\nIt could be WordPress or someone tinkering.",
+      "label": "Someone"
+    }
   },
   "list": {
     "description": "Everything that happens in detail.",

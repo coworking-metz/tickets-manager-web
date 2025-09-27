@@ -47,7 +47,7 @@
         ]"
         :disabled="!essentialContext">
         <div class="flex flex-col text-start">
-          <slot name="message">
+          <slot :author-name="authorName" :member-name="memberName" name="message">
             <i18n-t
               :keypath="
                 event.author?._id && event.author._id === event.context?.member?._id
@@ -67,11 +67,27 @@
                   {{ event.author.name }}
                 </RouterLink>
                 <span
-                  v-else
+                  v-else-if="event.author"
                   class="font-medium text-gray-900 dark:text-gray-100"
-                  :title="event.author?.email">
-                  {{ event.author?.name || $t('audit.author.unknown') }}
+                  :title="event.author.email">
+                  {{ authorName }}
                 </span>
+                <VTooltip v-else class="inline">
+                  <span
+                    class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
+                    {{ $t('audit.author.unknown.label') }}
+                    <SvgIcon
+                      aria-hidden="true"
+                      class="size-4"
+                      :path="mdiInformationOutline"
+                      type="mdi" />
+                  </span>
+                  <template #popper>
+                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                      {{ $t('audit.author.unknown.hint') }}
+                    </span>
+                  </template>
+                </VTooltip>
               </template>
 
               <template #member v-if="event.context?.member">
@@ -161,12 +177,13 @@ import {
   mdiGateOpen,
   mdiHeadCogOutline,
   mdiHelp,
+  mdiInformationOutline,
   mdiKeyChainVariant,
   mdiLockOpenOutline,
   mdiTicket,
 } from '@mdi/js';
 import dayjs from 'dayjs';
-import { isEmpty } from 'lodash';
+import { compact, isEmpty } from 'lodash';
 import { PropType, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -185,6 +202,14 @@ const props = defineProps({
     default: false,
   },
 });
+
+const authorName = computed(() => props.event.author?.name || props.event.author?.email);
+const memberName = computed(
+  () =>
+    compact([props.event.context?.member.firstName, props.event.context?.member.lastName]).join(
+      ' ',
+    ) || props.event.context?.member.email,
+);
 
 const essentialContext = computed(() => {
   if (!Object.keys(AuditAction).includes(props.event?.action)) {
