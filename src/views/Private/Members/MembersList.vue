@@ -57,7 +57,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
                 <SvgIcon
                   aria-hidden="true"
@@ -87,7 +87,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-gray-600 dark:bg-neutral-800 dark:text-gray-300">
+                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -150,7 +150,7 @@
               class="block transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-                params: { id: member._id },
+                params: { memberId: member._id },
               }">
               <MembersListCard :member="member" />
             </RouterLink>
@@ -239,10 +239,10 @@ import {
   isMemberBalanceInsufficient,
   isMembershipNonCompliant,
 } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import { useInfiniteScroll } from '@vueuse/core';
 import dayjs from 'dayjs';
@@ -323,27 +323,25 @@ const {
   isFetching,
   data: members,
   error,
-} = useQuery({
-  queryKey: ['members'],
-  queryFn: () => getAllMembers(),
-  refetchOnMount: true,
-  refetchOnWindowFocus: true,
-  retry: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.all(),
+    queryFn: () => getAllMembers(),
+  })),
+);
 
 const {
   isPending: isPendingVotingMembers,
   isFetching: isFetchingVotingMembers,
   data: votingMembers,
   error: votingMembersError,
-} = useQuery({
-  queryKey: ['members/voting'],
-  queryFn: () => getVotingMembers(),
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  retry: false,
-  enabled: computed(() => props.tab === 'voting'),
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.allVoting(),
+    queryFn: () => getVotingMembers(),
+    enabled: props.tab === 'voting',
+  })),
+);
 
 const filteredList = computed(() => {
   return (members.value || [])

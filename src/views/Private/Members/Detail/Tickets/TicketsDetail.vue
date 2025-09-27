@@ -122,7 +122,7 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberTickets, Ticket, updateMemberTicket } from '@/services/api/tickets';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiDeleteOutline, mdiTicket } from '@mdi/js';
@@ -161,13 +161,12 @@ const {
   isFetching: isFetchingTickets,
   data: tickets,
   errorText: ticketsErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'tickets'],
-  queryFn: () => getAllMemberTickets(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.ticketsById(props.memberId),
+    queryFn: () => getAllMemberTickets(props.memberId),
+  })),
+);
 
 const selectedTicket = computed<Ticket | null>(() => {
   return tickets.value?.find((ticket) => `${ticket._id}` === `${props.id}`) ?? null;
@@ -187,16 +186,16 @@ const vuelidate = useVuelidate(rules, state, { $scope: 'tickets-detail' });
 const onChanged = async () => {
   await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId)],
+    queryKey: membersQueryKeys.byId(props.memberId),
   });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId), 'history'],
+    queryKey: membersQueryKeys.ticketsById(props.memberId),
   });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId), 'activity'],
+    queryKey: membersQueryKeys.historyById(props.memberId),
   });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId), 'tickets'],
+    queryKey: membersQueryKeys.activityById(props.memberId),
   });
 };
 

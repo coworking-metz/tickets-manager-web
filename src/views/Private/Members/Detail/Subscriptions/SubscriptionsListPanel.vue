@@ -18,13 +18,13 @@
     </header>
 
     <div class="relative flex shrink grow flex-col overflow-hidden">
+      <LoadingSpinner v-if="isFetchingSubscriptions" class="mx-auto my-16 size-16" />
       <AppAlert
-        v-if="subscriptionsErrorText"
+        v-else-if="subscriptionsErrorText"
         class="m-4"
         :description="subscriptionsErrorText"
         :title="$t('members.detail.orders.subscriptions.onFetch.fail')"
         type="error" />
-      <LoadingSpinner v-if="isFetchingSubscriptions" class="mx-auto my-16 size-16" />
       <ul
         v-else-if="subscriptions"
         :class="[
@@ -118,7 +118,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
@@ -138,13 +138,12 @@ const {
   isFetching: isFetchingSubscriptions,
   data: subscriptions,
   errorText: subscriptionsErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
-  queryFn: () => getAllMemberSubscriptions(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.subscriptionsById(props.memberId),
+    queryFn: () => getAllMemberSubscriptions(props.memberId),
+  })),
+);
 
 const hasActiveSubscription = computed(
   () =>

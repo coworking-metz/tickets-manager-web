@@ -1,5 +1,5 @@
 <template>
-  <AppPanel body-class="!pb-1" @submit.prevent="onSubmit">
+  <AppPanel body-class="!pb-1" tag="form" @submit.prevent="onSubmit">
     <div class="flex flex-col items-stretch">
       <div class="flex flex-row flex-wrap gap-x-6">
         <AppTextField
@@ -10,6 +10,7 @@
           disabled
           :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.firstname.label')"
+          :loading="isFetchingMember"
           name="first-name"
           required
           type="text"
@@ -22,6 +23,7 @@
           disabled
           :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.lastname.label')"
+          :loading="isFetchingMember"
           name="last-name"
           required
           type="text"
@@ -37,6 +39,7 @@
           disabled
           :errors="vuelidate.email.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.email.label')"
+          :loading="isFetchingMember"
           name="email"
           required
           type="email"
@@ -47,6 +50,7 @@
           class="min-w-48 shrink grow basis-0"
           disabled
           :label="$t('members.detail.profile.birthdate.label')"
+          :loading="isFetchingMember"
           :model-value="dayjs(state.birthdate).format('L')"
           name="birthdate"
           :prepend-icon="mdiCakeVariantOutline"
@@ -56,28 +60,38 @@
 
       <AppTextField
         id="badge"
-        v-model="state.badgeId"
         class="min-w-48 shrink grow basis-0"
         :description="$t('members.detail.profile.badge.description')"
         :label="$t('members.detail.profile.badge.label')"
+        :loading="isFetchingMember"
+        max-length="11"
+        :model-value="state.badgeId"
         name="badge"
         placeholder="A1:2B:C3:4D"
         :prepend-icon="mdiCreditCardOutline"
-        type="text">
+        type="text"
+        @update:model-value="onBadgeIdInput">
         <template #after>
-          <button
-            class="relative -ml-px mt-1 inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            type="button"
+          <AppButtonPlain
+            class="relative -ml-px mt-1 self-stretch rounded-none rounded-r-md dark:focus:ring-offset-neutral-800"
+            color="gray"
+            :icon="mdiCellphoneNfc"
             @click="state.isScannerVisible = true">
-            <SvgIcon aria-hidden="true" class="size-5" :path="mdiCellphoneNfc" type="mdi" />
-            <span>{{ $t('members.detail.profile.badge.scan') }}</span>
-          </button>
+            {{ $t('members.detail.profile.badge.scan') }}
+          </AppButtonPlain>
         </template>
       </AppTextField>
 
       <NFCScannerDialog
         v-model="state.isScannerVisible"
         @update:identifier="(id) => (state.badgeId = id)" />
+
+      <AppAlert
+        v-if="memberErrorText"
+        class="mb-5"
+        :description="memberErrorText"
+        :title="$t('members.detail.onFetch.fail')"
+        type="error" />
     </div>
 
     <template #footer>
@@ -114,19 +128,21 @@ import {
   scrollToFirstError,
 } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { Member, updateMemberBagdeId } from '@/services/api/members';
+import { getMember, updateMemberBagdeId } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { compact } from 'lodash';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });
@@ -147,6 +163,17 @@ const state = reactive({
   isScannerVisible: false,
 });
 
+const {
+  isFetching: isFetchingMember,
+  data: member,
+  errorText: memberErrorText,
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.byId(props.memberId),
+    queryFn: () => getMember(props.memberId),
+  })),
+);
+
 const rules = computed(() => ({
   firstname: {
     // required: withAppI18nMessage(required)
@@ -162,6 +189,14 @@ const rules = computed(() => ({
 
 const vuelidate = useVuelidate(rules, state);
 
+const onBadgeIdInput = (userInput: string) => {
+  let badgeId = userInput.toUpperCase().replace(/\W/gi, ''); // Remove all non-alphanumeric characters;
+  if (badgeId.length >= 3) {
+    badgeId = badgeId.replace(/(.{2})/g, '$1:'); // Append a colon (:) after every second character;
+  }
+  state.badgeId = badgeId.slice(0, 11);
+};
+
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
   if (!isValid) {
@@ -171,20 +206,20 @@ const onSubmit = async () => {
   }
 
   state.isSubmitting = true;
-  updateMemberBagdeId(props.member._id, state.badgeId as string)
+  updateMemberBagdeId(props.memberId, state.badgeId as string)
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.onUpdate.success', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id)],
+        queryKey: membersQueryKeys.byId(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id), 'history'],
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
     })
     .catch(handleSilentError)
@@ -192,7 +227,7 @@ const onSubmit = async () => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.profile.onUpdate.fail', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
       );
       return Promise.reject(error);
@@ -203,14 +238,14 @@ const onSubmit = async () => {
 };
 
 watch(
-  () => props.member,
-  (member) => {
-    if (member) {
-      state.firstname = member.firstName || null;
-      state.lastname = member.lastName || null;
-      state.email = member.email || null;
-      state.birthdate = member.birthDate || null;
-      state.badgeId = member.badgeId || null;
+  member,
+  (fetchedMember) => {
+    if (fetchedMember) {
+      state.firstname = fetchedMember.firstName || null;
+      state.lastname = fetchedMember.lastName || null;
+      state.email = fetchedMember.email || null;
+      state.birthdate = fetchedMember.birthDate || null;
+      state.badgeId = fetchedMember.badgeId || null;
     }
   },
   { immediate: true },

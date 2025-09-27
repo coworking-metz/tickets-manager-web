@@ -12,11 +12,11 @@
         tag="p">
         <template #author>
           <RouterLink
-            v-if="event.author?._id && route.params.id !== event.author._id"
+            v-if="event.author?._id && route.params.memberId !== event.author._id"
             class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: event.author._id },
+              params: { memberId: event.author._id },
             }">
             {{ authorName }}
           </RouterLink>
@@ -30,11 +30,11 @@
 
         <template #member v-if="event.context?.member">
           <RouterLink
-            v-if="route.params.id !== event.context.member._id"
+            v-if="route.params.memberId !== event.context.member._id"
             class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-              params: { id: event.context.member._id },
+              params: { memberId: event.context.member._id },
             }">
             {{ memberName || $t('audit.author.unknown') }}
           </RouterLink>

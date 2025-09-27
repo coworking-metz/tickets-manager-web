@@ -5,20 +5,21 @@
     </template>
 
     <slot name="action">
-      <AppButton
-        class="mt-6 border border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500"
+      <AppButtonPlain
+        class="mt-6 dark:focus:ring-offset-neutral-800"
+        color="neutral"
         :icon="mdiRefresh"
         :loading="state.isReloading"
         @click="onReload">
         {{ $t('action.reload') }}
-      </AppButton>
+      </AppButtonPlain>
     </slot>
   </EmptyState>
 </template>
 
 <script setup lang="ts">
 import EmptyState from './EmptyState.vue';
-import AppButton from './form/AppButton.vue';
+import AppButtonPlain from './form/AppButtonPlain.vue';
 import ErrorCat from '@/assets/animations/error-cat.lottie';
 import { mdiRefresh } from '@mdi/js';
 import { isObjectLike } from 'lodash';

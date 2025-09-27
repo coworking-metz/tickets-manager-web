@@ -137,13 +137,13 @@ import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { isSilentError } from '@/helpers/errors';
 import { AttendancePeriod, getAttendancePerDay } from '@/services/api/attendance';
+import { attendanceQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { useQuery } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
-import { computed, reactive, watch, onMounted } from 'vue';
+import { computed, onMounted, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -192,11 +192,13 @@ const {
   isFetching,
   data: attendance,
   error: attendanceError,
-} = useQuery(
+} = useAppQuery(
   computed(() => ({
-    queryKey: ['attendance', calendarPeriod.value?.start, calendarPeriod.value?.end],
-    queryFn: ({ queryKey: [_attendance, start, end] }: { queryKey: any[] }) =>
-      getAttendancePerDay(start, end),
+    queryKey: attendanceQueryKeys.allInPeriod(
+      calendarPeriod.value?.start as string,
+      calendarPeriod.value?.end as string,
+    ),
+    queryFn: () => getAttendancePerDay(calendarPeriod.value?.start, calendarPeriod.value?.end),
     staleTime: 300_000,
     enabled: !!calendarPeriod.value?.start && !!calendarPeriod.value?.end,
   })),

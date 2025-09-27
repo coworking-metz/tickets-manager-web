@@ -34,7 +34,7 @@ const colors = computed(() => {
     case 'neutral':
       return 'bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-500 border border-gray-300 dark:bg-neutral-800 dark:text-gray-300 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-700/80 dark:focus:ring-neutral-700 dark:border-neutral-600';
     default:
-      return 'bg-gray-300 text-gray-900 hover:bg-gray-400/50 active:bg-gray-400/80 focus:ring-gray-500 ';
+      return 'bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:ring-gray-400 border border-gray-300 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80 dark:border-neutral-600';
   }
 });
 </script>

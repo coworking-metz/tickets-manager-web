@@ -10,7 +10,7 @@
         state.shouldScroll ? 'overflow-y-scroll' : 'overflow-y-hidden',
       ]"
       role="list">
-      <LoadingSpinner v-if="isPendingHistory" class="m-auto size-16" />
+      <LoadingSpinner v-if="isPendingHistory" class="mx-auto my-16 size-16" />
       <ErrorState
         v-else-if="historyErrorText"
         class="m-auto"
@@ -50,16 +50,16 @@ import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
-import { Member, getMemberAuditEvents } from '@/services/api/members';
-import { useAppQuery } from '@/services/query';
+import { getMemberAuditEvents } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown } from '@mdi/js';
-import { PropType, computed, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 
 const MIN_HISTORY_EVENTS = 3;
 
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });
@@ -73,11 +73,20 @@ const {
   isFetching: isFetchingHistory,
   data: history,
   errorText: historyErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.member._id), 'history'],
-  queryFn: () => getMemberAuditEvents(props.member._id),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.historyById(props.memberId),
+    queryFn: () => getMemberAuditEvents(props.memberId),
+  })),
+);
+
+watch(
+  () => props.memberId,
+  (newMemberId, oldMemberId) => {
+    // scroll to top to let the user know that member has changed
+    if (newMemberId !== oldMemberId) {
+      state.shouldScroll = false;
+    }
+  },
+);
 </script>

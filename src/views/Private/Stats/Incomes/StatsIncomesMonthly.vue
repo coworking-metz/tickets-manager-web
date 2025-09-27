@@ -23,7 +23,7 @@
         {{ $t('stats.incomes.monthly.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.incomes.monthly.summary.average.label') }}
@@ -127,6 +127,7 @@ import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { handleSilentError } from '@/helpers/errors';
 import { IncomePeriodWithTotal, getIncomesPerMonth } from '@/services/api/incomes';
+import { useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
 import { Head } from '@unhead/vue/components';
@@ -156,6 +157,7 @@ const props = defineProps({
 
 const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
+const currentTheme = useTheme();
 const state = reactive({
   isFetchingIncomes: false,
   incomes: [] as IncomePeriodWithTotal<'month'>[],
@@ -179,13 +181,14 @@ const averageCharges = computed(() => {
 
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
+    className: '!p-0 !border-0',
     formatter: (params) => {
       const {
         data: { incomes, tickets, subscriptions, charges },
         date, // @ts-ignore
       } = state.incomes[params[0].dataIndex];
       return `
-        <dl class="flex flex-col gap-1">
+        <dl class="flex flex-col gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('MMMM YYYY')}
           </dt>
@@ -241,7 +244,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           <div class="flex flex-row justify-between place-items-end">
             <dt class="flex flex-row gap-1 items-center text-base font-normal">
               <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                theme.charlestonGreen
+                currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite
               };"></span>
               ${i18n.t('stats.incomes.monthly.graph.threshold')}
             </dt>

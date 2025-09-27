@@ -35,7 +35,7 @@
             <template #after>
               <Menu as="div" class="relative -ml-px block">
                 <MenuButton
-                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                   tabindex="1">
                   <SvgIcon
                     aria-hidden="true"
@@ -65,7 +65,7 @@
                   leave-from-class="transform opacity-100 scale-100"
                   leave-to-class="transform opacity-0 scale-95">
                   <MenuItems
-                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:bg-neutral-800">
+                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                     <div class="py-1">
                       <MenuItem
                         v-for="listSorter in ALL_LIST_SORTERS"
@@ -73,9 +73,8 @@
                         v-slot="{ active, close }">
                         <RouterLink
                           :class="[
-                            active
-                              ? 'bg-gray-100 text-gray-900 dark:text-gray-100'
-                              : 'text-gray-700',
+                            active &&
+                              'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
                             'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                           ]"
                           replace
@@ -126,7 +125,7 @@
               class="flex w-full transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
               :to="{
                 name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-                params: { id: member._id },
+                params: { memberId: member._id },
               }">
               <AttendingMemberCard class="w-full" :member="member">
                 <template #append>

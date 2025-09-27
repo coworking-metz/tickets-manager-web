@@ -1,7 +1,10 @@
 <template>
   <aside class="flex w-28 flex-col items-center overflow-y-auto bg-amber-500 dark:bg-amber-800">
     <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
-      <img alt="Coworking Metz" class="h-16 w-auto" :src="monoLogo" />
+      <LogoMono
+        alt="Coworking Metz"
+        background-color="#FFFFFF"
+        class="h-16 w-auto text-amber-500 dark:text-amber-800" />
     </div>
     <nav class="my-6 flex w-full grow flex-col gap-1 px-2">
       <router-link
@@ -65,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import monoLogo from '@/assets/logo-mono-inverted.svg';
+import LogoMono from '../LogoMono.vue';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';

@@ -54,8 +54,8 @@
             </div>
           </template>
           <template v-else-if="loading">
-            <div class="h-4 w-32 rounded bg-slate-200 dark:bg-slate-700/50" />
-            <div class="mt-2 h-4 w-48 rounded bg-slate-200 dark:bg-slate-700/50" />
+            <LoadingSkeleton class="h-4 w-32" />
+            <LoadingSkeleton class="mt-2 h-4 w-48" />
           </template>
         </div>
         <i18n-t
@@ -101,6 +101,7 @@
 
 <script setup lang="ts">
 import MembersThumbnail from './MembersThumbnail.vue';
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import {
   MemberListItem,
   isMemberBalanceInsufficient,

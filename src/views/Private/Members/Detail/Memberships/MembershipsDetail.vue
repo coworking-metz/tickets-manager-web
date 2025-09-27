@@ -127,7 +127,7 @@ import {
   Membership,
   updateMemberMembership,
 } from '@/services/api/memberships';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarStartOutline, mdiCheck, mdiClose, mdiDeleteOutline } from '@mdi/js';
@@ -166,13 +166,12 @@ const {
   isFetching: isFetchingMemberships,
   data: memberships,
   errorText: membershipsErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'memberships'],
-  queryFn: () => getAllMemberMemberships(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.membershipsById(props.memberId),
+    queryFn: () => getAllMemberMemberships(props.memberId),
+  })),
+);
 
 const selectedMembership = computed<Membership | null>(() => {
   return memberships.value?.find((membership) => `${membership._id}` === `${props.id}`) ?? null;
@@ -188,13 +187,13 @@ const vuelidate = useVuelidate(rules, state, { $scope: 'memberships-detail' });
 const onChanged = async () => {
   await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId)],
+    queryKey: membersQueryKeys.byId(props.memberId),
   });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId), 'history'],
+    queryKey: membersQueryKeys.membershipsById(props.memberId),
   });
   queryClient.invalidateQueries({
-    queryKey: ['members', computed(() => props.memberId), 'memberships'],
+    queryKey: membersQueryKeys.historyById(props.memberId),
   });
 };
 

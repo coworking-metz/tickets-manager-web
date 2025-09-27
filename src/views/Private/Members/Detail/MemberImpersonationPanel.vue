@@ -12,7 +12,7 @@
         color="indigo"
         :href="
           HTTP.getUri({
-            url: `/api/auth/impersonate/${member._id}`,
+            url: `/api/auth/impersonate/${memberId}`,
             params: {
               refreshToken: authStore.refreshToken,
               accessToken: authStore.accessToken,
@@ -30,15 +30,13 @@
 <script setup lang="ts">
 import AppButtonTonal from '@/components/form/AppButtonTonal.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
-import { Member } from '@/services/api/members';
 import HTTP from '@/services/http';
 import { useAuthStore } from '@/store/auth';
 import { mdiDramaMasks } from '@mdi/js';
-import { PropType } from 'vue';
 
 defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });

@@ -5,7 +5,7 @@
       <AppPeriodField
         id="incomes-period"
         v-model="state.period"
-        class="mx-3 max-w-96 grow-0"
+        class="mx-3 w-full sm:max-w-96 sm:grow-0"
         hide-details
         :label="$t('stats.incomes.period.label')"
         :placeholder="$t('stats.incomes.period.placeholder')"
@@ -14,8 +14,8 @@
           <component
             :is="previousPeriod ? 'RouterLink' : 'button'"
             :class="[
-              'relative -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
-              previousPeriod && 'hover:bg-gray-100',
+              'relative -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
+              previousPeriod && 'hover:bg-gray-100 dark:hover:bg-zinc-700/50',
             ]"
             :disabled="!previousPeriod"
             :to="{
@@ -33,8 +33,8 @@
           <component
             :is="nextPeriod ? 'RouterLink' : 'button'"
             :class="[
-              'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
-              nextPeriod && 'hover:bg-gray-100',
+              'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
+              nextPeriod && 'hover:bg-gray-100 dark:hover:bg-zinc-700/50',
             ]"
             :disabled="!nextPeriod"
             :to="{
@@ -56,7 +56,7 @@
         </p>
         <nav aria-label="Breadcrumb" class="flex overflow-x-auto px-3 max-sm:w-screen">
           <ol
-            class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:bg-neutral-800"
+            class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:border-neutral-600 dark:bg-neutral-800"
             role="list">
             <li
               v-for="(frequency, index) in frequencies"
@@ -66,7 +66,7 @@
                 <svg
                   v-if="index !== 0"
                   aria-hidden="true"
-                  class="mr-4 h-full w-6 shrink-0 text-gray-200"
+                  class="mr-4 h-full w-6 shrink-0 text-gray-200 dark:text-neutral-600"
                   fill="currentColor"
                   preserveAspectRatio="none"
                   viewBox="0 0 24 44"

@@ -2,16 +2,13 @@
   "background": {
     "label": "Coworking photo"
   },
-  "description": "Manage the operation of Coworking Metz through a pleasant and intuitive interface.",
+  "description": "Manage the operation of Coworking Metz organization through a pleasant and intuitive interface.",
   "head": {
     "title": "Connection"
   },
   "headline": {
     "readMore": "Learn more",
     "text": "Coworking Metz is a shared office space"
-  },
-  "logo": {
-    "label": "Coworking Metz"
   },
   "onLoggedOut": {
     "success": "You have been successfully logged out."

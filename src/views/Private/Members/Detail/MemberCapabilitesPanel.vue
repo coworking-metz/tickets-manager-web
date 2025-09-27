@@ -6,7 +6,8 @@
         :description="$t('members.detail.profile.capabilities.manager.description')"
         disabled
         :label="$t('members.detail.profile.capabilities.manager.label')"
-        :model-value="member.isAdmin" />
+        :loading="isFetchingMember"
+        :model-value="member?.isAdmin" />
       <AppSwitchField
         v-model="state.canUnlockGate"
         as="li"
@@ -35,16 +36,7 @@
         v-if="capabilitiesErrorText"
         :description="capabilitiesErrorText"
         :title="$t('members.detail.profile.capabilities.onFetch.fail')"
-        type="error">
-        <template #action>
-          <AppButton
-            class="self-start border border-gray-300 bg-white text-base text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-gray-400 sm:w-auto sm:text-sm dark:bg-neutral-800"
-            :loading="isFetchingCapabilites"
-            @click="refetchCapabilities">
-            {{ $t('action.retry') }}
-          </AppButton>
-        </template>
-      </AppAlert>
+        type="error" />
     </ul>
 
     <template #footer>
@@ -71,7 +63,6 @@
 
 <script setup lang="ts">
 import AppAlert from '@/components/form/AppAlert.vue';
-import AppButton from '@/components/form/AppButton.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSwitchField from '@/components/form/AppSwitchField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
@@ -81,19 +72,20 @@ import {
   scrollToFirstError,
 } from '@/helpers/errors';
 import { UserCapabilities } from '@/services/api/auth';
-import { Member, getMemberCapabilities, updateMemberCapabilities } from '@/services/api/members';
-import { useAppQuery } from '@/services/query';
+import { getMember, getMemberCapabilities, updateMemberCapabilities } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiCheckAll } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { compact } from 'lodash';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['update:member']);
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });
@@ -111,17 +103,23 @@ const state = reactive({
   hasFailValidationOnce: false as boolean,
 });
 
+const { isFetching: isFetchingMember, data: member } = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.byId(props.memberId),
+    queryFn: () => getMember(props.memberId),
+  })),
+);
+
 const {
   isFetching: isFetchingCapabilites,
   data: capabilities,
   errorText: capabilitiesErrorText,
-  refetch: refetchCapabilities,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.member._id), 'capabilities'],
-  queryFn: () => getMemberCapabilities(props.member._id),
-  retry: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.capabilitiesById(props.memberId),
+    queryFn: () => getMemberCapabilities(props.memberId),
+  })),
+);
 
 const rules = computed(() => ({}));
 
@@ -137,7 +135,7 @@ const onSubmit = async () => {
 
   state.isSubmitting = true;
   (async () => {
-    await updateMemberCapabilities(props.member._id, {
+    await updateMemberCapabilities(props.memberId, {
       [UserCapabilities.UNLOCK_GATE]: state.canUnlockGate,
       [UserCapabilities.PARKING_ACCESS]: state.hasParkingAccess,
       [UserCapabilities.UNLOCK_DECK_DOOR]: state.canUnlockDeckDoor,
@@ -147,13 +145,13 @@ const onSubmit = async () => {
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.capabilities.onUpdate.success', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id), 'history'],
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
     })
     .catch(handleSilentError)
@@ -161,7 +159,7 @@ const onSubmit = async () => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.profile.capabilities.onUpdate.fail', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
       );
       return Promise.reject(error);

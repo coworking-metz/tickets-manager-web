@@ -13,39 +13,11 @@
     </p>
     <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <div class="grow sm:max-w-64">
-        <!-- @vue-ignore -->
-        <vue-tailwind-datepicker
-          id="activity-period"
+        <AppPeriodField
           v-model="state.period"
-          :as-single="width < 640"
-          :formatter="{
-            date: DATE_FORMAT,
-            month: 'MMM',
-          }"
-          :i18n="i18n.locale.value.substring(0, 2)"
-          :options="{
-            footer: {
-              apply: $t('action.apply'),
-              cancel: $t('action.cancel'),
-            },
-          }"
-          :shortcuts="shortcuts"
-          v-slot="{}"
-          use-range>
-          <AppTextField
-            class="w-full"
-            hide-details
-            :model-value="
-              state.period.start && state.period.end
-                ? $t('audit.list.period.value', {
-                    start: dayjs(state.period.start).format('ll'),
-                    end: dayjs(state.period.end).format('ll'),
-                  })
-                : ''
-            "
-            :placeholder="$t('audit.list.period.placeholder')"
-            readonly />
-        </vue-tailwind-datepicker>
+          class="min-w-52 shrink grow basis-0"
+          hide-details
+          :placeholder="$t('audit.list.period.placeholder')" />
       </div>
 
       <div class="w-full sm:mx-0 sm:max-w-lg">
@@ -62,7 +34,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
                 <SvgIcon
                   aria-hidden="true"
@@ -92,7 +64,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:bg-neutral-800">
+                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -100,7 +72,8 @@
                       v-slot="{ active, close }">
                       <RouterLink
                         :class="[
-                          active ? 'bg-gray-100 text-gray-900 dark:text-gray-100' : 'text-gray-700',
+                          active &&
+                            'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
                           'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
                         replace
@@ -164,22 +137,22 @@
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
+import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
-import { useAppQuery } from '@/services/query';
+import { auditEventsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useDebounceFn, useInfiniteScroll, useWindowSize } from '@vueuse/core';
+import { useDebounceFn, useInfiniteScroll } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { isNil } from 'lodash';
+import { compact, isNil } from 'lodash';
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 
 interface ListSorter {
   key: string;
@@ -230,7 +203,6 @@ const props = defineProps({
   },
 });
 
-const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
@@ -252,9 +224,10 @@ const {
   errorText: historyErrorText,
 } = useAppQuery(
   computed(() => ({
-    queryKey: ['history', state.period.start, state.period.end],
+    queryKey: auditEventsQueryKeys.allInPeriod(state.period.start, state.period.end),
     queryFn: () => getAllAuditEvents(state.period.start, state.period.end),
-    retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   })),
 );
 
@@ -269,6 +242,7 @@ const filteredList = computed(() => {
         event.author && event.author._id === event.context?.member?._id
           ? i18n.t(`audit.action.${event.action}.self`)
           : i18n.t(`audit.action.${event.action}.message`),
+        compact([event.context?.member?.firstName, event.context?.member?.lastName]).join(' '),
         JSON.stringify(event),
       ),
     )
@@ -366,39 +340,4 @@ watch(
     }
   },
 );
-
-const shortcuts = computed(() => () => [
-  {
-    label: i18n.t('audit.list.period.shortcuts.today'),
-    atClick: () => {
-      const now = dayjs();
-      return [now.startOf('day').format(DATE_FORMAT), now.add(1, 'day').format(DATE_FORMAT)];
-    },
-  },
-  {
-    label: i18n.t('audit.list.period.shortcuts.currentWeek'),
-    atClick: () => {
-      const now = dayjs();
-      return [now.startOf('week').format(DATE_FORMAT), now.endOf('week').format(DATE_FORMAT)];
-    },
-  },
-  {
-    label: i18n.t('audit.list.period.shortcuts.last7days'),
-    atClick: () => {
-      const now = dayjs();
-      return [now.subtract(7, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
-    },
-  },
-  {
-    label: i18n.t('audit.list.period.shortcuts.last30days'),
-    atClick: () => {
-      const now = dayjs();
-      return [now.subtract(30, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
-    },
-  },
-  {
-    label: i18n.t('audit.list.period.shortcuts.sinceFirstDay'),
-    atClick: () => [dayjs('01-01-2014').format(DATE_FORMAT)],
-  },
-]);
 </script>

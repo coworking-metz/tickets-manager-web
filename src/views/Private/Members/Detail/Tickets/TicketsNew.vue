@@ -73,6 +73,7 @@ import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
 import { addMemberTicket } from '@/services/api/tickets';
+import { membersQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiClose, mdiPlus, mdiTicket } from '@mdi/js';
@@ -138,16 +139,16 @@ const onSubmit = async () => {
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
+        queryKey: membersQueryKeys.byId(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
+        queryKey: membersQueryKeys.ticketsById(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'tickets'],
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
+        queryKey: membersQueryKeys.activityById(props.memberId),
       });
     })
     .catch(handleSilentError)

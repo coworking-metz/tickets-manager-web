@@ -14,13 +14,13 @@
     </header>
 
     <div class="relative flex shrink grow flex-col overflow-hidden">
+      <LoadingSpinner v-if="isFetchingMemberships" class="mx-auto my-16 size-16" />
       <AppAlert
-        v-if="membershipsErrorText"
+        v-else-if="membershipsErrorText"
         class="m-4"
         :description="membershipsErrorText"
         :title="$t('members.detail.orders.memberships.onFetch.fail')"
         type="error" />
-      <LoadingSpinner v-if="isFetchingMemberships" class="mx-auto my-16 size-16" />
       <ul
         v-else-if="memberships"
         :class="[
@@ -92,7 +92,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberMemberships } from '@/services/api/memberships';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { computed, reactive } from 'vue';
@@ -116,11 +116,10 @@ const {
   isFetching: isFetchingMemberships,
   data: memberships,
   errorText: membershipsErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'memberships'],
-  queryFn: () => getAllMemberMemberships(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.membershipsById(props.memberId),
+    queryFn: () => getAllMemberMemberships(props.memberId),
+  })),
+);
 </script>

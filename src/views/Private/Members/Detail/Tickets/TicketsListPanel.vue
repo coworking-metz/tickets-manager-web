@@ -24,13 +24,13 @@
     </header>
 
     <div class="relative flex shrink grow flex-col overflow-hidden">
+      <LoadingSpinner v-if="isFetchingTickets" class="mx-auto my-16 size-16" />
       <AppAlert
-        v-if="ticketsErrorText"
+        v-else-if="ticketsErrorText"
         class="m-4"
         :description="ticketsErrorText"
         :title="$t('members.detail.orders.tickets.onFetch.fail')"
         type="error" />
-      <LoadingSpinner v-if="isFetchingTickets" class="mx-auto my-16 size-16" />
       <ul
         v-else-if="tickets"
         :class="[
@@ -109,7 +109,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberTickets } from '@/services/api/tickets';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { computed, reactive } from 'vue';
@@ -132,13 +132,12 @@ const {
   isFetching: isFetchingTickets,
   data: tickets,
   errorText: ticketsErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'tickets'],
-  queryFn: () => getAllMemberTickets(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.ticketsById(props.memberId),
+    queryFn: () => getAllMemberTickets(props.memberId),
+  })),
+);
 
 const route = useRoute();
 const state = reactive({

@@ -22,8 +22,8 @@
             index === 0 && 'rounded-t-md',
             index === options.length - 1 && 'rounded-b-md',
             checked
-              ? 'z-10 border-orange-200 bg-orange-50 dark:border-gray-700 dark:bg-orange-950'
-              : 'border-gray-200 dark:border-gray-700',
+              ? 'z-10 border-orange-200 bg-orange-50 dark:border-stone-700 dark:bg-orange-950'
+              : 'border-gray-200 dark:border-stone-700',
             isInvalid &&
               `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
               focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
@@ -37,7 +37,7 @@
                 transition-all`,
                 checked
                   ? 'border-transparent bg-orange-500'
-                  : 'border-gray-300 bg-white dark:border-gray-600 dark:bg-neutral-800',
+                  : 'border-gray-300 bg-white dark:border-stone-600 dark:bg-neutral-800',
                 active && 'ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-orange-950',
                 active && isInvalid && 'ring-2 ring-red-300 ring-offset-2 dark:ring-red-500',
               ]">

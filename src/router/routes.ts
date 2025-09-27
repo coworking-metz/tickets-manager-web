@@ -43,11 +43,11 @@ export const routes: RouteRecordRaw[] = [
             }),
           },
           {
-            path: ':id',
+            path: ':memberId',
             name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
             component: () => import('@/views/Private/Members/MembersDetail.vue'),
             props: (route) => ({
-              id: route.params.id,
+              memberId: route.params.memberId,
             }),
             children: [
               {

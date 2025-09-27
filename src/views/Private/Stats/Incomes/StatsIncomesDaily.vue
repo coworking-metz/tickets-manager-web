@@ -23,7 +23,7 @@
         {{ $t('stats.incomes.daily.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.incomes.daily.summary.average.label') }}
@@ -166,6 +166,7 @@ import { DATE_FORMAT } from '@/helpers/dates';
 import { isSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
 import { IncomePeriodWithTotal, getIncomesPerDay } from '@/services/api/incomes';
+import { statsQueryKeys } from '@/services/query';
 import { useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
 import { theme } from '@/styles/colors';
@@ -207,9 +208,8 @@ const {
   error: incomesError,
 } = useQuery<IncomePeriodWithTotal<'day'>[]>(
   computed(() => ({
-    queryKey: ['stats', 'incomes', props.from, props.to],
+    queryKey: statsQueryKeys.incomesInPeriod(props.from, props.to),
     queryFn: () => getIncomesPerDay(props.from, props.to),
-    staleTime: 300_000,
   })),
 );
 
@@ -254,7 +254,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
         date, // @ts-ignore
       } = (incomes.value ?? [])[params[0].dataIndex];
       return `
-        <dl class="flex flex-col gap-1 bg-white dark:bg-neutral-800 p-4 text-gray-700 dark:text-gray-300">
+        <dl class="flex flex-col gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('dddd LL')}
           </dt>

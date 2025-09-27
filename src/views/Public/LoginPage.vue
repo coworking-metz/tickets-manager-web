@@ -18,9 +18,7 @@
             aria-label="Global"
             class="flex items-center justify-between sm:h-10 lg:justify-start">
             <a class="-m-1.5 p-1.5" href="https://www.coworking-metz.fr">
-              <span class="sr-only">{{ $t('login.logo.label') }}</span>
-
-              <img :alt="$t('login.logo.label')" class="h-16 w-auto" :src="monoLogo" />
+              <LogoMono alt="Coworking Metz" class="h-16 w-auto text-white dark:text-stone-900" />
             </a>
           </nav>
         </div>
@@ -33,7 +31,8 @@
                 {{ $t('login.headline.text') }}
                 <a
                   class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500"
-                  href="https://www.coworking-metz.fr/">
+                  href="https://www.coworking-metz.fr/"
+                  target="_blank">
                   {{ $t('login.headline.readMore') }}
                   <SvgIcon
                     aria-hidden="true"
@@ -83,8 +82,8 @@
 </template>
 
 <script setup lang="ts">
-import monoLogo from '@/assets/logo-mono.png';
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
+import LogoMono from '@/components/LogoMono.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import HTTP from '@/services/http';
 import { useNotificationsStore } from '@/store/notifications';

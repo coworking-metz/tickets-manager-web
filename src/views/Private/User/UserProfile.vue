@@ -10,7 +10,7 @@
           class="group relative block shrink-0 self-start overflow-hidden rounded-lg"
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-            params: { id: authStore.user.id },
+            params: { memberId: authStore.user.id },
           }">
           <MembersThumbnail
             class="size-32 rounded-none text-5xl"

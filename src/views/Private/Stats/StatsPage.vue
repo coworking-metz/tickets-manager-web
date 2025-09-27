@@ -4,7 +4,7 @@
       <!-- Mobile navigation -->
       <Menu as="nav" class="relative inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800">
+          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-800">
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"
@@ -33,7 +33,7 @@
           leave-from-class="transform opacity-100 scale-100"
           leave-to-class="transform opacity-0 scale-95">
           <MenuItems
-            class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:divide-gray-700 dark:bg-neutral-800">
+            class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:divide-stone-700 dark:bg-neutral-800">
             <div class="py-1">
               <MenuItem
                 v-for="tab in tabs.filter(({ active }) => !active)"
@@ -83,10 +83,8 @@
               :key="tab.label"
               :aria-current="tab.active ? 'page' : undefined"
               :class="[
-                tab.active
-                  ? 'bg-indigo-50 bg-opacity-[50%]'
-                  : 'hover:bg-indigo-50 hover:bg-opacity-[50%]',
-                'group flex border-b border-gray-200 p-6 pr-3 dark:border-stone-700',
+                tab.active && 'bg-indigo-50/50 dark:bg-neutral-900/50',
+                'group flex border-b border-gray-200 p-6 pr-3 hover:bg-indigo-50/50 active:bg-indigo-50/70 dark:border-stone-700 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900/70',
               ]"
               :to="tab.to">
               <SvgIcon
@@ -111,7 +109,7 @@
         </nav>
 
         <!-- Main content -->
-        <div class="flex flex-1 flex-col xl:overflow-y-auto">
+        <div class="flex flex-1 flex-col xl:overflow-y-clip">
           <RouterView />
         </div>
       </div>

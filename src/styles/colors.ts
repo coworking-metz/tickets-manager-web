@@ -1,5 +1,6 @@
 // https://www.color-name.com/
 export const theme = {
+  miramonYellow: '#F9B000', // https://www.lameilleureagencedecommunication.com/realisations/conseil-strategie-globale/ville-de-metz/
   meatBrown: '#EAB234',
   maizeCrayola: '#EEC15D',
   peachYellow: '#F7E0AE',
@@ -12,4 +13,5 @@ export const theme = {
   frenchSkyBlue: '#7FA1FF',
   babyBlueEyes: '#A9C0FF',
   azureishWhite: '#D4E0FF',
+  parentolishedPine: '#5BB188',
 };

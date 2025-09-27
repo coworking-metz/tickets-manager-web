@@ -55,7 +55,7 @@
         {{ $t('stats.activity.daily.summary.label') }}
       </h3>
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-gray-700 dark:bg-neutral-800">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('stats.activity.daily.summary.average.people.label') }}
@@ -223,13 +223,14 @@ const averageAttendance = computed(() => {
 
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
+    className: '!p-0 !border-0',
     formatter: (params) => {
       const {
         data: { coworkersCount, newCoworkersCount, coworkedDaysAmount },
         date, // @ts-ignore
       } = dailyActivities.value[params[0].dataIndex];
       return `
-        <dl class="flex flex-col min-w-48 items-end gap-1">
+        <dl class="flex flex-col min-w-48 items-end gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${dayjs(date).format('dddd LL')}
           </dt>

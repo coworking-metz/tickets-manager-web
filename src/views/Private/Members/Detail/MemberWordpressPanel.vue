@@ -15,11 +15,12 @@
         {{ $t('members.detail.wordpress.sync') }}
       </AppButtonTonal>
       <AppButtonText
-        v-if="!isNil(props.member.wpUserId)"
+        v-if="!isNil(member?.wpUserId)"
         class="dark:focus:ring-offset-neutral-800"
         color="indigo"
-        :href="buildMemberWordpressProfileUrl(props.member.wpUserId)"
+        :href="buildMemberWordpressProfileUrl(member.wpUserId)"
         :icon="mdiOpenInNew"
+        :loading="isFetchingMember"
         target="_blank">
         {{ $t('members.detail.wordpress.navigate') }}
       </AppButtonText>
@@ -31,17 +32,18 @@
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppButtonTonal from '@/components/form/AppButtonTonal.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
-import { Member, buildMemberWordpressProfileUrl, syncMember } from '@/services/api/members';
+import { buildMemberWordpressProfileUrl, getMember, syncMember } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiOpenInNew } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { isNil } from 'lodash';
-import { PropType, computed, reactive } from 'vue';
+import { compact, isNil } from 'lodash';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });
@@ -53,26 +55,42 @@ const state = reactive({
   isSyncing: false,
 });
 
+const { isFetching: isFetchingMember, data: member } = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.byId(props.memberId),
+    queryFn: () => getMember(props.memberId),
+  })),
+);
+
 const onSync = () => {
   state.isSyncing = true;
-  syncMember(props.member._id)
+  syncMember(props.memberId)
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.wordpress.onSync.success', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id)],
+        queryKey: membersQueryKeys.byId(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membersQueryKeys.ticketsById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membersQueryKeys.subscriptionsById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membersQueryKeys.membershipsById(props.memberId),
       });
     })
     .catch((error) => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.wordpress.onSync.fail', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
       );
       return Promise.reject(error);

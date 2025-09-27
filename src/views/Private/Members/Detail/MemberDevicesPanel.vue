@@ -1,5 +1,5 @@
 <template>
-  <AppPanel @submit.prevent="onSubmit">
+  <AppPanel tag="form" @submit.prevent="onSubmit">
     <div class="flex flex-col items-stretch">
       <fieldset class="flex flex-col">
         <legend class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
@@ -33,6 +33,7 @@
               :id="`mac-address-${index}`"
               class="app-mac-address"
               :errors="vuelidate.devices.$each.$message[index]"
+              :loading="isFetchingMember"
               max-length="17"
               :model-value="state.devices[index].macAddress"
               placeholder="A0:B1:C2:D3:E4:F5"
@@ -58,37 +59,29 @@
               </template>
 
               <template #after>
-                <RouterLink
-                  v-if="device.id"
-                  class="relative -ml-px inline-flex items-center gap-x-2 border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                <AppButtonPlain
+                  class="relative -ml-px rounded-none focus:z-10 dark:focus:ring-offset-neutral-800"
+                  color="gray"
+                  :icon="mdiSync"
                   :to="{
                     name: ROUTE_NAMES.SETTINGS,
                     query: {
                       macAddress: device.macAddress,
                     },
                   }">
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-5 text-gray-400"
-                    :path="mdiSync"
-                    type="mdi" />
                   <span class="max-sm:hidden">
                     {{ $t('members.detail.profile.macAddresses.compute') }}
                   </span>
-                </RouterLink>
-                <button
-                  class="relative -ml-px inline-flex items-center gap-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                  type="button"
+                </AppButtonPlain>
+                <AppButtonPlain
+                  class="relative -ml-px rounded-none rounded-r-md dark:focus:ring-offset-neutral-800"
+                  color="gray"
+                  :icon="mdiClose"
                   @click="() => onRemoveMacAddress(index)">
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-5 text-gray-400"
-                    :path="mdiClose"
-                    type="mdi" />
                   <span class="max-sm:hidden">
                     {{ $t('members.detail.profile.macAddresses.remove') }}
                   </span>
-                </button>
+                </AppButtonPlain>
               </template>
             </AppTextField>
           </li>
@@ -103,6 +96,13 @@
           </li>
         </ul>
       </fieldset>
+
+      <AppAlert
+        v-if="memberErrorText"
+        class="mt-5"
+        :description="memberErrorText"
+        :title="$t('members.detail.onFetch.fail')"
+        type="error" />
     </div>
 
     <template #footer>
@@ -138,18 +138,20 @@ import {
   scrollToFirstError,
 } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { Device, Member, updateMemberMacAddresses } from '@/services/api/members';
+import { Device, getMember, updateMemberMacAddresses } from '@/services/api/members';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiCheckAll, mdiClose, mdiLaptop, mdiOpenInNew, mdiPlus, mdiSync } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, macAddress, required } from '@vuelidate/validators';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { compact } from 'lodash';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  member: {
-    type: Object as PropType<Member>,
+  memberId: {
+    type: String,
     required: true,
   },
 });
@@ -163,6 +165,17 @@ const state = reactive({
   isSubmitting: false as boolean,
   hasFailValidationOnce: false as boolean,
 });
+
+const {
+  isFetching: isFetchingMember,
+  data: member,
+  errorText: memberErrorText,
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.byId(props.memberId),
+    queryFn: () => getMember(props.memberId),
+  })),
+);
 
 const rules = computed(() => ({
   devices: {
@@ -208,20 +221,23 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   (async () => {
     await updateMemberMacAddresses(
-      props.member._id,
+      props.memberId,
       state.devices.map(({ macAddress }) => macAddress),
     );
   })()
     .then(() => {
       notificationsStore.addNotification({
         message: i18n.t('members.detail.profile.macAddresses.onUpdate.success', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
         type: 'success',
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.member._id), 'history'],
+        queryKey: membersQueryKeys.byId(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
     })
     .catch(handleSilentError)
@@ -229,7 +245,7 @@ const onSubmit = async () => {
       notificationsStore.addErrorNotification(
         error,
         i18n.t('members.detail.profile.macAddresses.onUpdate.fail', {
-          name: [props.member.firstName, props.member.lastName].filter(Boolean).join(' '),
+          name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
       );
       return Promise.reject(error);
@@ -240,11 +256,11 @@ const onSubmit = async () => {
 };
 
 watch(
-  () => props.member,
-  (member) => {
-    if (member) {
+  member,
+  (fetchedMember) => {
+    if (fetchedMember) {
       state.devices =
-        member.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
+        fetchedMember.macAddresses.map((macAddress) => ({ id: macAddress, macAddress })) || [];
     }
   },
   { immediate: true },

@@ -241,7 +241,7 @@ import {
   getMemberActivity,
   updateMemberActivity,
 } from '@/services/api/members';
-import { useAppQuery } from '@/services/query';
+import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import {
   DialogTitle,
@@ -297,13 +297,12 @@ const {
   isFetching: isFetchingActivity,
   data: activity,
   errorText: activityErrorText,
-} = useAppQuery({
-  queryKey: ['members', computed(() => props.memberId), 'activity'],
-  queryFn: () => getMemberActivity(props.memberId),
-  retry: false,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+} = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.activityById(props.memberId),
+    queryFn: () => getMemberActivity(props.memberId),
+  })),
+);
 
 const selected = computed<Attendance | null>(() => {
   return activity.value?.find(({ date }) => `${date}` === `${props.date}`) ?? null;
@@ -361,13 +360,13 @@ const onSubmit = async () => {
       });
       await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
+        queryKey: membersQueryKeys.byId(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
+        queryKey: membersQueryKeys.activityById(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
     })
     .catch(handleSilentError)

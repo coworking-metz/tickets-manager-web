@@ -71,6 +71,7 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { addMemberSubscription } from '@/services/api/subscriptions';
+import { membersQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarEndOutline, mdiCalendarStartOutline, mdiClose, mdiPlus } from '@mdi/js';
@@ -135,16 +136,16 @@ const onSubmit = async () => {
         timeout: 3_000,
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId)],
+        queryKey: membersQueryKeys.byId(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'history'],
+        queryKey: membersQueryKeys.subscriptionsById(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'subscriptions'],
+        queryKey: membersQueryKeys.historyById(props.memberId),
       });
       queryClient.invalidateQueries({
-        queryKey: ['members', computed(() => props.memberId), 'activity'],
+        queryKey: membersQueryKeys.activityById(props.memberId),
       });
     })
     .catch(handleSilentError)
