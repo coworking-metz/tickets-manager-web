@@ -55,7 +55,7 @@
         </template>
 
         <template #started>
-          <strong class="font-bold text-gray-900 dark:text-gray-100">
+          <strong class="font-medium text-gray-900 dark:text-gray-100">
             {{ dayjs(event.context?.membershipStart).format('LL') }}
           </strong>
         </template>

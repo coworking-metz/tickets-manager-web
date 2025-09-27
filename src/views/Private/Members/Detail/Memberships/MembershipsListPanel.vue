@@ -1,17 +1,15 @@
 <template>
-  <section
-    class="flex flex-col bg-white shadow sm:overflow-hidden sm:rounded-md dark:bg-neutral-800">
-    <header
-      class="flex flex-row flex-wrap items-center justify-between gap-1 border-b border-gray-200 px-4 py-5 sm:p-6 dark:border-neutral-700">
-      <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-        {{ $t('members.detail.orders.memberships.title') }}
-      </h4>
+  <AppPanel
+    body-class="!p-0 flex flex-col overflow-hidden"
+    class="flex flex-col"
+    :title="$t('members.detail.orders.memberships.title')">
+    <template #title:append>
       <span
         v-if="!memberships?.length"
-        class="rounded-full bg-gray-500/10 px-3 py-1 leading-6 text-gray-400 ring-1 ring-inset ring-gray-500/20 sm:text-sm">
+        class="shrink-0 rounded-full bg-gray-500/10 px-3 py-1 leading-6 text-gray-400 ring-1 ring-inset ring-gray-500/20 sm:text-sm">
         {{ $t('members.detail.membership.none') }}
       </span>
-    </header>
+    </template>
 
     <div class="relative flex shrink grow flex-col overflow-hidden">
       <LoadingSpinner v-if="isFetchingMemberships" class="mx-auto my-16 size-16" />
@@ -31,7 +29,7 @@
         <li v-for="membership in memberships" :key="`membership-${membership._id}`">
           <RouterLink
             :class="[
-              'flex flex-col gap-1 px-6 py-4 hover:bg-slate-100 active:bg-slate-200 dark:hover:bg-zinc-800 dark:active:bg-zinc-900',
+              'flex flex-col gap-1 p-4 hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-800 dark:active:bg-zinc-900',
               route.params.membershipId === `${membership._id}` &&
                 route.name === ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL &&
                 'bg-slate-50 dark:bg-zinc-900/80',
@@ -72,8 +70,7 @@
       </button>
     </div>
 
-    <footer
-      class="mt-auto flex flex-row border-t border-t-gray-200 bg-gray-50 px-4 py-3 sm:px-6 dark:border-neutral-950 dark:bg-neutral-900/50">
+    <template #footer>
       <AppButtonPlain
         class="dark:focus:ring-offset-stone-950"
         color="neutral"
@@ -82,13 +79,14 @@
         :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW }">
         {{ $t('members.detail.orders.memberships.add') }}
       </AppButtonPlain>
-    </footer>
-  </section>
+    </template>
+  </AppPanel>
 </template>
 <script setup lang="ts">
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppPanel from '@/components/layout/AppPanel.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberMemberships } from '@/services/api/memberships';

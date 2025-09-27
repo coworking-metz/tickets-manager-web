@@ -27,7 +27,7 @@
             </div>
             <span
               v-if="member?.attending"
-              class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50" />
+              class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50 dark:ring-stone-900" />
           </component>
           <div v-if="isPendingMember" class="flex flex-col gap-1">
             <LoadingSkeleton class="h-8 w-48 rounded-xl" />
@@ -159,7 +159,7 @@
           }
         "
         :activity="activity"
-        class="pl-2"
+        class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
         :non-compliant-activity="nonCompliantActivity" />
 
       <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
