@@ -10,6 +10,7 @@
             v-else
             :is="member?.picture ? 'button' : 'figure'"
             class="group relative shrink-0 self-start rounded-full"
+            :inert="!member?.picture"
             @click="() => (state.isPictureDialogVisible = true)">
             <MembersThumbnail
               class="size-16"

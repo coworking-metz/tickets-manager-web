@@ -15,7 +15,7 @@
         </h3>
         <p
           v-if="description || $slots.description"
-          :class="['text-sm font-normal', descriptionColor]">
+          :class="['whitespace-pre-line text-sm font-normal', descriptionColor]">
           <slot name="description">
             {{ description }}
           </slot>
