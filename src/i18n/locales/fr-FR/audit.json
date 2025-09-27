@@ -101,7 +101,10 @@
     }
   },
   "author": {
-    "unknown": "Quelqu'un"
+    "unknown": {
+      "hint": "Le système a reçu une requête authentifiée par un jeton système.\nIl peut s'agir de WordPress ou d'une personne qui bidouille.",
+      "label": "Quelqu'un"
+    }
   },
   "list": {
     "description": "Tout ce qui se passe en détail.",

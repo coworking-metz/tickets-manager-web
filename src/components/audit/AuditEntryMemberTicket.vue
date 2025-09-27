@@ -1,6 +1,6 @@
 <template>
   <AuditEntryInline :event="event">
-    <template #message>
+    <template #message="{ authorName, memberName }">
       <i18n-t
         :keypath="
           event.author?._id && event.author._id === event.context?.member._id
@@ -21,11 +21,23 @@
             {{ authorName }}
           </RouterLink>
           <span
-            v-else
+            v-else-if="event.author"
             class="font-medium text-gray-900 dark:text-gray-100"
-            :title="event.author?.email">
-            {{ authorName || $t('audit.author.unknown') }}
+            :title="event.author.email">
+            {{ authorName }}
           </span>
+          <VTooltip v-else class="inline">
+            <span
+              class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
+              {{ $t('audit.author.unknown.label') }}
+              <SvgIcon aria-hidden="true" class="size-4" :path="mdiInformationOutline" type="mdi" />
+            </span>
+            <template #popper>
+              <span class="overflow-hidden whitespace-pre-line text-sm">
+                {{ $t('audit.author.unknown.hint') }}
+              </span>
+            </template>
+          </VTooltip>
         </template>
 
         <template #member v-if="event.context?.member">
@@ -61,22 +73,15 @@
 import AuditEntryInline from './AuditEntryInline.vue';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent } from '@/services/api/audit';
-import { computed, PropType } from 'vue';
+import { mdiInformationOutline } from '@mdi/js';
+import { PropType } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const props = defineProps({
+defineProps({
   event: {
     type: Object as PropType<AuditEvent>,
     default: null,
   },
 });
-
-const authorName = computed(() => props.event.author?.name || props.event.author?.email);
-const memberName = computed(
-  () =>
-    [props.event.context?.member.firstName, props.event.context?.member.lastName]
-      .filter(Boolean)
-      .join(' ') || props.event.context?.member.email,
-);
 </script>
