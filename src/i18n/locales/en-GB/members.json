@@ -177,6 +177,7 @@
       "macAddresses": {
         "add": "Specify a device | Add another device | Add other devices",
         "apply": "Change devices",
+        "compute": "Synchronize",
         "description": {
           "link": "MAC address",
           "text": "Allows knowing the presence through a {link}"

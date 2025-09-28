@@ -19,6 +19,11 @@
       <Head>
         <title>{{ $t('memberships.new.head.title') }}</title>
       </Head>
+      <AppAlert
+        class="mb-5"
+        :description="$t('memberships.detail.coverage.description')"
+        :title="$t('memberships.detail.coverage.title')"
+        type="info" />
       <AppTextField
         id="membership-started"
         v-model="state.started"
@@ -54,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';

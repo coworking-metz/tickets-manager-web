@@ -2,10 +2,11 @@ import HTTP from '../http';
 
 export interface Membership {
   _id: string;
-  membershipStart: string;
   purchased: string;
   amount: number;
   orderReference?: string;
+  membershipStart: string;
+  membershipEnd: string;
 }
 
 export const getAllMemberMemberships = (memberId: string): Promise<Membership[]> => {

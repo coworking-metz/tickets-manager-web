@@ -16,10 +16,17 @@
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"
     },
+    "coverage": {
+      "description": "La couverture d'une adhésion est automatiquement calculée par le système à partir de sa date de début.\nUne adhésion débutant à partir du 1er novembre couvre l'année en cours et également l'année suivante.",
+      "title": "Période de couverture"
+    },
     "description": "Commandée le {purchasedDate} à {purchasedTime}",
     "empty": {
       "description": "Assurez-vous que l'adhésion est bien rattachée à ce membre.",
       "title": "Adhésion introuvable"
+    },
+    "ended": {
+      "label": "Jusqu'au"
     },
     "head": {
       "title": "@:memberships.detail.title"

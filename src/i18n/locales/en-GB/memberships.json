@@ -16,10 +16,17 @@
       "label": "Reason",
       "placeholder": "Explain the reason for this change"
     },
+    "coverage": {
+      "description": "The coverage of a membership is automatically calculated by the system based on its start date.\nA membership starting from November 1st covers the current year and also the following year.",
+      "title": "Coverage period"
+    },
     "description": "Ordered on {purchasedDate} at {purchasedTime}",
     "empty": {
       "description": "Make sure the membership is properly linked to this member.",
       "title": "Membership not found"
+    },
+    "ended": {
+      "label": "Until"
     },
     "head": {
       "title": "@:memberships.detail.title"

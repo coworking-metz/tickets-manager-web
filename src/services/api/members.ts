@@ -13,12 +13,6 @@ export interface Attendance {
   type: AttendanceType;
 }
 
-export interface Membership {
-  id: string;
-  purchaseDate: string;
-  membershipStart: string;
-}
-
 export interface Device {
   id: string;
   macAddress: string;
@@ -51,7 +45,6 @@ export interface Member extends MemberListItem {
   activity: number;
   totalActivity: number;
   macAddresses: string[];
-  memberships: Membership[];
   trustedUser: boolean; // with at least 10 days of totalActivity
   activeUser: boolean; // with at least 20 days of activity (in the last 180 days)
   badgeId?: string;
