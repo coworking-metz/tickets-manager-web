@@ -59,14 +59,27 @@
           }}
         </title>
       </Head>
+      <AppAlert
+        class="mb-5"
+        :description="$t('memberships.detail.coverage.description')"
+        :title="$t('memberships.detail.coverage.title')"
+        type="info" />
       <AppTextField
         id="membership-started"
         v-model="state.started"
         :errors="vuelidate.started.$errors.map(({ $message }) => $message as string)"
-        :label="$t('subscriptions.detail.started.label')"
+        :label="$t('memberships.detail.started.label')"
         :prepend-icon="mdiCalendarStartOutline"
         required
         type="date" />
+      <AppTextField
+        id="membership-started"
+        disabled
+        :label="$t('memberships.detail.ended.label')"
+        :model-value="selectedMembership.membershipEnd"
+        :prepend-icon="mdiCalendarEndOutline"
+        type="date" />
+
       <AppTextField
         id="membership-reference"
         disabled
@@ -115,6 +128,7 @@ import MembershipsDeleteDialog from './MembershipsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -130,7 +144,13 @@ import {
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiCalendarStartOutline, mdiCheck, mdiClose, mdiDeleteOutline } from '@mdi/js';
+import {
+  mdiCalendarEndOutline,
+  mdiCalendarStartOutline,
+  mdiCheck,
+  mdiClose,
+  mdiDeleteOutline,
+} from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';

@@ -41,7 +41,14 @@
             }">
             <div class="flex flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
               <strong class="text-3xl">
-                {{ dayjs(membership.membershipStart).year() }}
+                {{
+                  compact([
+                    dayjs(membership.membershipStart).year() !==
+                      dayjs(membership.membershipEnd).year() &&
+                      dayjs(membership.membershipStart).year(),
+                    dayjs(membership.membershipEnd).year(),
+                  ]).join(' - ')
+                }}
               </strong>
               <p class="ml-auto text-lg">
                 {{ fractionAmount(membership.amount) }}
@@ -93,6 +100,7 @@ import { getAllMemberMemberships } from '@/services/api/memberships';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
+import { compact } from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 

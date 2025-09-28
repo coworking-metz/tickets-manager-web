@@ -51,7 +51,7 @@
               scope="global"
               tag="p">
               <template v-if="!!member.location" #location>
-                <span class="inline-block font-medium text-gray-900 dark:text-gray-100">
+                <span class="inline font-medium text-gray-900 dark:text-gray-100">
                   {{ $t(`members.detail.profile.location.${member.location}`) }}
                 </span>
               </template>
@@ -217,9 +217,7 @@
               scope="global"
               tag="dd">
               <template #amount>
-                <div
-                  v-if="isFetchingActivity"
-                  class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
+                <LoadingSkeleton v-if="isPendingMember" class="mb-1 h-8 w-32 rounded-3xl" />
                 <span
                   v-else-if="!periodAttendance"
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
@@ -253,7 +251,7 @@
     </SectionRow>
 
     <SectionRow
-      class="mt-8 px-3 sm:px-0"
+      class="mt-16 px-3 sm:px-0"
       :description="$t('members.detail.audit.description')"
       :title="$t('members.detail.audit.title')">
       <MemberHistoryPanel :member-id="memberId" />
@@ -275,7 +273,10 @@
             <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
               {{ $t('members.detail.profile.since.label') }}
             </dt>
-            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+            <LoadingSkeleton v-if="isPendingMember" class="mt-2 h-8 w-32 rounded-3xl" />
+            <dd
+              v-else
+              class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
               {{ dayjs(member?.created).format('ll') }}
             </dd>
           </AppPanel>
@@ -284,7 +285,9 @@
             <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
               {{ $t('members.detail.orders.tickets.used.label') }}
             </dt>
+            <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
             <i18n-t
+              v-else
               class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.detail.orders.tickets.used.text"
               :plural="totalTicketsUsed"
@@ -337,7 +340,9 @@
             <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
               {{ $t('members.detail.orders.subscriptions.coverage.label') }}
             </dt>
+            <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
             <i18n-t
+              v-else
               class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.detail.orders.subscriptions.coverage.text"
               :plural="attendanceCoveredBySubscriptions"
