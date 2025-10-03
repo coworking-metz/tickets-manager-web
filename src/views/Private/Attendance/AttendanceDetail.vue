@@ -26,7 +26,9 @@
           <AppTextField
             id="members-search"
             v-model="state.search"
+            clearable
             hide-details
+            input-class="pr-0"
             name="members-search"
             :placeholder="$t('attendance.detail.search.placeholder')"
             :prepend-icon="mdiMagnify"

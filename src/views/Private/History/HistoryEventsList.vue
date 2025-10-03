@@ -25,7 +25,9 @@
         <AppTextField
           id="history-search"
           v-model="state.search"
+          clearable
           hide-details
+          input-class="pr-0"
           name="history-search"
           :placeholder="$t('audit.list.search.placeholder')"
           :prepend-icon="mdiMagnify"

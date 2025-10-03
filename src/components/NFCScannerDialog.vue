@@ -1,23 +1,10 @@
 <template>
-  <AppDialog v-model="isVisible" dialog-class="flex flex-col py-4 sm:max-w-lg">
-    <header class="mx-3 flex flex-row items-start sm:mx-6">
-      <div class="shrink grow basis-0" />
+  <AppDialog v-model="isVisible" dialog-class="flex flex-col py-4 sm:max-w-lg relative">
+    <header class="mx-3 flex flex-row items-start">
       <h2
         class="shrink grow text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
         {{ $t('nfc.scan.title') }}
       </h2>
-      <div class="flex shrink-0 grow basis-0 flex-row justify-end">
-        <AppButtonIcon
-          class="shrink-0"
-          :icon="mdiClose"
-          :title="$t('action.close')"
-          @click="
-            () => {
-              onStopScan();
-              isVisible = false;
-            }
-          " />
-      </div>
     </header>
 
     <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
@@ -191,6 +178,17 @@
         {{ $t('nfc.scan.stop') }}
       </AppButtonPlain>
     </div>
+
+    <AppButtonIcon
+      class="absolute right-3 top-3 dark:ring-offset-neutral-800"
+      :icon="mdiClose"
+      :title="$t('action.close')"
+      @click="
+        () => {
+          onStopScan();
+          isVisible = false;
+        }
+      " />
   </AppDialog>
 </template>
 

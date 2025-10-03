@@ -43,12 +43,14 @@
         </RouterLink>
       </nav>
 
-      <div class="mx-3 w-full max-w-lg sm:mx-0">
+      <div class="mx-3 w-full min-w-96 max-w-lg shrink grow basis-0 sm:mx-0">
         <label class="sr-only" for="members-search">{{ $t('members.list.search.label') }}</label>
         <AppTextField
           id="members-search"
           v-model="state.search"
+          clearable
           hide-details
+          input-class="pr-0"
           name="members-search"
           :placeholder="$t('members.list.search.placeholder')"
           :prepend-icon="mdiMagnify"
