@@ -1,6 +1,6 @@
 <template>
   <article
-    class="mx-auto mb-12 flex w-full max-w-7xl flex-col max-sm:grow sm:mb-24 sm:min-h-full sm:px-6 lg:px-8">
+    class="mx-auto flex w-full max-w-7xl flex-col pb-12 max-sm:grow sm:min-h-full sm:px-6 sm:pb-24 lg:px-8">
     <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
       <div class="min-w-48 shrink grow basis-0" />
       <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
@@ -433,6 +433,7 @@
             <i18n-t
               class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.detail.orders.spent.daily.value"
+              :plural="dailyAmountConsumed"
               scope="global"
               tag="dd">
               <template #amount>
@@ -440,7 +441,7 @@
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="fractionAmount"
-                  :to="dailyAmountSpent" />
+                  :to="dailyAmountConsumed" />
               </template>
             </i18n-t>
           </AppPanel>
@@ -681,7 +682,7 @@ const totalAmountSpent = computed<number>(() => {
   return totalTicketsAmount + totalSubscriptionsAmount + totalMembershipsAmount;
 });
 
-const dailyAmountSpent = computed<number>(() => {
+const dailyAmountConsumed = computed<number>(() => {
   return activity.value?.length ? totalAmountSpent.value / activity.value?.length : 0;
 });
 

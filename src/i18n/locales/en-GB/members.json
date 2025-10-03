@@ -70,9 +70,9 @@
         "title": "Memberships"
       },
       "spent": {
-        "monthly": {
+        "daily": {
           "label": "On average",
-          "value": "{amount} per month"
+          "value": "{amount} consumed per day | {amount} consumed per day | {amount} consumed per day"
         },
         "total": {
           "label": "Total",

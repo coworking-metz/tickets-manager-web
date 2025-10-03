@@ -72,7 +72,7 @@
       "spent": {
         "daily": {
           "label": "En moyenne",
-          "value": "{amount} par jour"
+          "value": "{amount} consommé par jour | {amount} consommé par jour | {amount} consommés par jour"
         },
         "total": {
           "label": "En tout",
