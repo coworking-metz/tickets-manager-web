@@ -428,11 +428,11 @@
         <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
           <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
             <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.orders.spent.monthly.label') }}
+              {{ $t('members.detail.orders.spent.daily.label') }}
             </dt>
             <i18n-t
               class="mt-1 text-gray-800 dark:text-gray-200"
-              keypath="members.detail.orders.spent.monthly.value"
+              keypath="members.detail.orders.spent.daily.value"
               scope="global"
               tag="dd">
               <template #amount>
@@ -440,7 +440,7 @@
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="fractionAmount"
-                  :to="monthlyAmountSpent" />
+                  :to="dailyAmountSpent" />
               </template>
             </i18n-t>
           </AppPanel>
@@ -681,26 +681,8 @@ const totalAmountSpent = computed<number>(() => {
   return totalTicketsAmount + totalSubscriptionsAmount + totalMembershipsAmount;
 });
 
-const monthlyAmountSpent = computed<number>(() => {
-  if (member.value) {
-    const [lastActivity] = (activity.value || [])
-      .filter(({ value }) => value > 0)
-      .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
-
-    const totalMonths =
-      Math.ceil(
-        Math.abs(
-          dayjs(lastActivity?.date || member.value.lastSeen).diff(
-            member.value.created,
-            'month',
-            true,
-          ),
-        ),
-      ) || 1;
-
-    return totalAmountSpent.value / totalMonths;
-  }
-  return 0;
+const dailyAmountSpent = computed<number>(() => {
+  return activity.value?.length ? totalAmountSpent.value / activity.value?.length : 0;
 });
 
 const nonCompliantActivity = computed(() => {

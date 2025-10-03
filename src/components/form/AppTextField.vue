@@ -50,9 +50,8 @@
               !slots.before && 'rounded-l-md',
               !slots.after && 'rounded-r-md',
               (slots.prepend || prependIcon) && 'pl-10',
-              slots.append || (appendIcon && 'pr-10'),
+              (slots.append || appendIcon) && 'pr-10',
               type === 'number' && 'pr-3 text-right',
-              type !== 'search' && 'pr-0',
               isInvalid &&
                 `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
                 focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
@@ -82,7 +81,7 @@
           :class="[
             `absolute top-1/2 z-10 size-7 -translate-y-1/2 bg-white opacity-0 backdrop-blur-md transition-opacity
             focus:opacity-100 group-hover:opacity-100 dark:bg-neutral-800/10`,
-            $slots.append || appendIcon ? 'right-9' : 'right-1.5',
+            $slots.append || appendIcon ? 'right-9' : 'right-2',
           ]"
           :icon="mdiClose"
           :title="$t('action.clear')"
@@ -250,5 +249,12 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  -webkit-appearance: none;
 }
 </style>

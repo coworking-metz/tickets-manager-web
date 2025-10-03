@@ -165,6 +165,7 @@ import { ROUTE_NAMES } from '@/router/names';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import {
+  mdiBoomGateUpOutline,
   mdiCalendarEditOutline,
   mdiCalendarPlusOutline,
   mdiCalendarRangeOutline,
@@ -173,8 +174,7 @@ import {
   mdiChevronUp,
   mdiCreditCardOutline,
   mdiDevices,
-  mdiDoorbell,
-  mdiGateOpen,
+  mdiDoor,
   mdiHeadCogOutline,
   mdiHelp,
   mdiInformationOutline,
@@ -184,7 +184,7 @@ import {
 } from '@mdi/js';
 import dayjs from 'dayjs';
 import { compact, isEmpty } from 'lodash';
-import { PropType, computed } from 'vue';
+import { computed, PropType } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -247,9 +247,9 @@ const icon = computed(() => {
     case AuditAction.UNLOCK_DECK_DOOR:
       return mdiLockOpenOutline;
     case AuditAction.UNLOCK_GATE:
-      return mdiDoorbell;
+      return mdiDoor;
     case AuditAction.PARKING_ACCESS:
-      return mdiGateOpen;
+      return mdiBoomGateUpOutline;
     case AuditAction.MEMBER_DEVICE_ADD:
     case AuditAction.MEMBER_DEVICE_UPDATE:
     case AuditAction.MEMBER_DEVICE_REMOVE:

@@ -70,9 +70,9 @@
         "title": "Adhésions"
       },
       "spent": {
-        "monthly": {
+        "daily": {
           "label": "En moyenne",
-          "value": "{amount} par mois"
+          "value": "{amount} par jour"
         },
         "total": {
           "label": "En tout",
