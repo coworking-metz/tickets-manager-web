@@ -2,9 +2,9 @@
   <main class="flex flex-1 overflow-hidden">
     <div class="flex flex-1 flex-col overflow-y-auto xl:overflow-hidden">
       <!-- Mobile navigation -->
-      <Menu as="nav" class="relative inline-block text-left xl:hidden">
+      <Menu as="nav" class="relative mx-3 mt-3 inline-block text-left xl:hidden">
         <MenuButton
-          class="group w-full border-b border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-800">
+          class="group w-full rounded-xl border border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-800">
           <span class="flex w-full flex-row items-start justify-between">
             <SvgIcon
               aria-hidden="true"
@@ -69,7 +69,7 @@
       <div class="flex flex-1 xl:overflow-hidden">
         <nav
           aria-label="Sections"
-          class="hidden w-96 shrink-0 border-r border-gray-200 bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
+          class="my-6 ml-6 hidden max-h-[1200px] w-96 shrink-0 rounded-xl border bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
           <div
             class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6 dark:border-stone-700">
             <h1

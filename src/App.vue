@@ -5,7 +5,7 @@
   </Head>
   <LoadingProgressBar v-if="state.isLoading" class="fixed inset-x-0 top-0 z-50 h-0.5" />
   <LoadingSpinner v-if="!state.isReady" class="m-auto size-16" />
-  <router-view v-else />
+  <RouterView v-else />
   <Teleport to="body">
     <Toaster
       :position="width <= 600 ? 'top-center' : 'bottom-left'"
@@ -17,7 +17,7 @@
 
   <small
     v-if="ENVIRONMENT"
-    class="fixed -right-6 top-3 z-50 flex h-5 w-24 rotate-45 items-center justify-center overflow-hidden truncate bg-indigo-700 text-xs lowercase text-white shadow sm:-left-6 sm:-rotate-45">
+    class="fixed -right-6 top-3 z-50 flex h-5 w-24 rotate-45 items-center justify-center overflow-hidden truncate bg-indigo-700 text-xs lowercase text-white shadow">
     {{ ENVIRONMENT }}
   </small>
 </template>

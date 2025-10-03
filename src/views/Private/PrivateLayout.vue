@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      ['flex min-h-full grow flex-row items-start']: true,
+      ['relative mx-auto flex min-h-full w-full max-w-screen-3xl grow flex-row items-start']: true,
       ['max-sm:overflow-y-hidden']: state.isMenuOpen,
     }">
     <header
@@ -27,11 +27,14 @@
         class="h-full w-auto p-3 dark:invert"
         :src="typoLePoulailler" />
     </header>
-    <NavigationDrawer
+    <aside
       :class="[
-        'top-0 z-[1] h-full shrink-0 overflow-x-hidden max-sm:fixed max-sm:max-w-0 max-sm:pt-16 max-sm:transition-[max-width] sm:fixed sm:h-screen',
+        'inset-y-0 z-[1] flex shrink-0 flex-col max-sm:fixed max-sm:h-full max-sm:max-w-0 max-sm:overflow-x-hidden max-sm:transition-[max-width] sm:sticky sm:h-screen sm:max-h-[1440px] sm:py-3 sm:pl-3',
         state.isMenuOpen && 'max-sm:max-w-28',
-      ]" />
+      ]">
+      <NavigationDrawer
+        class="w-28 grow overflow-y-auto overflow-x-hidden max-sm:pt-16 sm:my-auto sm:max-h-[840px] sm:rounded-3xl sm:shadow-xl sm:[corner-shape:squircle]" />
+    </aside>
 
     <div
       :class="{
@@ -40,11 +43,20 @@
       }" />
     <main
       :class="[
-        'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16 sm:pl-28',
+        'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16',
         state.isMenuOpen && 'z-[2] shadow-2xl',
       ]">
-      <router-view />
+      <RouterView />
     </main>
+
+    <svg height="10" viewBox="0 0 10 10" width="10">
+      <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
+        <path
+          d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5"
+          fill="red"
+          stroke="none" />
+      </clipPath>
+    </svg>
   </div>
 </template>
 

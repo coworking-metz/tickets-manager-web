@@ -1,10 +1,10 @@
 <template>
   <div class="transition-wrapper">
-    <router-view v-slot="{ Component }">
+    <RouterView v-slot="{ Component }">
       <transition :name="state.transitionName">
         <component :is="Component" v-bind="$attrs" />
       </transition>
-    </router-view>
+    </RouterView>
   </div>
 </template>
 
