@@ -20,18 +20,15 @@ export type AttendingMember = MemberListItem & {
   };
 };
 
-export type AttendancePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> = {
+export type AttendancePeriod = {
   date: string;
-  type: PeriodType;
+  type: 'day';
   data: {
     members: AttendingMember[];
   };
 };
 
-export const getAttendancePerDay = (
-  from?: string,
-  to?: string,
-): Promise<AttendancePeriod<'day'>[]> => {
+export const getAttendancePerDay = (from?: string, to?: string): Promise<AttendancePeriod[]> => {
   return HTTP.get('/stats/attendance/day', {
     params: {
       ...(from && { from }),

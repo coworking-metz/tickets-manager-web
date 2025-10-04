@@ -84,7 +84,7 @@
         </p>
         <DailyActivityGraph class="mb-4" /> -->
         <AppAlert
-          v-if="nonCompliant"
+          v-if="selected.debt"
           class="mb-5 rounded-xl"
           :icon="mdiAlertCircle"
           :title="$t('activity.detail.nonCompliant.title')"
@@ -97,7 +97,9 @@
               tag="p">
               <template #emphasized>
                 <span class="font-semibold text-red-800 dark:text-red-300">
-                  {{ $t('activity.detail.nonCompliant.emphasized', { count: nonCompliant.value }) }}
+                  {{
+                    $t('activity.detail.nonCompliant.emphasized', { count: selected.debt.value })
+                  }}
                 </span>
               </template>
             </i18n-t>
@@ -263,7 +265,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { PropType, computed, nextTick, reactive, watch } from 'vue';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -278,10 +280,6 @@ const props = defineProps({
   memberId: {
     type: String,
     required: true,
-  },
-  nonCompliantActivity: {
-    type: Array as PropType<Attendance[]>,
-    default: () => [],
   },
 });
 
@@ -324,10 +322,6 @@ const next = computed<Attendance | null>(() => {
   return earliestDate ?? null;
 });
 
-const nonCompliant = computed(() => {
-  return props.nonCompliantActivity.find(({ date }) => dayjs(props.date).isSame(date));
-});
-
 const rules = computed(() => ({
   type: { required: withAppI18nMessage(required) },
   duration: { required: withAppI18nMessage(required) },
@@ -345,9 +339,8 @@ const onSubmit = async () => {
 
   state.isSubmitting = true;
   updateMemberActivity(props.memberId, props.date, {
-    type: state.type,
+    ...(selected.value as Attendance),
     value: state.duration,
-    date: props.date,
     comment: state.comment as string,
   })
     .then(async () => {

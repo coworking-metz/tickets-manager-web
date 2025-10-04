@@ -6,11 +6,17 @@ import dayjs from 'dayjs';
 
 export type AttendanceType = 'subscription' | 'ticket';
 export type MemberLocation = 'poulailler' | 'pti-poulailler' | 'racine' | 'cantina';
+export type AttendanceDuration = 0 | 0.5 | 1;
 
 export interface Attendance {
   date: string;
-  value: number;
+  value: AttendanceDuration;
   type: AttendanceType;
+  amount: number;
+  debt?: {
+    value: AttendanceDuration;
+    amount: number;
+  };
 }
 
 export interface Device {
@@ -99,7 +105,7 @@ export const getMemberActivity = (id: string): Promise<Attendance[]> => {
 
 export const addMemberActivity = (
   memberId: string,
-  activity: Omit<Attendance, 'type'> & { comment: string },
+  activity: Pick<Attendance, 'date' | 'value'> & { comment: string },
 ): Promise<Attendance> => {
   return HTTP.post(`/api/members/${memberId}/activity`, activity).then(({ data }) => data);
 };

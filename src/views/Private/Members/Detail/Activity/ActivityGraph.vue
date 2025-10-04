@@ -29,7 +29,6 @@ import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { HeatmapSeriesOption } from 'echarts/charts.js';
-
 import type {
   CalendarComponentOption,
   TooltipComponentOption,
@@ -56,10 +55,6 @@ const props = defineProps({
     type: String,
     default: () => dayjs().format('YYYY-MM-DD'),
   },
-  nonCompliantActivity: {
-    type: Array as PropType<Attendance[]>,
-    default: () => [],
-  },
 });
 
 const { width } = useWindowSize();
@@ -67,6 +62,7 @@ const state = reactive({
   shouldHideTooltip: false, // https://github.com/apache/echarts/issues/16454
 });
 const chart = ref<InstanceType<typeof VueECharts> | null>(null);
+const now = dayjs();
 
 const currentTheme = useTheme();
 const options = computed<
@@ -91,22 +87,21 @@ const options = computed<
     show: false,
   },
   calendar: {
-    locale: 'fr-FR',
     top: 20,
     left: 48,
     cellSize: 20,
     splitLine: {
       lineStyle: {
-        color: currentTheme.value === 'light' ? theme.charlestonGreen : '#e5e7eb',
+        color: currentTheme.value === 'light' ? theme.charlestonGreen : '#a3a3a3',
       },
     },
     monthLabel: {
-      nameMap: range(12).map((index) => capitalize(dayjs().set('month', index).format('MMMM'))),
+      nameMap: range(12).map((index) => capitalize(now.set('month', index).format('MMMM'))),
       color: currentTheme.value === 'light' ? theme.charlestonGreen : '#9ca3af',
     },
     dayLabel: {
       firstDay: 0,
-      nameMap: range(7).map((index) => capitalize(dayjs().set('day', index).format('dd'))),
+      nameMap: range(7).map((index) => capitalize(now.set('day', index).format('dd'))),
       color: currentTheme.value === 'light' ? theme.charlestonGreen : '#9ca3af',
     },
     range: [props.endDate, props.startDate],
@@ -118,13 +113,11 @@ const options = computed<
     yearLabel: { show: false },
   },
   series: {
-    locale: 'fr-FR',
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.activity.map(({ date, value }) => {
-      const nonCompliant = props.nonCompliantActivity.find(({ date: d }) => dayjs(d).isSame(date));
-      const color = nonCompliant
-        ? nonCompliant.value === 1
+    data: props.activity.map(({ date, value, debt }) => {
+      const color = debt
+        ? debt.value === 1
           ? '#b91c1c'
           : '#fca5a5' // even tho it could be a full day, the most important is its non compliant period
         : value === 1
@@ -148,10 +141,10 @@ const options = computed<
               : value === 0.5
                 ? i18n.t('members.detail.attendance.graph.value.HALF')
                 : i18n.t('members.detail.attendance.graph.value.NONE'),
-          ...(nonCompliant &&
-            nonCompliant.value !== value && {
+          ...(debt &&
+            debt.value !== value && {
               suffix:
-                nonCompliant.value === 1
+                debt.value === 1
                   ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
                   : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
             }),

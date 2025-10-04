@@ -1,6 +1,5 @@
 <template>
-  <article
-    class="mx-auto flex w-full max-w-7xl flex-col pb-12 max-sm:grow sm:min-h-full sm:px-6 sm:pb-24 lg:px-8">
+  <article class="mx-auto flex w-full max-w-7xl flex-col pb-12 max-sm:grow sm:min-h-full sm:pb-24">
     <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
       <div class="min-w-48 shrink grow basis-0" />
       <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
@@ -160,8 +159,7 @@
           }
         "
         :activity="activity"
-        class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
-        :non-compliant-activity="nonCompliantActivity" />
+        class="pl-2 max-sm:overflow-x-auto max-sm:pr-2" />
 
       <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
         <AppSegmentedControl
@@ -433,7 +431,7 @@
             <i18n-t
               class="mt-1 text-gray-800 dark:text-gray-200"
               keypath="members.detail.orders.spent.daily.value"
-              :plural="dailyAmountConsumed"
+              :plural="averageDailyAmountConsumed"
               scope="global"
               tag="dd">
               <template #amount>
@@ -441,7 +439,7 @@
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="fractionAmount"
-                  :to="dailyAmountConsumed" />
+                  :to="averageDailyAmountConsumed" />
               </template>
             </i18n-t>
           </AppPanel>
@@ -482,10 +480,7 @@
         ].includes(route.name as string)
       "
       @update:model-value="router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX })">
-      <RouterView
-        :member="member"
-        :member-id="memberId"
-        :non-compliant-activity="nonCompliantActivity" />
+      <RouterView :member="member" :member-id="memberId" />
     </SideDialog>
 
     <AppDialog
@@ -682,36 +677,23 @@ const totalAmountSpent = computed<number>(() => {
   return totalTicketsAmount + totalSubscriptionsAmount + totalMembershipsAmount;
 });
 
-const dailyAmountConsumed = computed<number>(() => {
-  return activity.value?.length ? totalAmountSpent.value / activity.value?.length : 0;
-});
+const averageDailyAmountConsumed = computed<number>(() => {
+  if (!activity.value) return 0;
 
-const nonCompliantActivity = computed(() => {
-  const balance = member.value?.balance || 0;
-  if (balance < 0 && activity.value?.length) {
-    const ticketActivities = activity.value
-      .filter(({ type, value }) => type === 'ticket' && value > 0)
-      .sort((a, b) => dayjs(b.date).diff(a.date));
+  const totalActivityConsumed = activity.value?.reduce(
+    (sum, a) => ({
+      amount: sum.amount + a.amount,
+      daysCount: sum.daysCount + a.value,
+    }),
+    {
+      amount: 0,
+      daysCount: 0,
+    },
+  );
 
-    let remainingDebt = Math.abs(balance);
-    const nonCompliantAttendance = [];
-    for (const { date, value, type } of ticketActivities) {
-      if (remainingDebt <= 0) {
-        break;
-      }
-
-      const debt = value > remainingDebt ? remainingDebt : value;
-      nonCompliantAttendance.push({
-        date,
-        value: debt,
-        type,
-      });
-      remainingDebt -= debt;
-    }
-    return nonCompliantAttendance;
-  }
-
-  return [];
+  return totalActivityConsumed.daysCount
+    ? totalActivityConsumed.amount / totalActivityConsumed.daysCount
+    : 0;
 });
 
 watch(

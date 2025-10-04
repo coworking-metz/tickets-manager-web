@@ -1,13 +1,5 @@
 <template>
-  <LoadingSpinner v-if="loading" class="m-auto size-16" />
-  <EmptyState
-    v-else-if="!incomes.length"
-    :animation="AnalyticsGraph"
-    class="m-auto py-8"
-    :description="$t('stats.incomes.empty.description')"
-    :title="$t('stats.incomes.empty.title')" />
   <VueECharts
-    v-else
     :key="`echarts-${width}`"
     ref="chart"
     class="size-full"
@@ -16,13 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
-import EmptyState from '@/components/EmptyState.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { IncomePeriodWithTotal } from '@/services/api/incomes';
-import { useTheme } from '@/services/theme';
-import { theme } from '@/styles/colors';
+import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
 import { GridComponent, MarkLineComponent, TooltipComponent } from 'echarts/components.js';
@@ -44,10 +32,6 @@ use([MarkLineComponent, TooltipComponent, GridComponent, BarChart, LineChart, Ca
 
 defineEmits(['click']);
 const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
   incomes: {
     type: Array as PropType<IncomePeriodWithTotal<'year' | 'month' | 'week' | 'day'>[]>,
     default: () => [],
@@ -75,7 +59,7 @@ const props = defineProps({
 
 const chart = ref();
 const { width } = useWindowSize();
-const currentTheme = useTheme();
+const statsColors = useStatsColors();
 
 const firstCharge = computed(() => props.incomes.map(({ data }) => data.charges).shift());
 const lastCharge = computed(() => props.incomes.map(({ data }) => data.charges).pop());
@@ -142,7 +126,7 @@ const options = computed<
             data: props.incomes.map(({ data }) => ({
               value: data.subscriptions.amount,
               itemStyle: {
-                color: theme.peachYellow,
+                color: statsColors.value.subscription,
               },
             })),
             type: 'bar',
@@ -155,7 +139,7 @@ const options = computed<
             data: props.incomes.map(({ data }) => ({
               value: data.tickets.amount,
               itemStyle: {
-                color: theme.babyBlueEyes,
+                color: statsColors.value.ticket,
               },
             })),
             type: 'bar',
@@ -168,7 +152,7 @@ const options = computed<
             data: props.incomes.map(({ data }) => ({
               value: data.tickets.debt.amount,
               itemStyle: {
-                color: theme.azureishWhite,
+                color: statsColors.value.debt,
               },
             })),
             type: 'bar',
@@ -197,12 +181,12 @@ const options = computed<
         scale: false,
       },
       itemStyle: {
-        color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
+        color: statsColors.value.charges,
         width: 2,
         opacity: 1,
       },
       lineStyle: {
-        color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
+        color: statsColors.value.charges,
         width: 2,
       },
       data: props.incomes.map(({ data }) => ({ value: data.charges || '-' })),
@@ -224,8 +208,7 @@ const options = computed<
                   label: {
                     position: 'start',
                     show: true,
-                    color:
-                      currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
+                    color: statsColors.value.charges,
                     formatter: ({ value }: { value: number }) => fractionAmount(value),
                     overflow: 'break',
                     lineHeight: 16,
@@ -239,7 +222,7 @@ const options = computed<
               show: true,
               overflow: 'break',
               lineHeight: 16,
-              color: currentTheme.value === 'light' ? theme.charlestonGreen : theme.azureishWhite,
+              color: statsColors.value.charges,
               ...(props.thresholdFormatter
                 ? {
                     formatter: props.thresholdFormatter,

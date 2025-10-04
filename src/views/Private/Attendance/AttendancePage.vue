@@ -1,6 +1,5 @@
 <template>
-  <article
-    class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 sm:px-6 lg:flex-row lg:px-8">
+  <article class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 lg:flex-row">
     <Head>
       <title>{{ $t('attendance.head.title') }}</title>
     </Head>
@@ -171,7 +170,7 @@ const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   selectedMonth: null as string | null,
-  selectedAttendance: null as AttendancePeriod<'day'> | null,
+  selectedAttendance: null as AttendancePeriod | null,
 });
 
 const calendarPeriod = computed(() => {

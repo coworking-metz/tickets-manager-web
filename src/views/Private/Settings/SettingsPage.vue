@@ -1,6 +1,5 @@
 <template>
-  <article
-    class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 overflow-hidden sm:px-6 lg:flex-row lg:px-8">
+  <article class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6">
     <Head>
       <title>{{ $t('settings.head.title') }}</title>
     </Head>
