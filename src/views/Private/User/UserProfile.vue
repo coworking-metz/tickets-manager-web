@@ -1,9 +1,9 @@
 <template>
-  <article class="mx-auto flex w-full max-w-3xl grow flex-col px-3 py-12 sm:px-6 sm:pt-40 lg:px-8">
+  <article class="mx-auto flex w-full max-w-5xl grow flex-col px-3 py-12 sm:pt-40">
     <Head>
       <title>{{ $t('user.profile.head.title') }}</title>
     </Head>
-    <section class="flex w-full max-w-3xl flex-col items-start sm:flex-row">
+    <section class="flex w-full max-w-3xl flex-col items-start md:flex-row">
       <div class="mb-6 shrink grow basis-0">
         <RouterLink
           v-if="authStore.user?.id"
@@ -30,10 +30,10 @@
           :name="authStore.user?.name"
           :thumbnail="authStore.user?.picture" />
       </div>
-      <div class="flex w-full flex-col sm:ml-6">
-        <div class="sm:border-l sm:border-gray-200 sm:pl-6 dark:border-stone-700">
+      <div class="flex w-full flex-col md:ml-6">
+        <div class="md:border-l md:border-gray-200 md:pl-6 dark:border-stone-700">
           <h1
-            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
+            class="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl dark:text-gray-100">
             {{ $t('user.profile.title') }}
           </h1>
           <p class="mt-1 text-base text-gray-500 dark:text-gray-400">
@@ -41,7 +41,7 @@
           </p>
         </div>
 
-        <div class="mt-6 flex flex-col gap-6 sm:ml-6">
+        <div class="mt-6 flex flex-col gap-6 md:ml-6">
           <AppTextField
             id="name"
             class="min-w-48 shrink grow basis-0"

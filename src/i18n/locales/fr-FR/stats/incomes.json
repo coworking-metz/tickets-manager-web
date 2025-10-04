@@ -77,6 +77,10 @@
         "label": "Revenu moyen mensuel",
         "threshold": "sur {amount} de charges fixes mensuelles"
       },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -127,6 +131,10 @@
         "label": "Revenu moyen hebdomadaire",
         "threshold": "sur {amount} de charges fixes hebdomadaires"
       },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -157,6 +165,10 @@
       "average": {
         "label": "Revenu moyen annuel",
         "threshold": "sur {amount} de charges fixes annuelles"
+      },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
       "label": "En quelques chiffres",
       "total": {

@@ -1,6 +1,5 @@
 <template>
-  <article
-    class="mx-auto flex w-full max-w-6xl grow flex-col px-3 pb-6 pt-12 sm:px-6 sm:pt-40 lg:px-8">
+  <article class="mx-auto flex w-full max-w-6xl grow flex-col px-3 pb-6 pt-12 sm:pt-40">
     <Head>
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>

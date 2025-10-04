@@ -1,4 +1,5 @@
 import { isSilentError, parseErrorText } from '@/helpers/errors';
+import { PeriodType } from '@/services/api/incomes';
 import { useQuery, UseQueryOptions, VueQueryPluginOptions } from '@tanstack/vue-query';
 import { computedAsync } from '@vueuse/core';
 
@@ -53,7 +54,8 @@ export const auditEventsQueryKeys = {
 };
 
 export const statsQueryKeys = {
-  incomesInPeriod: (from: string, to: string) => ['stats', 'incomes', from, to] as const,
+  incomesInPeriod: (period: PeriodType, from: string, to: string) =>
+    ['stats', 'incomes', period, from, to] as const,
 };
 
 export const attendanceQueryKeys = {

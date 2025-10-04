@@ -1,6 +1,8 @@
-import HTTP from '../http';
+import HTTP from '@/services/http';
 
-export type IncomePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> = {
+export type PeriodType = 'year' | 'month' | 'week' | 'day';
+
+export type IncomePeriod<PeriodType> = {
   date: string;
   type: PeriodType;
   data: {
@@ -21,88 +23,25 @@ export type IncomePeriod<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
   };
 };
 
-export type IncomePeriodWithTotal<PeriodType extends 'year' | 'month' | 'week' | 'day'> =
-  IncomePeriod<PeriodType> & {
-    data: IncomePeriod<PeriodType>['data'] & {
-      incomes: number; // total incomes in euro
-    };
+export type IncomePeriodWithTotal<PeriodType> = IncomePeriod<PeriodType> & {
+  data: IncomePeriod<PeriodType>['data'] & {
+    incomes: number; // total incomes in euro
   };
-
-export const getIncomesPerYear = (
-  from?: string,
-  to?: string,
-): Promise<IncomePeriodWithTotal<'year'>[]> => {
-  return HTTP.get('/stats/incomes/year/from-orders', {
-    params: {
-      ...(from && { from }),
-      ...(to && { to }),
-    },
-    timeout: 60_000,
-  }).then(({ data }) =>
-    data.map((income: IncomePeriod<'year'>) => ({
-      ...income,
-      data: {
-        ...income.data,
-        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
-      },
-    })),
-  );
 };
 
-export const getIncomesPerMonth = (
+export const getIncomesPerPeriod = (
+  period: PeriodType,
   from?: string,
   to?: string,
-): Promise<IncomePeriodWithTotal<'month'>[]> => {
-  return HTTP.get('/stats/incomes/month/from-orders', {
+): Promise<IncomePeriodWithTotal<PeriodType>[]> => {
+  return HTTP.get(`/stats/incomes/${period}/from-orders`, {
     params: {
       ...(from && { from }),
       ...(to && { to }),
     },
     timeout: 60_000,
   }).then(({ data }) =>
-    data.map((income: IncomePeriod<'month'>) => ({
-      ...income,
-      data: {
-        ...income.data,
-        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
-      },
-    })),
-  );
-};
-
-export const getIncomesPerWeek = (
-  from?: string,
-  to?: string,
-): Promise<IncomePeriodWithTotal<'week'>[]> => {
-  return HTTP.get('/stats/incomes/week/from-orders', {
-    params: {
-      ...(from && { from }),
-      ...(to && { to }),
-    },
-    timeout: 60_000,
-  }).then(({ data }) =>
-    data.map((income: IncomePeriod<'week'>) => ({
-      ...income,
-      data: {
-        ...income.data,
-        incomes: income.data.tickets.amount + income.data.subscriptions.amount,
-      },
-    })),
-  );
-};
-
-export const getIncomesPerDay = (
-  from?: string,
-  to?: string,
-): Promise<IncomePeriodWithTotal<'day'>[]> => {
-  return HTTP.get('/stats/incomes/day/from-orders', {
-    params: {
-      ...(from && { from }),
-      ...(to && { to }),
-    },
-    timeout: 60_000,
-  }).then(({ data }) =>
-    data.map((income: IncomePeriod<'day'>) => ({
+    data.map((income: IncomePeriod<PeriodType>) => ({
       ...income,
       data: {
         ...income.data,

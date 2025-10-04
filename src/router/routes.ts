@@ -153,22 +153,34 @@ export const routes: RouteRecordRaw[] = [
               {
                 path: 'daily',
                 name: ROUTE_NAMES.STATS.INCOMES.DAILY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesDaily.vue'),
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
+                props: {
+                  period: 'day',
+                },
               },
               {
                 path: 'weekly',
                 name: ROUTE_NAMES.STATS.INCOMES.WEEKLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesWeekly.vue'),
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
+                props: {
+                  period: 'week',
+                },
               },
               {
                 path: 'monthly',
                 name: ROUTE_NAMES.STATS.INCOMES.MONTHLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesMonthly.vue'),
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
+                props: {
+                  period: 'month',
+                },
               },
               {
                 path: 'yearly',
                 name: ROUTE_NAMES.STATS.INCOMES.YEARLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesYearly.vue'),
+                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
+                props: {
+                  period: 'year',
+                },
               },
             ],
           },

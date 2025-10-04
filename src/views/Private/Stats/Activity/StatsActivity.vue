@@ -1,7 +1,6 @@
 <template>
   <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-12">
-    <div
-      class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6 sm:px-3">
+    <div class="mx-auto mt-6 flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-y-6">
       <AppPeriodField
         id="activity-period"
         v-model="state.period"

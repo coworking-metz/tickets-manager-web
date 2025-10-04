@@ -1,6 +1,5 @@
 <template>
-  <article
-    class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 overflow-hidden sm:px-6 lg:flex-row lg:px-8">
+  <article class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6">
     <Head>
       <title>{{ $t('miscellaneous.head.title') }}</title>
     </Head>
@@ -11,7 +10,7 @@
           class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('miscellaneous.title') }}
         </h1>
-        <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
+        <p class="mt-1 text-base text-slate-500 dark:text-slate-400">
           {{ $t('miscellaneous.description') }}
         </p>
       </header>
