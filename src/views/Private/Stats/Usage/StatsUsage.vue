@@ -6,8 +6,8 @@
         v-model="state.period"
         class="shrink grow sm:w-auto"
         hide-details
-        :label="$t('stats.activity.period.label')"
-        :placeholder="$t('stats.activity.period.placeholder')"
+        :label="$t('stats.usage.period.label')"
+        :placeholder="$t('stats.usage.period.placeholder')"
         :shortcuts="shortcuts">
         <template #before>
           <component
@@ -51,7 +51,7 @@
 
       <div class="flex w-auto flex-col gap-1 overflow-hidden">
         <p class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
-          {{ $t('stats.activity.frequency.label') }}
+          {{ $t('stats.usage.frequency.label') }}
         </p>
         <ol
           class="flex h-10 flex-row items-center gap-x-4 overflow-x-auto overflow-y-hidden rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:border-neutral-600 dark:bg-neutral-800"
@@ -82,62 +82,41 @@
               ]"
               replace
               :to="{ ...route, query: { ...route.query, frequency: freq } }">
-              {{ $t(`stats.activity.frequency.value.${freq}`) }}
+              {{ $t(`stats.usage.frequency.value.${freq}`) }}
             </router-link>
           </li>
         </ol>
       </div>
 
-      <fieldset class="flex flex-col">
-        <legend class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
-          {{ $t('stats.activity.daily.weekDays.label') }}
-        </legend>
-        <ul class="mt-1 flex h-10 flex-row flex-wrap items-center gap-2">
-          <li
-            v-for="weekDayIndex in WEEK_DAYS_INDEXES"
-            :key="`day-${weekDayIndex}`"
-            class="relative flex">
-            <input
-              :id="`day-${weekDayIndex}`"
-              :checked="includes(state.selectedWeekDays, weekDayIndex)"
-              class="hidden"
-              :name="`day-${weekDayIndex}`"
-              type="checkbox"
-              :value="includes(state.selectedWeekDays, weekDayIndex)"
-              @input="() => onToggleWeekDay(weekDayIndex)" />
-            <label
-              :class="[
-                'flex size-8 cursor-pointer select-none items-center justify-center rounded-full text-sm font-medium ring-1 ring-inset transition-colors  focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
-                includes(state.selectedWeekDays, weekDayIndex)
-                  ? 'bg-indigo-500/10 text-indigo-700 ring-indigo-500/20 hover:bg-indigo-500/20 active:bg-indigo-500/30'
-                  : 'bg-white text-gray-700 ring-gray-500/20 hover:bg-gray-200 active:bg-gray-300 dark:bg-neutral-800',
-              ]"
-              :for="`day-${weekDayIndex}`"
-              :title="dayjs().set('day', weekDayIndex).format('dddd')">
-              {{ capitalize(dayjs().set('day', weekDayIndex).format('dd')).substring(0, 1) }}
-            </label>
-          </li>
-        </ul>
-      </fieldset>
+      <AppButtonPlain
+        class="dark:focus:ring-offset-stone-900"
+        :color="net ? 'indigo' : 'neutral'"
+        :icon="mdiChartWaterfall"
+        :to="{
+          ...route,
+          query: { ...route.query, net: `${!net}` },
+        }">
+        {{ $t('stats.usage.mode.waterfall.label') }}
+      </AppButtonPlain>
     </div>
 
-    <StatsActivityPeriod
+    <StatsUsagePeriod
+      :date="date"
       :frequency="frequency"
       :from="state.period.start"
-      :to="state.period.end"
-      :week-days="state.selectedWeekDays" />
+      :net="net"
+      :to="state.period.end" />
   </article>
 </template>
 
 <script lang="ts" setup>
-import StatsActivityPeriod from './StatsActivityPeriod.vue';
+import StatsUsagePeriod from './StatsUsagePeriod.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
-import { DATE_FORMAT, WEEK_DAYS_INDEXES } from '@/helpers/dates';
-import { ROUTE_QUERY_ARRAY_SEPARATOR } from '@/router/names';
+import { DATE_FORMAT } from '@/helpers/dates';
 import { Frequency } from '@/services/api/stats/frequency';
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import dayjs from 'dayjs';
-import { capitalize, includes } from 'lodash';
 import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -163,12 +142,7 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  weekDays: {
-    type: Array as PropType<string[]>,
-    default: () => WEEK_DAYS_INDEXES,
-  },
 });
-
 const i18n = useI18n();
 const router = useRouter();
 const route = useRoute();
@@ -177,47 +151,46 @@ const state = reactive({
     start: dayjs().subtract(30, 'day').format(DATE_FORMAT) as string,
     end: dayjs().format(DATE_FORMAT) as string,
   },
-  selectedWeekDays: WEEK_DAYS_INDEXES as number[],
 });
 
 const shortcuts = computed(() => () => [
   {
-    label: i18n.t('stats.activity.period.shortcuts.currentWeek'),
+    label: i18n.t('stats.usage.period.shortcuts.currentWeek'),
     atClick: () => {
       const now = dayjs();
       return [now.startOf('week').format(DATE_FORMAT), now.endOf('week').format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.currentMonth'),
+    label: i18n.t('stats.usage.period.shortcuts.currentMonth'),
     atClick: () => {
       const now = dayjs();
       return [now.startOf('month').format(DATE_FORMAT), now.endOf('month').format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.currentYear'),
+    label: i18n.t('stats.usage.period.shortcuts.currentYear'),
     atClick: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.endOf('year').format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.last30days'),
+    label: i18n.t('stats.usage.period.shortcuts.last30days'),
     atClick: () => {
       const now = dayjs();
       return [now.subtract(30, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.last6Months'),
+    label: i18n.t('stats.usage.period.shortcuts.last6Months'),
     atClick: () => {
       const now = dayjs();
       return [now.subtract(6, 'month').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.lastYear'),
+    label: i18n.t('stats.usage.period.shortcuts.lastYear'),
     atClick: () => {
       const lastYear = dayjs().subtract(1, 'year');
       return [
@@ -227,14 +200,14 @@ const shortcuts = computed(() => () => [
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.sinceYearStart'),
+    label: i18n.t('stats.usage.period.shortcuts.sinceYearStart'),
     atClick: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
-    label: i18n.t('stats.activity.period.shortcuts.sinceFirstDay'),
+    label: i18n.t('stats.usage.period.shortcuts.sinceFirstDay'),
     atClick: () => {
       const now = dayjs();
       return [now.year(2014).startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
@@ -298,35 +271,5 @@ watch(
     });
   },
   { immediate: true },
-);
-
-const onToggleWeekDay = (weekDayIndex: number) => {
-  if (state.selectedWeekDays.includes(weekDayIndex)) {
-    state.selectedWeekDays = state.selectedWeekDays.filter((day) => day !== weekDayIndex);
-  } else {
-    state.selectedWeekDays = [...state.selectedWeekDays, weekDayIndex].sort();
-  }
-};
-
-watch(
-  () => props.weekDays,
-  (weekdays) => {
-    if (weekdays?.length) {
-      state.selectedWeekDays = weekdays.map((i) => Number(i));
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  () => state.selectedWeekDays,
-  (selectedWeekDays) => {
-    router.replace({
-      query: {
-        ...router.currentRoute.value.query,
-        weekDays: selectedWeekDays.join(ROUTE_QUERY_ARRAY_SEPARATOR),
-      },
-    });
-  },
 );
 </script>

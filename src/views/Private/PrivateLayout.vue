@@ -36,7 +36,8 @@
         state.isMenuOpen && 'max-sm:max-w-28',
       ]">
       <NavigationDrawer
-        class="w-28 grow overflow-y-auto overflow-x-hidden max-sm:pt-16 sm:my-auto sm:max-h-[840px] sm:rounded-3xl sm:shadow-xl sm:[corner-shape:squircle]" />
+        id="navigation-drawer"
+        class="w-28 grow overflow-y-auto overflow-x-hidden max-sm:pt-16 sm:my-auto sm:max-h-[840px] sm:rounded-3xl sm:shadow-xl" />
     </aside>
 
     <div
@@ -70,3 +71,14 @@ router.afterEach(() => {
   state.isMenuOpen = false;
 });
 </script>
+
+<style scoped>
+@supports (corner-shape: squircle) {
+  @media (width >= 40rem) {
+    #navigation-drawer {
+      corner-shape: squircle;
+      border-radius: 9999px;
+    }
+  }
+}
+</style>

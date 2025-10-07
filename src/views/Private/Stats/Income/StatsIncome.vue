@@ -4,7 +4,7 @@
       <AppPeriodField
         id="incomes-period"
         v-model="state.period"
-        class="sm:w-auto sm:max-w-96 sm:grow-0"
+        class="shrink grow sm:w-auto"
         hide-details
         :label="$t('stats.incomes.period.label')"
         :placeholder="$t('stats.incomes.period.placeholder')"
@@ -49,46 +49,43 @@
         </template>
       </AppPeriodField>
 
-      <div class="flex flex-col gap-1">
+      <div class="flex w-auto flex-col gap-1 overflow-hidden">
         <p class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
           {{ $t('stats.incomes.frequency.label') }}
         </p>
-        <nav aria-label="Breadcrumb" class="flex overflow-x-auto max-sm:w-screen">
-          <ol
-            class="flex h-10 flex-row gap-x-4 rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:border-neutral-600 dark:bg-neutral-800"
-            role="list">
-            <li
-              v-for="(frequency, index) in frequencies"
-              :key="`incomes-${frequency.label}`"
-              class="flex">
-              <div class="flex items-center">
-                <svg
-                  v-if="index !== 0"
-                  aria-hidden="true"
-                  class="mr-4 h-full w-6 shrink-0 text-gray-200 dark:text-neutral-600"
-                  fill="currentColor"
-                  preserveAspectRatio="none"
-                  viewBox="0 0 24 44"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                </svg>
-                <router-link
-                  :aria-current="route.name === frequency.to.name ? 'page' : undefined"
-                  :class="[
-                    route.name === frequency.to.name
-                      ? 'text-indigo-500 hover:text-indigo-700'
-                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400',
-                    ,
-                    'text-sm font-medium',
-                  ]"
-                  replace
-                  :to="{ ...route, ...frequency.to }">
-                  {{ frequency.label }}
-                </router-link>
-              </div>
-            </li>
-          </ol>
-        </nav>
+        <ol
+          class="flex h-10 flex-row items-center gap-x-4 overflow-x-auto overflow-y-hidden rounded-md border border-gray-300 bg-white px-6 shadow-sm dark:border-neutral-600 dark:bg-neutral-800"
+          role="list"
+          tabindex="-1">
+          <li
+            v-for="(freq, index) in ['year', 'month', 'week', 'day']"
+            :key="`incomes-${freq}`"
+            class="flex flex-row items-center">
+            <svg
+              v-if="index !== 0"
+              aria-hidden="true"
+              class="mr-4 h-full w-6 shrink-0 text-gray-300 dark:text-neutral-600"
+              fill="currentColor"
+              preserveAspectRatio="none"
+              viewBox="0 0 24 44"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+            </svg>
+            <router-link
+              :aria-current="frequency === freq ? 'page' : undefined"
+              :class="[
+                frequency === freq
+                  ? 'text-indigo-500 hover:text-indigo-700'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400',
+                ,
+                'text-sm font-medium',
+              ]"
+              replace
+              :to="{ ...route, query: { ...route.query, frequency: freq } }">
+              {{ $t(`stats.incomes.frequency.value.${freq}`) }}
+            </router-link>
+          </li>
+        </ol>
       </div>
 
       <AppButtonPlain
@@ -103,19 +100,23 @@
       </AppButtonPlain>
     </div>
 
-    <RouterViewSlideTransition :from="state.period.start" :net="net" :to="state.period.end" />
+    <StatsIncomePeriod
+      :frequency="frequency"
+      :from="state.period.start"
+      :net="net"
+      :to="state.period.end" />
   </article>
 </template>
 
 <script lang="ts" setup>
+import StatsIncomePeriod from './StatsIncomePeriod.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
-import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { ROUTE_NAMES } from '@/router/names';
+import { Frequency } from '@/services/api/stats/frequency';
 import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import dayjs from 'dayjs';
-import { computed, reactive, watch } from 'vue';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -132,33 +133,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  frequency: {
+    type: String as PropType<Frequency>,
+    default: 'day',
+  },
 });
 
 const i18n = useI18n();
 const router = useRouter();
 const route = useRoute();
 const state = reactive({
-  period: { start: '' as string, end: '' as string },
+  period: {
+    start: dayjs().subtract(30, 'day').format(DATE_FORMAT) as string,
+    end: dayjs().format(DATE_FORMAT) as string,
+  },
 });
-
-const frequencies = computed(() => [
-  {
-    label: i18n.t('stats.incomes.frequency.value.yearly'),
-    to: { name: ROUTE_NAMES.STATS.INCOMES.YEARLY },
-  },
-  {
-    label: i18n.t('stats.incomes.frequency.value.monthly'),
-    to: { name: ROUTE_NAMES.STATS.INCOMES.MONTHLY },
-  },
-  {
-    label: i18n.t('stats.incomes.frequency.value.weekly'),
-    to: { name: ROUTE_NAMES.STATS.INCOMES.WEEKLY },
-  },
-  {
-    label: i18n.t('stats.incomes.frequency.value.daily'),
-    to: { name: ROUTE_NAMES.STATS.INCOMES.DAILY },
-  },
-]);
 
 const shortcuts = computed(() => () => [
   {

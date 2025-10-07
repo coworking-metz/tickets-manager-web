@@ -1,6 +1,6 @@
-import { ROUTE_NAMES } from './names';
-import { DATE_FORMAT } from '@/helpers/dates';
-import dayjs from 'dayjs';
+import { ROUTE_NAMES, ROUTE_QUERY_ARRAY_SEPARATOR } from './names';
+import { WEEK_DAYS_INDEXES } from '@/helpers/dates';
+import { compact } from 'lodash';
 import { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
@@ -119,120 +119,41 @@ export const routes: RouteRecordRaw[] = [
           {
             path: '',
             name: ROUTE_NAMES.STATS.INDEX,
-            redirect: { name: ROUTE_NAMES.STATS.INCOMES.INDEX },
+            redirect: { name: ROUTE_NAMES.STATS.USAGE },
           },
           {
-            path: 'incomes',
-            component: () => import('@/views/Private/Stats/Incomes/StatsIncomes.vue'),
+            path: 'usage/:date?',
+            name: ROUTE_NAMES.STATS.USAGE,
+            component: () => import('@/views/Private/Stats/Usage/StatsUsage.vue'),
             props: (route) => ({
               from: route.query.from,
               to: route.query.to,
               net: Boolean(route.query.net === 'true'),
+              frequency: route.query.frequency,
+              date: route.params.date,
             }),
-            children: [
-              {
-                path: '',
-                name: ROUTE_NAMES.STATS.INCOMES.INDEX,
-                redirect: (route) => {
-                  let from = route.query.from;
-                  let to = route.query.to;
-                  if (!from && !to) {
-                    const now = dayjs();
-                    from = now.subtract(30, 'day').format(DATE_FORMAT);
-                    to = now.format(DATE_FORMAT);
-                  }
-                  return {
-                    name: ROUTE_NAMES.STATS.INCOMES.DAILY,
-                    query: {
-                      from,
-                      to,
-                    },
-                  };
-                },
-              },
-              {
-                path: 'daily',
-                name: ROUTE_NAMES.STATS.INCOMES.DAILY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
-                props: {
-                  period: 'day',
-                },
-              },
-              {
-                path: 'weekly',
-                name: ROUTE_NAMES.STATS.INCOMES.WEEKLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
-                props: {
-                  period: 'week',
-                },
-              },
-              {
-                path: 'monthly',
-                name: ROUTE_NAMES.STATS.INCOMES.MONTHLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
-                props: {
-                  period: 'month',
-                },
-              },
-              {
-                path: 'yearly',
-                name: ROUTE_NAMES.STATS.INCOMES.YEARLY,
-                component: () => import('@/views/Private/Stats/Incomes/StatsIncomesPeriod.vue'),
-                props: {
-                  period: 'year',
-                },
-              },
-            ],
+          },
+          {
+            path: 'income',
+            name: ROUTE_NAMES.STATS.INCOME,
+            component: () => import('@/views/Private/Stats/Income/StatsIncome.vue'),
+            props: (route) => ({
+              from: route.query.from,
+              to: route.query.to,
+              net: Boolean(route.query.net === 'true'),
+              frequency: route.query.frequency,
+            }),
           },
           {
             path: 'activity',
+            name: ROUTE_NAMES.STATS.ACTIVITY,
             component: () => import('@/views/Private/Stats/Activity/StatsActivity.vue'),
             props: (route) => ({
               from: route.query.from,
               to: route.query.to,
+              frequency: route.query.frequency,
+              weekDays: compact(`${route.query.weekDays || ''}`.split(ROUTE_QUERY_ARRAY_SEPARATOR)),
             }),
-            children: [
-              {
-                path: '',
-                name: ROUTE_NAMES.STATS.ACTIVITY.INDEX,
-                redirect: (route) => {
-                  let from = route.query.from;
-                  let to = route.query.to;
-                  if (!from && !to) {
-                    const now = dayjs();
-                    from = now.subtract(30, 'day').format(DATE_FORMAT);
-                    to = now.format(DATE_FORMAT);
-                  }
-                  return {
-                    name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
-                    query: {
-                      from,
-                      to,
-                    },
-                  };
-                },
-              },
-              {
-                path: 'daily',
-                name: ROUTE_NAMES.STATS.ACTIVITY.DAILY,
-                component: () => import('@/views/Private/Stats/Activity/StatsActivityDaily.vue'),
-              },
-              {
-                path: 'weekly',
-                name: ROUTE_NAMES.STATS.ACTIVITY.WEEKLY,
-                component: () => import('@/views/Private/Stats/Activity/StatsActivityWeekly.vue'),
-              },
-              {
-                path: 'monthly',
-                name: ROUTE_NAMES.STATS.ACTIVITY.MONTHLY,
-                component: () => import('@/views/Private/Stats/Activity/StatsActivityMonthly.vue'),
-              },
-              {
-                path: 'yearly',
-                name: ROUTE_NAMES.STATS.ACTIVITY.YEARLY,
-                component: () => import('@/views/Private/Stats/Activity/StatsActivityYearly.vue'),
-              },
-            ],
           },
         ],
       },

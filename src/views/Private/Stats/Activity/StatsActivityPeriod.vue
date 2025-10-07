@@ -1,68 +1,41 @@
 <template>
-  <div class="flex grow flex-col">
+  <div class="mx-auto flex w-full max-w-5xl grow flex-col">
     <Head>
-      <title>{{ $t('stats.activity.daily.head.title') }}</title>
+      <title>{{ $t(`${i18nKeyPrefix}.head.title`) }}</title>
     </Head>
-
-    <section class="mx-auto flex w-full grow flex-col min-[1680px]:flex-row">
-      <div class="max-h-0 shrink grow basis-0" />
-      <div class="flex min-h-[320px] w-full max-w-5xl grow flex-col">
-        <StatsActivityPeriodGraph
-          :activities="dailyActivities"
-          :loading="state.isFetchingActivities"
-          :options="options"
-          @click="onBarSelect" />
-      </div>
-
-      <div class="flex shrink basis-0 flex-col items-start min-[1680px]:grow">
-        <fieldset class="mx-auto w-full min-w-16 max-w-5xl px-3 pb-6 sm:px-6 min-[1680px]:px-0">
-          <legend class="sr-only">{{ $t('stats.activity.daily.weekDays.label') }}</legend>
-          <p
-            aria-hidden="true"
-            class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
-            {{ $t('stats.activity.daily.weekDays.label') }}
-          </p>
-          <ul
-            class="mt-1 flex flex-row flex-wrap items-start gap-x-4 gap-y-2 min-[1680px]:flex-col">
-            <li
-              v-for="weekDay in state.selectedWeekDays"
-              :key="`day-${weekDay.index}`"
-              :class="[
-                'flex flex-row items-center gap-2 rounded-full px-3 ring-1 ring-inset transition-colors',
-                weekDay.value
-                  ? 'bg-indigo-500/10 text-indigo-700 ring-indigo-500/20 hover:bg-indigo-500/20 active:bg-indigo-500/30'
-                  : 'bg-white text-gray-700 ring-gray-500/20 hover:bg-gray-200 active:bg-gray-300 dark:bg-neutral-800',
-              ]">
-              <input
-                :id="`day-${weekDay.index}`"
-                v-model="weekDay.value"
-                class="size-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:text-indigo-500"
-                :name="`day-${weekDay.index}`"
-                type="checkbox" />
-              <label
-                class="size-full cursor-pointer select-none py-2 text-sm font-medium"
-                :for="`day-${weekDay.index}`">
-                {{ dayjs().set('day', weekDay.index).format('dddd') }}
-              </label>
-            </li>
-          </ul>
-        </fieldset>
-      </div>
+    <section class="flex grow basis-80 flex-col">
+      <LoadingSpinner v-if="isPendingActivities" class="m-auto size-16" />
+      <ErrorState
+        v-else-if="activitiesErrorText"
+        class="m-auto pb-16"
+        :description="activitiesErrorText"
+        :title="$t(`${i18nKeyPrefix}.onFetch.fail`)" />
+      <EmptyState
+        v-else-if="!activities?.length"
+        :animation="AnalyticsGraph"
+        class="m-auto pb-16"
+        :description="$t('stats.activity.empty.description')"
+        :title="$t('stats.activity.empty.title')" />
+      <StatsActivityPeriodGraph
+        v-else
+        :activities="dailyActivities"
+        :options="options"
+        @click="onSelectDate" />
     </section>
 
-    <section class="mx-auto w-full max-w-5xl px-3 sm:px-6">
+    <section class="max-sm:mx-3">
       <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-        {{ $t('stats.activity.daily.summary.label') }}
+        {{ $t(`${i18nKeyPrefix}.summary.label`) }}
       </h3>
       <dl
         class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-            {{ $t('stats.activity.daily.summary.average.people.label') }}
+            {{ $t(`${i18nKeyPrefix}.summary.average.people.label`) }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
-              v-if="state.isFetchingActivities"
+              v-if="isFetchingActivities"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
@@ -85,10 +58,10 @@
           </dd>
 
           <div
-            v-if="state.isFetchingActivities"
+            v-if="isFetchingActivities"
             class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
           <div
-            v-else-if="state.activities.length"
+            v-else-if="activities?.length"
             class="flex flex-row items-baseline justify-between text-sm">
             <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{
@@ -119,11 +92,11 @@
 
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-            {{ $t('stats.activity.daily.summary.average.attendance.label') }}
+            {{ $t(`${i18nKeyPrefix}.summary.average.attendance.label`) }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
-              v-if="state.isFetchingActivities"
+              v-if="isFetchingActivities"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
             <AnimatedCounter
               v-else
@@ -141,10 +114,10 @@
           </dd>
 
           <div
-            v-if="state.isFetchingActivities"
+            v-if="isFetchingActivities"
             class="mt-1 h-5 w-48 animate-pulse rounded-3xl bg-slate-200" />
           <div
-            v-else-if="state.activities.length"
+            v-else-if="activities?.length"
             class="flex flex-row items-baseline justify-between text-sm">
             <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{ $t('stats.activity.daily.summary.average.attendance.description') }}
@@ -158,25 +131,32 @@
 
 <script lang="ts" setup>
 import StatsActivityPeriodGraph from './StatsActivityPeriodGraph.vue';
+import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
+import EmptyState from '@/components/EmptyState.vue';
+import ErrorState from '@/components/ErrorState.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { handleSilentError } from '@/helpers/errors';
 import { ROUTE_NAMES } from '@/router/names';
-import { ActivityPeriod, getActivityPerDay, MAX_ATTENDANCE } from '@/services/api/activity';
-import { useNotificationsStore } from '@/store/notifications';
+import { MAX_ATTENDANCE } from '@/services/api/attendance';
+import { ActivityPeriod, getActivityPerPeriod } from '@/services/api/stats/activity';
+import { Frequency, getChildFrequency } from '@/services/api/stats/frequency';
+import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { theme } from '@/styles/colors';
+import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, reactive, watch } from 'vue';
+import { computed, PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
-// week should start on monday
-const WEEK_DAYS_INDEXES = [...Array(7).keys()].map((index) => (index + 1) % 7);
-
 const props = defineProps({
+  frequency: {
+    type: String as PropType<Frequency>,
+    required: true,
+  },
   from: {
     type: String,
     default: null,
@@ -185,22 +165,45 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  weekDays: {
+    type: Array as PropType<number[]>,
+    default: () => [],
+  },
 });
 
 const router = useRouter();
 const i18n = useI18n();
-const notificationsStore = useNotificationsStore();
-const state = reactive({
-  isFetchingActivities: false,
-  activities: [] as ActivityPeriod<'day'>[],
-  selectedWeekDays: WEEK_DAYS_INDEXES.map((i) => ({ index: i, value: true })),
+const statsColors = useStatsColors();
+
+const i18nKeyPrefix = computed(() => {
+  switch (props.frequency) {
+    case 'day':
+      return 'stats.activity.daily';
+    case 'week':
+      return 'stats.activity.weekly';
+    case 'month':
+      return 'stats.activity.monthly';
+    case 'year':
+      return 'stats.activity.yearly';
+    default:
+      return 'stats.activity.unknown';
+  }
 });
 
+const {
+  isPending: isPendingActivities,
+  isFetching: isFetchingActivities,
+  data: activities,
+  errorText: activitiesErrorText,
+} = useAppQuery<ActivityPeriod<Frequency>[]>(
+  computed(() => ({
+    queryKey: statsQueryKeys.activityInPeriod(props.frequency, props.from, props.to),
+    queryFn: () => getActivityPerPeriod(props.frequency, props.from, props.to),
+  })),
+);
+
 const dailyActivities = computed(() => {
-  return state.activities.filter(({ date }) => {
-    const dayIndex = dayjs(date).day();
-    return state.selectedWeekDays.find(({ index }) => index === dayIndex)?.value;
-  });
+  return (activities.value ?? []).filter(({ date }) => props.weekDays.includes(dayjs(date).day()));
 });
 
 const totalPeopleCount = computed(() =>
@@ -221,6 +224,24 @@ const averageAttendance = computed(() => {
   );
 });
 
+const getTooltipTitle = (date: string) => {
+  switch (props.frequency) {
+    case 'day':
+      return dayjs(date).format('dddd LL');
+    case 'week':
+      return i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.date.label`, {
+        start: dayjs(date).startOf('week').format('ll'),
+        end: dayjs(date).endOf('week').format('ll'),
+      });
+    case 'month':
+      return dayjs(date).format('MMMM YYYY');
+    case 'year':
+      return dayjs(date).format('YYYY');
+    default:
+      return date;
+  }
+};
+
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
     className: '!p-0 !border-0',
@@ -232,7 +253,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       return `
         <dl class="flex flex-col min-w-48 items-end gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
-            ${dayjs(date).format('dddd LL')}
+            ${getTooltipTitle(date)}
           </dt>
 
           <dd class="flex flex-col items-end">
@@ -256,7 +277,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               count: newCoworkersCount,
             })}
             <span class="block h-3 w-3 rounded-full" style="background-color: ${
-              theme.blueCrayola
+              statsColors.value.newMember
             };"></span>
           </p>
 
@@ -265,7 +286,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               count: coworkersCount - newCoworkersCount,
             })}
             <span class="block h-3 w-3 rounded-full" style="background-color: ${
-              theme.frenchSkyBlue
+              statsColors.value.member
             };"></span>
           </p>
 
@@ -283,50 +304,41 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
   },
   xAxis: {
     axisLabel: {
-      formatter: (value: string) => dayjs(value).format('ll').slice(0, -4),
+      formatter: (date: string) => {
+        switch (props.frequency) {
+          case 'month':
+            return dayjs(date).format('MMM');
+          case 'year':
+            return dayjs(date).format('YYYY');
+          default:
+            return dayjs(date).format('ll').slice(0, -4);
+        }
+      },
       align: 'center',
     },
   },
 }));
 
-const fetchActivities = (from: string, to: string) => {
-  state.isFetchingActivities = true;
-  Promise.all([
-    getActivityPerDay(from, to)
-      .then((activities) => {
-        state.activities = activities;
-      })
-      .catch(handleSilentError)
-      .catch((error) => {
-        notificationsStore.addErrorNotification(error, i18n.t('stats.activity.daily.onFetch.fail'));
-        return Promise.reject(error);
-      }),
-    // wait at least 500ms
-    // because the is the time for the transition to fully animate
-    // and it needs to be done before echarts can be rendered
-    new Promise((resolve) => setTimeout(resolve, 400)),
-  ]).finally(() => {
-    state.isFetchingActivities = false;
-  });
+const onSelectDate = ({ dataIndex }: { dataIndex: number }) => {
+  const element = (activities.value ?? [])[dataIndex];
+  const { date, type } = element;
+  if (type === 'day') {
+    router.push({
+      name: ROUTE_NAMES.ATTENDANCE,
+      params: {
+        date: dayjs(date).format(DATE_FORMAT),
+      },
+    });
+  } else {
+    router.push({
+      name: router.currentRoute.value.name,
+      query: {
+        ...router.currentRoute.value.query,
+        from: dayjs(date).startOf(props.frequency).format(DATE_FORMAT),
+        to: dayjs(date).endOf(props.frequency).format(DATE_FORMAT),
+        frequency: getChildFrequency(type),
+      },
+    });
+  }
 };
-
-const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
-  const { date } = (dailyActivities.value ?? [])[dataIndex];
-  router.push({
-    name: ROUTE_NAMES.ATTENDANCE,
-    params: {
-      date: dayjs(date).format(DATE_FORMAT),
-    },
-  });
-};
-
-watch(
-  [() => props.from, () => props.to],
-  ([from, to]) => {
-    if (dayjs(from).isValid() || dayjs(to).isValid()) {
-      fetchActivities(from, to);
-    }
-  },
-  { immediate: true },
-);
 </script>

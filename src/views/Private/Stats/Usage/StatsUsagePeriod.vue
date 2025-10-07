@@ -3,22 +3,21 @@
     <Head>
       <title>{{ $t(`${i18nKeyPrefix}.head.title`) }}</title>
     </Head>
-    <section class="flex min-h-[320px] grow flex-col">
-      <LoadingSpinner v-if="isFetchingIncomes" class="m-auto size-16" />
+    <section class="flex grow basis-80 flex-col">
+      <LoadingSpinner v-if="isPendingUsages" class="m-auto size-16" />
       <ErrorState
-        v-else-if="incomesErrorText"
+        v-else-if="usagesErrorText"
         class="m-auto pb-16"
-        :description="incomesErrorText"
+        :description="usagesErrorText"
         :title="$t(`${i18nKeyPrefix}.onFetch.fail`)" />
       <EmptyState
-        v-else-if="!incomes?.length"
+        v-else-if="!usages?.length"
         :animation="AnalyticsGraph"
         class="m-auto pb-16"
-        :description="$t('stats.incomes.empty.description')"
-        :title="$t('stats.incomes.empty.title')" />
-      <StatsIncomesPeriodGraph
+        :description="$t('stats.usage.empty.description')"
+        :title="$t('stats.usage.empty.title')" />
+      <StatsUsagePeriodGraph
         v-else
-        :incomes="incomes"
         :options="options"
         :threshold-formatter="
           ({ value }) =>
@@ -26,8 +25,9 @@
               amount: fractionAmount(value),
             })
         "
+        :usages="usages"
         :waterfall="net"
-        @click="onBarSelect" />
+        @click="onSelectDate" />
     </section>
 
     <section class="max-sm:mx-3">
@@ -41,7 +41,7 @@
             {{ $t(`${i18nKeyPrefix}.summary.average.label`) }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <LoadingSkeleton v-if="isFetchingIncomes" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
@@ -50,9 +50,9 @@
               :to="averageIncome" />
           </dd>
 
-          <LoadingSkeleton v-if="isFetchingIncomes" class="mt-1 h-5 w-48 rounded-full" />
+          <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
           <div
-            v-else-if="incomes?.length"
+            v-else-if="usages?.length"
             class="flex flex-row items-baseline justify-between text-sm">
             <span class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
               {{
@@ -83,17 +83,17 @@
             {{ $t(`${i18nKeyPrefix}.summary.total.label`) }}
           </dt>
           <dd class="mt-1 flex flex-col">
-            <LoadingSkeleton v-if="isFetchingIncomes" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
               :format="fractionAmount"
-              :to="totalIncome" />
+              :to="totalAmount" />
 
-            <LoadingSkeleton v-if="isFetchingIncomes" class="mt-1 h-5 w-48 rounded-full" />
+            <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
             <div
-              v-else-if="incomes?.length"
+              v-else-if="usages?.length"
               class="flex flex-row items-baseline justify-between text-sm">
               <span
                 class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
@@ -106,13 +106,13 @@
               <div
                 :class="[
                   'rounded-full px-2.5 py-0.5 font-medium',
-                  totalIncome > totalCharges
+                  totalAmount > totalCharges
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800',
                 ]">
                 {{
-                  `${totalIncome > totalCharges ? '+' : ''}${fractionAmount(
-                    totalIncome - totalCharges,
+                  `${totalAmount > totalCharges ? '+' : ''}${fractionAmount(
+                    totalAmount - totalCharges,
                     {},
                     $i18n.locale,
                   )}`
@@ -127,7 +127,7 @@
             {{ $t(`${i18nKeyPrefix}.summary.debt.label`) }}
           </dt>
           <dd class="mt-1 flex flex-col">
-            <LoadingSkeleton v-if="isFetchingIncomes" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
@@ -135,9 +135,9 @@
               :format="fractionAmount"
               :to="totalDebtAmount" />
 
-            <LoadingSkeleton v-if="isFetchingIncomes" class="mt-1 h-5 w-48 rounded-full" />
+            <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
             <div
-              v-else-if="incomes?.length"
+              v-else-if="usages?.length"
               class="flex flex-row items-baseline justify-between text-sm">
               <span
                 class="shrink grow basis-0 truncate font-normal text-gray-500 dark:text-gray-400">
@@ -149,18 +149,27 @@
               </span>
 
               <div class="rounded-full bg-gray-100 px-2.5 py-0.5 font-medium text-gray-800">
-                {{ fractionPercentage(totalDebtAmount / totalIncome, $i18n.locale) }}
+                {{ fractionPercentage(totalDebtAmount / totalAmount, $i18n.locale) }}
               </div>
             </div>
           </dd>
         </div>
       </dl>
     </section>
+
+    <StatsUsageMembersDialog
+      v-model="state.isDialogVisible"
+      :date="date"
+      :frequency="frequency"
+      :from="from"
+      :title="getTooltipTitle(date)"
+      :to="to" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import StatsIncomesPeriodGraph from './StatsIncomesPeriodGraph.vue';
+import StatsUsageMembersDialog from './StatsUsageMembersDialog.vue';
+import StatsUsagePeriodGraph from './StatsUsagePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
@@ -168,21 +177,24 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
-import { IncomePeriodWithTotal, PeriodType, getIncomesPerPeriod } from '@/services/api/incomes';
+import { Frequency } from '@/services/api/stats/frequency';
+import { getUsagePerFrequency } from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, PropType } from 'vue';
+import { debounce } from 'lodash';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
 const props = defineProps({
-  period: {
-    type: String as PropType<PeriodType>,
+  frequency: {
+    type: String as PropType<Frequency>,
     required: true,
   },
   from: {
@@ -200,76 +212,80 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  date: {
+    type: String,
+    default: null,
+  },
 });
 
 const router = useRouter();
 const i18n = useI18n();
 const statsColors = useStatsColors();
+const state = reactive({
+  isDialogVisible: false,
+});
 
 const i18nKeyPrefix = computed(() => {
-  switch (props.period) {
+  switch (props.frequency) {
     case 'day':
-      return 'stats.incomes.daily';
+      return 'stats.usage.daily';
     case 'week':
-      return 'stats.incomes.weekly';
+      return 'stats.usage.weekly';
     case 'month':
-      return 'stats.incomes.monthly';
+      return 'stats.usage.monthly';
     case 'year':
-      return 'stats.incomes.yearly';
+      return 'stats.usage.yearly';
     default:
-      return 'stats.incomes.unknown';
+      return 'stats.usage.unknown';
   }
 });
 
 const {
-  isFetching: isFetchingIncomes,
-  data: incomes,
-  errorText: incomesErrorText,
-} = useAppQuery<IncomePeriodWithTotal<PeriodType>[]>(
+  isPending: isPendingUsages,
+  isFetching: isFetchingUsages,
+  data: usages,
+  errorText: usagesErrorText,
+} = useAppQuery(
   computed(() => ({
-    queryKey: statsQueryKeys.incomesInPeriod(props.period, props.from, props.to),
-    queryFn: () => getIncomesPerPeriod(props.period, props.from, props.to),
+    queryKey: statsQueryKeys.usageInPeriod(props.frequency, props.from, props.to),
+    queryFn: () => getUsagePerFrequency(props.frequency, props.from, props.to),
   })),
 );
 
-const totalIncome = computed(() =>
-  (incomes.value ?? [])
-    .map(({ data }) => data.tickets.amount + data.subscriptions.amount)
-    .reduce((acc, income) => acc + income, 0),
+const totalAmount = computed(() =>
+  (usages.value ?? []).reduce((acc, { data }) => acc + data.amount, 0),
 );
 
 const totalCharges = computed(() => {
-  return (incomes.value ?? [])
-    .map(({ data }) => data.charges)
-    .reduce((acc, charges) => acc + charges, 0);
+  return (usages.value ?? []).reduce((acc, { data }) => acc + data.charges, 0);
 });
 
 const averageIncome = computed(() => {
-  return totalIncome.value / (incomes.value ?? []).length || 0;
+  return totalAmount.value / (usages.value ?? []).length || 0;
 });
 
 const averageCharges = computed(() => {
-  return totalCharges.value / (incomes.value ?? []).length || 0;
+  return totalCharges.value / (usages.value ?? []).length || 0;
 });
 
 const totalDebtCount = computed(() =>
-  (incomes.value ?? [])
+  (usages.value ?? [])
     .map(({ data }) => data.tickets.debt.count)
     .reduce((acc, count) => acc + count, 0),
 );
 
 const totalDebtAmount = computed(() =>
-  (incomes.value ?? [])
+  (usages.value ?? [])
     .map(({ data }) => data.tickets.debt.amount)
     .reduce((acc, amount) => acc + amount, 0),
 );
 
 const getTooltipTitle = (date: string) => {
-  switch (props.period) {
+  switch (props.frequency) {
     case 'day':
       return dayjs(date).format('dddd LL');
     case 'week':
-      return i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.date.label`, {
+      return i18n.t(`stats.usage.weekly.graph.tooltip.label`, {
         start: dayjs(date).startOf('week').format('ll'),
         end: dayjs(date).endOf('week').format('ll'),
       });
@@ -287,9 +303,9 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
     className: '!p-0 !border-0',
     formatter: (params) => {
       const {
-        data: { incomes: incomeAmount, tickets, subscriptions, charges },
+        data: { amount, tickets, subscriptions, charges },
         date, // @ts-ignore
-      } = (incomes.value ?? [])[params[0].dataIndex];
+      } = (usages.value ?? [])[params[0].dataIndex];
       return `
         <dl class="flex flex-col gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
@@ -298,12 +314,12 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
 
           ${
             tickets.debt.count
-              ? `<div class="flex flex-row justify-between place-items-end">
-              <dt class="flex flex-row gap-1 items-center text-base font-normal">
-                <span class="block h-3 w-3 rounded-full" style="background-color: ${
+              ? `<div class="flex flex-row justify-between items-start">
+              <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
+                <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                   statsColors.value.debt
                 };"></span>
-                ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.tickets.debt`, {
+                ${i18n.t(`stats.usage.tickets.debt`, {
                   count: tickets.debt.count,
                 })}
               </dt>
@@ -313,12 +329,12 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
             </div>`
               : ''
           }
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
+          <div class="flex flex-row justify-between items-start">
+            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
+              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                 statsColors.value.ticket
               };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.tickets.label`, {
+              ${i18n.t(`stats.usage.tickets.label`, {
                 count: tickets.count,
               })}
             </dt>
@@ -326,14 +342,20 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               tickets.amount,
             )}</dd>
           </div>
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
+          <div class="flex flex-row justify-between items-start">
+            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
+              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                 statsColors.value.subscription
               };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.subscriptions.label`, {
+              ${i18n.t(`stats.usage.subscriptions.label`, {
                 count: subscriptions.count,
-              })}
+              })}${
+                subscriptions.attending.count
+                  ? `<br />${i18n.t(`stats.usage.subscriptions.attending`, {
+                      count: subscriptions.attending.count,
+                    })}`
+                  : ''
+              }
             </dt>
             <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
               subscriptions.amount,
@@ -341,12 +363,12 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           </div>
 
           <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            ${fractionAmount(incomeAmount)}
+            ${fractionAmount(amount)}
           </dd>
 
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
+          <div class="flex flex-row justify-between items-start">
+            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
+              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                 statsColors.value.charges
               };"></span>
               ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
@@ -355,9 +377,9 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           </div>
 
           <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
-            incomeAmount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            amount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
-            ${incomeAmount > charges ? '+' : ''}${fractionAmount(incomeAmount - charges)}
+            ${amount > charges ? '+' : ''}${fractionAmount(amount - charges)}
           </div>
         </dl>
       `;
@@ -365,19 +387,48 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
   },
   xAxis: {
     axisLabel: {
-      formatter: (value: string) => dayjs(value).format('ll').slice(0, -4),
+      formatter: (date: string) => {
+        switch (props.frequency) {
+          case 'month':
+            return dayjs(date).format('MMM');
+          case 'year':
+            return dayjs(date).format('YYYY');
+          default:
+            return dayjs(date).format('ll').slice(0, -4);
+        }
+      },
       align: 'center',
     },
   },
 }));
 
-const onBarSelect = ({ dataIndex }: { dataIndex: number }) => {
-  const { date } = (incomes.value ?? [])[dataIndex];
+const onSelectDate = ({ dataIndex }: { dataIndex: number }) => {
+  const element = (usages.value ?? [])[dataIndex];
+  const { date } = element;
   router.push({
-    name: ROUTE_NAMES.ATTENDANCE,
+    name: router.currentRoute.value.name,
+    query: router.currentRoute.value.query,
     params: {
       date: dayjs(date).format(DATE_FORMAT),
     },
   });
 };
+
+const onDialogChange = debounce((isVisible: boolean) => {
+  if (!isVisible && doesRouteBelongsTo(router.currentRoute.value, ROUTE_NAMES.STATS.USAGE)) {
+    router.replace({
+      name: router.currentRoute.value.name,
+      query: router.currentRoute.value.query,
+    });
+  }
+}, 300);
+
+watch(() => state.isDialogVisible, onDialogChange);
+watch(
+  () => props.date,
+  (newDate) => {
+    state.isDialogVisible = !!newDate;
+  },
+  { immediate: true },
+);
 </script>

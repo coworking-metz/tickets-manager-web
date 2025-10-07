@@ -11,7 +11,7 @@
         "newMembers": {
           "label": "0 new | {count} new | {count} new"
         },
-        "total": "Nobody | Only one person | People whose"
+        "total": "Nobody | Only one person | people whose"
       }
     },
     "head": {
@@ -33,7 +33,7 @@
           "threshold": "on {threshold} available seats"
         }
       },
-      "label": "In a few figures"
+      "label": "At a glance"
     },
     "weekDays": {
       "label": "Week days"
@@ -47,10 +47,10 @@
   "frequency": {
     "label": "View by",
     "value": {
-      "daily": "Day",
-      "monthly": "Month",
-      "weekly": "Week",
-      "yearly": "Year"
+      "day": "Day",
+      "month": "Month",
+      "week": "Week",
+      "year": "Year"
     }
   },
   "mode": {
@@ -70,7 +70,7 @@
         "newMembers": {
           "label": "0 new | {count} new | {count} new"
         },
-        "total": "Nobody | Only one person | People whose"
+        "total": "Nobody | Only one person | people whose"
       }
     },
     "head": {
@@ -92,7 +92,7 @@
           "label": "Average occupation per month"
         }
       },
-      "label": "In a few figures"
+      "label": "At a glance"
     }
   },
   "period": {
@@ -126,7 +126,7 @@
         "newMembers": {
           "label": "0 new | {count} new | {count} new"
         },
-        "total": "Nobody | Only one person | People whose"
+        "total": "Nobody | Only one person | people whose"
       }
     },
     "head": {
@@ -148,7 +148,7 @@
           "label": "Average occupation per week"
         }
       },
-      "label": "In a few figures"
+      "label": "At a glance"
     }
   },
   "yearly": {
@@ -163,7 +163,7 @@
         "newMembers": {
           "label": "0 new | {count} new | {count} new"
         },
-        "total": "Nobody | Only one person | People whose"
+        "total": "Nobody | Only one person | people whose"
       }
     },
     "head": {
@@ -185,7 +185,7 @@
           "label": "Average occupation per year"
         }
       },
-      "label": "In a few figures"
+      "label": "At a glance"
     }
   }
 }

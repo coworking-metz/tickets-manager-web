@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { fractionAmount } from '@/helpers/currency';
-import { IncomePeriodWithTotal } from '@/services/api/incomes';
+import { IncomePeriod } from '@/services/api/stats/income';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -33,7 +33,7 @@ use([MarkLineComponent, TooltipComponent, GridComponent, BarChart, LineChart, Ca
 defineEmits(['click']);
 const props = defineProps({
   incomes: {
-    type: Array as PropType<IncomePeriodWithTotal<'year' | 'month' | 'week' | 'day'>[]>,
+    type: Array as PropType<IncomePeriod<'year' | 'month' | 'week' | 'day'>[]>,
     default: () => [],
   },
   /**
@@ -86,6 +86,9 @@ const options = computed<
       align: 'right',
       clickable: true,
     },
+    splitLine: {
+      show: false,
+    },
   },
   series: [
     ...(props.waterfall
@@ -93,9 +96,9 @@ const options = computed<
           {
             silent: props.disabled,
             name: 'transparent',
-            data: props.incomes.map(({ data: { charges, incomes } }) => {
+            data: props.incomes.map(({ data: { charges, income } }) => {
               return {
-                value: incomes > charges ? charges : incomes,
+                value: income > charges ? charges : income,
                 itemStyle: {
                   color: 'transparent',
                 },
@@ -107,11 +110,11 @@ const options = computed<
           {
             silent: props.disabled,
             name: 'net',
-            data: props.incomes.map(({ data: { charges, incomes } }) => {
+            data: props.incomes.map(({ data: { charges, income } }) => {
               return {
-                value: incomes > charges ? incomes - charges : charges - incomes,
+                value: income > charges ? income - charges : charges - income,
                 itemStyle: {
-                  color: incomes > charges ? '#047857' : '#fca5a5',
+                  color: income > charges ? '#047857' : '#fca5a5',
                 },
               };
             }),
@@ -126,7 +129,7 @@ const options = computed<
             data: props.incomes.map(({ data }) => ({
               value: data.subscriptions.amount,
               itemStyle: {
-                color: statsColors.value.subscription,
+                color: statsColors.value.subscriptionOrder,
               },
             })),
             type: 'bar',
@@ -139,7 +142,7 @@ const options = computed<
             data: props.incomes.map(({ data }) => ({
               value: data.tickets.amount,
               itemStyle: {
-                color: statsColors.value.ticket,
+                color: statsColors.value.ticketOrder,
               },
             })),
             type: 'bar',
@@ -148,11 +151,11 @@ const options = computed<
           },
           {
             silent: props.disabled,
-            name: 'debt',
+            name: 'memberships',
             data: props.incomes.map(({ data }) => ({
-              value: data.tickets.debt.amount,
+              value: data.memberships.amount,
               itemStyle: {
-                color: statsColors.value.debt,
+                color: statsColors.value.membershipOrder,
               },
             })),
             type: 'bar',
@@ -163,6 +166,7 @@ const options = computed<
     {
       type: 'line',
       smooth: true,
+      animation: false,
       smoothMonotone: 'x',
       symbol: 'rect',
       symbolSize: (_value: number, { dataIndex }: { dataIndex: number }) => {

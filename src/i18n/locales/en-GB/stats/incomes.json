@@ -3,17 +3,13 @@
     "graph": {
       "threshold": "Daily\nfixed\ncharges\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Deficit"
-        },
-        "profit": {
-          "label": "Profit"
+        "memberships": {
+          "label": "No membership | {count} membership | {count} memberships"
         },
         "subscriptions": {
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
-          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -29,11 +25,7 @@
         "label": "Average Daily Revenue",
         "threshold": "on {amount} of daily fixed charges"
       },
-      "debt": {
-        "label": "Indebted",
-        "tickets": "{''} | {count} ticket in debt | {count} tickets in debt"
-      },
-      "label": "In a few figures",
+      "label": "At a glance",
       "total": {
         "label": "Total",
         "threshold": "on {amount} of fixed charges"
@@ -48,10 +40,10 @@
   "frequency": {
     "label": "View by",
     "value": {
-      "daily": "Day",
-      "monthly": "Month",
-      "weekly": "Week",
-      "yearly": "Year"
+      "day": "Day",
+      "month": "Month",
+      "week": "Week",
+      "year": "Year"
     }
   },
   "mode": {
@@ -63,17 +55,13 @@
     "graph": {
       "threshold": "Monthly\nfixed\ncharges\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Deficit"
-        },
-        "profit": {
-          "label": "Profit"
+        "memberships": {
+          "label": "No membership | {count} membership | {count} memberships"
         },
         "subscriptions": {
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
-          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -89,7 +77,7 @@
         "label": "Average Monthly Revenue",
         "threshold": "on {amount} of monthly fixed charges"
       },
-      "label": "In a few figures",
+      "label": "At a glance",
       "total": {
         "label": "Total",
         "threshold": "on {amount} of fixed charges"
@@ -119,17 +107,13 @@
         "date": {
           "label": "From {start} to {end}"
         },
-        "deficit": {
-          "label": "Deficit"
-        },
-        "profit": {
-          "label": "Profit"
+        "memberships": {
+          "label": "No membership | {count} membership | {count} memberships"
         },
         "subscriptions": {
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
-          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -145,7 +129,7 @@
         "label": "Average Weekly Revenue",
         "threshold": "on {amount} of weekly fixed charges"
       },
-      "label": "In a few figures",
+      "label": "At a glance",
       "total": {
         "label": "Total",
         "threshold": "on {amount} of fixed charges"
@@ -156,17 +140,13 @@
     "graph": {
       "threshold": "Yearly\nfixed\ncharges\n{amount}",
       "tooltip": {
-        "deficit": {
-          "label": "Deficit"
-        },
-        "profit": {
-          "label": "Profit"
+        "memberships": {
+          "label": "No membership | {count} membership | {count} memberships"
         },
         "subscriptions": {
           "label": "No subscription | {count} subscription | {count} subscriptions"
         },
         "tickets": {
-          "debt": "No debt | {count} ticket in debt | {count} tickets in debt",
           "label": "No ticket | {count} ticket | {count} tickets"
         }
       }
@@ -182,7 +162,7 @@
         "label": "Average Yearly Revenue",
         "threshold": "on {amount} of yearly fixed charges"
       },
-      "label": "In a few figures",
+      "label": "At a glance",
       "total": {
         "label": "Total",
         "threshold": "on {amount} of fixed charges"

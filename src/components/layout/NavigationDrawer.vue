@@ -1,11 +1,11 @@
 <template>
   <nav
-    class="flex flex-col items-center overflow-y-auto bg-amber-500 backdrop-blur-sm dark:bg-yellow-950">
+    class="flex flex-col items-center overflow-y-auto bg-amber-500 backdrop-blur-sm dark:bg-amber-900">
     <div class="mt-6 flex shrink-0 items-center max-sm:hidden">
       <LogoMono
         alt="Coworking Metz"
         background-color="#FFFFFF"
-        class="h-16 w-auto text-amber-500 dark:text-yellow-950" />
+        class="h-16 w-auto text-amber-500 dark:text-amber-900" />
     </div>
     <ol class="my-6 flex w-full grow flex-col gap-1 px-2">
       <NavigationDrawerLink

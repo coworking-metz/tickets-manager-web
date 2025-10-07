@@ -1,5 +1,5 @@
 <template>
-  <article class="mx-auto flex w-full max-w-6xl grow flex-col pb-6 pt-12 sm:pt-40">
+  <article class="mx-auto flex w-full max-w-7xl grow flex-col pb-6 pt-12 sm:pt-40">
     <Head>
       <title>{{ $t('members.list.head.title') }}</title>
     </Head>

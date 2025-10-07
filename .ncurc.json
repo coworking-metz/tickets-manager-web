@@ -12,6 +12,7 @@
     "eslint-import-resolver-typescript",
     "eslint-plugin-vue",
     "vue-echarts",
-    "tailwindcss"
+    "tailwindcss",
+    "vue-tailwind-datepicker"
   ]
 }

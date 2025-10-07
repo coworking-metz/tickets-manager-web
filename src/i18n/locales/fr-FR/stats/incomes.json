@@ -3,11 +3,13 @@
     "graph": {
       "threshold": "Charges\nfixes\njournalières\n{amount}",
       "tooltip": {
+        "memberships": {
+          "label": "Aucune adhésion | {count} adhésion | {count} adhésions"
+        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
-          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -23,10 +25,6 @@
         "label": "Revenu moyen journalier",
         "threshold": "sur {amount} de charges fixes journalières"
       },
-      "debt": {
-        "label": "Recouvrable",
-        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
-      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -34,7 +32,7 @@
       }
     }
   },
-  "description": "Visualisez les revenus par jour, semaine, mois ou année ainsi que les bénéfices ou pertes.",
+  "description": "L'argent rentré dans les caisses via les commandes des membres.",
   "empty": {
     "description": "Précisez la période pour visualiser les revenus.",
     "title": "Rien à afficher"
@@ -42,10 +40,10 @@
   "frequency": {
     "label": "Visualiser par",
     "value": {
-      "daily": "Jour",
-      "monthly": "Mois",
-      "weekly": "Semaine",
-      "yearly": "Année"
+      "day": "Jour",
+      "month": "Mois",
+      "week": "Semaine",
+      "year": "Année"
     }
   },
   "mode": {
@@ -57,11 +55,13 @@
     "graph": {
       "threshold": "Charges\nfixes\nmensuelles\n{amount}",
       "tooltip": {
+        "memberships": {
+          "label": "Aucune adhésion | {count} adhésion | {count} adhésions"
+        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
-          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -76,10 +76,6 @@
       "average": {
         "label": "Revenu moyen mensuel",
         "threshold": "sur {amount} de charges fixes mensuelles"
-      },
-      "debt": {
-        "label": "Recouvrable",
-        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
       "label": "En quelques chiffres",
       "total": {
@@ -111,11 +107,13 @@
         "date": {
           "label": "Du {start} au {end}"
         },
+        "memberships": {
+          "label": "Aucune adhésion | {count} adhésion | {count} adhésions"
+        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
-          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -131,10 +129,6 @@
         "label": "Revenu moyen hebdomadaire",
         "threshold": "sur {amount} de charges fixes hebdomadaires"
       },
-      "debt": {
-        "label": "Recouvrable",
-        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
-      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -146,11 +140,13 @@
     "graph": {
       "threshold": "Charges\nfixes\nannuelles\n{amount}",
       "tooltip": {
+        "memberships": {
+          "label": "Aucune adhésion | {count} adhésion | {count} adhésions"
+        },
         "subscriptions": {
           "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
         },
         "tickets": {
-          "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
           "label": "Aucun ticket | {count} ticket | {count} tickets"
         }
       }
@@ -165,10 +161,6 @@
       "average": {
         "label": "Revenu moyen annuel",
         "threshold": "sur {amount} de charges fixes annuelles"
-      },
-      "debt": {
-        "label": "Recouvrable",
-        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
       "label": "En quelques chiffres",
       "total": {

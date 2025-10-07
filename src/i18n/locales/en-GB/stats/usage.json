@@ -1,0 +1,175 @@
+{
+  "activity": {
+    "count": "absent | {count} day | {count} days"
+  },
+  "daily": {
+    "graph": {
+      "threshold": "Daily\nfixed\ncharges\n{amount}"
+    },
+    "head": {
+      "title": "Daily consumption"
+    },
+    "onFetch": {
+      "fail": "Unable to fetch daily consumption"
+    },
+    "summary": {
+      "average": {
+        "label": "Average daily consumption",
+        "threshold": "over {amount} of daily fixed charges"
+      },
+      "debt": {
+        "label": "Recoverable",
+        "tickets": "{''} | meaning {count} payable ticket | meaning {count} payable tickets"
+      },
+      "label": "At a glance",
+      "total": {
+        "label": "Total",
+        "threshold": "over {amount} of fixed charges"
+      }
+    }
+  },
+  "description": "The use of tickets/subscriptions as well as the gains or losses compared to fixed charges.",
+  "empty": {
+    "description": "Select a period to display consumption data.",
+    "title": "Nothing to display"
+  },
+  "frequency": {
+    "label": "View by",
+    "value": {
+      "day": "Day",
+      "month": "Month",
+      "week": "Week",
+      "year": "Year"
+    }
+  },
+  "members": {
+    "empty": {
+      "description": "Apparently, no one showed up that day.",
+      "title": "No one"
+    },
+    "search": {
+      "empty": {
+        "title": "No results"
+      },
+      "placeholder": "Search for a member"
+    },
+    "sort": {
+      "label": "Sort {suffix}",
+      "value": {
+        "debt": "By debt",
+        "name": "By name",
+        "usage": "By usage"
+      }
+    }
+  },
+  "mode": {
+    "waterfall": {
+      "label": "Net result"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "threshold": "Monthly\nfixed\ncharges\n{amount}"
+    },
+    "head": {
+      "title": "Monthly consumption"
+    },
+    "onFetch": {
+      "fail": "Unable to fetch monthly consumption"
+    },
+    "summary": {
+      "average": {
+        "label": "Average monthly consumption",
+        "threshold": "over {amount} of monthly fixed charges"
+      },
+      "debt": {
+        "label": "Recoverable",
+        "tickets": "{''} | meaning {count} payable ticket | meaning {count} payable tickets"
+      },
+      "label": "At a glance",
+      "total": {
+        "label": "Total",
+        "threshold": "over {amount} of fixed charges"
+      }
+    }
+  },
+  "period": {
+    "label": "Period",
+    "placeholder": "Select a period",
+    "shortcuts": {
+      "currentMonth": "This month",
+      "currentWeek": "This week",
+      "currentYear": "This year",
+      "last30days": "Last 30 days",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year",
+      "sinceFirstDay": "Since the first day",
+      "sinceYearStart": "Since the beginning of the year"
+    },
+    "value": "From {start} to {end}"
+  },
+  "subscriptions": {
+    "attending": "with no attendee | with {count} attendee | with {count} attendees",
+    "label": "No subscription | {count} subscription | {count} subscriptions"
+  },
+  "tickets": {
+    "debt": "No payable ticket | {count} payable ticket | {count} payable tickets",
+    "label": "No ticket | {count} ticket | {count} tickets"
+  },
+  "title": "Consumption",
+  "weekly": {
+    "graph": {
+      "threshold": "Weekly\nfixed\ncharges\n{amount}",
+      "tooltip": {
+        "label": "From {start} to {end}"
+      }
+    },
+    "head": {
+      "title": "Weekly consumption"
+    },
+    "onFetch": {
+      "fail": "Unable to fetch weekly consumption"
+    },
+    "summary": {
+      "average": {
+        "label": "Average weekly consumption",
+        "threshold": "over {amount} of weekly fixed charges"
+      },
+      "debt": {
+        "label": "Recoverable",
+        "tickets": "{''} | meaning {count} payable ticket | meaning {count} payable tickets"
+      },
+      "label": "At a glance",
+      "total": {
+        "label": "Total",
+        "threshold": "over {amount} of fixed charges"
+      }
+    }
+  },
+  "yearly": {
+    "graph": {
+      "threshold": "Yearly\nfixed\ncharges\n{amount}"
+    },
+    "head": {
+      "title": "Yearly consumption"
+    },
+    "onFetch": {
+      "fail": "Unable to fetch yearly consumption"
+    },
+    "summary": {
+      "average": {
+        "label": "Average yearly consumption",
+        "threshold": "over {amount} of yearly fixed charges"
+      },
+      "debt": {
+        "label": "Recoverable",
+        "tickets": "{''} | meaning {count} payable ticket | meaning {count} payable tickets"
+      },
+      "label": "At a glance",
+      "total": {
+        "label": "Total",
+        "threshold": "over {amount} of fixed charges"
+      }
+    }
+  }
+}

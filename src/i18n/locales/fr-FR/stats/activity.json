@@ -39,7 +39,7 @@
       "label": "Jours de la semaine"
     }
   },
-  "description": "Un horizon des allers et venues des membres.",
+  "description": "Combien sont venu⸱e⸱s et combien de temps iels sont resté⸱e⸱s.",
   "empty": {
     "description": "Précisez la période pour visualiser la fréquentation.",
     "title": "Rien à afficher"
@@ -47,15 +47,10 @@
   "frequency": {
     "label": "Visualiser par",
     "value": {
-      "daily": "Jour",
-      "monthly": "Mois",
-      "weekly": "Semaine",
-      "yearly": "Année"
-    }
-  },
-  "mode": {
-    "waterfall": {
-      "label": "Résultat net"
+      "day": "Jour",
+      "month": "Mois",
+      "week": "Semaine",
+      "year": "Année"
     }
   },
   "monthly": {

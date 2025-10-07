@@ -13,8 +13,7 @@
         "Le calendrier n'est modifiable qu'avec le compte \"coworking-metz@gmail.com\".",
         "Le format Markdown est supporté dans la description des évènements.",
         "Pour ajouter des images, coller dans la description des liens qui finissent par \".png\" ou \".jpg\" (ils seront cachés une fois la description affichée).",
-        "Le premier lien qui n'est pas une image et qui n'est pas au format Markdown sera utilisé pour le bouton \"Consulter\".\nTous les autres liens (hors format Markdown) seront cachés.",
-        "Les évènements avec la période \"Toute la journée\" ne sont pas très bien supportés."
+        "Le premier lien qui n'est pas une image et qui n'est pas au format Markdown sera utilisé pour le bouton \"Consulter\".\nTous les autres liens (hors format Markdown) seront cachés."
       ]
     },
     "navigate": "Consulter le calendrier",

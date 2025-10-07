@@ -104,7 +104,7 @@ import { compact } from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-const SHOULD_SCROLL_ABOVE_COUNT = 5;
+const SHOULD_SCROLL_ABOVE_COUNT = 4;
 
 const props = defineProps({
   memberId: {
