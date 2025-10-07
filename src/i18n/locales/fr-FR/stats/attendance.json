@@ -1,0 +1,39 @@
+{
+  "activity": {
+    "count": "absent | {count} journée | {count} journées"
+  },
+  "empty": {
+    "description": "Apparemment, personne ne s'est présenté ce jour-ci.",
+    "title": "Personne"
+  },
+  "onFetch": {
+    "fail": "Impossible de récupérer les présences pour la période du {start} au {end}"
+  },
+  "search": {
+    "empty": {
+      "title": "Aucun résultat"
+    },
+    "label": "Rechercher un membre",
+    "placeholder": "@:attendance.detail.search.label"
+  },
+  "select": {
+    "description": "Pour visualiser les présences et autres informations d'un jour précis.",
+    "title": "Sélectionner une date"
+  },
+  "sort": {
+    "label": "Trier {suffix}",
+    "value": {
+      "activity": "Par activité",
+      "debt": "Par dette",
+      "name": "Par nom"
+    }
+  },
+  "subscriptions": {
+    "count": "Aucun abonnement | {count} abonnement | {count} abonnements"
+  },
+  "tickets": {
+    "count": "Aucun ticket | {count} ticket | {count} tickets",
+    "debt": "Aucune dette | {count} ticket redevable | {count} tickets redevables"
+  },
+  "title": "Présences"
+}

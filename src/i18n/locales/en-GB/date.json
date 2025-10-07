@@ -1,5 +1,5 @@
 {
-  "shortcuts": {
+  "preset": {
     "currentMonth": "This month",
     "currentWeek": "This week",
     "currentYear": "This year",
@@ -7,9 +7,8 @@
     "last6Months": "Last 6 months",
     "last7days": "Last 7 days",
     "lastYear": "Last year",
-    "sinceFirstDay": "Since the first day",
-    "sinceYearStart": "Since the beginning of the year",
+    "sinceFirstDay": "Since the beginning",
+    "sinceYearStart": "Since year start",
     "today": "Today"
-  },
-  "value": "From {start} to {end}"
+  }
 }

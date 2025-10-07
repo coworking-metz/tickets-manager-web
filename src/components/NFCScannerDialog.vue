@@ -298,7 +298,6 @@ const onSuccessComplete = (_e: { target: DotLottiePlayer }) => {
     if (isVisible.value) {
       state.hasSucceeded = false;
       isVisible.value = false;
-      emit('update:identifier', serialNumber.value);
     }
   }, 2_000);
 };
@@ -328,6 +327,12 @@ watch([isVisible, isUnavailable], ([visible, unavailable]) => {
     onStartScan();
   } else if (!visible) {
     onStopScan();
+  }
+});
+
+watch(serialNumber, (identifier) => {
+  if (identifier) {
+    emit('update:identifier', identifier);
   }
 });
 </script>

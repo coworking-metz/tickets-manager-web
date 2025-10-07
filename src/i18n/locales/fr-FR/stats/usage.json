@@ -1,0 +1,175 @@
+{
+  "activity": {
+    "count": "absent | {count} journée | {count} journées"
+  },
+  "daily": {
+    "graph": {
+      "threshold": "Charges\nfixes\njournalières\n{amount}"
+    },
+    "head": {
+      "title": "Consommation journalière"
+    },
+    "onFetch": {
+      "fail": "Impossible de récupérer la consommation journalière"
+    },
+    "summary": {
+      "average": {
+        "label": "Consommation moyenne journalière",
+        "threshold": "sur {amount} de charges fixes journalières"
+      },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "description": "L'usage des tickets/abonnements ainsi que les bénéfices ou pertes par rapport aux charges fixes.",
+  "empty": {
+    "description": "Précisez la période pour visualiser les consommations.",
+    "title": "Rien à afficher"
+  },
+  "frequency": {
+    "label": "Visualiser par",
+    "value": {
+      "day": "Jour",
+      "month": "Mois",
+      "week": "Semaine",
+      "year": "Année"
+    }
+  },
+  "members": {
+    "empty": {
+      "description": "Apparemment, personne ne s'est présenté ce jour-ci.",
+      "title": "Personne"
+    },
+    "search": {
+      "empty": {
+        "title": "Aucun résultat"
+      },
+      "placeholder": "Rechercher un membre"
+    },
+    "sort": {
+      "label": "Trier {suffix}",
+      "value": {
+        "debt": "Par dette",
+        "name": "Par nom",
+        "usage": "Par consommation"
+      }
+    }
+  },
+  "mode": {
+    "waterfall": {
+      "label": "Résultat net"
+    }
+  },
+  "monthly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nmensuelles\n{amount}"
+    },
+    "head": {
+      "title": "Consommation mensuelle"
+    },
+    "onFetch": {
+      "fail": "Impossible de récupérer la consommation mensuelle"
+    },
+    "summary": {
+      "average": {
+        "label": "Consommation moyenne mensuelle",
+        "threshold": "sur {amount} de charges fixes mensuelles"
+      },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "period": {
+    "label": "Période",
+    "placeholder": "Choissisez une période",
+    "shortcuts": {
+      "currentMonth": "Ce mois",
+      "currentWeek": "Cette semaine",
+      "currentYear": "Cette année",
+      "last30days": "30 derniers jours",
+      "last6Months": "6 derniers mois",
+      "lastYear": "L'année dernière",
+      "sinceFirstDay": "Depuis le premier jour",
+      "sinceYearStart": "Depuis le début de l'année"
+    },
+    "value": "Du {start} au {end}"
+  },
+  "subscriptions": {
+    "attending": "dont aucun présent | dont {count} présent | dont {count} présents",
+    "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+  },
+  "tickets": {
+    "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
+    "label": "Aucun ticket | {count} ticket | {count} tickets"
+  },
+  "title": "Consommation",
+  "weekly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nhebdomadaires\n{amount}",
+      "tooltip": {
+        "label": "Du {start} au {end}"
+      }
+    },
+    "head": {
+      "title": "Consommation hebdomadaire"
+    },
+    "onFetch": {
+      "fail": "Impossible de récupérer la consommation hebdomadaire"
+    },
+    "summary": {
+      "average": {
+        "label": "Consommation moyenne hebdomadaire",
+        "threshold": "sur {amount} de charges fixes hebdomadaires"
+      },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  },
+  "yearly": {
+    "graph": {
+      "threshold": "Charges\nfixes\nannuelles\n{amount}"
+    },
+    "head": {
+      "title": "Consommation annuelle"
+    },
+    "onFetch": {
+      "fail": "Impossible de récupérer la consommation annuelle"
+    },
+    "summary": {
+      "average": {
+        "label": "Consommation moyenne annuelle",
+        "threshold": "sur {amount} de charges fixes annuelles"
+      },
+      "debt": {
+        "label": "Recouvrable",
+        "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
+      },
+      "label": "En quelques chiffres",
+      "total": {
+        "label": "Au total",
+        "threshold": "sur {amount} de charges fixes"
+      }
+    }
+  }
+}

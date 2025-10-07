@@ -8,20 +8,9 @@ const RAW_ROUTE_NAMES = {
   ATTENDANCE: 'ATTENDANCE',
   STATS: {
     INDEX: 'STATS.INDEX',
-    INCOMES: {
-      INDEX: 'STATS.INCOMES.INDEX',
-      YEARLY: 'STATS.INCOMES.YEARLY',
-      MONTHLY: 'STATS.INCOMES.MONTHLY',
-      WEEKLY: 'STATS.INCOMES.WEEKLY',
-      DAILY: 'STATS.INCOMES.DAILY',
-    },
-    ACTIVITY: {
-      INDEX: 'STATS.ACTIVITY.INDEX',
-      YEARLY: 'STATS.ACTIVITY.YEARLY',
-      MONTHLY: 'STATS.ACTIVITY.MONTHLY',
-      WEEKLY: 'STATS.ACTIVITY.WEEKLY',
-      DAILY: 'STATS.ACTIVITY.DAILY',
-    },
+    USAGE: 'STATS.USAGE',
+    INCOME: 'STATS.INCOME',
+    ACTIVITY: 'STATS.ACTIVITY',
   },
   MEMBERS: {
     LIST: 'MEMBERS.LIST',
@@ -83,3 +72,5 @@ export const flattenDeepObject = (item: any): string[] => {
   if (typeof item === 'string') return [item];
   return [...flatMapDeep(Object.values(item), flattenDeepObject)];
 };
+
+export const ROUTE_QUERY_ARRAY_SEPARATOR = ',';

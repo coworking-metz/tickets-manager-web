@@ -1,5 +1,5 @@
 <template>
-  <article class="mx-auto flex w-full max-w-6xl grow flex-col items-stretch gap-6 lg:flex-row">
+  <article class="mx-auto flex w-full max-w-7xl grow flex-col items-stretch gap-6 lg:flex-row">
     <Head>
       <title>{{ $t('attendance.head.title') }}</title>
     </Head>
@@ -135,8 +135,8 @@ import AttendanceDetail from './AttendanceDetail.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { isSilentError } from '@/helpers/errors';
-import { AttendancePeriod, getAttendancePerDay } from '@/services/api/attendance';
-import { attendanceQueryKeys, useAppQuery } from '@/services/query';
+import { AttendancePeriod, getAttendancePerPeriod } from '@/services/api/attendance';
+import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
@@ -170,7 +170,7 @@ const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   selectedMonth: null as string | null,
-  selectedAttendance: null as AttendancePeriod | null,
+  selectedAttendance: null as AttendancePeriod<'day'> | null,
 });
 
 const calendarPeriod = computed(() => {
@@ -193,11 +193,17 @@ const {
   error: attendanceError,
 } = useAppQuery(
   computed(() => ({
-    queryKey: attendanceQueryKeys.allInPeriod(
+    queryKey: statsQueryKeys.attendanceInPeriod(
+      'day',
       calendarPeriod.value?.start as string,
       calendarPeriod.value?.end as string,
     ),
-    queryFn: () => getAttendancePerDay(calendarPeriod.value?.start, calendarPeriod.value?.end),
+    queryFn: () =>
+      getAttendancePerPeriod(
+        'day',
+        calendarPeriod.value?.start,
+        calendarPeriod.value?.end,
+      ) as unknown as AttendancePeriod<'day'>[],
     staleTime: 300_000,
     enabled: !!calendarPeriod.value?.start && !!calendarPeriod.value?.end,
   })),

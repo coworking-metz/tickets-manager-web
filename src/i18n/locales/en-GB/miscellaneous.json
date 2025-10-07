@@ -13,8 +13,7 @@
         "The calendar can only be modified with the account \"coworking-metz@gmail.com\".",
         "The Markdown format is supported in the event description.",
         "To add pictures in the gallery, paste links ending with \".png\" or \".jpg\".",
-        "The first link which is not a picture nor in Markdown format will be used for the \"Check\" button.\nAll other links (outside of Markdown format) will be hidden.",
-        "Events with the \"All day\" period are not very well supported."
+        "The first link which is not a picture nor in Markdown format will be used for the \"Check\" button.\nAll other links (outside of Markdown format) will be hidden."
       ]
     },
     "navigate": "Navigate to the calendar",

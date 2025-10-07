@@ -1,17 +1,22 @@
+<!-- eslint-disable tailwindcss/no-custom-classname -->
 <template>
   <RouterLink
     :aria-current="active ? 'page' : undefined"
     :class="[
-      'group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium no-underline transition-colors [corner-shape:squircle] active:bg-amber-700 dark:active:bg-amber-900/50',
+      'navigation-drawer-link',
+      'group flex w-full flex-col items-center rounded-xl p-3 text-xs font-medium no-underline transition-colors active:bg-amber-700 dark:active:bg-amber-950/50',
       active
-        ? 'bg-amber-600 text-white dark:bg-amber-900'
-        : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-900',
+        ? 'bg-amber-600 text-white dark:bg-amber-950/80'
+        : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:text-zinc-200 dark:hover:bg-amber-950/80',
     ]"
     :to="to">
     <slot>
       <SvgIcon
         aria-hidden="true"
-        :class="['size-6', active ? 'text-white' : 'text-amber-100 group-hover:text-white']"
+        :class="[
+          'size-6 transition-colors',
+          active ? 'text-white' : 'text-amber-100 group-hover:text-white dark:text-zinc-200',
+        ]"
         :path="icon"
         type="mdi" />
       <span class="mt-2">{{ label }}</span>
@@ -42,3 +47,12 @@ defineProps({
   },
 });
 </script>
+
+<style scoped>
+@supports (corner-shape: squircle) {
+  .navigation-drawer-link {
+    corner-shape: squircle;
+    border-radius: 9999px;
+  }
+}
+</style>

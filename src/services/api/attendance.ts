@@ -1,4 +1,5 @@
 import { MemberListItem } from './members';
+import { Frequency } from './stats/frequency';
 import HTTP from '../http';
 
 export const MAX_ATTENDANCE = 40;
@@ -20,16 +21,20 @@ export type AttendingMember = MemberListItem & {
   };
 };
 
-export type AttendancePeriod = {
+export type AttendancePeriod<PeriodType> = {
   date: string;
-  type: 'day';
+  type: PeriodType;
   data: {
     members: AttendingMember[];
   };
 };
 
-export const getAttendancePerDay = (from?: string, to?: string): Promise<AttendancePeriod[]> => {
-  return HTTP.get('/stats/attendance/day', {
+export const getAttendancePerPeriod = (
+  period: Frequency,
+  from?: string,
+  to?: string,
+): Promise<AttendancePeriod<Frequency>[]> => {
+  return HTTP.get(`/stats/attendance/${period}`, {
     params: {
       ...(from && { from }),
       ...(to && { to }),

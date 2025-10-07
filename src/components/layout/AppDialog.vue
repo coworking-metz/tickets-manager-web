@@ -1,5 +1,5 @@
 <template>
-  <TransitionRoot appear as="template" :show="isVisible">
+  <TransitionRoot appear as="template" :show="isVisible" v-bind="$attrs">
     <Dialog as="div" class="relative z-50" @close="!static ? (isVisible = false) : null">
       <TransitionChild
         as="template"
