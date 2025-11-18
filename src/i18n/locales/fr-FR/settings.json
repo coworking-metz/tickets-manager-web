@@ -1,4 +1,13 @@
 {
+  "cache": {
+    "clear": "Vider le cache",
+    "description": "Le cache du serveur stocke des données temporaires pour améliorer les performances, en particulier les statistiques.\nCependant, il peut arriver que certaines données deviennent obsolètes ou corrompues.\n\nEn vidant le cache, vous forcez le serveur à re-calculer toutes les données depuis la source d'origine, ce qui peut résoudre certains problèmes.",
+    "onClear": {
+      "fail": "Impossible de vider le cache",
+      "success": "Cache vidé"
+    },
+    "title": "Cache du serveur"
+  },
   "computeAttendance": {
     "description": "Les présences sont automatiquement synchronisées/calculées chaque nuit à 01h00 à partir des traces des addresses MAC scannées sur le réseau. Ce qui signifie que tous les appareils connectés sont tracés, même si ils ne sont pas encore dans le système.\n\nVous pouvez lancer manuellement une synchronisation entre les traces et les présences en précisant une période particulière et/ou une adresse MAC.",
     "macAddress": {

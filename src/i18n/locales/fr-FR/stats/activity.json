@@ -3,7 +3,7 @@
     "graph": {
       "tooltip": {
         "activity": {
-          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+          "label": "0 journée de présence | {count} journée de présence | {count} journées de présence"
         },
         "members": {
           "label": "0 membre | {count} membre | {count} membres"
@@ -57,7 +57,7 @@
     "graph": {
       "tooltip": {
         "activity": {
-          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+          "label": "0 journée de présence | {count} journée de présence | {count} journées de présence"
         },
         "members": {
           "label": "0 membre | {count} membre | {count} membres"
@@ -110,7 +110,7 @@
     "graph": {
       "tooltip": {
         "activity": {
-          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+          "label": "0 journée de présence | {count} journée de présence | {count} journées de présence"
         },
         "date": {
           "label": "Du {start} au {end}"
@@ -150,7 +150,7 @@
     "graph": {
       "tooltip": {
         "activity": {
-          "label": "0 journée consommée | {count} journée consommée | {count} journées consommées"
+          "label": "0 journée de présence | {count} journée de présence | {count} journées de présence"
         },
         "members": {
           "label": "0 membre | {count} membre | {count} membres"

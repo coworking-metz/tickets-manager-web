@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
+import AppTextField from './AppTextField.vue';
 import { PresetDate, VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import AppTextField from './AppTextField.vue';
 
 const date = defineModel({
   type: [Date, String] as unknown as () => Date | string,

@@ -13,9 +13,10 @@
 
 <script setup lang="ts">
 import { ROUTE_NAMES } from '@/router/names';
-import { Attendance } from '@/services/api/members';
+import { AttendanceWithCoverage } from '@/services/api/members';
 import { useTheme } from '@/services/theme';
 import { theme } from '@/styles/colors';
+import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
@@ -44,7 +45,7 @@ const i18n = useI18n();
 const router = useRouter();
 const props = defineProps({
   activity: {
-    type: Array as PropType<Attendance[]>,
+    type: Array as PropType<AttendanceWithCoverage[]>,
     default: () => [],
   },
   startDate: {
@@ -63,6 +64,28 @@ const state = reactive({
 });
 const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 const now = dayjs();
+
+const statsColors = useStatsColors();
+const getAttendanceColor = (attendance: AttendanceWithCoverage) => {
+  const debt = attendance.coverage.debt?.value;
+  if (debt) {
+    return debt === 1 ? '#b91c1c' : '#fca5a5'; // even tho it could be a full day, the most important is its non compliant
+  }
+
+  const duration = attendance.value;
+
+  if (duration > 0) {
+    if (attendance.type === 'subscription') {
+      return duration >= 1 ? theme.meatBrown : theme.peachYellow;
+    }
+
+    if (attendance.type === 'ticket') {
+      return duration >= 1 ? statsColors.value.ticket : `${statsColors.value.ticket}88`;
+    }
+  }
+
+  return theme.silverSand;
+};
 
 const currentTheme = useTheme();
 const options = computed<
@@ -115,36 +138,24 @@ const options = computed<
   series: {
     type: 'heatmap',
     coordinateSystem: 'calendar',
-    data: props.activity.map(({ date, value, debt }) => {
-      const color = debt
-        ? debt.value === 1
-          ? '#b91c1c'
-          : '#fca5a5' // even tho it could be a full day, the most important is its non compliant period
-        : value === 1
-          ? theme.meatBrown
-          : value === 0.5
-            ? theme.peachYellow
-            : currentTheme.value === 'light'
-              ? theme.papayaWhip
-              : theme.charlestonGreen;
-
+    data: props.activity.map((attendance) => {
       return {
-        value: [dayjs(date).format('YYYY-MM-DD'), value],
+        value: [dayjs(attendance.date).format('YYYY-MM-DD'), attendance.value],
         itemStyle: {
-          color,
+          color: getAttendanceColor(attendance),
         },
         tooltip: i18n.t('members.detail.attendance.graph.tooltip', {
-          date: dayjs(date).format('ll') + '<br />',
+          date: dayjs(attendance.date).format('ll') + '<br />',
           amount:
-            value === 1
+            attendance.value === 1
               ? i18n.t('members.detail.attendance.graph.value.FULL')
-              : value === 0.5
+              : attendance.value === 0.5
                 ? i18n.t('members.detail.attendance.graph.value.HALF')
                 : i18n.t('members.detail.attendance.graph.value.NONE'),
-          ...(debt &&
-            debt.value !== value && {
+          ...(attendance.coverage.debt?.value &&
+            attendance.coverage.debt?.value !== attendance.value && {
               suffix:
-                debt.value === 1
+                attendance.coverage.debt.value === 1
                   ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
                   : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
             }),

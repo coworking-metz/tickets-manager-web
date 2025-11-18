@@ -23,7 +23,7 @@
         <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
           {{ $t('settings.computeAttendance.description') }}
         </p>
-        <form class="mt-6 flex flex-col" @submit.prevent="onSubmit">
+        <form class="mt-6 flex flex-col" @submit.prevent="onComputeAttendance">
           <div class="flex flex-row flex-wrap items-start gap-x-3">
             <AppPeriodField
               v-model="state.period"
@@ -65,6 +65,24 @@
           </div>
         </form>
       </AppPanel>
+
+      <AppPanel body-class="rounded-lg" class="overflow-visible">
+        <h3
+          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          {{ $t('settings.cache.title') }}
+        </h3>
+        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+          {{ $t('settings.cache.description') }}
+        </p>
+        <AppButtonPlain
+          class="mt-6 dark:focus:ring-offset-neutral-800"
+          color="indigo"
+          :icon="mdiDeleteEmptyOutline"
+          :loading="state.isClearingCache"
+          @click="onClearCache">
+          {{ $t('settings.cache.clear') }}
+        </AppButtonPlain>
+      </AppPanel>
     </div>
   </article>
 </template>
@@ -79,8 +97,10 @@ import { DATE_FORMAT } from '@/helpers/dates';
 import { getVuelidateErrorFieldsCount, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { computeAttendance } from '@/services/api/attendance';
+import { clearCache } from '@/services/api/cache';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiDevices, mdiSync } from '@mdi/js';
+import { mdiDeleteEmptyOutline, mdiDevices, mdiSync } from '@mdi/js';
+import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { helpers, requiredIf, macAddress as vuelidateMacAddress } from '@vuelidate/validators';
@@ -106,6 +126,8 @@ const state = reactive({
     end: now.format(DATE_FORMAT) as string,
   },
   hasFailValidationOnce: false,
+
+  isClearingCache: false,
 });
 
 const rules = computed(() => ({
@@ -125,7 +147,7 @@ const rules = computed(() => ({
 
 const vuelidate = useVuelidate(rules, state);
 
-const onSubmit = async () => {
+const onComputeAttendance = async () => {
   const isValid = await vuelidate.value.$validate();
   if (!isValid) {
     state.hasFailValidationOnce = true;
@@ -155,6 +177,23 @@ const onSubmit = async () => {
     })
     .finally(() => {
       state.isComputingAttendance = false;
+    });
+};
+
+const queryClient = useQueryClient();
+const onClearCache = async () => {
+  state.isClearingCache = true;
+  clearCache()
+    .then(async () => {
+      await queryClient.resetQueries(); // also clear local cache to request fresh data
+      notificationStore.addSuccessNotification(i18n.t('settings.cache.onClear.success'));
+    })
+    .catch((error) => {
+      notificationStore.addErrorNotification(error, i18n.t('settings.cache.onClear.fail'));
+      return Promise.reject(error);
+    })
+    .finally(() => {
+      state.isClearingCache = false;
     });
 };
 

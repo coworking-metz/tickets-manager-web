@@ -65,7 +65,7 @@
       </div>
     </section>
     <section
-      class="relative overflow-hidden bg-gray-50 max-sm:max-h-[320px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+      class="relative min-h-64 overflow-hidden bg-gray-50 max-sm:max-h-[320px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
       <img
         :alt="$t('login.background.label')"
         class="aspect-auto h-full object-cover grayscale lg:w-full"

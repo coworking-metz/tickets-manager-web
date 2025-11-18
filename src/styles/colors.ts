@@ -10,7 +10,7 @@ export const theme = {
   charlestonGreen: '#2A2C2B',
   silverSand: '#BDC3C7',
   blueCrayola: '#2962FF',
-  frenchSkyBlue: '#7FA1FF',
+  frenchSkyBlue: '#7fa1ff',
   babyBlueEyes: '#A9C0FF',
   azureishWhite: '#D4E0FF',
   parentolishedPine: '#5BB188',

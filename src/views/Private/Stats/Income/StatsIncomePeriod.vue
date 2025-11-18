@@ -134,7 +134,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import { fractionAmount, fractionPercentage } from '@/helpers/currency';
+import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { Frequency, getChildFrequency } from '@/services/api/stats/frequency';
 import { getIncomePerPeriod, IncomePeriod } from '@/services/api/stats/income';
@@ -259,7 +259,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: memberships.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
               memberships.amount,
             )}</dd>
           </div>
@@ -272,7 +272,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: tickets.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
               tickets.amount,
             )}</dd>
           </div>
@@ -285,13 +285,13 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: subscriptions.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
               subscriptions.amount,
             )}</dd>
           </div>
 
           <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            ${fractionAmount(income)}
+            ${formatAmount(income)}
           </dd>
 
           <div class="flex flex-row justify-between place-items-end">
@@ -301,13 +301,13 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               };"></span>
               ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(-charges)}</dd>
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
           </div>
 
-          <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
+          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
             income > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
-            ${income > charges ? '+' : ''}${fractionAmount(income - charges)}
+            ${income > charges ? '+' : ''}${formatAmount(income - charges)}
           </div>
         </dl>
       `;

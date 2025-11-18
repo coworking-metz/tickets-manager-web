@@ -175,7 +175,7 @@ import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import { fractionAmount, fractionPercentage } from '@/helpers/currency';
+import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
@@ -323,7 +323,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                   count: tickets.debt.count,
                 })}
               </dt>
-              <dd class="ml-6 text-base font-medium text-gray-400">${fractionAmount(
+              <dd class="ml-6 text-base font-medium text-gray-400">${formatAmount(
                 tickets.debt.amount,
               )}</dd>
             </div>`
@@ -338,7 +338,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 count: tickets.count,
               })}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
               tickets.amount,
             )}</dd>
           </div>
@@ -363,7 +363,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
           </div>
 
           <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            ${fractionAmount(amount)}
+            ${formatAmount(amount)}
           </dd>
 
           <div class="flex flex-row justify-between items-start">
@@ -373,13 +373,13 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               };"></span>
               ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(-charges)}</dd>
+            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
           </div>
 
-          <div class="inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
+          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
             amount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
-            ${amount > charges ? '+' : ''}${fractionAmount(amount - charges)}
+            ${amount > charges ? '+' : ''}${formatAmount(amount - charges)}
           </div>
         </dl>
       `;

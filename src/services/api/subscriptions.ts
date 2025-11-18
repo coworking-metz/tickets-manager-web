@@ -6,6 +6,8 @@ export interface Subscription {
   ended: string;
   purchased: string;
   amount: number;
+  dailyAmount: number;
+  durationInDays: number;
   orderReference?: string | null;
 }
 

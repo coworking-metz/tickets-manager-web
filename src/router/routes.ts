@@ -1,5 +1,4 @@
 import { ROUTE_NAMES, ROUTE_QUERY_ARRAY_SEPARATOR } from './names';
-import { WEEK_DAYS_INDEXES } from '@/helpers/dates';
 import { compact } from 'lodash';
 import { RouteRecordRaw } from 'vue-router';
 

@@ -1,6 +1,6 @@
 {
   "activity": {
-    "count": "absent | {count} journée | {count} journées"
+    "count": "absent | présent {count} journée | présent {count} journées"
   },
   "daily": {
     "graph": {

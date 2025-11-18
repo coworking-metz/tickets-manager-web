@@ -29,9 +29,6 @@ export const useStatsColors = () => {
       currentTheme.value === 'dark'
         ? '#a78bfa' // indigo-400
         : '#a5b4fc', // indigo-300'
-    activity:
-      currentTheme.value === 'dark'
-        ? '#f59e0b' // amber-500
-        : '#fbbf24', // amber-400,
+    activity: '#10b981', // emerald-500
   }));
 };
