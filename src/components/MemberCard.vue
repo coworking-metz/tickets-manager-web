@@ -1,6 +1,6 @@
 <template>
-  <div :class="['flex items-center p-4', loading && 'animate-pulse']">
-    <div class="flex min-w-0 flex-1 items-start">
+  <div :class="['flex flex-row items-center gap-1 p-4', loading && 'animate-pulse']">
+    <div class="flex min-w-0 shrink grow basis-0 flex-row items-start overflow-hidden">
       <div class="relative">
         <MembersThumbnail
           class="shrink-0"
@@ -11,24 +11,24 @@
           v-if="member?.attending"
           class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white" />
       </div>
-      <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">
-        <div class="flex min-w-48 shrink grow basis-0 flex-col items-start">
-          <template v-if="member">
-            <p class="shrink-0 font-medium text-indigo-600 sm:text-sm dark:text-indigo-500">
-              {{ fullname }}
-            </p>
+      <div class="flex shrink grow basis-0 flex-col items-start overflow-hidden pl-4">
+        <template v-if="member">
+          <p
+            class="w-full truncate text-left font-medium text-gray-900 sm:text-sm dark:text-gray-200">
+            {{ fullname }}
+          </p>
 
-            <p class="mt-1 flex w-full items-center text-sm text-gray-500 dark:text-gray-400">
-              <span class="truncate">{{ member.email }}</span>
-            </p>
+          <p
+            class="mt-1 w-full overflow-hidden truncate text-left text-sm text-gray-500 dark:text-gray-400">
+            {{ member.email }}
+          </p>
 
-            <slot />
-          </template>
-          <template v-else-if="loading">
-            <div class="h-4 w-32 rounded bg-slate-200" />
-            <div class="mt-2 h-4 w-48 rounded bg-slate-200" />
-          </template>
-        </div>
+          <slot />
+        </template>
+        <template v-else-if="loading">
+          <div class="h-4 w-32 rounded bg-slate-200" />
+          <div class="mt-2 h-4 w-48 rounded bg-slate-200" />
+        </template>
       </div>
     </div>
     <slot name="append" />

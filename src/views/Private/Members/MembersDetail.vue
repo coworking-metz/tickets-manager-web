@@ -680,20 +680,22 @@ const totalAmountSpent = computed<number>(() => {
 const averageDailyAmountConsumed = computed<number>(() => {
   if (!activity.value) return 0;
 
-  const totalActivityConsumed = activity.value?.reduce(
-    (sum, a) => ({
-      amount: sum.amount + a.amount,
-      daysCount: sum.daysCount + a.value,
-    }),
-    {
-      amount: 0,
-      daysCount: 0,
-    },
-  );
+  let amount = 0;
+  let durationInDays = 0;
 
-  return totalActivityConsumed.daysCount
-    ? totalActivityConsumed.amount / totalActivityConsumed.daysCount
-    : 0;
+  for (const dayActivity of activity.value) {
+    durationInDays += dayActivity.value;
+    const [firstCoverSubscription] = dayActivity.coverage.subscriptions ?? [];
+    if (firstCoverSubscription?.dailyAmount) {
+      amount += firstCoverSubscription.dailyAmount * dayActivity.value;
+      continue;
+    }
+
+    amount +=
+      (dayActivity.coverage.tickets?.amount ?? 0) + (dayActivity.coverage.debt?.amount ?? 0);
+  }
+
+  return durationInDays ? amount / durationInDays : 0;
 });
 
 watch(

@@ -142,7 +142,6 @@ import { MAX_ATTENDANCE } from '@/services/api/attendance';
 import { ActivityPeriod, getActivityPerPeriod } from '@/services/api/stats/activity';
 import { Frequency, getChildFrequency } from '@/services/api/stats/frequency';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
-import { theme } from '@/styles/colors';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
@@ -295,7 +294,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               count: coworkedDaysAmount,
             })}
             <span class="block h-3 w-3 rounded-full" style="background-color: ${
-              theme.meatBrown
+              statsColors.value.activity
             };"></span>
           </p>
         </dl>

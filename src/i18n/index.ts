@@ -7,7 +7,9 @@ import duration from 'dayjs/plugin/duration.js';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
+import timezone from 'dayjs/plugin/timezone.js';
 import updateLocale from 'dayjs/plugin/updateLocale.js';
+import utc from 'dayjs/plugin/utc.js';
 import weekday from 'dayjs/plugin/weekday.js';
 import { createI18n, IntlDateTimeFormats, IntlNumberFormats, PluralizationRule } from 'vue-i18n';
 import 'dayjs/locale/fr.js';
@@ -20,6 +22,8 @@ dayjs.extend(duration);
 dayjs.extend(isBetween);
 dayjs.extend(customParseFormat);
 dayjs.extend(weekday);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 dayjs.updateLocale('fr', {
   calendar: {

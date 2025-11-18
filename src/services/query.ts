@@ -1,4 +1,4 @@
-import { Frequency } from './api/stats/usage';
+import { Frequency } from './api/stats/frequency';
 import { isSilentError, parseErrorText } from '@/helpers/errors';
 import { useQuery, UseQueryOptions, VueQueryPluginOptions } from '@tanstack/vue-query';
 import { computedAsync } from '@vueuse/core';

@@ -8,15 +8,26 @@ export type AttendanceType = 'subscription' | 'ticket';
 export type MemberLocation = 'poulailler' | 'pti-poulailler' | 'racine' | 'cantina';
 export type AttendanceDuration = 0 | 0.5 | 1;
 
+export interface AttendanceCoverage {
+  subscriptions?: Subscription[];
+  tickets?: {
+    count: number;
+    amount: number;
+  };
+  debt?: {
+    value: number;
+    amount: number;
+  };
+}
+
 export interface Attendance {
   date: string;
   value: AttendanceDuration;
   type: AttendanceType;
-  amount: number;
-  debt?: {
-    value: AttendanceDuration;
-    amount: number;
-  };
+}
+
+export interface AttendanceWithCoverage extends Attendance {
+  coverage: AttendanceCoverage;
 }
 
 export interface Device {
@@ -99,7 +110,7 @@ export const updateMemberMacAddresses = (id: string, macAddresses: string[]): Pr
   return HTTP.put(`/api/members/${id}/mac-addresses`, macAddresses).then(({ data }) => data);
 };
 
-export const getMemberActivity = (id: string): Promise<Attendance[]> => {
+export const getMemberActivity = (id: string): Promise<AttendanceWithCoverage[]> => {
   return HTTP.get(`/api/members/${id}/activity`).then(({ data }) => data);
 };
 

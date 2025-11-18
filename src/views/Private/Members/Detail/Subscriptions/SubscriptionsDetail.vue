@@ -192,7 +192,12 @@ const selectedSubscription = computed<Subscription | null>(() => {
 
 const computedEnded = computed(() => {
   return state.started
-    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').toISOString().slice(0, 10)
+    ? dayjs
+        .tz(state.started, 'Europe/Paris')
+        .add(1, 'month')
+        .subtract(1, 'day')
+        .toISOString()
+        .slice(0, 10)
     : null;
 });
 

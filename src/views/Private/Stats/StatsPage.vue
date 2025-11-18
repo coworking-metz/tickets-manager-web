@@ -123,16 +123,14 @@ import { ROUTE_NAMES } from '@/router/names';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
   mdiAccountClockOutline,
-  mdiCashMultiple,
   mdiChevronRight,
   mdiCurrencyEur,
-  mdiHandCoin,
   mdiHandCoinOutline,
   mdiUnfoldMoreHorizontal,
 } from '@mdi/js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { RouteRecordName, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const i18n = useI18n();

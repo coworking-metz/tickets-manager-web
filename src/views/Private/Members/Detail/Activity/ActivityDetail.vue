@@ -84,7 +84,7 @@
         </p>
         <DailyActivityGraph class="mb-4" /> -->
         <AppAlert
-          v-if="selected.debt"
+          v-if="selected?.coverage.debt?.value"
           class="mb-5 rounded-xl"
           :icon="mdiAlertCircle"
           :title="$t('activity.detail.nonCompliant.title')"
@@ -98,7 +98,9 @@
               <template #emphasized>
                 <span class="font-semibold text-red-800 dark:text-red-300">
                   {{
-                    $t('activity.detail.nonCompliant.emphasized', { count: selected.debt.value })
+                    $t('activity.detail.nonCompliant.emphasized', {
+                      count: selected?.coverage.debt?.value,
+                    })
                   }}
                 </span>
               </template>
@@ -285,7 +287,7 @@ const props = defineProps({
 
 const queryClient = useQueryClient();
 const state = reactive({
-  type: 'TICKET' as AttendanceType,
+  type: 'ticket' as AttendanceType,
   duration: ActivityDuration.NONE as ActivityDuration,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -302,11 +304,11 @@ const {
   })),
 );
 
-const selected = computed<Attendance | null>(() => {
+const selected = computed(() => {
   return activity.value?.find(({ date }) => `${date}` === `${props.date}`) ?? null;
 });
 
-const previous = computed<Attendance | null>(() => {
+const previous = computed(() => {
   const [latestDate] =
     activity.value
       ?.filter(({ date }) => dayjs(date).isBefore(selected.value?.date))
@@ -314,7 +316,7 @@ const previous = computed<Attendance | null>(() => {
   return latestDate ?? null;
 });
 
-const next = computed<Attendance | null>(() => {
+const next = computed(() => {
   const [earliestDate] =
     activity.value
       ?.filter(({ date }) => dayjs(date).isAfter(selected.value?.date))

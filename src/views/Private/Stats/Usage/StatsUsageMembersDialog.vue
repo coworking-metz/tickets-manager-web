@@ -16,7 +16,7 @@
           class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
-              class="mt-1.5 block size-3 rounded-full"
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.debt};`"></span>
             {{
               $t(`stats.usage.tickets.debt`, {
@@ -24,15 +24,15 @@
               })
             }}
           </dt>
-          <dd class="ml-6 text-base font-medium text-gray-400">
-            {{ fractionAmount(selectedUsageDate.data.tickets.debt.amount) }}
+          <dd class="text-base font-medium text-gray-400">
+            {{ formatAmount(selectedUsageDate.data.tickets.debt.amount) }}
           </dd>
         </div>
 
         <div class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
-              class="mt-1.5 block size-3 rounded-full"
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.ticket};`" />
             {{
               $t(`stats.usage.tickets.label`, {
@@ -40,14 +40,14 @@
               })
             }}
           </dt>
-          <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ fractionAmount(selectedUsageDate.data.tickets.amount) }}
+          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(selectedUsageDate.data.tickets.amount) }}
           </dd>
         </div>
         <div class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
-              class="mt-1.5 block size-3 rounded-full"
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.subscription};`" />
             {{
               $t(`stats.usage.subscriptions.label`, {
@@ -63,37 +63,37 @@
               }}
             </template>
           </dt>
-          <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ fractionAmount(selectedUsageDate.data.subscriptions.amount) }}
+          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(selectedUsageDate.data.subscriptions.amount) }}
           </dd>
         </div>
 
         <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          {{ fractionAmount(selectedUsageDate.data.amount) }}
+          {{ formatAmount(selectedUsageDate.data.amount) }}
         </dd>
 
         <div class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
-              class="mt-1.5 block size-3 rounded-full"
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.charges}`" />
             {{ $t(`${i18nKeyPrefix}.graph.threshold`) }}
           </dt>
-          <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ fractionAmount(-selectedUsageDate.data.charges) }}
+          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(-selectedUsageDate.data.charges) }}
           </dd>
         </div>
 
         <div
           :class="[
-            ' inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 text-base font-medium md:mt-2 lg:mt-0',
+            '-mr-2.5 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 text-base font-medium md:mt-2 lg:mt-0',
             selectedUsageDate.data.amount > selectedUsageDate.data.charges
               ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800',
           ]">
           {{
             `${selectedUsageDate.data.amount > selectedUsageDate.data.charges ? '+' : ''}
-          ${fractionAmount(selectedUsageDate.data.amount - selectedUsageDate.data.charges)}`
+          ${formatAmount(selectedUsageDate.data.amount - selectedUsageDate.data.charges)}`
           }}
         </div>
       </dl>
@@ -245,7 +245,7 @@ import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
-import { fractionAmount } from '@/helpers/currency';
+import { formatAmount } from '@/helpers/currency';
 import { searchIn } from '@/helpers/text';
 import { Frequency } from '@/services/api/stats/frequency';
 import { getUsagePerFrequency, MemberListItemWithUsage } from '@/services/api/stats/usage';

@@ -48,12 +48,12 @@
             <div class="flex flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
               <i18n-t
                 keypath="members.detail.orders.subscriptions.days"
-                :plural="dayjs(subscription.ended).diff(subscription.started, 'day')"
+                :plural="subscription.durationInDays"
                 scope="global"
                 tag="span">
                 <template #count>
                   <strong class="text-3xl">
-                    {{ dayjs(subscription.ended).diff(subscription.started, 'day') }}
+                    {{ subscription.durationInDays }}
                   </strong>
                 </template>
               </i18n-t>
