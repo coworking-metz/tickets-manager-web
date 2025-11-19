@@ -1,5 +1,8 @@
 <template>
   <article class="mx-auto flex w-full max-w-7xl flex-col pb-12 max-sm:grow sm:min-h-full sm:pb-24">
+    <Head>
+      <title>{{ fullname }}</title>
+    </Head>
     <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
       <div class="min-w-48 shrink grow basis-0" />
       <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
@@ -541,11 +544,10 @@ import {
   mdiOpenInNew,
   mdiPlus,
 } from '@mdi/js';
-import { useHead } from '@unhead/vue';
+import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { compact, isNil } from 'lodash';
+import { isNil } from 'lodash';
 import { computed, reactive, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
@@ -557,19 +559,9 @@ const props = defineProps({
 
 const route = useRoute();
 const router = useRouter();
-const i18n = useI18n();
 const state = reactive({
   shouldRenderAllActivity: false as boolean,
   isPictureDialogVisible: false as boolean,
-});
-
-const head = useHead({
-  titleTemplate: (title?: string) =>
-    compact([
-      title,
-      compact([member.value?.firstName, member.value?.lastName]).join(' '),
-      i18n.t('head.title'),
-    ]).join(' - '),
 });
 
 const {
@@ -704,15 +696,6 @@ watch(
     // scroll to top to let the user know that member has changed
     if (newMemberId !== oldMemberId) {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-
-      head.patch({
-        titleTemplate: (title?: string) =>
-          compact([
-            title,
-            compact([member.value?.firstName, member.value?.lastName]).join(' '),
-            i18n.t('head.title'),
-          ]).join(' - '),
-      });
     }
   },
 );
