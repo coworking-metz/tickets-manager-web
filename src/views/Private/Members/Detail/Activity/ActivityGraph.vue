@@ -8,6 +8,7 @@
         width: `${20 * ceil(dayjs(props.endDate).diff(props.startDate, 'week', true)) + 96}px`,
       }"
       @click="onSelect" />
+    <slot />
   </section>
 </template>
 

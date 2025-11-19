@@ -1,6 +1,6 @@
 {
   "activity": {
-    "count": "absent | {count} day | {count} days"
+    "count": "absent | present {count} day | present {count} days"
   },
   "daily": {
     "graph": {
@@ -110,7 +110,8 @@
   },
   "subscriptions": {
     "attending": "with no attendee | with {count} attendee | with {count} attendees",
-    "label": "No subscription | {count} subscription | {count} subscriptions"
+    "count": "No subscription | {count} subscription | {count} subscriptions",
+    "label": "No subscription | {count} day covered by subscription | {count} days covered by subscription"
   },
   "tickets": {
     "debt": "No payable ticket | {count} payable ticket | {count} payable tickets",

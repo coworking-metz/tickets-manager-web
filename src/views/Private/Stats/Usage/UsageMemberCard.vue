@@ -29,7 +29,7 @@
             class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.subscription}88; --tw-ring-color: ${statsColors.subscription};`">
             {{
-              $t('stats.usage.subscriptions.label', {
+              $t('stats.usage.subscriptions.count', {
                 count: member.usage.subscriptions.count,
               })
             }}
@@ -105,7 +105,6 @@
           <span
             class="mt-1.5 block size-3 shrink-0 rounded-full"
             :style="`background-color: ${totalActivity ? statsColors.activity : theme.silverSand}`" />
-
           {{
             $t(`stats.usage.activity.count`, {
               count: totalActivity,
@@ -143,7 +142,7 @@ const statsColors = useStatsColors();
 const totalActivity = computed(
   () =>
     props.member.usage.tickets.count +
-    props.member.usage.subscriptions.attending.count +
-    props.member.usage.tickets.debt.count,
+    props.member.usage.tickets.debt.count +
+    props.member.usage.subscriptions.attending.count,
 );
 </script>

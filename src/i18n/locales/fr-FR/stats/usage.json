@@ -1,6 +1,6 @@
 {
   "activity": {
-    "count": "absent | présent {count} journée | présent {count} journées"
+    "count": "absent⸱e | présent⸱e {count} journée | présent⸱e {count} journées"
   },
   "daily": {
     "graph": {
@@ -110,7 +110,8 @@
   },
   "subscriptions": {
     "attending": "dont aucun présent | dont {count} présent | dont {count} présents",
-    "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+    "count": "Aucun abonnement | {count} abonnement | {count} abonnements",
+    "label": "Aucun abonnement | {count} jour couvert par abonnement | {count} jours couverts par abonnement"
   },
   "tickets": {
     "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",

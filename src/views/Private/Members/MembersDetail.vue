@@ -148,21 +148,35 @@
 
     <SectionRow class="mt-6">
       <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-[172px] w-12" />
-      <ActivityGraph
-        v-else
-        :key="`activity-graph-${state.shouldRenderAllActivity}`"
-        v-bind="
-          state.shouldRenderAllActivity &&
-          firstActivityDate &&
-          lastActivityDate && {
-            class:
-              firstActivityDate.isBefore(dayjs().subtract(6, 'months')) && 'overflow-x-auto pr-2',
-            endDate: lastActivityDate.format('YYYY-MM-DD'),
-            startDate: firstActivityDate.format('YYYY-MM-DD'),
-          }
-        "
-        :activity="activity"
-        class="pl-2 max-sm:overflow-x-auto max-sm:pr-2" />
+      <div v-else class="relative">
+        <span
+          v-if="
+            state.shouldRenderAllActivity &&
+            firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
+          "
+          class="absolute left-0 z-10 h-[172px] w-10 bg-gradient-to-r from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+        <span
+          v-if="
+            state.shouldRenderAllActivity &&
+            firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
+          "
+          class="absolute right-0 z-10 h-[172px] w-10 bg-gradient-to-l from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+
+        <ActivityGraph
+          :key="`activity-graph-${state.shouldRenderAllActivity}`"
+          v-bind="
+            state.shouldRenderAllActivity &&
+            firstActivityDate &&
+            lastActivityDate && {
+              class:
+                firstActivityDate.isBefore(dayjs().subtract(6, 'months')) && 'overflow-x-auto pr-2',
+              endDate: lastActivityDate.format('YYYY-MM-DD'),
+              startDate: firstActivityDate.format('YYYY-MM-DD'),
+            }
+          "
+          :activity="activity"
+          class="pl-2 max-sm:overflow-x-auto max-sm:pr-2" />
+      </div>
 
       <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
         <AppSegmentedControl
