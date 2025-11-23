@@ -9,8 +9,11 @@
           <div class="sm:flex sm:items-start">
             <div
               v-if="icon"
-              class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
-              <SvgIcon aria-hidden="true" :class="['size-6', iconColor]" :path="icon" type="mdi" />
+              :class="[
+                'mx-auto flex size-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-10',
+                iconColors,
+              ]">
+              <SvgIcon aria-hidden="true" class="size-6" :path="icon" type="mdi" />
             </div>
             <div class="sm:ml-4">
               <DialogTitle
@@ -85,18 +88,18 @@ const props = defineProps({
   },
 });
 
-const iconColor = computed(() => {
+const iconColors = computed(() => {
   switch (props.type) {
     case 'critical':
-      return 'text-red-600';
+      return 'text-red-600 bg-red-100';
     case 'warning':
-      return 'text-amber-600';
+      return 'text-amber-600 bg-amber-100';
     case 'info':
-      return 'text-blue-600';
+      return 'text-blue-600 bg-blue-100';
     case 'success':
-      return 'text-green-600';
+      return 'text-green-600 bg-green-100';
     default:
-      return 'text-gray-600';
+      return 'text-gray-600 bg-gray-100';
   }
 });
 

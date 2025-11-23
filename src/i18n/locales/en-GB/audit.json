@@ -93,11 +93,17 @@
     "PARKING_ACCESS": {
       "message": "{author} has opened the parking barrier"
     },
+    "STORAGE_KEYS_ACCESS": {
+      "message": "{author} retrieved the access code for the storage room key box"
+    },
     "UNLOCK_DECK_DOOR": {
       "message": "{author} unlocked the deck door"
     },
     "UNLOCK_GATE": {
       "message": "{author} unlock pedestrian gate"
+    },
+    "WIFI_CREDENTIALS_ACCESS": {
+      "message": "{author} retrieved the Wi-Fi credentials"
     }
   },
   "author": {

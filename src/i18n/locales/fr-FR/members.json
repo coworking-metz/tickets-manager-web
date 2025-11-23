@@ -129,32 +129,51 @@
       },
       "capabilities": {
         "apply": "Modifier les capacités",
-        "keysAccess": {
-          "description": "Récupère le code des boîtes à clés dans l'application mobile pour accéder aux espaces de travail en toute autonomie.",
-          "label": "Accès à la boîte à clés"
-        },
-        "manager": {
-          "description": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.\nCe paramètre se change sur le profil Wordpress.",
-          "label": "Administrateur"
-        },
         "onFetch": {
           "fail": "Impossible de récupérer les capacités"
+        },
+        "onReset": {
+          "fail": "Impossible de réinitialiser les capacités de {name}",
+          "success": "Capacités de {name} réinitialisées"
         },
         "onUpdate": {
           "fail": "Impossible de mettre à jour les capacités de {name}",
           "success": "Capacités de {name} mis à jour"
         },
-        "parkingAccess": {
-          "description": "Ouvrir la barrière du parking.",
-          "label": "Accès au parking"
+        "reset": {
+          "description": "Les capacités ne seront plus surchargées et seront de nouveau calculées en fonction du statut du membre.",
+          "label": "Réinitialiser les valeurs par défaut",
+          "title": "Réinitialiser les capacités"
         },
-        "unlockDeckDoor": {
-          "description": "En utilisant l'application mobile. La porte donne un accès direct au Poulailler depuis l'extérieur.",
-          "label": "Déverouiller la porte de la terrasse"
-        },
-        "unlockGate": {
-          "description": "Pour entrer dans l'enceinte du tiers lieu.",
-          "label": "Déverouiller le portail piéton"
+        "values": {
+          "KEYS_ACCESS": {
+            "description": "Récupère le code des boîtes à clés dans l'application mobile pour accéder aux espaces de travail en toute autonomie.",
+            "label": "Accès à la boîte à clés"
+          },
+          "MANAGER": {
+            "description": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.\nCe paramètre se change sur le profil Wordpress.",
+            "label": "Administrateur"
+          },
+          "PARKING_ACCESS": {
+            "description": "Ouvrir la barrière du parking.",
+            "label": "Accès au parking"
+          },
+          "STORAGE_KEYS_ACCESS": {
+            "description": "Récupère le code des boîtes à clés du stock dans l'application mobile.",
+            "label": "Accès à la boîte à clés du stock"
+          },
+          "UNLOCK_DECK_DOOR": {
+            "description": "En utilisant l'application mobile. La porte donne un accès direct au Poulailler depuis l'extérieur.",
+            "label": "Déverouiller la porte de la terrasse"
+          },
+          "UNLOCK_GATE": {
+            "description": "Pour entrer dans l'enceinte du tiers lieu.",
+            "label": "Déverouiller le portail piéton"
+          },
+          "WIFI_CREDENTIALS_ACCESS": {
+            "description": "Récupère les identifiants du réseau WiFi dans l'application mobile.",
+            "label": "Accès aux identifiants WiFi"
+          }
         }
       },
       "description": "Les informations de contact et autres données personnelles de ce membre.\nCes informations ne sont pas publiques.",
