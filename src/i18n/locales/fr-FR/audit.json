@@ -94,7 +94,7 @@
       "message": "{author} a ouvert la barrière pour accéder au parking"
     },
     "STORAGE_KEYS_ACCESS": {
-      "message": "{author} a recupéré le code d'accès de la boîte à clés pour le local de stockage"
+      "message": "{author} a récupéré le code d'accès de la boîte à clés pour le local de stockage"
     },
     "UNLOCK_DECK_DOOR": {
       "message": "{author} a déverrouillé la porte de la terrasse"
