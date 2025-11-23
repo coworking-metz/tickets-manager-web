@@ -181,6 +181,7 @@ import {
   mdiKeyChainVariant,
   mdiLockOpenOutline,
   mdiTicket,
+  mdiWifiCog,
 } from '@mdi/js';
 import dayjs from 'dayjs';
 import { compact, isEmpty } from 'lodash';
@@ -243,6 +244,7 @@ const icon = computed(() => {
     case AuditAction.KEYS_ACCESS_DECK:
     case AuditAction.KEYS_ACCESS_POULAILLER:
     case AuditAction.KEYS_ACCESS_PTI_POULAILLER:
+    case AuditAction.STORAGE_KEYS_ACCESS:
       return mdiKeyChainVariant;
     case AuditAction.UNLOCK_DECK_DOOR:
       return mdiLockOpenOutline;
@@ -257,6 +259,8 @@ const icon = computed(() => {
       return mdiDevices;
     case AuditAction.MEMBER_CAPABILITIES_UPDATE:
       return mdiHeadCogOutline;
+    case AuditAction.WIFI_CREDENTIALS_ACCESS:
+      return mdiWifiCog;
     default:
       return mdiHelp;
   }

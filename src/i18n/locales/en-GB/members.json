@@ -128,33 +128,52 @@
         "label": "Birthdate"
       },
       "capabilities": {
-        "apply": "Change capabilities",
-        "keysAccess": {
-          "description": "Retrieve the code for key boxes in the mobile app to access workspaces independently.",
-          "label": "Key Box Access"
-        },
-        "manager": {
-          "description": "Manage members and services and access all features. In short: full control.\nThis setting is changed in the Wordpress profile.",
-          "label": "Administrator"
-        },
+        "apply": "Update Capabilities",
         "onFetch": {
-          "fail": "Unable to fetch member's capabilities"
+          "fail": "Unable to fetch capabilities"
+        },
+        "onReset": {
+          "fail": "Unable to reset capabilities of {name}",
+          "success": "Capabilities of {name} reset"
         },
         "onUpdate": {
-          "fail": "Unable to update {name} capabilities",
-          "success": "{name} capabilities updated"
+          "fail": "Unable to update capabilities of {name}",
+          "success": "Capabilities of {name} updated"
         },
-        "parkingAccess": {
-          "description": "Open the parking barrier.",
-          "label": "Parking Access"
+        "reset": {
+          "description": "Capabilities will no longer be overridden and will be computed based on the member's status.",
+          "label": "Reset to default values",
+          "title": "Reset Capabilities"
         },
-        "unlockDeckDoor": {
-          "description": "Using the mobile app. The door provides direct access to the Poulailler from the outside.",
-          "label": "Unlock Deck Door"
-        },
-        "unlockGate": {
-          "description": "To enter the third-place enclosure.",
-          "label": "Unlock Pedestrian Gate"
+        "values": {
+          "KEYS_ACCESS": {
+            "description": "Retrieves the key box codes in the mobile app to access the coworking spaces autonomously.",
+            "label": "Key Box Access"
+          },
+          "MANAGER": {
+            "description": "Manage members and services as well as access all features. Basically: full powers.\nThis setting is changed on the Wordpress profile.",
+            "label": "Administrator"
+          },
+          "PARKING_ACCESS": {
+            "description": "Open the parking barrier.",
+            "label": "Parking Access"
+          },
+          "STORAGE_KEYS_ACCESS": {
+            "description": "Retrieves the stock key box codes in the mobile app.",
+            "label": "Stock Key Box Access"
+          },
+          "UNLOCK_DECK_DOOR": {
+            "description": "Using the mobile app. The door provides direct access to the Poulailler from outside.",
+            "label": "Unlock Deck Door"
+          },
+          "UNLOCK_GATE": {
+            "description": "To enter the coworking premises.",
+            "label": "Unlock Pedestrian Gate"
+          },
+          "WIFI_CREDENTIALS_ACCESS": {
+            "description": "Retrieves the WiFi network credentials in the mobile app.",
+            "label": "WiFi Credentials Access"
+          }
         }
       },
       "description": "Contact information and other personal data of this member.\nThis information is not public.",

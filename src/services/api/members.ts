@@ -163,7 +163,7 @@ export const getMemberCapabilities = (id: string): Promise<MemberCapabilities> =
 
 export const updateMemberCapabilities = (
   id: string,
-  capabilities: MemberCapabilities,
+  capabilities: MemberCapabilities | {},
 ): Promise<MemberCapabilities> => {
   return HTTP.put(`/api/members/${id}/capabilities`, capabilities).then(({ data }) => data);
 };

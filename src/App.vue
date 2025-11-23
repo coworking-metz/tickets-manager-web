@@ -50,7 +50,7 @@ const state = reactive({
 });
 
 useHead({
-  titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' - '),
+  titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
 });
 
 router.isReady().finally(() => {
