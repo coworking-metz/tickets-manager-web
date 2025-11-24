@@ -32,113 +32,116 @@
               v-if="member?.attending"
               class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50 dark:ring-stone-900" />
           </component>
-          <div v-if="isPendingMember" class="flex flex-col gap-1">
-            <LoadingSkeleton class="h-8 w-48 rounded-xl" />
-            <LoadingSkeleton class="my-1 h-4 w-64" />
-            <LoadingSkeleton class="my-0.5 h-6 w-24 rounded-full" />
-          </div>
-          <AppAlert
-            v-else-if="memberErrorText"
-            :description="memberErrorText"
-            :title="$t('members.detail.onFetch.fail')"
-            type="error" />
-          <div v-else-if="member" class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-              {{ fullname || member.email }}
-            </h1>
-            <i18n-t
-              v-if="member.attending"
-              class="text-sm font-medium text-gray-500 dark:text-gray-400"
-              keypath="members.detail.profile.attending"
-              scope="global"
-              tag="p">
-              <template v-if="!!member.location" #location>
-                <span class="inline font-medium text-gray-900 dark:text-gray-100">
-                  {{ $t(`members.detail.profile.location.${member.location}`) }}
-                </span>
-              </template>
-            </i18n-t>
-            <i18n-t
-              v-else-if="!!member.lastSeen"
-              class="text-sm font-medium text-gray-500 dark:text-gray-400"
-              keypath="members.detail.profile.lastSeen"
-              scope="global"
-              tag="p">
-              <template #date>
-                <time
-                  class="mr-1 inline-block lowercase text-gray-900 dark:text-gray-100"
-                  :datetime="member.lastSeen"
-                  :title="dayjs(member.lastSeen).format('llll')">
+
+          <div class="flex flex-col gap-1">
+            <template v-if="isPendingMember">
+              <LoadingSkeleton class="h-8 w-48 rounded-xl" />
+              <LoadingSkeleton class="my-1 h-4 w-64" />
+              <LoadingSkeleton class="my-0.5 h-6 w-24 rounded-full" />
+            </template>
+            <template v-else-if="member">
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {{ fullname || member.email }}
+              </h1>
+              <i18n-t
+                v-if="member.attending"
+                class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                keypath="members.detail.profile.attending"
+                scope="global"
+                tag="p">
+                <template v-if="!!member.location" #location>
+                  <span class="inline font-medium text-gray-900 dark:text-gray-100">
+                    {{ $t(`members.detail.profile.location.${member.location}`) }}
+                  </span>
+                </template>
+              </i18n-t>
+              <i18n-t
+                v-else-if="!!member.lastSeen"
+                class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                keypath="members.detail.profile.lastSeen"
+                scope="global"
+                tag="p">
+                <template #date>
+                  <time
+                    class="mr-1 inline-block lowercase text-gray-900 dark:text-gray-100"
+                    :datetime="member.lastSeen"
+                    :title="dayjs(member.lastSeen).format('llll')">
+                    {{
+                      dayjs().diff(member.lastSeen, 'hour') < 1
+                        ? dayjs(member.lastSeen).fromNow()
+                        : dayjs(member.lastSeen).calendar(dayjs())
+                    }}
+                  </time>
+                </template>
+                <template v-if="!!member?.location" #location>
+                  <span class="inline-block">
+                    {{ $t(`members.detail.profile.location.${member.location}`) }}
+                  </span>
+                </template>
+              </i18n-t>
+              <div class="mt-1 flex flex-row flex-wrap items-center gap-2">
+                <span
+                  v-if="isMemberBalanceInsufficient(member)"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
                   {{
-                    dayjs().diff(member.lastSeen, 'hour') < 1
-                      ? dayjs(member.lastSeen).fromNow()
-                      : dayjs(member.lastSeen).calendar(dayjs())
+                    $t('members.detail.orders.tickets.overconsumed', {
+                      count: Math.abs(member.balance),
+                    })
                   }}
-                </time>
-              </template>
-              <template v-if="!!member?.location" #location>
-                <span class="inline-block">
-                  {{ $t(`members.detail.profile.location.${member.location}`) }}
                 </span>
-              </template>
-            </i18n-t>
-            <div class="mt-1 flex flex-row flex-wrap items-center gap-2">
-              <span
-                v-if="isMemberBalanceInsufficient(member)"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
-                {{
-                  $t('members.detail.orders.tickets.overconsumed', {
-                    count: Math.abs(member.balance),
-                  })
-                }}
-              </span>
-              <span
-                v-if="member.membershipOk"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                {{ $t('members.detail.membership.current', { year: member.lastMembership }) }}
-              </span>
-              <span
-                v-else
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
-                {{
-                  member.lastMembership
-                    ? $t('members.detail.membership.last', { year: member.lastMembership })
-                    : $t('members.detail.membership.none')
-                }}
-              </span>
-              <VTooltip v-if="member.trustedUser">
                 <span
-                  class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                  {{ $t('members.detail.status.trusted.label') }}
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-4"
-                    :path="mdiInformationOutline"
-                    type="mdi" />
+                  v-if="member.membershipOk"
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                  {{ $t('members.detail.membership.current', { year: member.lastMembership }) }}
                 </span>
-                <template #popper>
-                  <span class="overflow-hidden whitespace-pre-line text-sm">
-                    {{ $t('members.detail.status.trusted.description') }}
-                  </span>
-                </template>
-              </VTooltip>
-              <VTooltip v-if="member.activeUser">
                 <span
-                  class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                  {{ $t('members.detail.status.voting.label') }}
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-4"
-                    :path="mdiInformationOutline"
-                    type="mdi" />
+                  v-else
+                  class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                  {{
+                    member.lastMembership
+                      ? $t('members.detail.membership.last', { year: member.lastMembership })
+                      : $t('members.detail.membership.none')
+                  }}
                 </span>
-                <template #popper>
-                  <span class="overflow-hidden whitespace-pre-line text-sm">
-                    {{ $t('members.detail.status.voting.description') }}
+                <VTooltip v-if="member.trustedUser">
+                  <span
+                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    {{ $t('members.detail.status.trusted.label') }}
+                    <SvgIcon
+                      aria-hidden="true"
+                      class="size-4"
+                      :path="mdiInformationOutline"
+                      type="mdi" />
                   </span>
-                </template>
-              </VTooltip>
-            </div>
+                  <template #popper>
+                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                      {{ $t('members.detail.status.trusted.description') }}
+                    </span>
+                  </template>
+                </VTooltip>
+                <VTooltip v-if="member.activeUser">
+                  <span
+                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    {{ $t('members.detail.status.voting.label') }}
+                    <SvgIcon
+                      aria-hidden="true"
+                      class="size-4"
+                      :path="mdiInformationOutline"
+                      type="mdi" />
+                  </span>
+                  <template #popper>
+                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                      {{ $t('members.detail.status.voting.description') }}
+                    </span>
+                  </template>
+                </VTooltip>
+              </div>
+            </template>
+            <AppAlert
+              v-if="memberErrorText"
+              :description="memberErrorText"
+              :title="$t('members.detail.onFetch.fail')"
+              type="error" />
           </div>
         </div>
       </header>
