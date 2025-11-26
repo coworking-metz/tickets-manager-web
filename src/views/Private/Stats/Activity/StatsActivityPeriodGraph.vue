@@ -79,26 +79,13 @@ const options = computed<
       silent: props.disabled,
       name: 'members',
       data: props.activities.map(({ data }) => ({
-        value: data.coworkedDaysAmount,
-        itemStyle: {
-          color: statsColors.value.activity,
-        },
-      })),
-      type: 'bar',
-      stack: 'activity',
-      triggerLineEvent: true,
-    },
-    {
-      silent: props.disabled,
-      name: 'members',
-      data: props.activities.map(({ data }) => ({
-        value: data.coworkersCount - data.coworkedDaysAmount - data.newCoworkersCount,
+        value: data.coworkersCount - data.newCoworkersCount,
         itemStyle: {
           color: statsColors.value.member,
         },
       })),
       type: 'bar',
-      stack: 'activity',
+      stack: 'members',
       triggerLineEvent: true,
     },
     {
@@ -111,10 +98,23 @@ const options = computed<
         },
       })),
       type: 'bar',
-      stack: 'activity',
+      stack: 'members',
       emphasis: {
         focus: 'series',
       },
+      triggerLineEvent: true,
+    },
+    {
+      silent: props.disabled,
+      name: 'activity',
+      data: props.activities.map(({ data }) => ({
+        value: data.coworkedDaysAmount,
+        itemStyle: {
+          color: statsColors.value.activity,
+        },
+      })),
+      type: 'bar',
+      stack: 'activity',
       triggerLineEvent: true,
     },
   ],

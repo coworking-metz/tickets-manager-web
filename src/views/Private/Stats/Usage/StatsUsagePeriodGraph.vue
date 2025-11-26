@@ -161,6 +161,9 @@ const options = computed<
             type: 'bar',
             stack: 'usage',
             triggerLineEvent: true,
+            emphasis: {
+              focus: 'series',
+            },
           },
         ]),
     {
