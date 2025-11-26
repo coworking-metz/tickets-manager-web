@@ -3,12 +3,13 @@
     <EmptyState
       v-if="!date"
       :animation="SelectCalendarDate"
-      class="mx-auto mb-16 lg:my-32"
+      class="mx-auto mb-16 lg:mb-32 lg:mt-72"
       :description="$t('attendance.detail.select.description')"
       loop
       :title="$t('attendance.detail.select.title')" />
     <template v-else>
-      <header class="flex flex-col items-start max-sm:px-3">
+      <header
+        class="z-10 flex flex-col items-start border-b border-gray-200 bg-slate-50/90 backdrop-blur-sm max-sm:px-3 lg:sticky lg:top-0 lg:pt-40 dark:border-neutral-700 dark:bg-stone-900/90">
         <h1
           class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ capitalize(dayjs(date).format('dddd LL')) }}
@@ -19,91 +20,87 @@
           {{ $t('attendance.detail.attending', { count: attendance?.data.members.length }) }}
         </p>
 
-        <div class="my-4 max-w-lg self-stretch">
-          <label class="sr-only" for="members-search">
-            {{ $t('attendance.detail.search.label') }}
-          </label>
-          <AppTextField
-            id="members-search"
-            v-model="state.search"
-            clearable
-            hide-details
-            input-class="pr-0"
-            name="members-search"
-            :placeholder="$t('attendance.detail.search.placeholder')"
-            :prepend-icon="mdiMagnify"
-            tabindex="1"
-            type="search">
-            <template #after>
-              <Menu as="div" class="relative -ml-px block">
-                <MenuButton
-                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
-                  tabindex="1">
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-5 shrink-0 text-gray-400"
-                    :path="mdiSort"
-                    type="mdi" />
-                  <span class="ml-2 whitespace-nowrap max-sm:hidden">
-                    {{
-                      $t('attendance.detail.sort.label', {
-                        ...(sort && {
-                          suffix: $t(`attendance.detail.sort.value.${sort}`).toLocaleLowerCase(),
-                        }),
-                      })
-                    }}
-                  </span>
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="-mr-1.5 ml-2.5 size-5 text-gray-400"
-                    :path="mdiChevronDown"
-                    type="mdi" />
-                </MenuButton>
-                <Transition
-                  enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95"
-                  enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100"
-                  leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems
-                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
-                    <div class="py-1">
-                      <MenuItem
-                        v-for="listSorter in ALL_LIST_SORTERS"
-                        :key="`members-list-sort-${listSorter.key}`"
-                        v-slot="{ active, close }">
-                        <RouterLink
-                          :class="[
-                            active &&
-                              'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
-                            'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
-                          ]"
-                          replace
-                          :to="{
-                            ...currentRoute,
-                            query: {
-                              ...currentRoute.query,
-                              sort: listSorter.key !== sort ? listSorter.key : undefined,
-                            },
-                          }"
-                          @click="close">
-                          {{ $t(`attendance.detail.sort.value.${listSorter.key}`) }}
-                          <SvgIcon
-                            v-if="listSorter.key === sort"
-                            aria-hidden="true"
-                            class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                            :path="mdiCheck"
-                            type="mdi" />
-                        </RouterLink>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </Transition>
-              </Menu>
-            </template>
-          </AppTextField>
-        </div>
+        <AppTextField
+          id="members-search"
+          v-model="state.search"
+          class="my-4 w-full"
+          clearable
+          hide-details
+          input-class="pr-0"
+          name="members-search"
+          :placeholder="$t('attendance.detail.search.placeholder')"
+          :prepend-icon="mdiMagnify"
+          tabindex="1"
+          type="search">
+          <template #after>
+            <Menu as="div" class="relative -ml-px block">
+              <MenuButton
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
+                tabindex="1">
+                <SvgIcon
+                  aria-hidden="true"
+                  class="size-5 shrink-0 text-gray-400"
+                  :path="mdiSort"
+                  type="mdi" />
+                <span class="ml-2 whitespace-nowrap max-sm:hidden">
+                  {{
+                    $t('attendance.detail.sort.label', {
+                      ...(sort && {
+                        suffix: $t(`attendance.detail.sort.value.${sort}`).toLocaleLowerCase(),
+                      }),
+                    })
+                  }}
+                </span>
+                <SvgIcon
+                  aria-hidden="true"
+                  class="-mr-1.5 ml-2.5 size-5 text-gray-400"
+                  :path="mdiChevronDown"
+                  type="mdi" />
+              </MenuButton>
+              <Transition
+                enter-active-class="transition ease-out duration-100"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95">
+                <MenuItems
+                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  <div class="py-1">
+                    <MenuItem
+                      v-for="listSorter in ALL_LIST_SORTERS"
+                      :key="`members-list-sort-${listSorter.key}`"
+                      v-slot="{ active, close }">
+                      <RouterLink
+                        :class="[
+                          active &&
+                            'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
+                          'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
+                        ]"
+                        replace
+                        :to="{
+                          ...currentRoute,
+                          query: {
+                            ...currentRoute.query,
+                            sort: listSorter.key !== sort ? listSorter.key : undefined,
+                          },
+                        }"
+                        @click="close">
+                        {{ $t(`attendance.detail.sort.value.${listSorter.key}`) }}
+                        <SvgIcon
+                          v-if="listSorter.key === sort"
+                          aria-hidden="true"
+                          class="-mr-1.5 ml-2.5 size-4 shrink-0"
+                          :path="mdiCheck"
+                          type="mdi" />
+                      </RouterLink>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+              </Transition>
+            </Menu>
+          </template>
+        </AppTextField>
       </header>
 
       <template v-if="attendance?.date && attendance.date === date">
@@ -182,12 +179,12 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'activity',
     sort: (a, b) =>
-      (b.attendance.subscriptions.count || a.attendance.tickets.count || 0) -
-      (a.attendance.subscriptions.count || b.attendance.tickets.count || 0),
-  },
-  {
-    key: 'debt',
-    sort: (a, b) => (b.attendance.tickets.debt.count || 0) - (a.attendance.tickets.debt.count || 0),
+      a.attendance.subscriptions.count +
+      a.attendance.tickets.count +
+      a.attendance.tickets.debt.count -
+      (b.attendance.subscriptions.count +
+        b.attendance.tickets.count +
+        b.attendance.tickets.debt.count),
   },
 ]);
 

@@ -34,7 +34,6 @@
       "label": "Trier {suffix}",
       "value": {
         "activity": "Par activité",
-        "debt": "Par dette",
         "name": "Par nom"
       }
     }

@@ -34,7 +34,6 @@
       "label": "Sort {suffix}",
       "value": {
         "activity": "By activity",
-        "debt": "By debt",
         "name": "By name"
       }
     }

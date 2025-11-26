@@ -1,10 +1,11 @@
 <template>
-  <article class="mx-auto flex w-full max-w-7xl grow flex-col items-stretch gap-6 lg:flex-row">
+  <article
+    class="mx-auto flex w-full max-w-7xl grow flex-col items-stretch gap-6 lg:flex-row lg:items-start">
     <Head>
       <title>{{ $t('attendance.head.title') }}</title>
     </Head>
 
-    <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 sm:pt-40">
+    <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 lg:sticky lg:top-40 lg:py-0">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
           class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
@@ -15,9 +16,10 @@
         </p>
 
         <div class="my-4 flex w-full flex-row items-center justify-between">
-          <div class="flex h-10 items-stretch rounded-md shadow-sm md:items-stretch">
+          <div
+            class="flex h-10 items-stretch overflow-hidden rounded-md border border-gray-300 bg-white shadow-sm md:items-stretch dark:border-neutral-700 dark:bg-neutral-800">
             <RouterLink
-              class="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400"
+              class="flex items-center justify-center py-2 pl-3 pr-4 text-gray-400 transition-colors hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400 dark:hover:bg-neutral-900"
               :to="{
                 ...currentRoute,
                 query: {
@@ -34,12 +36,12 @@
             </RouterLink>
             <time
               v-if="state.selectedMonth"
-              class="flex flex-row items-center border-y border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-900 focus:relative dark:bg-neutral-800 dark:text-gray-100"
+              class="flex flex-row items-center px-3.5 text-sm font-medium text-gray-900 focus:relative dark:bg-neutral-800 dark:text-gray-100"
               :datetime="state.selectedMonth">
               {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
             </time>
             <RouterLink
-              class="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400"
+              class="flex items-center justify-center py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-neutral-900"
               :to="{
                 ...currentRoute,
                 query: {
@@ -78,7 +80,7 @@
         <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-[2px] w-full" />
         <div
           v-if="calendarPeriod"
-          class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
+          class="grid grid-cols-7 divide-x divide-gray-300 border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none dark:divide-stone-600 dark:border-stone-600 dark:text-gray-300">
           <div
             v-for="weekIndex in 7"
             :key="`weekday-${weekIndex}`"
@@ -120,7 +122,6 @@
     <aside class="relative min-w-[320px] shrink grow basis-0 self-stretch">
       <AttendanceDetail
         :attendance="state.selectedAttendance"
-        class="lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-clip lg:px-0.5 lg:pt-40"
         :date="date"
         :loading="isFetching"
         :search="search"
@@ -161,7 +162,7 @@ const props = defineProps({
   },
   sort: {
     type: String,
-    default: 'debt',
+    default: 'activity',
   },
 });
 

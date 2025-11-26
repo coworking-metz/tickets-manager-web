@@ -79,16 +79,26 @@ const options = computed<
       silent: props.disabled,
       name: 'members',
       data: props.activities.map(({ data }) => ({
-        value: data.coworkersCount - data.newCoworkersCount,
+        value: data.coworkedDaysAmount,
+        itemStyle: {
+          color: statsColors.value.activity,
+        },
+      })),
+      type: 'bar',
+      stack: 'activity',
+      triggerLineEvent: true,
+    },
+    {
+      silent: props.disabled,
+      name: 'members',
+      data: props.activities.map(({ data }) => ({
+        value: data.coworkersCount - data.coworkedDaysAmount - data.newCoworkersCount,
         itemStyle: {
           color: statsColors.value.member,
         },
       })),
       type: 'bar',
       stack: 'activity',
-      emphasis: {
-        focus: 'series',
-      },
       triggerLineEvent: true,
     },
     {
