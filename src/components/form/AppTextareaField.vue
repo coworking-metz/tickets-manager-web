@@ -22,7 +22,7 @@
           ($slots.prepend || prependIcon) && 'pl-10',
           ($slots.append || appendIcon) && 'pr-10',
           isInvalid &&
-            `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
+            `border-red-500 text-red-900 placeholder:text-red-300 focus:border-red-500
             focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
             dark:placeholder:text-red-300/50 dark:focus:border-red-600 dark:focus:ring-red-600`,
           inputClass,

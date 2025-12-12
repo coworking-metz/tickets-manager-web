@@ -9,6 +9,10 @@
     "description": "This page may be temporarily unavailable.\nYou can try reloading the page without cache for better results.",
     "message": "Unable to load the page"
   },
+  "onTimeout": {
+    "message": "No response from the server{withDuration}. This may be due to an interrupted or poor quality connection.",
+    "withDuration": " after waiting for {duration}"
+  },
   "onUnknown": {
     "message": [
       "An unknown error has occurred",

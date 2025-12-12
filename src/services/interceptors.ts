@@ -1,5 +1,5 @@
 import { parseErrorText } from '@/helpers/errors';
-import { i18nInstance } from '@/i18n';
+import { formatDuration, i18nInstance } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
 import { useHttpStore } from '@/store/http';
 import { useNotificationsStore } from '@/store/notifications';
@@ -131,6 +131,22 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         );
 
         return Promise.reject(disconnectedError);
+      }
+
+      // handle timeout error by translating with a proper message
+      if (error.code === 'ECONNABORTED' && error.message?.includes('timeout')) {
+        const timeoutDuration = (error as AxiosError).config?.timeout;
+        const errorMessage = i18nInstance.global.t(
+          'errors.onTimeout.message',
+          timeoutDuration
+            ? {
+                withDuration: i18nInstance.global.t('errors.onTimeout.withDuration', {
+                  duration: formatDuration(timeoutDuration),
+                }),
+              }
+            : {},
+        );
+        return Promise.reject(new Error(errorMessage));
       }
 
       return Promise.reject(error);

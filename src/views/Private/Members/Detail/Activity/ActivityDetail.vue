@@ -69,16 +69,6 @@
         </AppButtonText>
       </nav>
       <form class="mt-6 flex h-full flex-col" @submit.prevent="onSubmit">
-        <Head>
-          <title>
-            {{
-              $t('activity.detail.head.title', {
-                date: dayjs(selected.date).format('LL'),
-              })
-            }}
-          </title>
-        </Head>
-
         <!-- <p class="font-medium text-gray-900 dark:text-gray-100 sm:text-sm">
           {{ $t('activity.detail.daily.label') }}
         </p>
@@ -108,7 +98,7 @@
           </template>
         </AppAlert>
 
-        <RadioGroup v-model="state.type" disabled>
+        <RadioGroup class="mb-5" disabled :model-value="selected.type">
           <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
             {{ $t('activity.detail.type.label') }}
           </RadioGroupLabel>
@@ -158,52 +148,27 @@
             </RadioGroupOption>
           </div>
         </RadioGroup>
-        <ul class="min-h-[1.4rem] px-3 text-xs">
-          <li
-            v-for="error in vuelidate.type.$errors.map(({ $message }) => $message)"
-            :key="`error-${error}`"
-            class="text-red-600">
-            {{ error }}
-          </li>
-        </ul>
 
-        <RadioGroup v-model="state.duration">
-          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
-            {{ $t('activity.detail.duration.label') }}
-          </RadioGroupLabel>
-          <div class="mt-1 flex flex-row gap-3">
-            <RadioGroupOption
-              v-for="durationOption in [
-                { label: $t('activity.detail.duration.value.NONE'), value: ActivityDuration.NONE },
-                { label: $t('activity.detail.duration.value.HALF'), value: ActivityDuration.HALF },
-                { label: $t('activity.detail.duration.value.FULL'), value: ActivityDuration.FULL },
-              ]"
-              :key="durationOption.label"
-              as="template"
-              :value="durationOption.value"
-              v-slot="{ active, checked }">
-              <div
-                :class="[
-                  'cursor-pointer text-center focus:outline-none',
-                  active && 'ring-2 ring-indigo-500 ring-offset-2',
-                  checked
-                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-100',
-                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm dark:hover:bg-neutral-700 dark:focus:ring-offset-neutral-800',
-                ]">
-                <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
-              </div>
-            </RadioGroupOption>
-          </div>
-        </RadioGroup>
-        <ul class="min-h-[1.4rem] px-3 text-xs">
-          <li
-            v-for="error in vuelidate.duration.$errors.map(({ $message }) => $message)"
-            :key="`error-${error}`"
-            class="text-red-600">
-            {{ error }}
-          </li>
-        </ul>
+        <AppToggleField
+          v-model="state.duration"
+          :accept-other="
+            !includes(
+              [ActivityDuration.NONE, ActivityDuration.HALF, ActivityDuration.FULL],
+              selected.value,
+            )
+          "
+          :errors="vuelidate.duration.$errors.map(({ $message }) => $message as string)"
+          :format="
+            (option) =>
+              option === ActivityDuration.HALF
+                ? $t('activity.detail.duration.half')
+                : $t('activity.detail.duration.count', {
+                    count: option,
+                  })
+          "
+          :label="$t('activity.detail.duration.label')"
+          :options="[ActivityDuration.NONE, ActivityDuration.HALF, ActivityDuration.FULL]"
+          :other-placeholder="$t('activity.detail.duration.other')" />
 
         <AppTextareaField
           id="comment"
@@ -234,7 +199,9 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
+import AppFieldHint from '@/components/form/AppFieldHint.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
+import AppToggleField from '@/components/form/AppToggleField.vue';
 import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
@@ -267,6 +234,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
+import { includes } from 'lodash';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -287,7 +255,6 @@ const props = defineProps({
 
 const queryClient = useQueryClient();
 const state = reactive({
-  type: 'ticket' as AttendanceType,
   duration: ActivityDuration.NONE as ActivityDuration,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -325,7 +292,6 @@ const next = computed(() => {
 });
 
 const rules = computed(() => ({
-  type: { required: withAppI18nMessage(required) },
   duration: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
@@ -383,7 +349,6 @@ watch(
   () => selected.value,
   (activity) => {
     if (activity) {
-      state.type = activity.type;
       state.duration = getActivityDuration(activity.value);
       state.comment = null;
     }

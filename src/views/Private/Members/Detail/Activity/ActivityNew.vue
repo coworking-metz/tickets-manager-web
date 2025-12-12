@@ -1,8 +1,5 @@
 <template>
   <div class="flex h-full flex-col">
-    <Head>
-      <title>{{ $t('activity.new.head.title') }}</title>
-    </Head>
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle
@@ -32,42 +29,20 @@
           required
           type="date" />
 
-        <RadioGroup v-model="state.duration">
-          <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100">
-            {{ $t('activity.detail.duration.label') }}
-          </RadioGroupLabel>
-          <div class="mt-1 flex flex-row gap-3">
-            <RadioGroupOption
-              v-for="durationOption in [
-                { label: $t('activity.detail.duration.value.HALF'), value: ActivityDuration.HALF },
-                { label: $t('activity.detail.duration.value.FULL'), value: ActivityDuration.FULL },
-              ]"
-              :key="durationOption.label"
-              as="template"
-              :value="durationOption.value"
-              v-slot="{ active, checked }">
-              <div
-                :class="[
-                  'cursor-pointer text-center focus:outline-none',
-                  active && 'ring-2 ring-indigo-500 ring-offset-2',
-                  checked
-                    ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-                    : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-100',
-                  'flex flex-1 items-center justify-center rounded-md border p-3 font-medium sm:text-sm dark:hover:bg-neutral-700 dark:focus:ring-offset-neutral-800',
-                ]">
-                <RadioGroupLabel as="span">{{ durationOption.label }}</RadioGroupLabel>
-              </div>
-            </RadioGroupOption>
-          </div>
-        </RadioGroup>
-        <ul class="min-h-[1.4rem] px-3 text-xs">
-          <li
-            v-for="error in vuelidate.duration.$errors.map(({ $message }) => $message)"
-            :key="`error-${error}`"
-            class="text-red-600">
-            {{ error }}
-          </li>
-        </ul>
+        <AppToggleField
+          v-model="state.duration"
+          :errors="vuelidate.duration.$errors.map(({ $message }) => $message as string)"
+          :format="
+            (option) =>
+              option === ActivityDuration.HALF
+                ? $t('activity.detail.duration.half')
+                : $t('activity.detail.duration.count', {
+                    count: option,
+                  })
+          "
+          :label="$t('activity.detail.duration.label')"
+          :options="[ActivityDuration.HALF, ActivityDuration.FULL]"
+          :other-placeholder="$t('activity.detail.duration.other')" />
 
         <AppTextareaField
           id="comment"
@@ -95,6 +70,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
+import AppToggleField from '@/components/form/AppToggleField.vue';
 import { ActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
@@ -102,10 +78,9 @@ import { ROUTE_NAMES } from '@/router/names';
 import { addMemberActivity } from '@/services/api/members';
 import { membersQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
-import { DialogTitle, RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
+import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendar, mdiClose, mdiPlus } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
@@ -159,7 +134,7 @@ const onSubmit = async () => {
     .then(async () => {
       notificationsStore.addNotification({
         type: 'success',
-        message: i18n.t('activity.detail.onUpdate.success', {
+        message: i18n.t('activity.detail.onAdd.success', {
           date: dayjs(state.date).format('dddd LL'),
         }),
         timeout: 3_000,

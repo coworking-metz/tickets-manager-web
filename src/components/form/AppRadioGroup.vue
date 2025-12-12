@@ -9,7 +9,7 @@
     <ul class="mt-1 flex flex-col -space-y-px rounded-md bg-white dark:bg-neutral-800">
       <RadioGroupOption
         v-for="(option, index) in options"
-        :key="`activity-option-${option}`"
+        :key="`radio-group-option-${option}`"
         as="li"
         class="focus-visible:outline-none focus-visible:ring-0"
         :disabled="disabled"
@@ -72,10 +72,6 @@ import { PropType, computed } from 'vue';
 defineEmits(['input']);
 
 const props = defineProps({
-  value: {
-    type: Object as PropType<any>,
-    default: null,
-  },
   options: {
     type: Array as PropType<any>,
     required: true,

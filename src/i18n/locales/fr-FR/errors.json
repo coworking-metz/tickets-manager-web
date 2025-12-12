@@ -9,6 +9,10 @@
     "description": "Il est possible que cette page soit temporairement indisponible.\nVous pouvez essayer de recharger la page sans cache pour de meilleurs résultats.",
     "message": "Impossible de charger la page"
   },
+  "onTimeout": {
+    "message": "Aucune réponse du serveur{withDuration}. Cela peut être dû à une connexion interrompue ou de mauvaise qualité.",
+    "withDuration": " après {duration} d'attente"
+  },
   "onUnknown": {
     "message": [
       "Une erreur inconnue est survenue",

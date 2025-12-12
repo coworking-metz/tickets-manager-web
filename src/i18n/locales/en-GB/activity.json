@@ -5,19 +5,14 @@
       "placeholder": "Explain the reason for this change"
     },
     "duration": {
+      "count": "Absent | Full day | {count} days",
+      "half": "Half day",
       "label": "Duration",
-      "value": {
-        "FULL": "Full day",
-        "HALF": "Half day",
-        "NONE": "Absent"
-      }
+      "other": "Other"
     },
     "empty": {
       "description": "No attendance has been recorded for this date.",
       "title": "Attendance Not Found"
-    },
-    "head": {
-      "title": "@:activity.detail.title"
     },
     "nonCompliant": {
       "description": "The person showed up at the Coworking but:\n- did not have an active subscription,\n- did not have a sufficient ticket balance.\nThis resulted in an {emphasized}.\n\nTo rectify the situation, you need to add a ticket or activate a subscription covering this date.",
@@ -49,9 +44,6 @@
   "new": {
     "date": {
       "label": "What day?"
-    },
-    "head": {
-      "title": "@:activity.new.title"
     },
     "onAdd": {
       "fail": "Unable to create attendance on {date}",

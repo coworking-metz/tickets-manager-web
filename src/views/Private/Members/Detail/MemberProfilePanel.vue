@@ -46,12 +46,12 @@
           @blur="vuelidate.email.$touch()" />
         <AppTextField
           id="birthdate"
+          v-model="state.birthdate"
           autocomplete="bday"
           class="min-w-48 shrink grow basis-0"
           disabled
           :label="$t('members.detail.profile.birthdate.label')"
           :loading="isFetchingMember"
-          :model-value="dayjs(state.birthdate).format('L')"
           name="birthdate"
           :prepend-icon="mdiCakeVariantOutline"
           type="date"
@@ -135,7 +135,6 @@ import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutli
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
-import dayjs from 'dayjs';
 import { compact } from 'lodash';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';

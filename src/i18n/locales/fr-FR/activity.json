@@ -5,19 +5,14 @@
       "placeholder": "Expliquez la raison de ce changement"
     },
     "duration": {
+      "count": "Absent | Journée complète | {count} journées",
+      "half": "Demi-journée",
       "label": "Durée",
-      "value": {
-        "FULL": "Journée complète",
-        "HALF": "Demi-journée",
-        "NONE": "Absent"
-      }
+      "other": "Autre"
     },
     "empty": {
       "description": "Aucune présence n'a été enregistrée\npour cette date.",
       "title": "Présence introuvable"
-    },
-    "head": {
-      "title": "@:activity.detail.title"
     },
     "nonCompliant": {
       "description": "La personne s'est présenté au Poulailler mais :\n- n'avait pas d'abonnement actif,\n- n'avait pas un solde de tickets suffisant.\nCela a donc entraîné une {emphasized}.\n\nPour régulariser la situation, il faut ajouter un ticket ou activer un abonnement couvrant cette date.",
@@ -50,12 +45,9 @@
     "date": {
       "label": "Quel jour ?"
     },
-    "head": {
-      "title": "@:activity.new.title"
-    },
     "onAdd": {
       "fail": "Impossible de créer la présence du {date}",
-      "success": "Présence du {date} créée"
+      "success": "Présence du {date} ajoutée"
     },
     "title": "Nouvelle présence"
   }

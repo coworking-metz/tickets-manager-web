@@ -42,6 +42,18 @@ dayjs.updateLocale('en', {
   },
 });
 
+export const formatDuration = (milliseconds: number): string => {
+  const dayJSduration = dayjs.duration(milliseconds, 'milliseconds');
+  const days = dayJSduration.get('day');
+  const minutes = dayJSduration.get('minute');
+  const seconds = dayJSduration.get('second');
+  const dynamicFormats = [!!days && 'H[h]', !!minutes && 'm[m]', !!seconds && 's[s]']
+    .filter(Boolean)
+    .join(' ');
+
+  return dayJSduration.format(dynamicFormats);
+};
+
 export const datetimeFormats: IntlDateTimeFormats = {
   'fr-FR': {
     short: {

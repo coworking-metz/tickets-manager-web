@@ -53,7 +53,7 @@
               (slots.append || appendIcon) && 'pr-10',
               type === 'number' && 'pr-3 text-right',
               isInvalid &&
-                `border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500
+                `border-red-500 text-red-900 placeholder:text-red-300 focus:border-red-500
                 focus:ring-red-500 dark:border-red-500/50 dark:text-red-300
                 dark:placeholder:text-red-300/50 dark:focus:border-red-600 dark:focus:ring-red-600`,
               inputClass,

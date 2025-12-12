@@ -65,7 +65,7 @@
       </div>
     </section>
     <section
-      class="relative min-h-64 overflow-hidden bg-gray-50 max-sm:max-h-[320px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+      class="relative flex min-h-64 flex-col overflow-hidden bg-gray-50 max-lg:max-h-[320px] lg:absolute lg:inset-y-0 lg:right-0 lg:min-h-[420px] lg:w-1/2">
       <img
         :alt="$t('login.background.label')"
         class="aspect-auto h-full object-cover grayscale lg:w-full"
@@ -75,7 +75,7 @@
         style="background-color: rgb(243, 175, 16, 0.6)" />
       <img
         :alt="$t('login.logo.label')"
-        class="pointer-events-none absolute inset-0 m-auto size-full max-h-[320px] max-w-[320px] object-contain"
+        class="pointer-events-none absolute inset-0 size-full max-h-[320px] max-w-[320px] place-self-center object-contain lg:ml-40"
         :src="typoLePoulailler" />
     </section>
   </article>

@@ -505,7 +505,7 @@
 
     <AppDialog
       v-model="state.isPictureDialogVisible"
-      dialog-class="max-w-xl relative overflow-hidden">
+      dialog-class="max-w-xl relative overflow-hidden min-h-40">
       <img
         v-if="member?.picture"
         class="max-h-[80vh] w-full rounded-md object-contain"
