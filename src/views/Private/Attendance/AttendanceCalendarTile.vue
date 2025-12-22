@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import CircularProgress from '@/components/CircularProgress.vue';
 import { AttendancePeriod, MAX_ATTENDANCE } from '@/services/api/attendance';
-import { theme } from '@/styles/colors';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import dayjs from 'dayjs';
 import { PropType, computed } from 'vue';

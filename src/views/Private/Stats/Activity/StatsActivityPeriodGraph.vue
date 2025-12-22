@@ -1,7 +1,6 @@
 <template>
   <VueECharts
     :key="`echarts-${width}`"
-    ref="chart"
     class="size-full"
     :option="options"
     @click="(event) => $emit('click', event)" />
@@ -15,7 +14,7 @@ import { BarChart, LineChart } from 'echarts/charts.js';
 import { GridComponent, MarkLineComponent, TooltipComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
-import { PropType, computed, ref } from 'vue';
+import { PropType, computed } from 'vue';
 import VueECharts from 'vue-echarts';
 import type {
   GridComponentOption,
@@ -45,7 +44,6 @@ const props = defineProps({
   },
 });
 
-const chart = ref();
 const { width } = useWindowSize();
 const statsColors = useStatsColors();
 

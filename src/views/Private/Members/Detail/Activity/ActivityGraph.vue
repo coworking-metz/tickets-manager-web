@@ -1,7 +1,6 @@
 <template>
   <section class="overflow-visible">
     <VueECharts
-      ref="chart"
       :option="options"
       :style="{
         height: '172px',
@@ -26,7 +25,7 @@ import { CalendarComponent, TooltipComponent, VisualMapComponent } from 'echarts
 import { use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
 import { capitalize, ceil, range } from 'lodash';
-import { PropType, computed, reactive, ref } from 'vue';
+import { PropType, computed, reactive } from 'vue';
 import VueECharts from 'vue-echarts';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -63,7 +62,6 @@ const { width } = useWindowSize();
 const state = reactive({
   shouldHideTooltip: false, // https://github.com/apache/echarts/issues/16454
 });
-const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 const now = dayjs();
 
 const statsColors = useStatsColors();

@@ -199,19 +199,13 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
-import AppFieldHint from '@/components/form/AppFieldHint.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import AppToggleField from '@/components/form/AppToggleField.vue';
 import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import {
-  Attendance,
-  AttendanceType,
-  getMemberActivity,
-  updateMemberActivity,
-} from '@/services/api/members';
+import { Attendance, getMemberActivity, updateMemberActivity } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import {
@@ -230,7 +224,6 @@ import {
   mdiClose,
 } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import dayjs from 'dayjs';

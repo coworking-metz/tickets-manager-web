@@ -1,7 +1,6 @@
 <template>
   <section class="overflow-visible">
     <VueECharts
-      ref="chart"
       :option="options"
       :style="{
         height: '96px',
@@ -16,15 +15,15 @@ import { theme } from '@/styles/colors';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import { CustomChart } from 'echarts/charts.js';
-import { TooltipComponent, VisualMapComponent, GridComponent } from 'echarts/components.js';
-import { use, graphic } from 'echarts/core.js';
+import { GridComponent, TooltipComponent, VisualMapComponent } from 'echarts/components.js';
+import { graphic, use } from 'echarts/core.js';
 import { CanvasRenderer } from 'echarts/renderers.js';
-import { PropType, computed, ref } from 'vue';
+import { PropType, computed } from 'vue';
 import VueECharts from 'vue-echarts';
 import type {
+  GridComponentOption,
   TooltipComponentOption,
   VisualMapComponentOption,
-  GridComponentOption,
 } from 'echarts/components.js';
 import type { ComposeOption } from 'echarts/core.js';
 
@@ -54,8 +53,6 @@ const dailyActivity = [...Array(10)].map((_, index) => {
     },
   };
 });
-
-const chart = ref<InstanceType<typeof VueECharts> | null>(null);
 
 const renderItem = (params: any, api: any) => {
   var categoryIndex = api.value(0);
