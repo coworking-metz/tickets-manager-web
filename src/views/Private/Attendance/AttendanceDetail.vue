@@ -11,7 +11,7 @@
       <header
         class="z-10 flex flex-col items-start border-b border-gray-200 bg-slate-50/90 backdrop-blur-sm max-sm:px-3 lg:sticky lg:top-0 lg:pt-40 dark:border-neutral-700 dark:bg-stone-900/90">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+          class="w-full text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ capitalize(dayjs(date).format('dddd LL')) }}
         </h1>
         <p

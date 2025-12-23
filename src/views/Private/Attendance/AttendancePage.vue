@@ -11,7 +11,7 @@
           class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('attendance.title') }}
         </h1>
-        <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
+        <p class="mt-1 text-base text-slate-500 sm:truncate dark:text-slate-400">
           {{ $t('attendance.description') }}
         </p>
 
