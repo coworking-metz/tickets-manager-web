@@ -114,6 +114,7 @@ watch(
         componentProps: {
           notificationId: notification.id,
         },
+        onDismiss: () => notificationsStore.dismissNotification(notification.id),
       });
     }
   },

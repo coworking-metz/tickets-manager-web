@@ -1,4 +1,13 @@
 {
+  "cache": {
+    "clear": "Clear cache",
+    "description": "The server cache stores temporary data to improve performance, especially statistics.\nHowever, sometimes some data can become outdated or corrupted.\n\nBy clearing the cache, you force the server to re-calculate all data from the original source, which can resolve certain issues.",
+    "onClear": {
+      "fail": "Unable to clear cache",
+      "success": "Cache cleared"
+    },
+    "title": "Server Cache"
+  },
   "computeAttendance": {
     "description": "Attendance is automatically synchronized/computed every night at 1 AM from the traces of MAC addresses scanned on the network. This means that all connected devices are tracked, even if they are not yet in the system.\n\nYou can manually trigger a synchronization between the traces and the attendance by specifying a particular period and/or a MAC address.",
     "macAddress": {

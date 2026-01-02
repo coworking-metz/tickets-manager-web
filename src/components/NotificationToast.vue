@@ -45,7 +45,7 @@
             type="button"
             @click="
               () => {
-                emit('closeToast');
+                onClose(notificationId);
                 action.onClick?.();
               }
             ">
@@ -58,12 +58,7 @@
         class="ml-4 shrink-0 rounded-md !text-gray-400 hover:!bg-gray-400/30 hover:!text-gray-300 active:!bg-gray-400/40 active:!text-gray-100"
         :icon="mdiClose"
         :title="$t('action.close')"
-        @click="
-          () => {
-            notificationsStore.dismissNotification(notificationId);
-            emit('closeToast');
-          }
-        " />
+        @click="() => onClose(notificationId)" />
     </div>
     <AppButtonIcon
       v-if="
@@ -113,6 +108,11 @@ const notification = computed(() =>
   notificationsStore.history.find(({ id }) => id === props.notificationId),
 );
 
+const onClose = (notificationId: string) => {
+  notificationsStore.dismissNotification(notificationId);
+  emit('closeToast');
+};
+
 const getIconFromType = (type: AppNotification['type']) => {
   switch (type) {
     case 'info':
@@ -160,8 +160,7 @@ const getIconColorFromType = (type: AppNotification['type']) => {
 
 const onTimeoutAnimationEnd = (notification?: StoreNotification) => {
   if (!!notification?.timeout && !notification?.dismissed) {
-    notificationsStore.dismissNotification(notification.id);
-    emit('closeToast');
+    onClose(notification.id);
   }
 };
 
