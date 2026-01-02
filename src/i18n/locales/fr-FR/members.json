@@ -88,7 +88,6 @@
           "orders": "aucun abonnement | {count} abonnement | {count} abonnements",
           "text": "{attendance} journée couverte par {orders} | {attendance} couverte par {orders} | {attendance} couvertes par {orders}"
         },
-        "days": "{count} jour | {count} jour | {count} jours",
         "more": "Plus",
         "onFetch": {
           "fail": "Impossible de récupérer ses abonnements"
@@ -199,7 +198,7 @@
         "compute": "Synchroniser",
         "description": {
           "link": "adresse MAC",
-          "text": "Permet de connaître la présence au travers d'une {link}"
+          "text": "Découvre la présence au travers d'une {link} sur le réseau WiFi."
         },
         "label": "Appareil | Appareil | {count} appareils",
         "onUpdate": {

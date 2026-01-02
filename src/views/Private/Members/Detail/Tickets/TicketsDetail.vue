@@ -65,12 +65,38 @@
           </span>
         </template>
       </AppTextField>
+
       <AppTextField
         id="ticket-reference"
         disabled
         :label="$t('tickets.detail.reference.label')"
-        :model-value="selectedTicket.orderReference"
-        readonly />
+        readonly
+        v-bind="{
+          ...(!isMemberOrderFromWordpress(selectedTicket.orderReference) && {
+            modelValue: selectedTicket.orderReference,
+          }),
+        }">
+        <template
+          v-if="
+            selectedTicket.orderReference &&
+            isMemberOrderFromWordpress(selectedTicket.orderReference)
+          "
+          #prepend>
+          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+            <a
+              class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
+              :href="buildWordpressSearchOrderByReferenceUrl(selectedTicket.orderReference)"
+              target="_blank">
+              {{ selectedTicket.orderReference }}
+            </a>
+            <SvgIcon
+              aria-hidden="true"
+              class="inline-block size-4 text-indigo-600"
+              :path="mdiOpenInNew"
+              type="mdi" />
+          </div>
+        </template>
+      </AppTextField>
 
       <AppTextareaField
         id="comment"
@@ -121,11 +147,15 @@ import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
+import {
+  buildWordpressSearchOrderByReferenceUrl,
+  isMemberOrderFromWordpress,
+} from '@/services/api/members';
 import { getAllMemberTickets, Ticket, updateMemberTicket } from '@/services/api/tickets';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
-import { mdiCheck, mdiClose, mdiDeleteOutline, mdiTicket } from '@mdi/js';
+import { mdiCheck, mdiClose, mdiDeleteOutline, mdiOpenInNew, mdiTicket } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';

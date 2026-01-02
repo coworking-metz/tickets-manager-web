@@ -88,7 +88,6 @@
           "orders": "{count} subscription | {count} subscription | {count} subscriptions",
           "text": "{attendance} covered by {orders} | {attendance} covered by {orders} | {attendance} covered by {orders}"
         },
-        "days": "{count} day | {count} day | {count} days",
         "more": "More",
         "onFetch": {
           "fail": "Unable to fetch member's subscriptions"
@@ -128,7 +127,7 @@
         "label": "Birthdate"
       },
       "capabilities": {
-        "apply": "Update Capabilities",
+        "apply": "Update capabilities",
         "onFetch": {
           "fail": "Unable to fetch capabilities"
         },
@@ -199,7 +198,7 @@
         "compute": "Synchronize",
         "description": {
           "link": "MAC address",
-          "text": "Allows knowing the presence through a {link}"
+          "text": "Check attendance through the presence of a {link} on the WiFi network."
         },
         "label": "Device | Device | {count} devices",
         "onUpdate": {

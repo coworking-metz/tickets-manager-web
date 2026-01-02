@@ -77,8 +77,33 @@
         id="subscription-reference"
         disabled
         :label="$t('subscriptions.detail.reference.label')"
-        :model-value="selectedSubscription.orderReference"
-        readonly />
+        readonly
+        v-bind="{
+          ...(!isMemberOrderFromWordpress(selectedSubscription.orderReference) && {
+            modelValue: selectedSubscription.orderReference,
+          }),
+        }">
+        <template
+          v-if="
+            selectedSubscription.orderReference &&
+            isMemberOrderFromWordpress(selectedSubscription.orderReference)
+          "
+          #prepend>
+          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+            <a
+              class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
+              :href="buildWordpressSearchOrderByReferenceUrl(selectedSubscription.orderReference)"
+              target="_blank">
+              {{ selectedSubscription.orderReference }}
+            </a>
+            <SvgIcon
+              aria-hidden="true"
+              class="inline-block size-4 text-indigo-600"
+              :path="mdiOpenInNew"
+              type="mdi" />
+          </div>
+        </template>
+      </AppTextField>
 
       <AppTextareaField
         id="comment"
@@ -130,6 +155,10 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import {
+  buildWordpressSearchOrderByReferenceUrl,
+  isMemberOrderFromWordpress,
+} from '@/services/api/members';
+import {
   getAllMemberSubscriptions,
   Subscription,
   updateMemberSubscription,
@@ -143,6 +172,7 @@ import {
   mdiCheck,
   mdiClose,
   mdiDeleteOutline,
+  mdiOpenInNew,
 } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';

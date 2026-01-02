@@ -19,7 +19,7 @@
             </a>
             <SvgIcon
               aria-hidden="true"
-              class="inline-block size-4 pb-1 text-blue-600"
+              class="inline-block size-4 pb-1 text-indigo-600"
               :path="mdiOpenInNew"
               type="mdi" />
           </template>

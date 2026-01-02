@@ -45,18 +45,10 @@
               name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
               params: { subscriptionId: subscription._id },
             }">
-            <div class="flex flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
-              <i18n-t
-                keypath="members.detail.orders.subscriptions.days"
-                :plural="subscription.durationInDays"
-                scope="global"
-                tag="span">
-                <template #count>
-                  <strong class="text-3xl">
-                    {{ subscription.durationInDays }}
-                  </strong>
-                </template>
-              </i18n-t>
+            <div class="flex min-h-9 flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
+              <span class="text-xl font-semibold">
+                {{ getSubscriptionTitle(subscription) }}
+              </span>
               <p class="ml-auto text-lg">
                 {{ fractionAmount(subscription.amount) }}
               </p>
@@ -115,7 +107,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
+import { getAllMemberSubscriptions, Subscription } from '@/services/api/subscriptions';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
@@ -154,4 +146,24 @@ const route = useRoute();
 const state = reactive({
   shouldScroll: false,
 });
+
+const getSubscriptionTitle = (subscription: Subscription) => {
+  const now = dayjs();
+  const start = dayjs(subscription.started);
+  const end = dayjs(subscription.ended);
+  const startMonthDaysCount = start.endOf('month').diff(start, 'day');
+  const endMonthDaysCount = end.diff(end.startOf('month'), 'day');
+  if (startMonthDaysCount >= 20) {
+    return now.isSame(start, 'year') ? start.format('MMMM') : start.format('MMMM YYYY');
+  } else if (endMonthDaysCount >= 20) {
+    return now.isSame(end, 'year') ? end.format('MMMM') : end.format('MMMM YYYY');
+  } else {
+    return [
+      `${start.format('MMMM')} - ${end.format('MMMM')}`,
+      !now.isSame(end, 'year') && end.format('YYYY'),
+    ]
+      .filter(Boolean)
+      .join(' ');
+  }
+};
 </script>

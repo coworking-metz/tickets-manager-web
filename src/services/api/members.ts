@@ -70,10 +70,10 @@ export interface Member extends MemberListItem {
 export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
   return Boolean(
     !member.membershipOk &&
-      member.lastSeen &&
-      dayjs(member.lastSeen).isSame(dayjs(), 'year') &&
-      (!member.lastMembership ||
-        dayjs(member.lastSeen).isAfter(dayjs().year(member.lastMembership).endOf('year'), 'year')),
+    member.lastSeen &&
+    dayjs(member.lastSeen).isSame(dayjs(), 'year') &&
+    (!member.lastMembership ||
+      dayjs(member.lastSeen).isAfter(dayjs().year(member.lastMembership).endOf('year'), 'year')),
   );
 };
 
@@ -81,6 +81,10 @@ export const isMemberBalanceInsufficient = (member: Member | MemberListItem) => 
   const isAttendingWithoutSufficientBalance =
     member.attending && !member.balance && !member.hasActiveSubscription;
   return member.balance < 0 || isAttendingWithoutSufficientBalance;
+};
+
+export const isMemberOrderFromWordpress = (reference?: string | null) => {
+  return reference?.startsWith('POUL-');
 };
 
 export const getAllMembers = (): Promise<MemberListItem[]> => {
@@ -145,6 +149,13 @@ export const buildMemberWordpressProfileUrl = (wordpressUserId: number) => {
 export const buildMemberWordpressOrdersUrl = (wordpressUserId: number) => {
   return new URL(
     `/wp-admin/edit.php?s&post_status=all&post_type=shop_order&_customer_user=${wordpressUserId}`,
+    import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
+  ).toString();
+};
+
+export const buildWordpressSearchOrderByReferenceUrl = (orderReference: string) => {
+  return new URL(
+    `/wp-admin/edit.php?post_type=shop_order&s=${orderReference}`,
     import.meta.env.VUE_APP_WORDPRESS_BASE_URL,
   ).toString();
 };

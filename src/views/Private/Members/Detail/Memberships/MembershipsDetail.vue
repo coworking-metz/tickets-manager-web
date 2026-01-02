@@ -84,8 +84,33 @@
         id="membership-reference"
         disabled
         :label="$t('memberships.detail.reference.label')"
-        :model-value="selectedMembership.orderReference"
-        readonly />
+        readonly
+        v-bind="{
+          ...(!isMemberOrderFromWordpress(selectedMembership.orderReference) && {
+            modelValue: selectedMembership.orderReference,
+          }),
+        }">
+        <template
+          v-if="
+            selectedMembership.orderReference &&
+            isMemberOrderFromWordpress(selectedMembership.orderReference)
+          "
+          #prepend>
+          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+            <a
+              class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
+              :href="buildWordpressSearchOrderByReferenceUrl(selectedMembership.orderReference)"
+              target="_blank">
+              {{ selectedMembership.orderReference }}
+            </a>
+            <SvgIcon
+              aria-hidden="true"
+              class="inline-block size-4 text-indigo-600"
+              :path="mdiOpenInNew"
+              type="mdi" />
+          </div>
+        </template>
+      </AppTextField>
 
       <AppTextareaField
         id="comment"
@@ -131,11 +156,16 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
+import {
+  buildWordpressSearchOrderByReferenceUrl,
+  isMemberOrderFromWordpress,
+} from '@/services/api/members';
 import {
   getAllMemberMemberships,
   Membership,
@@ -150,6 +180,7 @@ import {
   mdiCheck,
   mdiClose,
   mdiDeleteOutline,
+  mdiOpenInNew,
 } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
