@@ -25,6 +25,7 @@ export const getMemberSubscription = (
 };
 
 export type SubscriptionChange = Pick<Subscription, 'started' | 'orderReference'> & {
+  amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };
 

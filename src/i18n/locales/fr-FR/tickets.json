@@ -12,6 +12,9 @@
     "title": "Suppression de la commande {reference} de {count} ticket | Suppression de la commande {reference} de {count} ticket | Suppression de la commande {reference} de {count} tickets"
   },
   "detail": {
+    "amount": {
+      "label": "Prix total"
+    },
     "comment": {
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"

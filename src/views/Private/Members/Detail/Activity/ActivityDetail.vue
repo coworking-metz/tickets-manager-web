@@ -305,16 +305,14 @@ const onSubmit = async () => {
     comment: state.comment as string,
   })
     .then(async () => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('activity.detail.onUpdate.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('activity.detail.onUpdate.success', {
           date: dayjs(props.date).format('dddd LL'),
         }),
-        timeout: 3_000,
-      });
+      );
       await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
       queryClient.invalidateQueries({
-        queryKey: membersQueryKeys.byId(props.memberId),
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.activityById(props.memberId),

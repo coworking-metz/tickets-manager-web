@@ -92,14 +92,12 @@ const onDelete = async () => {
   state.isDeleting = true;
   deleteMemberTicket(props.memberId, props.ticketId, state.comment as string)
     .then(() => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('tickets.delete.onDelete.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('tickets.delete.onDelete.success', {
           count: props.ticket.count,
           reference: props.ticket.orderReference,
         }),
-        timeout: 3_000,
-      });
+      );
       isVisible.value = false;
       emit('deleted');
     })

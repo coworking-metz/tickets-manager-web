@@ -12,6 +12,9 @@
     "title": "Membership {year} deletion"
   },
   "detail": {
+    "amount": {
+      "label": "Price"
+    },
     "comment": {
       "label": "Reason",
       "placeholder": "Explain the reason for this change"

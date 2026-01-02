@@ -32,8 +32,14 @@
         :prepend-icon="mdiCalendarStartOutline"
         required
         type="date" />
+      <AppAmountField
+        id="membership-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('memberships.detail.amount.label')"
+        required />
       <AppTextField
-        id="order-reference"
+        id="membership-reference"
         v-model="state.orderReference"
         :label="$t('memberships.detail.reference.label')"
         :placeholder="$t('memberships.detail.reference.placeholder')" />
@@ -60,6 +66,7 @@
 
 <script setup lang="ts">
 import AppAlert from '@/components/form/AppAlert.vue';
+import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
@@ -75,7 +82,7 @@ import { mdiCalendarStartOutline, mdiClose, mdiPlus } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -98,6 +105,7 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: dayjs().format('YYYY-MM-DD') as string | null,
+  amount: null as number | null,
   orderReference: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -105,6 +113,11 @@ const state = reactive({
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
+  amount: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0)),
+  },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -120,20 +133,19 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   addMemberMembership(props.memberId, {
     membershipStart: state.started as string,
+    amount: state.amount as number,
     orderReference: state.orderReference,
     comment: state.comment as string,
   })
     .then(async (newMembership) => {
       await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('memberships.new.onAdd.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('memberships.new.onAdd.success', {
           year: dayjs(newMembership.membershipStart).year(),
         }),
-        timeout: 3_000,
-      });
+      );
       queryClient.invalidateQueries({
-        queryKey: membersQueryKeys.byId(props.memberId),
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.historyById(props.memberId),

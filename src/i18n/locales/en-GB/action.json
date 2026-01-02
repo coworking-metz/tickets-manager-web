@@ -13,6 +13,7 @@
   "help": "I need help",
   "login": "Login",
   "logout": "Logout",
+  "navigate": "View",
   "reload": "Reload",
   "retry": "Retry"
 }

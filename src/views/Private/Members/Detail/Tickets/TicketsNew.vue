@@ -39,10 +39,17 @@
       </AppTextField>
 
       <AppTextField
-        id="order-reference"
+        id="ticket-reference"
         v-model="state.orderReference"
         :label="$t('tickets.detail.reference.label')"
         :placeholder="$t('tickets.detail.reference.placeholder')" />
+
+      <AppAmountField
+        id="ticket-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.amount.label')"
+        required />
 
       <AppTextareaField
         id="comment"
@@ -65,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
@@ -102,6 +110,7 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
+  amount: null as number | null,
   orderReference: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -112,6 +121,11 @@ const rules = computed(() => ({
     required: withAppI18nMessage(required),
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0.5)),
+  },
+  amount: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0)),
   },
   comment: { required: withAppI18nMessage(required) },
 }));
@@ -128,18 +142,15 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   addMemberTicket(props.memberId, {
     count: state.count as number,
+    amount: state.amount as number,
     orderReference: state.orderReference,
     comment: state.comment as string,
   })
     .then(async () => {
       await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('tickets.new.onAdd.success'),
-        timeout: 3_000,
-      });
+      notificationsStore.addSuccessNotification(i18n.t('tickets.new.onAdd.success'));
       queryClient.invalidateQueries({
-        queryKey: membersQueryKeys.byId(props.memberId),
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.ticketsById(props.memberId),

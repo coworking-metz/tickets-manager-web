@@ -50,15 +50,6 @@
       v-else-if="selectedMembership"
       class="flex h-full flex-col px-4 pt-6 sm:px-6"
       @submit.prevent="onSubmit">
-      <Head>
-        <title>
-          {{
-            $t('memberships.detail.head.title', {
-              year: dayjs(selectedMembership.membershipStart).year(),
-            })
-          }}
-        </title>
-      </Head>
       <AppAlert
         class="mb-5"
         :description="$t('memberships.detail.coverage.description')"
@@ -79,29 +70,29 @@
         :model-value="selectedMembership.membershipEnd"
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />
+      <AppAmountField
+        id="membership-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('memberships.detail.amount.label')"
+        required />
 
       <AppTextField
         id="membership-reference"
-        disabled
-        :label="$t('memberships.detail.reference.label')"
-        readonly
-        v-bind="{
-          ...(!isMemberOrderFromWordpress(selectedMembership.orderReference) && {
-            modelValue: selectedMembership.orderReference,
-          }),
-        }">
+        v-model="state.reference"
+        :label="$t('memberships.detail.reference.label')">
         <template
           v-if="
             selectedMembership.orderReference &&
             isMemberOrderFromWordpress(selectedMembership.orderReference)
           "
-          #prepend>
-          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+          #append>
+          <div class="absolute inset-y-0 right-3 z-[11] flex h-10 items-center gap-1">
             <a
               class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
               :href="buildWordpressSearchOrderByReferenceUrl(selectedMembership.orderReference)"
               target="_blank">
-              {{ selectedMembership.orderReference }}
+              {{ $t('action.navigate') }}
             </a>
             <SvgIcon
               aria-hidden="true"
@@ -154,9 +145,9 @@ import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
+import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -183,9 +174,8 @@ import {
   mdiOpenInNew,
 } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -208,6 +198,8 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
+  reference: null as string | null,
+  amount: null as number | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
@@ -230,6 +222,11 @@ const selectedMembership = computed<Membership | null>(() => {
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
+  amount: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0)),
+  },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -238,7 +235,7 @@ const vuelidate = useVuelidate(rules, state, { $scope: 'memberships-detail' });
 const onChanged = async () => {
   await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
   queryClient.invalidateQueries({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
   });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.membershipsById(props.memberId),
@@ -258,16 +255,16 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   updateMemberMembership(props.memberId, props.id, {
     membershipStart: state.started as string,
+    orderReference: state.reference as string,
+    amount: state.amount,
     comment: state.comment as string,
   })
     .then(async (updatedMembership) => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('memberships.detail.onUpdate.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('memberships.detail.onUpdate.success', {
           year: dayjs(updatedMembership.membershipStart).year(),
         }),
-        timeout: 3_000,
-      });
+      );
       onChanged();
     })
     .catch(handleSilentError)
@@ -285,6 +282,8 @@ watch(
   (membership) => {
     if (membership) {
       state.started = membership.membershipStart;
+      state.reference = membership.orderReference ?? null;
+      state.amount = membership.amount;
     }
   },
   { immediate: true },

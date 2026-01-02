@@ -57,7 +57,7 @@ const state = reactive({
 
 const { isFetching: isFetchingMember, data: member } = useAppQuery(
   computed(() => ({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
     queryFn: () => getMember(props.memberId),
   })),
 );
@@ -66,15 +66,13 @@ const onSync = () => {
   state.isSyncing = true;
   syncMember(props.memberId)
     .then(() => {
-      notificationsStore.addNotification({
-        message: i18n.t('members.detail.wordpress.onSync.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('members.detail.wordpress.onSync.success', {
           name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
-        type: 'success',
-        timeout: 3_000,
-      });
+      );
       queryClient.invalidateQueries({
-        queryKey: membersQueryKeys.byId(props.memberId),
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.ticketsById(props.memberId),

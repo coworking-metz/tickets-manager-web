@@ -12,6 +12,9 @@
     "title": "Suppression de l'abonnement"
   },
   "detail": {
+    "amount": {
+      "label": "Prix"
+    },
     "comment": {
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"

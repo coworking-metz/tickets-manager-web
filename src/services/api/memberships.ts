@@ -22,6 +22,7 @@ export const getMemberMembership = (
 
 export type MembershipChange = Pick<Membership, 'membershipStart'> & {
   orderReference?: string | null; // orderReference is optional for new memberships
+  amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };
 

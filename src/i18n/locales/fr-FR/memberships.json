@@ -12,6 +12,9 @@
     "title": "Suppression de l'adhésion {year}"
   },
   "detail": {
+    "amount": {
+      "label": "Prix"
+    },
     "comment": {
       "label": "Motif",
       "placeholder": "Expliquez la raison de ce changement"

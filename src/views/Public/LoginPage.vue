@@ -123,11 +123,7 @@ watch(
   () => props.loggedOut,
   (loggedOut) => {
     if (loggedOut) {
-      notificationsStore.addNotification({
-        message: i18n.t('login.onLoggedOut.success'),
-        type: 'success',
-        timeout: 3_000,
-      });
+      notificationsStore.addSuccessNotification(i18n.t('login.onLoggedOut.success'));
       router.replace({ query: queryParams.value });
     }
   },

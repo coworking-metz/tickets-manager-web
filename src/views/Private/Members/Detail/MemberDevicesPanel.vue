@@ -172,7 +172,7 @@ const {
   errorText: memberErrorText,
 } = useAppQuery(
   computed(() => ({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
     queryFn: () => getMember(props.memberId),
   })),
 );
@@ -226,15 +226,13 @@ const onSubmit = async () => {
     );
   })()
     .then(() => {
-      notificationsStore.addNotification({
-        message: i18n.t('members.detail.profile.macAddresses.onUpdate.success', {
+      notificationsStore.addSuccessNotification(
+        i18n.t('members.detail.profile.macAddresses.onUpdate.success', {
           name: compact([member.value?.firstName, member.value?.lastName]).join(' '),
         }),
-        type: 'success',
-        timeout: 3_000,
-      });
+      );
       queryClient.invalidateQueries({
-        queryKey: membersQueryKeys.byId(props.memberId),
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.historyById(props.memberId),

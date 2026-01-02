@@ -38,6 +38,7 @@ export const membersQueryKeys = {
   all: () => ['members'] as const,
   allVoting: () => ['voting-members'] as const,
   byId: (id: string | number) => [...membersQueryKeys.all(), `${id}`] as const,
+  profileById: (id: string | number) => [...membersQueryKeys.byId(id), 'profile'] as const,
   activityById: (id: string | number) => [...membersQueryKeys.byId(id), 'activity'] as const,
   historyById: (id: string | number) => [...membersQueryKeys.byId(id), 'history'] as const,
   capabilitiesById: (id: string | number) =>

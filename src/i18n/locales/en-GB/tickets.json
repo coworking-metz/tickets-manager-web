@@ -12,15 +12,18 @@
     "title": "Deleting ticket order {reference} of {count} ticket | Deleting ticket order {reference} of one ticket | Deleting ticket order {reference} of {count} tickets"
   },
   "detail": {
+    "amount": {
+      "label": "Total price"
+    },
     "comment": {
       "label": "Reason",
       "placeholder": "Explain the reason for this change"
     },
     "count": {
-      "label": "Number of tickets",
+      "label": "Tickets count",
       "unit": "ticket | ticket | tickets"
     },
-    "description": "Placed on {purchasedDate} at {purchasedTime}",
+    "description": "Purchased on {purchasedDate} at {purchasedTime}",
     "empty": {
       "description": "Make sure the order is correctly linked to this member.",
       "title": "Order Not Found"

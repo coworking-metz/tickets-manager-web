@@ -587,7 +587,7 @@ const {
   errorText: memberErrorText,
 } = useAppQuery(
   computed(() => ({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
     queryFn: () => getMember(props.memberId),
   })),
 );

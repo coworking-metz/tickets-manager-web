@@ -17,6 +17,7 @@ export const getMemberTicket = (memberId: string, ticketId: string): Promise<Tic
 };
 
 export type TicketChange = Pick<Ticket, 'count' | 'orderReference'> & {
+  amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };
 

@@ -88,11 +88,7 @@ const onDelete = async () => {
   state.isDeleting = true;
   deleteMemberSubscription(props.memberId, props.subscriptionId, state.comment as string)
     .then(() => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('subscriptions.delete.onDelete.success'),
-        timeout: 3_000,
-      });
+      notificationsStore.addSuccessNotification(i18n.t('subscriptions.delete.onDelete.success'));
       isVisible.value = false;
       emit('deleted');
     })

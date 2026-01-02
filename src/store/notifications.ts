@@ -4,6 +4,8 @@ import { isNil } from 'lodash';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
+export const DEFAULT_NOTIFICATION_TIMEOUT = 3_000;
+
 export type NotificationAction = {
   label: string;
   onClick: () => void;
@@ -67,7 +69,7 @@ export const useNotificationsStore = defineStore('notifications', {
       return this.addNotification({
         message,
         type: 'success',
-        timeout: 3_000,
+        timeout: DEFAULT_NOTIFICATION_TIMEOUT,
         ...options,
       });
     },

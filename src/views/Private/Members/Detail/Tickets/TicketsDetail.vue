@@ -46,9 +46,6 @@
       v-else-if="selectedTicket"
       class="flex flex-col px-4 pt-6 sm:px-6"
       @submit.prevent="onSubmit">
-      <Head>
-        <title>{{ $t('tickets.detail.head.title', { count: selectedTicket.count }) }}</title>
-      </Head>
       <AppTextField
         id="ticket-count"
         v-model.number="state.count"
@@ -66,28 +63,29 @@
         </template>
       </AppTextField>
 
+      <AppAmountField
+        id="ticket-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.amount.label')"
+        required />
+
       <AppTextField
         id="ticket-reference"
-        disabled
-        :label="$t('tickets.detail.reference.label')"
-        readonly
-        v-bind="{
-          ...(!isMemberOrderFromWordpress(selectedTicket.orderReference) && {
-            modelValue: selectedTicket.orderReference,
-          }),
-        }">
+        v-model="state.reference"
+        :label="$t('tickets.detail.reference.label')">
         <template
           v-if="
             selectedTicket.orderReference &&
             isMemberOrderFromWordpress(selectedTicket.orderReference)
           "
-          #prepend>
-          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+          #append>
+          <div class="absolute inset-y-0 right-3 z-[11] flex h-10 items-center gap-1">
             <a
               class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
               :href="buildWordpressSearchOrderByReferenceUrl(selectedTicket.orderReference)"
               target="_blank">
-              {{ selectedTicket.orderReference }}
+              {{ $t('action.navigate') }}
             </a>
             <SvgIcon
               aria-hidden="true"
@@ -140,6 +138,7 @@ import TicketsDeleteDialog from './TicketsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -157,7 +156,6 @@ import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiDeleteOutline, mdiOpenInNew, mdiTicket } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
@@ -182,6 +180,8 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
+  reference: null as string | null,
+  amount: null as number | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
@@ -208,6 +208,11 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  amount: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0)),
+  },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -216,7 +221,7 @@ const vuelidate = useVuelidate(rules, state, { $scope: 'tickets-detail' });
 const onChanged = async () => {
   await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
   queryClient.invalidateQueries({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
   });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.ticketsById(props.memberId),
@@ -239,14 +244,12 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   updateMemberTicket(props.memberId, props.id, {
     count: state.count as number,
+    orderReference: state.reference as string,
+    amount: state.amount,
     comment: state.comment as string,
   })
     .then(async () => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('tickets.detail.onUpdate.success'),
-        timeout: 3_000,
-      });
+      notificationsStore.addSuccessNotification(i18n.t('tickets.detail.onUpdate.success'));
       onChanged();
     })
     .catch(handleSilentError)
@@ -264,6 +267,8 @@ watch(
   (ticket) => {
     if (ticket) {
       state.count = ticket.count;
+      state.reference = ticket.orderReference ?? null;
+      state.amount = ticket.amount ?? null;
     }
   },
   { immediate: true },

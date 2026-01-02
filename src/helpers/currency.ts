@@ -47,3 +47,17 @@ export const fractionPercentage = (
     maximumFractionDigits: decimals,
   }).format(value);
 };
+
+export const getCurrencySymbol = (
+  locale: string = DEFAULT_LOCALE,
+  currency: string = DEFAULT_CURRENCY,
+): string => {
+  return (
+    new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+    })
+      .formatToParts(1)
+      .find((x) => x.type === 'currency')?.value || ''
+  );
+};

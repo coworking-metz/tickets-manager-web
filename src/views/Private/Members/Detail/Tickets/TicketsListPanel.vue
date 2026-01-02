@@ -70,7 +70,7 @@
               {{
                 $t('members.detail.orders.tickets.purchased', {
                   count: ticket.count,
-                  date: dayjs(ticket.purchased).format('dddd LL'),
+                  date: dayjs(ticket.purchased).format('dddd ll'),
                 })
               }}
             </time>

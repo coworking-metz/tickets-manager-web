@@ -47,15 +47,6 @@
       :description="$t('subscriptions.detail.empty.description')"
       :title="$t('subscriptions.detail.empty.title')" />
     <form v-else class="flex flex-col px-4 pt-6 sm:px-6" @submit.prevent="onSubmit">
-      <Head>
-        <title>
-          {{
-            $t('subscriptions.detail.head.title', {
-              startDate: dayjs(selectedSubscription.started).format('LL'),
-            })
-          }}
-        </title>
-      </Head>
       <AppTextField
         id="subscription-started"
         v-model="state.started"
@@ -73,28 +64,28 @@
         :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />
+      <AppAmountField
+        id="subscription-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.amount.label')"
+        required />
       <AppTextField
         id="subscription-reference"
-        disabled
-        :label="$t('subscriptions.detail.reference.label')"
-        readonly
-        v-bind="{
-          ...(!isMemberOrderFromWordpress(selectedSubscription.orderReference) && {
-            modelValue: selectedSubscription.orderReference,
-          }),
-        }">
+        v-model="state.reference"
+        :label="$t('subscriptions.detail.reference.label')">
         <template
           v-if="
             selectedSubscription.orderReference &&
             isMemberOrderFromWordpress(selectedSubscription.orderReference)
           "
-          #prepend>
-          <div class="absolute inset-y-0 left-0 z-[11] ml-3 flex h-10 items-center gap-1">
+          #append>
+          <div class="absolute inset-y-0 right-3 z-[11] flex h-10 items-center gap-1">
             <a
               class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
               :href="buildWordpressSearchOrderByReferenceUrl(selectedSubscription.orderReference)"
               target="_blank">
-              {{ selectedSubscription.orderReference }}
+              {{ $t('action.navigate') }}
             </a>
             <SvgIcon
               aria-hidden="true"
@@ -147,6 +138,7 @@ import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -175,9 +167,8 @@ import {
   mdiOpenInNew,
 } from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
-import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -200,6 +191,8 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
+  reference: null as string | null,
+  amount: null as number | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
@@ -233,6 +226,11 @@ const computedEnded = computed(() => {
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
+  amount: {
+    required: withAppI18nMessage(required),
+    decimal: withAppI18nMessage(numeric),
+    minValue: withAppI18nMessage(minValue(0)),
+  },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -241,7 +239,7 @@ const vuelidate = useVuelidate(rules, state, { $scope: 'subscriptions-detail' })
 const onChanged = async () => {
   await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
   queryClient.invalidateQueries({
-    queryKey: membersQueryKeys.byId(props.memberId),
+    queryKey: membersQueryKeys.profileById(props.memberId),
   });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.subscriptionsById(props.memberId),
@@ -264,14 +262,12 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   updateMemberSubscription(props.memberId, props.id, {
     started: state.started as string,
+    orderReference: state.reference,
+    amount: state.amount,
     comment: state.comment as string,
   })
     .then(() => {
-      notificationsStore.addNotification({
-        type: 'success',
-        message: i18n.t('subscriptions.detail.onUpdate.success'),
-        timeout: 3_000,
-      });
+      notificationsStore.addSuccessNotification(i18n.t('subscriptions.detail.onUpdate.success'));
       onChanged();
     })
     .catch(handleSilentError)
@@ -289,6 +285,8 @@ watch(
   (subscription) => {
     if (subscription) {
       state.started = dayjs(subscription.started).format('YYYY-MM-DD');
+      state.reference = subscription.orderReference ?? null;
+      state.amount = subscription.amount ?? null;
     }
   },
   { immediate: true },

@@ -12,6 +12,9 @@
     "title": "Deleting Subscription"
   },
   "detail": {
+    "amount": {
+      "label": "Price"
+    },
     "comment": {
       "label": "Reason",
       "placeholder": "Explain the reason for this change"

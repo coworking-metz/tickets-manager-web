@@ -60,7 +60,7 @@
               :datetime="dayjs(membership.purchased).toISOString()">
               {{
                 $t('members.detail.orders.memberships.purchased', {
-                  date: dayjs(membership.purchased).format('dddd LL'),
+                  date: dayjs(membership.purchased).format('dddd ll'),
                 })
               }}
             </time>
