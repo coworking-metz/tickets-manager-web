@@ -2,7 +2,7 @@
   <div
     v-if="notification"
     :class="[
-      'app-notification group pointer-events-auto relative w-screen max-w-96 max-sm:mx-auto',
+      'app-notification group pointer-events-auto relative max-w-96 max-sm:mx-auto sm:w-screen',
       notification.type === 'error' && '2xl:max-w-[512px]',
     ]"
     @animationend="() => onTimeoutAnimationEnd(notification)">
@@ -65,7 +65,7 @@
         notificationsStore?.openCount > 1 && notificationsStore.lastOpen?.id === notification.id
       "
       :id="`notification-close-all`"
-      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 !text-gray-400 opacity-0 transition hover:!bg-slate-700 hover:!text-gray-300 active:!bg-slate-900 active:!text-gray-100 group-hover:opacity-100"
+      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 !text-gray-400 transition hover:!bg-slate-700 hover:!text-gray-300 active:!bg-slate-900 active:!text-gray-100 group-hover:opacity-100 sm:opacity-0"
       :icon="mdiNotificationClearAll"
       :title="$t('action.closeAll')"
       type="button"

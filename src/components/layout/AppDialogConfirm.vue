@@ -15,11 +15,11 @@
               ]">
               <SvgIcon aria-hidden="true" class="size-6" :path="icon" type="mdi" />
             </div>
-            <div class="sm:ml-4">
+            <div class="max-sm:mt-4 sm:ml-4">
               <DialogTitle
                 v-if="title"
                 as="h3"
-                class="flex flex-row items-center text-lg font-medium leading-6 text-gray-900 max-sm:text-center sm:min-h-10 dark:text-gray-100">
+                class="flex flex-row items-center text-lg font-medium leading-6 text-gray-900 max-sm:justify-center max-sm:text-center sm:min-h-10 dark:text-gray-100">
                 {{ title }}
               </DialogTitle>
 
@@ -39,16 +39,13 @@
               {{ $t('action.confirm') }}
             </AppButtonPlain>
           </slot>
-          <slot name="close">
-            <AppButtonText
-              class="w-full sm:w-auto sm:text-sm dark:focus:ring-offset-neutral-900/80"
-              color="gray"
-              type="button"
-              @click="isVisible = false">
-              {{ $t('action.close') }}
-            </AppButtonText>
-          </slot>
         </footer>
+
+        <AppButtonIcon
+          class="absolute right-3 top-3 sm:right-4 dark:ring-offset-neutral-800"
+          :icon="mdiClose"
+          :title="$t('action.close')"
+          @click="isVisible = false" />
       </DialogPanel>
     </template>
   </AppDialog>
@@ -56,9 +53,10 @@
 
 <script setup lang="ts">
 import AppDialog from './AppDialog.vue';
+import AppButtonIcon from '../form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppButtonText from '@/components/form/AppButtonText.vue';
 import { DialogPanel, DialogTitle } from '@headlessui/vue';
+import { mdiClose } from '@mdi/js';
 import { computed } from 'vue';
 
 const isVisible = defineModel({
@@ -91,15 +89,15 @@ const props = defineProps({
 const iconColors = computed(() => {
   switch (props.type) {
     case 'critical':
-      return 'text-red-600 bg-red-100';
+      return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
     case 'warning':
-      return 'text-amber-600 bg-amber-100';
+      return 'text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/20';
     case 'info':
-      return 'text-blue-600 bg-blue-100';
+      return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20';
     case 'success':
-      return 'text-green-600 bg-green-100';
+      return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
     default:
-      return 'text-gray-600 bg-gray-100';
+      return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/20';
   }
 });
 

@@ -78,7 +78,7 @@
 
         <AppRadioGroup
           id="locale"
-          class="mt-6 sm:pl-6"
+          class="mt-6 md:ml-6"
           :format="(locale) => $t(`user.profile.locale.value.${locale}`)"
           hide-details
           :label="$t('user.profile.locale.label')"
@@ -89,7 +89,7 @@
 
         <AppRadioGroup
           id="theme"
-          class="mt-6 sm:pl-6"
+          class="mt-6 md:ml-6"
           :format="(theme) => $t(`user.profile.theme.value.${theme}`)"
           hide-details
           :label="$t('user.profile.theme.label')"
@@ -98,7 +98,7 @@
           :options="SUPPORTED_THEMES"
           @update:model-value="settingsStore.setTheme" />
 
-        <div class="mt-8 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+        <div class="mt-8 flex space-x-3 sm:border-l sm:border-transparent md:ml-6">
           <AppButtonPlain
             class="dark:focus:ring-offset-stone-900"
             color="indigo"
