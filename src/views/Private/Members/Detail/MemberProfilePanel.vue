@@ -203,6 +203,7 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isSubmitting = true;
   updateMemberBagdeId(props.memberId, state.badgeId as string)

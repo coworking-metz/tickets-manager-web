@@ -154,7 +154,6 @@ const onComputeAttendance = async () => {
     nextTick(scrollToFirstError);
     return;
   }
-
   vuelidate.value.$reset();
 
   state.isComputingAttendance = true;

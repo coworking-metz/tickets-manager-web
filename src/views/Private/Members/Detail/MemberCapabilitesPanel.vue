@@ -41,7 +41,7 @@
       <AppButtonTonal
         class="dark:focus:ring-offset-neutral-800"
         color="indigo"
-        :loading="state.isSubmitting"
+        :loading="state.isResetting"
         @click="() => (state.isResetDialogVisible = true)">
         {{ $t('members.detail.profile.capabilities.reset.label') }}
       </AppButtonTonal>
@@ -58,6 +58,7 @@
 
     <AppDialogConfirm
       v-model="state.isResetDialogVisible"
+      :confirming="state.isResetting"
       :icon="mdiInformationOutline"
       :title="$t('members.detail.profile.capabilities.reset.title')"
       type="info"
@@ -153,11 +154,10 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isSubmitting = true;
-  (async () => {
-    await updateMemberCapabilities(props.memberId, state.capabilities as MemberCapabilities);
-  })()
+  updateMemberCapabilities(props.memberId, state.capabilities as MemberCapabilities)
     .then(() => {
       notificationsStore.addSuccessNotification(
         i18n.t('members.detail.profile.capabilities.onUpdate.success', {
@@ -185,9 +185,7 @@ const onSubmit = async () => {
 
 const onReset = () => {
   state.isResetting = true;
-  (async () => {
-    await updateMemberCapabilities(props.memberId, {});
-  })()
+  updateMemberCapabilities(props.memberId, {})
     .then(async () => {
       notificationsStore.addSuccessNotification(
         i18n.t('members.detail.profile.capabilities.onReset.success', {

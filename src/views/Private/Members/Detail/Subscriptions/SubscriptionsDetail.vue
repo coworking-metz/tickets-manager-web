@@ -258,6 +258,7 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isSubmitting = true;
   updateMemberSubscription(props.memberId, props.id, {

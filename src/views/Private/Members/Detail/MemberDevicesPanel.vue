@@ -60,6 +60,7 @@
 
               <template #after>
                 <AppButtonPlain
+                  v-if="device.id"
                   class="relative -ml-px rounded-none focus:z-10 dark:focus:ring-offset-neutral-800"
                   color="gray"
                   :icon="mdiSync"
@@ -217,6 +218,7 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isSubmitting = true;
   (async () => {

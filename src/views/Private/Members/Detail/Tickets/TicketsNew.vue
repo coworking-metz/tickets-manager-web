@@ -148,6 +148,7 @@ const onSubmit = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isSubmitting = true;
   addMemberTicket(props.memberId, {

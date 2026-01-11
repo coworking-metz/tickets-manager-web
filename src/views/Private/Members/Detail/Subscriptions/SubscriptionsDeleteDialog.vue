@@ -84,6 +84,7 @@ const onDelete = async () => {
     nextTick(scrollToFirstError);
     return;
   }
+  vuelidate.value.$reset();
 
   state.isDeleting = true;
   deleteMemberSubscription(props.memberId, props.subscriptionId, state.comment as string)
