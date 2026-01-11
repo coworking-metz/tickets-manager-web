@@ -3,8 +3,13 @@
     <html :lang="$i18n.locale.substring(0, 2)" />
     <meta :content="$t('head.meta.content')" name="description" />
   </Head>
-  <LoadingProgressBar v-if="state.isLoading" class="fixed inset-x-0 top-0 z-50 h-0.5" />
-  <LoadingSpinner v-if="!state.isReady" class="m-auto size-16" />
+  <LoadingProgressBar v-if="state.isImporting" class="fixed inset-x-0 top-0 z-50 h-0.5" />
+  <ErrorState
+    v-if="!state.isReady && state.routerErrorMessage"
+    class="m-auto"
+    :description="state.routerErrorMessage"
+    :title="$t('errors.onImport.message')" />
+  <LoadingSpinner v-else-if="!state.isReady" class="m-auto size-16" />
   <RouterView v-else />
   <Teleport to="body">
     <Toaster
@@ -23,10 +28,12 @@
 </template>
 
 <script lang="ts" setup>
+import ErrorState from '@/components/ErrorState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NotificationToast from '@/components/NotificationToast.vue';
 import { ENVIRONMENT } from '@/helpers/environment';
+import { parseErrorText } from '@/helpers/errors';
 import { applyTheme, useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
 import { useSettingsStore } from '@/store/settings';
@@ -46,58 +53,70 @@ const router = useRouter();
 const notificationsStore = useNotificationsStore();
 const state = reactive({
   isReady: false as boolean,
-  isLoading: false as boolean,
+  isImporting: false as boolean,
+  routerErrorMessage: null as string | null,
 });
 
 useHead({
   titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
 });
 
-router.isReady().finally(() => {
+router.isReady().then(() => {
   state.isReady = true;
 });
 
 router.beforeEach((_to, _from, next) => {
-  state.isLoading = true;
+  state.isImporting = true;
+  state.routerErrorMessage = null;
   next();
 });
 
 router.afterEach(() => {
-  state.isLoading = false;
+  state.isImporting = false;
 });
 
-router.onError((error) => {
-  state.isLoading = false;
-  state.isReady = true;
-
-  const actions = [
-    {
-      label: i18n.t('action.reload'),
-      onClick: () => window.location.reload(),
-    },
-    {
-      label: i18n.t('action.help'),
-      onClick: () =>
-        window.open(`mailto:contact@coworking-metz.fr?body=${encodeURIComponent(error.message)}`),
-    },
-  ];
-
-  if (
-    error.message.includes('Failed to fetch dynamically imported module') ||
-    error.message.includes('Importing a module script failed')
-  ) {
-    notificationsStore.addNotification({
-      message: i18n.t('errors.onImport.message'),
-      description: i18n.t('errors.onImport.description'),
-      type: 'error',
-      actions,
-    });
-  } else {
-    notificationsStore.addErrorNotification(error, '', {
-      actions,
-    });
-  }
+router.onError(async (error) => {
+  state.isImporting = false;
+  state.routerErrorMessage = await parseErrorText(error);
 });
+
+watch(
+  () => state.routerErrorMessage,
+  (routerErrorMessage) => {
+    if (state.isReady && routerErrorMessage) {
+      const actions = [
+        {
+          label: i18n.t('action.reload'),
+          onClick: () => window.location.reload(),
+        },
+        {
+          label: i18n.t('action.help'),
+          onClick: () =>
+            window.open(
+              `mailto:contact@coworking-metz.fr?body=${encodeURIComponent(routerErrorMessage)}`,
+            ),
+        },
+      ];
+      if (
+        routerErrorMessage.includes('Failed to fetch dynamically imported module') ||
+        routerErrorMessage.includes('Importing a module script failed')
+      ) {
+        notificationsStore.addNotification({
+          message: i18n.t('errors.onImport.message'),
+          description: i18n.t('errors.onImport.description'),
+          type: 'error',
+          actions,
+        });
+      } else {
+        notificationsStore.addNotification({
+          description: routerErrorMessage,
+          type: 'error',
+          actions,
+        });
+      }
+    }
+  },
+);
 
 watch(
   () => notificationsStore.history.length,
