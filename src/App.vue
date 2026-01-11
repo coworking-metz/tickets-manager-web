@@ -21,7 +21,7 @@
   </Teleport>
 
   <small
-    v-if="ENVIRONMENT"
+    v-if="!IS_PRODUCTION"
     class="fixed -right-6 top-3 z-50 flex h-5 w-24 rotate-45 items-center justify-center overflow-hidden truncate bg-indigo-700 text-xs lowercase text-white shadow">
     {{ ENVIRONMENT }}
   </small>
@@ -32,7 +32,7 @@ import ErrorState from '@/components/ErrorState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NotificationToast from '@/components/NotificationToast.vue';
-import { ENVIRONMENT } from '@/helpers/environment';
+import { ENVIRONMENT, IS_PRODUCTION } from '@/helpers/environment';
 import { parseErrorText } from '@/helpers/errors';
 import { applyTheme, useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';

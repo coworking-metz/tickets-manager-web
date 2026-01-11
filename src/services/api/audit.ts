@@ -1,4 +1,4 @@
-import HTTP from '../http';
+import { HTTP } from '../http';
 
 export enum AuditAction {
   MEMBER_ACTIVITY_ADD = 'MEMBER_ACTIVITY_ADD',

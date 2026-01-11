@@ -1,6 +1,6 @@
 import { Frequency } from './frequency';
 import { MemberListItem } from '../members';
-import HTTP from '@/services/http';
+import { HTTP } from '@/services/http';
 
 type StatsUsage = {
   tickets: {

@@ -1,5 +1,5 @@
 import { Frequency } from './frequency';
-import HTTP from '@/services/http';
+import { HTTP } from '@/services/http';
 
 export const MAX_ATTENDANCE = 40;
 

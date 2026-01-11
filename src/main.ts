@@ -5,7 +5,7 @@ import App from './App.vue';
 import { i18nInstance } from './i18n';
 import router from './router';
 import { ROUTE_NAMES } from './router/names';
-import HTTP from './services/http';
+import { HTTP } from './services/http';
 import createHttpInterceptors from './services/interceptors';
 import { defaultVueQueryPluginOptions } from './services/query';
 import pinia from './store';

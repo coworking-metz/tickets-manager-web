@@ -207,9 +207,9 @@ const props = defineProps({
 const authorName = computed(() => props.event.author?.name || props.event.author?.email);
 const memberName = computed(
   () =>
-    compact([props.event.context?.member.firstName, props.event.context?.member.lastName]).join(
+    compact([props.event.context?.member?.firstName, props.event.context?.member?.lastName]).join(
       ' ',
-    ) || props.event.context?.member.email,
+    ) || props.event.context?.member?.email,
 );
 
 const essentialContext = computed(() => {
