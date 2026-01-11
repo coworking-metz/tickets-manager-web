@@ -27,11 +27,26 @@
           clearable
           hide-details
           input-class="pr-0"
+          :loading="state.isSearching"
           name="history-search"
           :placeholder="$t('audit.list.search.placeholder')"
-          :prepend-icon="mdiMagnify"
           tabindex="1"
           type="search">
+          <template #prepend="{ isInvalid }">
+            <LoadingSpinner
+              v-if="state.isSearching"
+              class="pointer-events-none absolute inset-y-0 left-3 z-[11] my-auto size-5 text-gray-400" />
+            <SvgIcon
+              v-else
+              aria-hidden="true"
+              :class="[
+                'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
+                isInvalid && 'text-red-500',
+              ]"
+              :path="mdiMagnify"
+              type="mdi" />
+          </template>
+
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
@@ -137,6 +152,7 @@
 <script setup lang="ts">
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
@@ -209,6 +225,7 @@ const router = useRouter();
 const i18n = useI18n();
 const now = dayjs();
 const state = reactive({
+  isSearching: false as boolean,
   search: null as string | null,
   slice: Number(props.slice) as number,
   period: {
@@ -313,6 +330,7 @@ const debounceQueryParams = useDebounceFn(
           to: period.end || undefined,
         },
       });
+      state.isSearching = false;
     }
   },
   300,
@@ -322,6 +340,7 @@ watch(
   [() => state.search, () => state.slice, () => state.period],
   ([search, slice, period], [_previousSearch, previousSlice]) => {
     if (Number(slice) >= Number(previousSlice)) {
+      state.isSearching = true;
       debounceQueryParams(search, slice, period);
     }
   },

@@ -24,7 +24,7 @@
           'group relative flex grow flex-row items-stretch gap-3',
           (label || description) && 'mt-1',
         ]">
-        <slot name="prepend">
+        <slot :is-invalid="isInvalid" name="prepend">
           <SvgIcon
             v-if="prependIcon"
             aria-hidden="true"

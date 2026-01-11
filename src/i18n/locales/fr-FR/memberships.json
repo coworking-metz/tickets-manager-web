@@ -41,7 +41,7 @@
       "success": "Adhésion {year} modifiée"
     },
     "purchased": {
-      "label": "Commandé le"
+      "label": "Commandée le"
     },
     "reference": {
       "label": "Référence de la commande",

@@ -112,6 +112,7 @@ import { membersQueryKeys, useAppQuery } from '@/services/query';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
+import { capitalize } from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -159,7 +160,7 @@ const getSubscriptionTitle = (subscription: Subscription) => {
     return now.isSame(end, 'year') ? end.format('MMMM') : end.format('MMMM YYYY');
   } else {
     return [
-      `${start.format('MMMM')} - ${end.format('MMMM')}`,
+      `${capitalize(start.format('MMMM'))} - ${capitalize(end.format('MMMM'))}`,
       !now.isSame(end, 'year') && end.format('YYYY'),
     ]
       .filter(Boolean)
