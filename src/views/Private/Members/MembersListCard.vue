@@ -3,7 +3,7 @@
     <div class="flex min-w-0 flex-1 items-start">
       <div class="relative">
         <MembersThumbnail
-          class="shrink-0"
+          class="shrink-0 text-sm"
           :email="member?.email"
           :name="fullname"
           :thumbnail="member?.thumbnail" />

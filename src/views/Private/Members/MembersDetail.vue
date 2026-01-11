@@ -3,10 +3,11 @@
     <Head>
       <title>{{ fullname }}</title>
     </Head>
-    <section class="mt-6 flex flex-row flex-wrap px-3 sm:mt-40 sm:px-0">
+    <section
+      class="mt-6 flex flex-row flex-wrap px-3 sm:px-0 sm:pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
       <div class="min-w-48 shrink grow basis-0" />
       <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
-        <div class="flex flex-row space-x-5 sm:ml-8">
+        <div class="flex flex-row space-x-5 xl:ml-8">
           <LoadingSpinner v-if="isPendingMember" class="size-16" />
           <component
             v-else
@@ -15,7 +16,7 @@
             :inert="!member?.picture"
             @click="() => (state.isPictureDialogVisible = true)">
             <MembersThumbnail
-              class="size-16"
+              class="size-16 text-xl"
               :email="member?.email"
               :name="fullname"
               :thumbnail="member?.thumbnail" />

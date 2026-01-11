@@ -1,5 +1,6 @@
 <template>
-  <article class="mx-auto flex w-full max-w-7xl grow flex-col px-3 pb-6 pt-12 sm:pt-40">
+  <article
+    class="mx-auto flex w-full max-w-7xl grow flex-col px-3 pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
     <Head>
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>
@@ -31,7 +32,7 @@
 
       <div class="w-full sm:mx-0 sm:max-w-lg">
         <label class="sr-only" for="history-search">{{ $t('audit.list.search.label') }}</label>
-        <AppTextField
+        <AppSearchField
           id="history-search"
           v-model="state.search"
           clearable
@@ -40,21 +41,7 @@
           :loading="state.isSearching"
           name="history-search"
           :placeholder="$t('audit.list.search.placeholder')"
-          tabindex="1"
-          type="search">
-          <template #prepend="{ isInvalid }">
-            <LoadingSpinner
-              v-if="state.isSearching"
-              class="pointer-events-none absolute inset-y-0 left-3 z-[11] my-auto size-5 text-gray-400" />
-            <AppIcon
-              v-else
-              :class="[
-                'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
-                isInvalid && 'text-red-500',
-              ]"
-              :icon="mdiMagnify" />
-          </template>
-
+          tabindex="1">
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
@@ -118,7 +105,7 @@
               </Transition>
             </Menu>
           </template>
-        </AppTextField>
+        </AppSearchField>
       </div>
     </section>
 
@@ -167,6 +154,7 @@ import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';

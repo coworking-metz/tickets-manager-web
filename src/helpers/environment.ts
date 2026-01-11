@@ -16,3 +16,4 @@ export const IS_PRODUCTION = currentEnvironment === 'production';
 export const ENVIRONMENT = currentEnvironment === 'development' ? 'local' : currentEnvironment;
 
 export const MAX_MOBILE_WIDTH = 640;
+export const ARE_MESSAGES_ENABLED = import.meta.env.VUE_APP_ENABLE_MESSAGES === 'true';

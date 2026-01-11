@@ -1,5 +1,6 @@
 <template>
-  <article class="mx-auto flex w-full max-w-7xl grow flex-col pb-6 pt-12 sm:pt-40">
+  <article
+    class="mx-auto flex w-full max-w-7xl grow flex-col pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
     <Head>
       <title>{{ $t('members.list.head.title') }}</title>
     </Head>
@@ -62,15 +63,15 @@
 
       <div class="mx-3 w-full min-w-96 max-w-lg shrink grow basis-0 sm:mx-0">
         <label class="sr-only" for="members-search">{{ $t('members.list.search.label') }}</label>
-        <AppTextField
+        <AppSearchField
           id="members-search"
-          v-model="queryState.search"
+          v-model="state.search"
           clearable
           hide-details
           input-class="pr-0"
+          :loading="state.isSearching"
           name="members-search"
           :placeholder="$t('members.list.search.placeholder')"
-          :prepend-icon="mdiMagnify"
           tabindex="1"
           type="search">
           <template #after>
@@ -130,7 +131,7 @@
               </Transition>
             </Menu>
           </template>
-        </AppTextField>
+        </AppSearchField>
       </div>
     </section>
 
@@ -138,7 +139,7 @@
       <div
         class="relative flex grow flex-col border-t border-gray-200 sm:rounded-t-md dark:border-stone-700">
         <div
-          v-if="isFetchingMembers || isFetchingVotingMembers"
+          v-if="isFetchingMembers || isFetchingVotingMembers || state.isSearching"
           class="sticky top-[67px] w-full sm:top-[3px]">
           <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
         </div>
@@ -253,7 +254,7 @@ import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
+import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { formatAmount } from '@/helpers/currency';
 import { searchIn } from '@/helpers/text';
@@ -267,12 +268,12 @@ import {
 } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
+import { mdiCheck, mdiChevronDown, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useElementVisibility } from '@vueuse/core';
+import { useDebounceFn, useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { numberCodec, queryReactive } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
@@ -318,6 +319,11 @@ const SLICE_STEP = 16;
 const props = defineProps<{
   tab: string;
 }>();
+
+const state = reactive({
+  search: null as string | null,
+  isSearching: false as boolean,
+});
 
 const queryState = queryReactive({
   search: { defaultValue: '' },
@@ -430,6 +436,32 @@ const totalDebt = computed(() =>
 
 const missingMembershipsCount = computed(() =>
   filteredList.value.reduce((acc, member) => acc + Number(isMembershipNonCompliant(member)), 0),
+);
+
+const debounceSearch = useDebounceFn((search: string) => {
+  queryState.search = search;
+  state.isSearching = false;
+}, 300);
+
+watch(
+  () => state.search,
+  (search) => {
+    if (search) {
+      state.isSearching = true;
+      debounceSearch(search);
+    } else {
+      queryState.search = '';
+      state.isSearching = false;
+    }
+  },
+);
+
+watch(
+  () => queryState.search,
+  (search) => {
+    state.search = search;
+  },
+  { immediate: true },
 );
 
 const endOfList = ref<HTMLLIElement>();

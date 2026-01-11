@@ -52,6 +52,7 @@ export const useAuthStore = defineStore('auth', {
     disconnect() {
       this.accessToken = null;
       localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_NAME);
+      sessionStorage.removeItem(SESSION_STORAGE_ACCESS_TOKEN_NAME);
       const http = useHttpStore();
       http.cancelAllRequests();
       http.$reset();
@@ -59,6 +60,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.disconnect();
       localStorage.clear();
+      sessionStorage.clear();
     },
   },
 });
