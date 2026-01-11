@@ -1,7 +1,7 @@
 import { AuditEvent } from './audit';
 import { UserCapabilities } from './auth';
 import { Subscription } from './subscriptions';
-import HTTP from '../http';
+import { HTTP } from '../http';
 import dayjs from 'dayjs';
 
 export type AttendanceType = 'subscription' | 'ticket';

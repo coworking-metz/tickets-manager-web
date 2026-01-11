@@ -1,4 +1,5 @@
 import { version as appVersion } from '../../../package.json';
+import { PUBLIC_HTTP_CLIENT } from '../http';
 import axios from 'axios';
 
 export enum UserCapabilities {
@@ -27,19 +28,9 @@ export const refreshTokens = (
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   // refreshing tokens should have its own axios config
   // and should not be cancelled
-  return axios
-    .post(
-      '/api/auth/tokens',
-      { refreshToken: refreshToken },
-      {
-        baseURL: import.meta.env.VUE_APP_API_URL,
-        timeout: 10_000,
-        headers: {
-          ...(appVersion ? { 'X-APP-VERSION': appVersion } : {}),
-        },
-      },
-    )
-    .then(({ data }) => data);
+  return PUBLIC_HTTP_CLIENT.post('/api/auth/tokens', { refreshToken: refreshToken }).then(
+    ({ data }) => data,
+  );
 };
 
 // https://stackoverflow.com/a/38552302

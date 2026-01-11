@@ -1,6 +1,6 @@
 import { MemberListItem } from './members';
 import { Frequency } from './stats/frequency';
-import HTTP from '../http';
+import { HTTP } from '../http';
 
 export const MAX_ATTENDANCE = 40;
 

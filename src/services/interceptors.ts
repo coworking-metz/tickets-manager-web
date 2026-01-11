@@ -1,3 +1,4 @@
+import { PUBLIC_HTTP_CLIENT } from './http';
 import { parseErrorText } from '@/helpers/errors';
 import { formatDuration, i18nInstance } from '@/i18n';
 import { useAuthStore } from '@/store/auth';
@@ -171,6 +172,27 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         httpStore.removeRequest(error.config.id);
       }
       return Promise.reject(error);
+    },
+  );
+
+  PUBLIC_HTTP_CLIENT.interceptors.response.use(
+    (response) => response,
+    async (error: AxiosError) => {
+      // handle timeout error by translating with a proper message
+      if (error.code === 'ECONNABORTED' && error.message?.includes('timeout')) {
+        const timeoutDuration = (error as AxiosError).config?.timeout;
+        const errorMessage = i18nInstance.global.t(
+          'errors.onTimeout.message',
+          timeoutDuration
+            ? {
+                withDuration: i18nInstance.global.t('errors.onTimeout.withDuration', {
+                  duration: formatDuration(timeoutDuration),
+                }),
+              }
+            : {},
+        );
+        return Promise.reject(new Error(errorMessage));
+      }
     },
   );
 };

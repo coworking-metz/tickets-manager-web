@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import AppButtonTonal from '@/components/form/AppButtonTonal.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
-import HTTP from '@/services/http';
+import { HTTP } from '@/services/http';
 import { useAuthStore } from '@/store/auth';
 import { mdiDramaMasks } from '@mdi/js';
 

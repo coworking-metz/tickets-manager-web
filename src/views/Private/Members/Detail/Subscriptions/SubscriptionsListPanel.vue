@@ -155,9 +155,9 @@ const getSubscriptionTitle = (subscription: Subscription) => {
   const startMonthDaysCount = start.endOf('month').diff(start, 'day');
   const endMonthDaysCount = end.diff(end.startOf('month'), 'day');
   if (startMonthDaysCount >= 20) {
-    return now.isSame(start, 'year') ? start.format('MMMM') : start.format('MMMM YYYY');
+    return capitalize(now.isSame(start, 'year') ? start.format('MMMM') : start.format('MMMM YYYY'));
   } else if (endMonthDaysCount >= 20) {
-    return now.isSame(end, 'year') ? end.format('MMMM') : end.format('MMMM YYYY');
+    return capitalize(now.isSame(end, 'year') ? end.format('MMMM') : end.format('MMMM YYYY'));
   } else {
     return [
       `${capitalize(start.format('MMMM'))} - ${capitalize(end.format('MMMM'))}`,

@@ -120,7 +120,7 @@ import AppRadioGroup from '@/components/form/AppRadioGroup.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { SUPPORTED_LOCALES } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import HTTP from '@/services/http';
+import { HTTP } from '@/services/http';
 import { SUPPORTED_THEMES } from '@/services/theme';
 import { useAuthStore } from '@/store/auth';
 import { useSettingsStore } from '@/store/settings';

@@ -85,7 +85,7 @@
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import LogoMono from '@/components/LogoMono.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import HTTP from '@/services/http';
+import { HTTP } from '@/services/http';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiArrowRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
