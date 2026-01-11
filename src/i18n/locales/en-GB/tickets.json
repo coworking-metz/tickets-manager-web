@@ -23,7 +23,6 @@
       "label": "Tickets count",
       "unit": "ticket | ticket | tickets"
     },
-    "description": "Purchased on {purchasedDate} at {purchasedTime}",
     "empty": {
       "description": "Make sure the order is correctly linked to this member.",
       "title": "Order Not Found"
@@ -37,6 +36,9 @@
     "onUpdate": {
       "fail": "Unable to edit this ticket order",
       "success": "Ticket order updated"
+    },
+    "purchased": {
+      "label": "Ordered on"
     },
     "reference": {
       "label": "Order reference",

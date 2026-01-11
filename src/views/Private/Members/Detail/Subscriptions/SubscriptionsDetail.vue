@@ -25,15 +25,6 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="isFetchingSubscriptions" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selectedSubscription" class="text-sm text-indigo-300">
-        {{
-          $t('subscriptions.detail.description', {
-            purchasedDate: dayjs(selectedSubscription.purchased).format('LL'),
-            purchasedTime: dayjs(selectedSubscription.purchased).format('LT'),
-          })
-        }}
-      </p>
     </header>
     <LoadingSpinner v-if="isFetchingSubscriptions" class="m-auto size-16" />
     <ErrorState
@@ -95,6 +86,13 @@
           </div>
         </template>
       </AppTextField>
+      <AppTextField
+        id="subscription-purchased"
+        v-model="state.purchased"
+        :errors="vuelidate.purchased.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.purchased.label')"
+        required
+        type="date" />
 
       <AppTextareaField
         id="comment"
@@ -191,8 +189,9 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
-  reference: null as string | null,
   amount: null as number | null,
+  reference: null as string | null,
+  purchased: null as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
   isDeleteDialogVisible: false as boolean,
@@ -231,6 +230,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  purchased: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -263,6 +263,7 @@ const onSubmit = async () => {
   updateMemberSubscription(props.memberId, props.id, {
     started: state.started as string,
     orderReference: state.reference,
+    purchased: state.purchased as string,
     amount: state.amount,
     comment: state.comment as string,
   })
@@ -287,6 +288,7 @@ watch(
       state.started = dayjs(subscription.started).format('YYYY-MM-DD');
       state.reference = subscription.orderReference ?? null;
       state.amount = subscription.amount ?? null;
+      state.purchased = dayjs(subscription.purchased).format('YYYY-MM-DD');
     }
   },
   { immediate: true },

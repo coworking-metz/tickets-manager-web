@@ -49,6 +49,13 @@
         v-model="state.orderReference"
         :label="$t('subscriptions.detail.reference.label')"
         :placeholder="$t('subscriptions.detail.reference.placeholder')" />
+      <AppTextField
+        id="subscription-purchased"
+        v-model="state.purchased"
+        :errors="vuelidate.purchased.$errors.map(({ $message }) => $message as string)"
+        :label="$t('subscriptions.detail.purchased.label')"
+        required
+        type="date" />
 
       <AppTextareaField
         id="comment"
@@ -104,9 +111,10 @@ const i18n = useI18n();
 const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
-  started: null as string | null,
+  started: dayjs().format('YYYY-MM-DD') as string | null,
   amount: null as number | null,
   orderReference: null as string | null,
+  purchased: dayjs().format('YYYY-MM-DD') as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
 });
@@ -118,6 +126,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  purchased: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -141,6 +150,7 @@ const onSubmit = async () => {
     started: state.started as string,
     amount: state.amount as number,
     orderReference: state.orderReference,
+    purchased: state.purchased as string,
     comment: state.comment as string,
   })
     .then(async () => {

@@ -37,6 +37,12 @@
           </span>
         </template>
       </AppTextField>
+      <AppAmountField
+        id="ticket-amount"
+        v-model.number="state.amount"
+        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.amount.label')"
+        required />
 
       <AppTextField
         id="ticket-reference"
@@ -44,12 +50,13 @@
         :label="$t('tickets.detail.reference.label')"
         :placeholder="$t('tickets.detail.reference.placeholder')" />
 
-      <AppAmountField
-        id="ticket-amount"
-        v-model.number="state.amount"
-        :errors="vuelidate.amount.$errors.map(({ $message }) => $message as string)"
-        :label="$t('tickets.detail.amount.label')"
-        required />
+      <AppTextField
+        id="ticket-purchased"
+        v-model="state.purchased"
+        :errors="vuelidate.purchased.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.purchased.label', { count: state.count })"
+        required
+        type="date" />
 
       <AppTextareaField
         id="comment"
@@ -89,6 +96,7 @@ import { useQueryClient } from '@tanstack/vue-query';
 import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { minValue, numeric, required } from '@vuelidate/validators';
+import dayjs from 'dayjs';
 import { PropType, computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -112,6 +120,7 @@ const state = reactive({
   count: null as null | number,
   amount: null as number | null,
   orderReference: null as string | null,
+  purchased: dayjs().format('YYYY-MM-DD') as string | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
 });
@@ -127,6 +136,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  purchased: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -144,6 +154,7 @@ const onSubmit = async () => {
     count: state.count as number,
     amount: state.amount as number,
     orderReference: state.orderReference,
+    purchased: state.purchased as string,
     comment: state.comment as string,
   })
     .then(async () => {

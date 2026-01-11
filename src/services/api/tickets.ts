@@ -16,7 +16,7 @@ export const getMemberTicket = (memberId: string, ticketId: string): Promise<Tic
   return HTTP.get(`/api/members/${memberId}/tickets/${ticketId}`).then(({ data }) => data);
 };
 
-export type TicketChange = Pick<Ticket, 'count' | 'orderReference'> & {
+export type TicketChange = Pick<Ticket, 'count' | 'orderReference' | 'purchased'> & {
   amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };

@@ -23,7 +23,6 @@
       "label": "Nombre de tickets",
       "unit": "ticket | ticket | tickets"
     },
-    "description": "Passée le {purchasedDate} à {purchasedTime}",
     "empty": {
       "description": "Assurez-vous que la commande est bien rattachée à ce membre.",
       "title": "Commande introuvable"
@@ -37,6 +36,9 @@
     "onUpdate": {
       "fail": "Impossible de modifier cette commande de tickets",
       "success": "Commande de tickets modifiée"
+    },
+    "purchased": {
+      "label": "Commandé le | Commandé le | Commandés le"
     },
     "reference": {
       "label": "Référence de la commande",

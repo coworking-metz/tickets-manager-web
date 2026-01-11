@@ -19,7 +19,7 @@
               <DialogTitle
                 v-if="title"
                 as="h3"
-                class="flex flex-row items-center text-lg font-medium leading-6 text-gray-900 max-sm:justify-center max-sm:text-center sm:min-h-10 dark:text-gray-100">
+                class="flex flex-row items-center text-lg font-medium leading-6 text-gray-900 max-sm:justify-center max-sm:text-center sm:min-h-10 sm:pr-6 dark:text-gray-100">
                 {{ title }}
               </DialogTitle>
 

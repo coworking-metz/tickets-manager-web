@@ -20,7 +20,7 @@ export const getMemberMembership = (
   return HTTP.get(`/api/members/${memberId}/memberships/${membershipId}`).then(({ data }) => data);
 };
 
-export type MembershipChange = Pick<Membership, 'membershipStart'> & {
+export type MembershipChange = Pick<Membership, 'membershipStart' | 'purchased'> & {
   orderReference?: string | null; // orderReference is optional for new memberships
   amount?: number | null;
   comment: string; // comment is mandatory to audit what happened

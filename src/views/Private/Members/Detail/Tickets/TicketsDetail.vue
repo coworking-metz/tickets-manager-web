@@ -21,15 +21,6 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="isFetchingTickets" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selectedTicket" class="text-indigo-300 sm:text-sm">
-        {{
-          $t('tickets.detail.description', {
-            purchasedDate: dayjs(selectedTicket.purchased).format('LL'),
-            purchasedTime: dayjs(selectedTicket.purchased).format('LT'),
-          })
-        }}
-      </p>
     </header>
     <LoadingSpinner v-if="isFetchingTickets" class="m-auto size-16" />
     <ErrorState
@@ -95,6 +86,13 @@
           </div>
         </template>
       </AppTextField>
+      <AppTextField
+        id="ticket-purchased"
+        v-model="state.purchased"
+        :errors="vuelidate.purchased.$errors.map(({ $message }) => $message as string)"
+        :label="$t('tickets.detail.purchased.label', { count: state.count })"
+        required
+        type="date" />
 
       <AppTextareaField
         id="comment"
@@ -181,6 +179,7 @@ const queryClient = useQueryClient();
 const state = reactive({
   count: null as null | number,
   reference: null as string | null,
+  purchased: null as string | null,
   amount: null as number | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -208,6 +207,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  purchased: { required: withAppI18nMessage(required) },
   amount: {
     required: withAppI18nMessage(required),
     decimal: withAppI18nMessage(numeric),
@@ -245,6 +245,7 @@ const onSubmit = async () => {
   updateMemberTicket(props.memberId, props.id, {
     count: state.count as number,
     orderReference: state.reference as string,
+    purchased: state.purchased as string,
     amount: state.amount,
     comment: state.comment as string,
   })
@@ -269,6 +270,7 @@ watch(
       state.count = ticket.count;
       state.reference = ticket.orderReference ?? null;
       state.amount = ticket.amount ?? null;
+      state.purchased = dayjs(ticket.purchased).format('YYYY-MM-DD');
     }
   },
   { immediate: true },

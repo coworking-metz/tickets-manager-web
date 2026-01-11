@@ -231,7 +231,7 @@
       }
     },
     "wordpress": {
-      "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket and subscription orders will be updated.",
+      "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket, subscription and membership orders will be updated.",
       "navigate": "View Profile",
       "onSync": {
         "fail": "Unable to synchronize {name}",

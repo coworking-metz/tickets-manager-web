@@ -24,7 +24,7 @@ export const getMemberSubscription = (
   );
 };
 
-export type SubscriptionChange = Pick<Subscription, 'started' | 'orderReference'> & {
+export type SubscriptionChange = Pick<Subscription, 'started' | 'orderReference' | 'purchased'> & {
   amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };

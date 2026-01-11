@@ -231,7 +231,7 @@
       }
     },
     "wordpress": {
-      "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets et d'abonnement se mettront à jour.",
+      "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets, d'abonnements et d'adhésions se mettront à jour.",
       "navigate": "Consulter le profil",
       "onSync": {
         "fail": "Impossible de synchroniser {name}",

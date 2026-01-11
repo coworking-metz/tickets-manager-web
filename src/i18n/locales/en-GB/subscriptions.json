@@ -19,7 +19,6 @@
       "label": "Reason",
       "placeholder": "Explain the reason for this change"
     },
-    "description": "Ordered on {purchasedDate} at {purchasedTime}",
     "empty": {
       "description": "Make sure the subscription is correctly linked to this member.",
       "title": "Subscription Not Found"
@@ -37,6 +36,9 @@
     "onUpdate": {
       "fail": "Unable to modify this subscription",
       "success": "Subscription modified"
+    },
+    "purchased": {
+      "label": "Ordered on"
     },
     "reference": {
       "label": "Order reference",

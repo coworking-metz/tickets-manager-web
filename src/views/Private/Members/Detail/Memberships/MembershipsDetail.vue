@@ -25,15 +25,6 @@
           </RouterLink>
         </div>
       </div>
-      <div v-if="isFetchingMemberships" class="h-3 w-64 rounded-full bg-slate-400" />
-      <p v-else-if="selectedMembership" class="text-indigo-300 sm:text-sm">
-        {{
-          $t('memberships.detail.description', {
-            purchasedDate: dayjs(selectedMembership.purchased).format('LL'),
-            purchasedTime: dayjs(selectedMembership.purchased).format('LT'),
-          })
-        }}
-      </p>
     </header>
     <LoadingSpinner v-if="isFetchingMemberships" class="m-auto size-16" />
     <ErrorState
@@ -102,6 +93,13 @@
           </div>
         </template>
       </AppTextField>
+      <AppTextField
+        id="membership-purchased"
+        v-model="state.purchased"
+        :errors="vuelidate.purchased.$errors.map(({ $message }) => $message as string)"
+        :label="$t('memberships.detail.purchased.label')"
+        required
+        type="date" />
 
       <AppTextareaField
         id="comment"
@@ -199,6 +197,7 @@ const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
   reference: null as string | null,
+  purchased: null as string | null,
   amount: null as number | null,
   comment: null as string | null,
   isSubmitting: false as boolean,
@@ -227,6 +226,7 @@ const rules = computed(() => ({
     decimal: withAppI18nMessage(numeric),
     minValue: withAppI18nMessage(minValue(0)),
   },
+  purchased: { required: withAppI18nMessage(required) },
   comment: { required: withAppI18nMessage(required) },
 }));
 
@@ -256,6 +256,7 @@ const onSubmit = async () => {
   updateMemberMembership(props.memberId, props.id, {
     membershipStart: state.started as string,
     orderReference: state.reference as string,
+    purchased: state.purchased as string,
     amount: state.amount,
     comment: state.comment as string,
   })
@@ -284,6 +285,7 @@ watch(
       state.started = membership.membershipStart;
       state.reference = membership.orderReference ?? null;
       state.amount = membership.amount;
+      state.purchased = membership.purchased;
     }
   },
   { immediate: true },
