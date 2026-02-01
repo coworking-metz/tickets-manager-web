@@ -1,6 +1,4 @@
-import { version as appVersion } from '../../../package.json';
 import { PUBLIC_HTTP_CLIENT } from '../http';
-import axios from 'axios';
 
 export enum UserCapabilities {
   UNLOCK_GATE = 'UNLOCK_GATE',
