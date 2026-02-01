@@ -1,7 +1,7 @@
 <template>
   <AppButton
     :class="[
-      `border border-transparent px-4 py-2 font-medium outline-none transition-all
+      `border border-transparent font-medium outline-none transition-all
       focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900`,
       colors,
     ]">
