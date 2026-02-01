@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
+  <div class="flex min-h-full flex-col bg-white pb-6 dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <form class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
+    <form class="flex h-full flex-col px-4 pt-6 sm:px-6" @submit.prevent="onSubmit">
       <Head>
         <title>{{ $t('subscriptions.new.head.title') }}</title>
       </Head>
@@ -30,10 +30,9 @@
 
       <AppTextField
         id="subscription-ended"
-        disabled
+        v-model="state.ended"
         :hint="$t('subscriptions.detail.ended.hint')"
         :label="$t('subscriptions.detail.ended.label')"
-        :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />
 
@@ -85,7 +84,7 @@ import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
-import { addMemberSubscription } from '@/services/api/subscriptions';
+import { addMemberSubscription, computeDefaultEndDate } from '@/services/api/subscriptions';
 import { membersQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
@@ -95,7 +94,7 @@ import { Head } from '@unhead/vue/components';
 import useVuelidate from '@vuelidate/core';
 import { minValue, numeric, required } from '@vuelidate/validators';
 import dayjs from 'dayjs';
-import { computed, nextTick, reactive } from 'vue';
+import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -112,6 +111,7 @@ const notificationsStore = useNotificationsStore();
 const queryClient = useQueryClient();
 const state = reactive({
   started: dayjs().format('YYYY-MM-DD') as string | null,
+  ended: null as string | null,
   amount: null as number | null,
   orderReference: null as string | null,
   purchased: dayjs().format('YYYY-MM-DD') as string | null,
@@ -121,6 +121,7 @@ const state = reactive({
 
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
+  ended: { required: withAppI18nMessage(required) },
   amount: {
     required: withAppI18nMessage(required),
     decimal: withAppI18nMessage(numeric),
@@ -131,12 +132,6 @@ const rules = computed(() => ({
 }));
 
 const vuelidate = useVuelidate(rules, state);
-
-const computedEnded = computed(() => {
-  return state.started
-    ? dayjs(state.started).add(1, 'month').subtract(1, 'day').format('YYYY-MM-DD')
-    : null;
-});
 
 const onSubmit = async () => {
   const isValid = await vuelidate.value.$validate();
@@ -149,6 +144,7 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   addMemberSubscription(props.memberId, {
     started: state.started as string,
+    ended: state.ended as string,
     amount: state.amount as number,
     orderReference: state.orderReference,
     purchased: state.purchased as string,
@@ -179,4 +175,14 @@ const onSubmit = async () => {
       state.isSubmitting = false;
     });
 };
+
+watch(
+  () => state.started,
+  (newStarted, oldStarted) => {
+    if (newStarted && state.ended === computeDefaultEndDate(oldStarted)) {
+      state.ended = computeDefaultEndDate(newStarted);
+    }
+  },
+  { immediate: true },
+);
 </script>

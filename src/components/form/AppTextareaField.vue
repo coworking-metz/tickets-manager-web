@@ -12,9 +12,8 @@
         :class="[
           `block min-h-24 w-full rounded-md border-gray-300 transition-colors
           placeholder:text-gray-400/80 focus:border-indigo-500 focus:ring-indigo-500
-          disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50
-          disabled:text-gray-500 sm:text-sm dark:border-gray-600 dark:bg-slate-800
-          dark:text-gray-100 dark:disabled:border-gray-700 dark:disabled:bg-slate-700
+          disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-stone-500
+          sm:text-sm dark:border-stone-700 dark:bg-zinc-900 dark:text-gray-100 dark:disabled:border-stone-700 dark:disabled:bg-zinc-900/80
           disabled:dark:text-gray-400`,
           ($slots.after || $slots.before) && 'rounded-none',
           !$slots.before && 'rounded-l-md',

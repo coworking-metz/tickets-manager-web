@@ -1,4 +1,5 @@
 import { HTTP } from '../http';
+import dayjs from 'dayjs';
 
 export interface Subscription {
   _id: string;
@@ -24,7 +25,10 @@ export const getMemberSubscription = (
   );
 };
 
-export type SubscriptionChange = Pick<Subscription, 'started' | 'orderReference' | 'purchased'> & {
+export type SubscriptionChange = Pick<
+  Subscription,
+  'started' | 'ended' | 'orderReference' | 'purchased'
+> & {
   amount?: number | null;
   comment: string; // comment is mandatory to audit what happened
 };
@@ -54,4 +58,20 @@ export const deleteMemberSubscription = (
   return HTTP.delete(`/api/members/${memberId}/subscriptions/${subscriptionId}`, {
     data: { comment },
   });
+};
+
+/**
+ * Add (1 month - 1 day) to the starting date
+ * ensure that 12 subscriptions are equivalent to 1 year
+ * @see https://github.com/coworking-metz/tickets-backend/pull/54#discussion_r1438295181
+ */
+export const computeDefaultEndDate = (started?: string | null) => {
+  return started
+    ? dayjs
+        .tz(started, 'Europe/Paris')
+        .add(1, 'month')
+        .subtract(1, 'day')
+        .toISOString()
+        .slice(0, 10)
+    : null;
 };

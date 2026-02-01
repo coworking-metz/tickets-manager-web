@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
+  <div class="flex min-h-full flex-col bg-white pb-6 dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex items-center justify-between">
         <DialogTitle :class="['text-lg font-medium text-white']">
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <form class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
+    <form class="flex h-full flex-col px-4 pt-6 sm:px-6" @submit.prevent="onSubmit">
       <Head>
         <title>{{ $t('tickets.new.head.title') }}</title>
       </Head>

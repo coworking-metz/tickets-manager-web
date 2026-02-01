@@ -49,11 +49,10 @@
 
       <AppTextField
         id="subscription-ended"
-        disabled
-        :hint="$t('subscriptions.detail.ended.hint')"
+        v-model="state.ended"
         :label="$t('subscriptions.detail.ended.label')"
-        :model-value="computedEnded"
         :prepend-icon="mdiCalendarEndOutline"
+        required
         type="date" />
       <AppAmountField
         id="subscription-amount"
@@ -190,6 +189,7 @@ const queryClient = useQueryClient();
 const state = reactive({
   started: null as string | null,
   amount: null as number | null,
+  ended: null as string | null,
   reference: null as string | null,
   purchased: null as string | null,
   comment: null as string | null,
@@ -212,19 +212,9 @@ const selectedSubscription = computed<Subscription | null>(() => {
   return subscriptions.value?.find(({ _id }) => `${_id}` === `${props.id}`) ?? null;
 });
 
-const computedEnded = computed(() => {
-  return state.started
-    ? dayjs
-        .tz(state.started, 'Europe/Paris')
-        .add(1, 'month')
-        .subtract(1, 'day')
-        .toISOString()
-        .slice(0, 10)
-    : null;
-});
-
 const rules = computed(() => ({
   started: { required: withAppI18nMessage(required) },
+  ended: { required: withAppI18nMessage(required) },
   amount: {
     required: withAppI18nMessage(required),
     decimal: withAppI18nMessage(numeric),
@@ -263,6 +253,7 @@ const onSubmit = async () => {
   state.isSubmitting = true;
   updateMemberSubscription(props.memberId, props.id, {
     started: state.started as string,
+    ended: state.ended as string,
     orderReference: state.reference,
     purchased: state.purchased as string,
     amount: state.amount,
@@ -287,6 +278,7 @@ watch(
   (subscription) => {
     if (subscription) {
       state.started = dayjs(subscription.started).format('YYYY-MM-DD');
+      state.ended = dayjs(subscription.ended).format('YYYY-MM-DD');
       state.reference = subscription.orderReference ?? null;
       state.amount = subscription.amount ?? null;
       state.purchased = dayjs(subscription.purchased).format('YYYY-MM-DD');
