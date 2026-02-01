@@ -39,7 +39,7 @@
         <template #append>
           <div class="ml-auto flex flex-row items-center self-start">
             <dd class="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-              {{ fractionAmount(member.usage.amount) }}
+              {{ formatAmount(member.usage.amount) }}
             </dd>
 
             <SvgIcon
@@ -119,7 +119,7 @@
 <script setup lang="ts">
 import { useStatsColors } from '../statsColors';
 import MemberCard from '@/components/MemberCard.vue';
-import { formatAmount, fractionAmount } from '@/helpers/currency';
+import { formatAmount } from '@/helpers/currency';
 import { MemberListItemWithUsage } from '@/services/api/stats/usage';
 import { theme } from '@/styles/colors';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
