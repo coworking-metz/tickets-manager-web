@@ -160,7 +160,7 @@ import {
   Membership,
   updateMemberMembership,
 } from '@/services/api/memberships';
-import { membersQueryKeys, useAppQuery } from '@/services/query';
+import { membersQueryKeys, statsQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import {
@@ -242,6 +242,9 @@ const onChanged = async () => {
   });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.historyById(props.memberId),
+  });
+  queryClient.invalidateQueries({
+    queryKey: statsQueryKeys.allIncomePeriods(),
   });
 };
 

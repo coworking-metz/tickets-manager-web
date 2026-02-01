@@ -206,7 +206,7 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Attendance, getMemberActivity, updateMemberActivity } from '@/services/api/members';
-import { membersQueryKeys, useAppQuery } from '@/services/query';
+import { membersQueryKeys, statsQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import {
   DialogTitle,
@@ -320,6 +320,15 @@ const onSubmit = async () => {
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.historyById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allUsagePeriods(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allActivityPeriods(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allAttendancePeriods(),
       });
     })
     .catch(handleSilentError)
