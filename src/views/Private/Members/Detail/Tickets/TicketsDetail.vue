@@ -149,7 +149,7 @@ import {
   isMemberOrderFromWordpress,
 } from '@/services/api/members';
 import { getAllMemberTickets, Ticket, updateMemberTicket } from '@/services/api/tickets';
-import { membersQueryKeys, useAppQuery } from '@/services/query';
+import { membersQueryKeys, statsQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCheck, mdiClose, mdiDeleteOutline, mdiOpenInNew, mdiTicket } from '@mdi/js';
@@ -231,6 +231,9 @@ const onChanged = async () => {
   });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.activityById(props.memberId),
+  });
+  queryClient.invalidateQueries({
+    queryKey: statsQueryKeys.allUsagePeriods(),
   });
 };
 

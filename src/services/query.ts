@@ -55,12 +55,16 @@ export const auditEventsQueryKeys = {
 };
 
 export const statsQueryKeys = {
+  allUsagePeriods: () => ['stats', 'usage'] as const,
   usageInPeriod: (frequency: Frequency, from: string, to: string) =>
-    ['stats', 'usage', frequency, from, to] as const,
+    [...statsQueryKeys.allUsagePeriods(), frequency, from, to] as const,
+  allIncomePeriods: () => ['stats', 'income'] as const,
   incomeInPeriod: (frequency: Frequency, from: string, to: string) =>
-    ['stats', 'income', frequency, from, to] as const,
+    [...statsQueryKeys.allIncomePeriods(), frequency, from, to] as const,
+  allActivityPeriods: () => ['stats', 'activity'] as const,
   activityInPeriod: (frequency: Frequency, from: string, to: string) =>
-    ['stats', 'activity', frequency, from, to] as const,
+    [...statsQueryKeys.allActivityPeriods(), frequency, from, to] as const,
+  allAttendancePeriods: () => ['stats', 'attendance'] as const,
   attendanceInPeriod: (frequency: Frequency, from: string, to: string) =>
-    ['stats', 'attendance', frequency, from, to] as const,
+    [...statsQueryKeys.allAttendancePeriods(), frequency, from, to] as const,
 };

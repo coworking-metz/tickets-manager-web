@@ -82,7 +82,7 @@ import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { Member } from '@/services/api/members';
 import { addMemberMembership } from '@/services/api/memberships';
-import { membersQueryKeys } from '@/services/query';
+import { membersQueryKeys, statsQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendarStartOutline, mdiClose, mdiPlus } from '@mdi/js';
@@ -163,6 +163,9 @@ const onSubmit = async () => {
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.membershipsById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allIncomePeriods(),
       });
     })
     .catch(handleSilentError)

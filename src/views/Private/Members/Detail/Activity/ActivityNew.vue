@@ -76,7 +76,7 @@ import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
 import { ROUTE_NAMES } from '@/router/names';
 import { addMemberActivity } from '@/services/api/members';
-import { membersQueryKeys } from '@/services/query';
+import { membersQueryKeys, statsQueryKeys } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { DialogTitle } from '@headlessui/vue';
 import { mdiCalendar, mdiClose, mdiPlus } from '@mdi/js';
@@ -147,6 +147,15 @@ const onSubmit = async () => {
       });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.activityById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allUsagePeriods(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allActivityPeriods(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: statsQueryKeys.allAttendancePeriods(),
       });
     })
     .catch(handleSilentError)
