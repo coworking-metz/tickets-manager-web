@@ -23,12 +23,14 @@ export interface User {
 
 export const refreshTokens = (
   refreshToken: string | null,
+  accessToken?: string | null,
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   // refreshing tokens should have its own axios config
   // and should not be cancelled
-  return PUBLIC_HTTP_CLIENT.post('/api/auth/tokens', { refreshToken: refreshToken }).then(
-    ({ data }) => data,
-  );
+  return PUBLIC_HTTP_CLIENT.post('/api/auth/tokens', {
+    refreshToken,
+    accessToken,
+  }).then(({ data }) => data);
 };
 
 // https://stackoverflow.com/a/38552302

@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
     },
     fetchTokens() {
       if (!refreshPromise) {
-        refreshPromise = refreshTokens(this.refreshToken)
+        refreshPromise = refreshTokens(this.refreshToken, this.accessToken)
           .then(async ({ accessToken: newAccessToken, refreshToken: newRefresToken }) => {
             await this.setAccessToken(newAccessToken);
             this.refreshToken = newRefresToken;
