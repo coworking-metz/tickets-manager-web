@@ -260,6 +260,10 @@
         "value": "Aucune | {count} ticket | {count} tickets"
       }
     },
+    "onEndScrollReached": {
+      "full": "C'est tout",
+      "loading": "Chargement…"
+    },
     "onFetch": {
       "fail": "Impossible de récupérer la liste des membres"
     },

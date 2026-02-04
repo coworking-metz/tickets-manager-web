@@ -7,7 +7,7 @@
       class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
       {{ $t('members.list.title') }}
     </h1>
-    <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
+    <section class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <nav class="flex flex-row gap-x-3 overflow-x-auto px-3 sm:px-0">
         <RouterLink
           v-for="listTab in ALL_TABS"
@@ -126,18 +126,20 @@
           </template>
         </AppTextField>
       </div>
-    </div>
+    </section>
 
-    <div class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
+    <section class="flex flex-col-reverse items-stretch gap-3 md:flex-row">
       <div
-        class="relative flex grow flex-col border-t border-gray-200 bg-white shadow sm:rounded-md dark:border-stone-700 dark:bg-neutral-800">
+        class="relative flex grow flex-col border-t border-gray-200 sm:rounded-t-md dark:border-stone-700">
         <div
           v-if="isFetching || isFetchingVotingMembers"
           class="sticky top-[67px] w-full sm:top-[3px]">
           <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
         </div>
 
-        <ul class="grow divide-y divide-gray-200 dark:divide-stone-700" role="list">
+        <ul
+          class="grow divide-y divide-gray-200 bg-white shadow sm:rounded-md dark:divide-stone-700 dark:bg-neutral-800"
+          role="list">
           <template v-if="isPending || (tab === 'voting' && isPendingVotingMembers)">
             <li v-for="index in 10" :key="`loading-member-card-${index}`">
               <MembersListCard loading />
@@ -147,17 +149,30 @@
             v-else-if="!slicedList.length"
             class="m-auto pb-24 pt-6"
             :title="$t('members.list.empty.title')" />
-          <li v-else v-for="member in slicedList" :key="`member-${member._id}`">
-            <RouterLink
-              class="block transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
-              :to="{
-                name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-                params: { memberId: member._id },
-              }">
-              <MembersListCard :member="member" />
-            </RouterLink>
-          </li>
+          <template v-else>
+            <li v-for="member in slicedList" :key="`member-${member._id}`">
+              <RouterLink
+                class="block transition-colors hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900"
+                :to="{
+                  name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                  params: { memberId: member._id },
+                }">
+                <MembersListCard :member="member" />
+              </RouterLink>
+            </li>
+          </template>
         </ul>
+
+        <div
+          v-if="slicedList.length"
+          ref="endOfList"
+          class="p-6 text-center text-gray-500 dark:text-gray-400">
+          {{
+            state.slice < tabFilteredList.length
+              ? $t('members.list.onEndScrollReached.loading')
+              : $t('members.list.onEndScrollReached.full')
+          }}
+        </div>
       </div>
 
       <aside v-if="selectedTab?.key === 'nonCompliant'" class="flex flex-col">
@@ -220,7 +235,7 @@
           </AppPanel>
         </dl>
       </aside>
-    </div>
+    </section>
   </article>
 </template>
 
@@ -246,10 +261,10 @@ import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useInfiniteScroll } from '@vueuse/core';
+import { useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -425,19 +440,16 @@ const missingMembershipsCount = computed(() =>
   filteredList.value.reduce((acc, member) => acc + Number(isMembershipNonCompliant(member)), 0),
 );
 
-const scrollElement = ref<Document>();
-useInfiniteScroll(
-  scrollElement,
-  () => {
-    // load more
+const endOfList = ref<HTMLLIElement>();
+const endOfListVisible = useElementVisibility(endOfList);
+
+watch(endOfListVisible, (isVisible) => {
+  if (isVisible) {
     if (tabFilteredList.value.length && state.slice < tabFilteredList.value.length) {
       state.slice += SLICE_STEP;
     }
-  },
-  { distance: 100 },
-);
-
-onMounted(() => (scrollElement.value = document));
+  }
+});
 
 watch(
   () => props.search,

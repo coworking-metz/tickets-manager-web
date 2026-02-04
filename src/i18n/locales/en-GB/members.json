@@ -260,6 +260,10 @@
         "value": "None | {count} ticket | {count} tickets"
       }
     },
+    "onEndScrollReached": {
+      "full": "That's all",
+      "loading": "Loading…"
+    },
     "onFetch": {
       "fail": "Unable to fetch members list"
     },

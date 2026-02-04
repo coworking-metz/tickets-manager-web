@@ -1,6 +1,5 @@
 {
   "reject": [
-    "@vueuse/core",
     "@intlify/eslint-plugin-vue-i18n",
     "@typescript-eslint/eslint-plugin",
     "@typescript-eslint/parser",
