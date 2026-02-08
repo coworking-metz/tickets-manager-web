@@ -2,7 +2,8 @@
   <MemberCard :loading="loading" :member="member">
     <div class="mt-3 flex shrink flex-row flex-wrap items-center gap-1">
       <span
-        class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+        class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 ring-1 ring-inset dark:text-gray-100"
+        :style="`color:${statsColors.activity}; background-color: ${statsColors.activity}44; --tw-ring-color: ${statsColors.activity}88;`">
         {{ $t(`attendance.detail.activity.value.${ActivityDuration[activityDuration]}`) }}
       </span>
       <span
@@ -22,8 +23,9 @@
 </template>
 
 <script setup lang="ts">
+import { useStatsColors } from '../Stats/statsColors';
 import MemberCard from '@/components/MemberCard.vue';
-import { AttendingMember } from '@/services/api/attendance';
+import { AttendingMember, computeActivityFromAttendance } from '@/services/api/attendance';
 import { PropType, computed } from 'vue';
 
 enum ActivityDuration {
@@ -32,6 +34,7 @@ enum ActivityDuration {
   'FULL' = 1,
 }
 
+const statsColors = useStatsColors();
 const props = defineProps({
   member: {
     type: Object as PropType<AttendingMember>,
@@ -44,10 +47,6 @@ const props = defineProps({
 });
 
 const activityDuration = computed<number>(() => {
-  return (
-    props.member.attendance.subscriptions.count ||
-    props.member.attendance.tickets.count ||
-    props.member.attendance.tickets.debt.count
-  );
+  return computeActivityFromAttendance(props.member.attendance);
 });
 </script>

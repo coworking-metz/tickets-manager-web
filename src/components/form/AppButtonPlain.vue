@@ -30,7 +30,7 @@ const colors = computed(() => {
     case 'emerald':
       return 'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 focus:ring-emerald-500';
     case 'blue':
-      return 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500';
+      return 'bg-sky-600 text-white hover:bg-sky-700 active:bg-sky-800 focus:ring-sky-500';
     case 'neutral':
       return 'bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-500 border border-gray-300 dark:bg-neutral-800 dark:text-gray-300 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-700/80 dark:focus:ring-neutral-700 dark:border-neutral-600';
     default:

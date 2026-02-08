@@ -45,7 +45,7 @@
               </h1>
               <i18n-t
                 v-if="member.attending"
-                class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="text-sm font-medium text-gray-500 dark:text-neutral-400"
                 keypath="members.detail.profile.attending"
                 scope="global"
                 tag="p">
@@ -57,7 +57,7 @@
               </i18n-t>
               <i18n-t
                 v-else-if="!!member.lastSeen"
-                class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="text-sm font-medium text-gray-500 dark:text-neutral-400"
                 keypath="members.detail.profile.lastSeen"
                 scope="global"
                 tag="p">
@@ -178,7 +178,8 @@
             }
           "
           :activity="activity"
-          class="pl-2 max-sm:overflow-x-auto max-sm:pr-2" />
+          class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
+          :selected-date="selectedActivityDate" />
       </div>
 
       <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
@@ -505,13 +506,13 @@
 
     <AppDialog
       v-model="state.isPictureDialogVisible"
-      dialog-class="max-w-xl relative overflow-hidden min-h-40">
+      dialog-class="max-w-xl relative overflow-hidden min-h-40 !bg-black">
       <img
         v-if="member?.picture"
-        class="max-h-[80vh] w-full rounded-md object-contain"
+        class="max-h-[80vh] w-full object-contain"
         :src="member.picture" />
       <AppButtonIcon
-        class="absolute right-3 top-3 bg-black/40 !text-white hover:!bg-black/60 dark:focus:ring-offset-neutral-800"
+        class="absolute right-3 top-3 bg-black/40 !text-white hover:!bg-black/60 focus:ring-offset-black"
         :icon="mdiClose"
         :title="$t('action.close')"
         @click="() => (state.isPictureDialogVisible = false)" />
@@ -564,13 +565,17 @@ import {
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, reactive, watch } from 'vue';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   memberId: {
     type: String,
     required: true,
+  },
+  selectedActivityDate: {
+    type: String as PropType<string | null>,
+    default: null,
   },
 });
 

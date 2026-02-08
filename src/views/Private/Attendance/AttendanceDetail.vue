@@ -153,7 +153,11 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
-import { AttendancePeriod, AttendingMember } from '@/services/api/attendance';
+import {
+  AttendancePeriod,
+  AttendingMember,
+  computeActivityFromAttendance,
+} from '@/services/api/attendance';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort, mdiChevronRight } from '@mdi/js';
 import dayjs from 'dayjs';
@@ -179,12 +183,7 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'activity',
     sort: (a, b) =>
-      a.attendance.subscriptions.count +
-      a.attendance.tickets.count +
-      a.attendance.tickets.debt.count -
-      (b.attendance.subscriptions.count +
-        b.attendance.tickets.count +
-        b.attendance.tickets.debt.count),
+      computeActivityFromAttendance(b.attendance) - computeActivityFromAttendance(a.attendance),
   },
 ]);
 

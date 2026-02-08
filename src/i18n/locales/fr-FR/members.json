@@ -2,7 +2,7 @@
   "detail": {
     "attendance": {
       "add": "Ajouter une présence",
-      "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wifi du Coworking.",
+      "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau WiFi du coworking.",
       "graph": {
         "tooltip": "{date}\n{amount}{suffix}",
         "value": {
@@ -237,7 +237,7 @@
         "fail": "Impossible de synchroniser {name}",
         "success": "{name} synchronisé"
       },
-      "orders": "Consulter les commandes",
+      "orders": "Consulter toutes les\u00A0commandes",
       "sync": "Synchroniser",
       "title": "Synchronisation avec Wordpress"
     }

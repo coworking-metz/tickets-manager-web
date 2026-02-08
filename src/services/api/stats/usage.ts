@@ -2,7 +2,7 @@ import { Frequency } from './frequency';
 import { MemberListItem } from '../members';
 import { HTTP } from '@/services/http';
 
-type StatsUsage = {
+export type StatsUsage = {
   tickets: {
     count: number; // tickets count consumed
     amount: number; // amount in euro
@@ -45,6 +45,11 @@ export const getUsagePerFrequency = (
       ...(from && { from }),
       ...(to && { to }),
     },
-    timeout: 60_000,
+    timeout: 180_000,
   }).then(({ data }) => data);
 };
+
+export const computeActivityFromUsage = (usage: StatsUsage): number =>
+  usage.tickets.count + usage.tickets.debt.count + usage.subscriptions.attending.count;
+
+export const WHOLE_PERIOD_SUMMARY_ROUTE_PARAM = 'all';

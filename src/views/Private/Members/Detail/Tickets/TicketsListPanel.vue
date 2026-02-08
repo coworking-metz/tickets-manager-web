@@ -39,7 +39,7 @@
         <li v-for="ticket in tickets" :key="`ticket-${ticket._id}`">
           <RouterLink
             :class="[
-              'flex flex-col gap-1 p-4 hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-800 dark:active:bg-zinc-900',
+              'flex flex-col gap-1 p-4 transition-colors hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-900 dark:active:bg-zinc-950',
               route.params.ticketId === `${ticket._id}` &&
                 route.name === ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL &&
                 'bg-slate-50 dark:bg-zinc-900/80',

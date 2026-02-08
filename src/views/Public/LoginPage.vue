@@ -7,7 +7,7 @@
       <div class="relative z-10 flex grow flex-col lg:w-full lg:max-w-2xl">
         <svg
           aria-hidden="true"
-          class="absolute inset-y-0 right-8 hidden h-full w-80 translate-x-1/2 fill-slate-50 lg:block dark:fill-stone-900"
+          class="absolute inset-y-0 right-8 hidden h-full w-80 translate-x-1/2 fill-slate-50 duration-500 lg:block dark:fill-stone-900"
           preserveAspectRatio="none"
           viewBox="0 0 100 100">
           <polygon points="0,0 90,0 50,100 0,100" />
@@ -26,21 +26,21 @@
         <div class="relative flex max-h-[960px] min-h-[480px] grow flex-col px-6 lg:px-8 lg:pr-0">
           <div class="m-auto max-w-2xl lg:mx-0 lg:max-w-xl">
             <div class="hidden sm:mb-10 sm:flex">
-              <div
-                class="relative rounded-full px-3 py-1 leading-6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20 sm:text-sm dark:text-gray-400 dark:ring-gray-100/10 dark:hover:ring-gray-100/20">
+              <a
+                class="relative rounded-full px-3 py-1 leading-6 text-gray-500 ring-1 ring-gray-900/10 transition-colors hover:bg-gray-100 hover:ring-gray-900/20 active:bg-gray-200 sm:text-sm dark:text-gray-400 dark:ring-gray-100/10 dark:hover:bg-neutral-900 dark:hover:ring-gray-100/20 dark:active:bg-neutral-950"
+                href="https://www.coworking-metz.fr/"
+                target="_blank">
                 {{ $t('login.headline.text') }}
-                <a
-                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500"
-                  href="https://www.coworking-metz.fr/"
-                  target="_blank">
+                <span
+                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500">
                   {{ $t('login.headline.readMore') }}
                   <SvgIcon
                     aria-hidden="true"
                     class="ml-1 size-4"
-                    :path="mdiArrowRight"
+                    :path="mdiArrowTopRight"
                     type="mdi" />
-                </a>
-              </div>
+                </span>
+              </a>
             </div>
             <h1
               class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl dark:text-gray-100">
@@ -87,7 +87,7 @@ import LogoMono from '@/components/LogoMono.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { HTTP } from '@/services/http';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiArrowRight } from '@mdi/js';
+import { mdiArrowTopRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';

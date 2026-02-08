@@ -1,6 +1,7 @@
 {
   "activity": {
-    "count": "absent⸱e | présent⸱e {count} journée | présent⸱e {count} journées"
+    "count": "absent⸱e | {count} journée | {count} journées",
+    "label": "absent⸱e | présent⸱e {count} journée | présent⸱e {count} journées"
   },
   "daily": {
     "graph": {
@@ -21,7 +22,10 @@
         "label": "Recouvrable",
         "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
-      "label": "En quelques chiffres",
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
+      "label": "En résumé",
       "total": {
         "label": "Au total",
         "threshold": "sur {amount} de charges fixes"
@@ -47,6 +51,7 @@
       "description": "Apparemment, personne ne s'est présenté ce jour-ci.",
       "title": "Personne"
     },
+    "navigateTo": "Consulter le profil de {name}",
     "search": {
       "empty": {
         "title": "Aucun résultat"
@@ -56,9 +61,9 @@
     "sort": {
       "label": "Trier {suffix}",
       "value": {
+        "activity": "Par présence",
         "debt": "Par dette",
-        "name": "Par nom",
-        "usage": "Par consommation"
+        "usage": "Par contribution"
       }
     }
   },
@@ -86,7 +91,10 @@
         "label": "Recouvrable",
         "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
-      "label": "En quelques chiffres",
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
+      "label": "En résumé",
       "total": {
         "label": "Au total",
         "threshold": "sur {amount} de charges fixes"
@@ -110,11 +118,14 @@
   },
   "subscriptions": {
     "attending": "dont aucun présent | dont {count} présent | dont {count} présents",
-    "count": "Aucun abonnement | {count} abonnement | {count} abonnements",
+    "count": "Aucun jour abonné | {count} jour abonné | {count} jours abonnés",
     "label": "Aucun abonnement | {count} jour couvert par abonnement | {count} jours couverts par abonnement"
   },
   "tickets": {
-    "debt": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
+    "debt": {
+      "count": "{count} redevable | {count} redevable | {count} redevables",
+      "label": "dont aucun redevable | dont {count} redevable | dont {count} redevables"
+    },
     "label": "Aucun ticket | {count} ticket | {count} tickets"
   },
   "title": "Consommation",
@@ -140,7 +151,10 @@
         "label": "Recouvrable",
         "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
-      "label": "En quelques chiffres",
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
+      "label": "En résumé",
       "total": {
         "label": "Au total",
         "threshold": "sur {amount} de charges fixes"
@@ -166,7 +180,10 @@
         "label": "Recouvrable",
         "tickets": "{''} | soit {count} ticket redevable | soit {count} tickets redevables"
       },
-      "label": "En quelques chiffres",
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
+      "label": "En résumé",
       "total": {
         "label": "Au total",
         "threshold": "sur {amount} de charges fixes"

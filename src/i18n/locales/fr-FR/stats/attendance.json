@@ -28,12 +28,5 @@
       "name": "Par nom"
     }
   },
-  "subscriptions": {
-    "count": "Aucun abonnement | {count} abonnement | {count} abonnements"
-  },
-  "tickets": {
-    "count": "Aucun ticket | {count} ticket | {count} tickets",
-    "debt": "Aucune dette | {count} ticket redevable | {count} tickets redevables"
-  },
   "title": "Présences"
 }

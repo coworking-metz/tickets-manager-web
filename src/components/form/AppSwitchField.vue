@@ -4,7 +4,7 @@
       <SwitchLabel as="p" class="font-medium text-gray-900 sm:text-sm dark:text-gray-100" passive>
         {{ label }}
       </SwitchLabel>
-      <SwitchDescription class="whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+      <SwitchDescription class="whitespace-pre-line text-sm text-gray-500 dark:text-neutral-400">
         {{ description }}
       </SwitchDescription>
     </div>

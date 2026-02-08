@@ -1,7 +1,7 @@
 {
-  "description": "A bit of this, a bit of that to know in order to manage the Coworking space.",
+  "description": "A bit of this, a bit of that to know in order to manage the coworking space.",
   "digitalSignage": {
-    "description": "Manage the content displayed on the Coworking space screens.\n\nYou can create, modify, and schedule messages, announcements, or events to keep members informed. The service is password-protected.",
+    "description": "Manage the content displayed on the coworking space screens.\n\nYou can create, modify, and schedule messages, announcements, or events to keep members informed. The service is password-protected.",
     "navigate": "Go to the screens",
     "title": "Screens"
   },

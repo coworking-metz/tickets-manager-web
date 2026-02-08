@@ -13,7 +13,7 @@
       </label>
     </slot>
     <slot :description="description" name="description">
-      <span v-if="description" class="text-sm text-slate-500 dark:text-slate-400">
+      <span v-if="description" class="text-sm text-slate-500 dark:text-neutral-400">
         {{ description }}
       </span>
     </slot>

@@ -1,9 +1,7 @@
 import { useHttpStore } from './http';
-import { AppError, AppErrorCode } from '@/helpers/errors';
 import { User, decodeToken, refreshTokens } from '@/services/api/auth';
 import { useLocalStorage, useSessionStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { includes } from 'lodash';
 import { defineStore } from 'pinia';
 
 const LOCAL_STORAGE_REFRESH_TOKEN_NAME = 'tickets-manager-web-rt';
@@ -26,12 +24,6 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async setAccessToken(accessToken: string) {
       this.accessToken = accessToken || null;
-
-      if (!this.user || !includes(this.user.roles, 'admin')) {
-        const error = new Error('Missing admin role') as AppError;
-        error.code = AppErrorCode.FORBIDDEN;
-        throw error;
-      }
     },
     async getOrRefreshAccessToken() {
       if (this.user) {

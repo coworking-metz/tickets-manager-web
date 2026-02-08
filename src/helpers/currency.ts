@@ -33,6 +33,17 @@ export const fractionAmount = (
   );
 };
 
+export const fractionNumber = (
+  value: number,
+  locale: string = DEFAULT_LOCALE,
+  options?: Intl.NumberFormatOptions,
+): string => {
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    ...options,
+  }).format(value);
+};
+
 export const fractionPercentage = (
   value: number,
   locale: string = DEFAULT_LOCALE,

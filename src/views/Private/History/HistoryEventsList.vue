@@ -10,7 +10,8 @@
     <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
       {{ $t('audit.list.description') }}
     </p>
-    <div class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
+
+    <section class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <div class="grow sm:max-w-64">
         <AppPeriodField
           v-model="state.period"
@@ -117,9 +118,9 @@
           </template>
         </AppTextField>
       </div>
-    </div>
+    </section>
 
-    <div class="flex flex-col-reverse items-stretch gap-3 pt-6 md:flex-row">
+    <section class="mt-6 flex flex-col items-stretch">
       <ul class="grow overflow-hidden" role="list">
         <template v-if="isPendingHistory">
           <li v-for="index in 10" :key="`loading-event-${index}`">
@@ -145,7 +146,18 @@
             :with-timeline="eventIndex !== slicedList.length - 1" />
         </li>
       </ul>
-    </div>
+
+      <div
+        v-if="slicedList.length"
+        ref="endOfList"
+        class="p-6 text-center text-gray-500 dark:text-gray-400">
+        {{
+          state.slice < filteredList.length
+            ? $t('audit.list.onEndScrollReached.loading')
+            : $t('audit.list.onEndScrollReached.full')
+        }}
+      </div>
+    </section>
   </article>
 </template>
 
@@ -164,10 +176,10 @@ import { auditEventsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useDebounceFn, useInfiniteScroll } from '@vueuse/core';
+import { useDebounceFn, useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { compact, isNil } from 'lodash';
-import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -269,19 +281,16 @@ const filteredList = computed(() => {
 
 const slicedList = computed(() => filteredList.value.slice(0, state.slice));
 
-const documentElement = ref<Document>();
-useInfiniteScroll(
-  documentElement,
-  () => {
-    // load more
+const endOfList = ref<HTMLLIElement>();
+const endOfListVisible = useElementVisibility(endOfList);
+
+watch(endOfListVisible, (isVisible) => {
+  if (isVisible) {
     if (filteredList.value.length && state.slice < filteredList.value.length) {
       state.slice += SLICE_STEP;
     }
-  },
-  { distance: 100 },
-);
-
-onMounted(() => (documentElement.value = document));
+  }
+});
 
 watch(
   () => props.search,

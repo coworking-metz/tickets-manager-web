@@ -31,7 +31,11 @@
       <AppTextField
         id="subscription-ended"
         v-model="state.ended"
-        :hint="$t('subscriptions.detail.ended.hint')"
+        :hint="
+          state.ended === computeDefaultEndDate(state.started)
+            ? $t('subscriptions.detail.ended.hint')
+            : ''
+        "
         :label="$t('subscriptions.detail.ended.label')"
         :prepend-icon="mdiCalendarEndOutline"
         type="date" />

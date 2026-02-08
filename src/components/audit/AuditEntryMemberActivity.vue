@@ -10,15 +10,15 @@
         scope="global"
         tag="p">
         <template #author>
-          <RouterLink
+          <AppLink
             v-if="event.author?._id && route.params.memberId !== event.author._id"
-            class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
+            class="font-medium"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { memberId: event.author._id },
             }">
             {{ authorName }}
-          </RouterLink>
+          </AppLink>
           <span
             v-else-if="event.author"
             class="font-medium text-gray-900 dark:text-gray-100"
@@ -40,15 +40,15 @@
         </template>
 
         <template #member v-if="event.context?.member">
-          <RouterLink
+          <AppLink
             v-if="route.params.memberId !== event.context.member._id"
-            class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
+            class="font-medium"
             :to="{
               name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
               params: { memberId: event.context.member._id },
             }">
             {{ memberName || $t('audit.author.unknown') }}
-          </RouterLink>
+          </AppLink>
           <span v-else class="font-medium text-gray-900 dark:text-gray-100">
             {{ memberName || $t('audit.author.unknown') }}
           </span>
@@ -87,6 +87,7 @@
 
 <script setup lang="ts">
 import AuditEntryInline from './AuditEntryInline.vue';
+import AppLink from '@/components/AppLink.vue';
 import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent } from '@/services/api/audit';

@@ -1,6 +1,6 @@
 {
   "background": {
-    "label": "Photo du Coworking"
+    "label": "Photo du Coworking Metz"
   },
   "description": "Gérer le fonctionnement de l'association Coworking Metz à travers une interface agréable et intuitive.",
   "head": {
@@ -9,6 +9,9 @@
   "headline": {
     "readMore": "En savoir plus",
     "text": "Le Poulailler est un espace de bureau partagé"
+  },
+  "logo": {
+    "label": "Logo du Coworking Metz"
   },
   "onLoggedOut": {
     "success": "Vous avez été déconnecté avec succès."

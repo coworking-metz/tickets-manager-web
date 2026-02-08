@@ -13,7 +13,7 @@
         <slot name="description">
           <p
             v-if="description"
-            class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+            class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-neutral-400">
             {{ description }}
           </p>
         </slot>

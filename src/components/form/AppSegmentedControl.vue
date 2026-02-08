@@ -4,7 +4,7 @@
       {{ label }}
     </RadioGroupLabel>
     <ul
-      class="flex w-full flex-row gap-1 overflow-x-auto rounded-lg bg-slate-100 p-0.5 transition-colors dark:bg-slate-700">
+      class="flex w-full flex-row gap-1 overflow-x-auto rounded-lg bg-slate-100 p-0.5 transition-colors dark:bg-zinc-700">
       <RadioGroupOption
         v-for="option in options"
         :key="`activity-option-${option}`"
@@ -25,8 +25,8 @@
           <RadioGroupLabel
             as="span"
             :class="[
-              'text-gray-600 group-hover:text-gray-900 dark:text-gray-100',
-              checked && 'text-gray-900 dark:text-gray-100',
+              'text-gray-600 group-hover:text-gray-900 dark:text-neutral-100',
+              checked && 'text-gray-900 dark:text-neutral-100',
             ]">
             {{ format(option) }}
           </RadioGroupLabel>

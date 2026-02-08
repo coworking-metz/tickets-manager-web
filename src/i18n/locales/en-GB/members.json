@@ -2,7 +2,7 @@
   "detail": {
     "attendance": {
       "add": "Add attendance",
-      "description": "Attendance is automatically recorded when the member connects to the coworking's wifi network.",
+      "description": "Attendance is automatically recorded when the member connects to the coworking's WiFi network.",
       "graph": {
         "tooltip": "{date}\n{amount}{suffix}",
         "value": {

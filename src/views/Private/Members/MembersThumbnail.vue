@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative size-12 overflow-hidden rounded-full bg-slate-200 text-base dark:bg-slate-800"
+    class="relative size-12 overflow-hidden rounded-full bg-slate-200 text-base dark:bg-stone-700"
     role="figure">
     <img
       v-if="thumbnail && !state.hasFailedLoadingThumbnail"

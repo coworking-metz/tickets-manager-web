@@ -34,14 +34,29 @@
       <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
         {{ $t(`${i18nKeyPrefix}.summary.label`) }}
       </h3>
+
+      <AppLink
+        class="text-sm font-medium"
+        color="indigo"
+        :to="{
+          name: $route.name,
+          query: $route.query,
+          params: {
+            date: WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
+          },
+        }">
+        {{ $t(`${i18nKeyPrefix}.summary.detail.navigateTo`) }}
+      </AppLink>
+
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
+        class="relative mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
+        <LoadingProgressBar v-if="isFetchingUsages" class="absolute inset-x-0 h-[2px]" />
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t(`${i18nKeyPrefix}.summary.average.label`) }}
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
@@ -50,7 +65,7 @@
               :to="averageIncome" />
           </dd>
 
-          <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
+          <LoadingSkeleton v-if="isPendingUsages" class="mt-1 h-5 w-48 rounded-full" />
           <div
             v-else-if="usages?.length"
             class="flex flex-row items-baseline justify-between text-sm">
@@ -83,7 +98,7 @@
             {{ $t(`${i18nKeyPrefix}.summary.total.label`) }}
           </dt>
           <dd class="mt-1 flex flex-col">
-            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
@@ -91,7 +106,7 @@
               :format="fractionAmount"
               :to="totalAmount" />
 
-            <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
+            <LoadingSkeleton v-if="isPendingUsages" class="mt-1 h-5 w-48 rounded-full" />
             <div
               v-else-if="usages?.length"
               class="flex flex-row items-baseline justify-between text-sm">
@@ -127,7 +142,7 @@
             {{ $t(`${i18nKeyPrefix}.summary.debt.label`) }}
           </dt>
           <dd class="mt-1 flex flex-col">
-            <LoadingSkeleton v-if="isFetchingUsages" class="mb-1 h-8 w-32 rounded-full" />
+            <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
             <AnimatedCounter
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
@@ -135,7 +150,7 @@
               :format="fractionAmount"
               :to="totalDebtAmount" />
 
-            <LoadingSkeleton v-if="isFetchingUsages" class="mt-1 h-5 w-48 rounded-full" />
+            <LoadingSkeleton v-if="isPendingUsages" class="mt-1 h-5 w-48 rounded-full" />
             <div
               v-else-if="usages?.length"
               class="flex flex-row items-baseline justify-between text-sm">
@@ -162,7 +177,11 @@
       :date="date"
       :frequency="frequency"
       :from="from"
-      :title="getTooltipTitle(date)"
+      :title="
+        date === WHOLE_PERIOD_SUMMARY_ROUTE_PARAM
+          ? $t(`${i18nKeyPrefix}.summary.label`)
+          : getTooltipTitle(date)
+      "
       :to="to" />
   </div>
 </template>
@@ -171,8 +190,10 @@
 import StatsUsageMembersDialog from './StatsUsageMembersDialog.vue';
 import StatsUsagePeriodGraph from './StatsUsagePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
+import AppLink from '@/components/AppLink.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
+import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
@@ -180,7 +201,7 @@ import { DATE_FORMAT } from '@/helpers/dates';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
-import { getUsagePerFrequency } from '@/services/api/stats/usage';
+import { getUsagePerFrequency, WHOLE_PERIOD_SUMMARY_ROUTE_PARAM } from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
@@ -306,11 +327,27 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
         data: { amount, tickets, subscriptions, charges },
         date, // @ts-ignore
       } = (usages.value ?? [])[params[0].dataIndex];
+      const totalTicketsCount = tickets.count + (tickets.debt?.count ?? 0);
+      const totalTicketsAmount = tickets.amount + (tickets.debt?.amount ?? 0);
       return `
         <dl class="flex flex-col gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
           <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${getTooltipTitle(date)}
           </dt>
+
+          <div class="flex flex-row justify-between items-start">
+            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
+              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
+                statsColors.value.ticket
+              };"></span>
+              ${i18n.t(`stats.usage.tickets.label`, {
+                count: totalTicketsCount,
+              })}
+            </dt>
+            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
+              totalTicketsAmount,
+            )}</dd>
+          </div>
 
           ${
             tickets.debt.count
@@ -319,29 +356,17 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                   statsColors.value.debt
                 };"></span>
-                ${i18n.t(`stats.usage.tickets.debt`, {
+                ${i18n.t(`stats.usage.tickets.debt.label`, {
                   count: tickets.debt.count,
                 })}
               </dt>
-              <dd class="ml-6 text-base font-medium text-gray-400">${formatAmount(
+              <dd class="ml-6 font-mono text-base font-medium text-gray-400">-${formatAmount(
                 tickets.debt.amount,
               )}</dd>
             </div>`
               : ''
           }
-          <div class="flex flex-row justify-between items-start">
-            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.ticket
-              };"></span>
-              ${i18n.t(`stats.usage.tickets.label`, {
-                count: tickets.count,
-              })}
-            </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
-              tickets.amount,
-            )}</dd>
-          </div>
+
           <div class="flex flex-row justify-between items-start">
             <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
               <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
@@ -357,7 +382,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                   : ''
               }
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
+            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
               subscriptions.amount,
             )}</dd>
           </div>
@@ -373,10 +398,10 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               };"></span>
               ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
             </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
+            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
           </div>
 
-          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
+          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full font-mono text-base font-medium md:mt-2 lg:mt-0 ${
             amount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }">
             ${amount > charges ? '+' : ''}${formatAmount(amount - charges)}
