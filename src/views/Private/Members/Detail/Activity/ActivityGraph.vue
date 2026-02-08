@@ -56,6 +56,10 @@ const props = defineProps({
     type: String,
     default: () => dayjs().format('YYYY-MM-DD'),
   },
+  selectedDate: {
+    type: String as PropType<string | null>,
+    default: null,
+  },
 });
 
 const { width } = useWindowSize();
@@ -66,6 +70,10 @@ const now = dayjs();
 
 const statsColors = useStatsColors();
 const getAttendanceColor = (attendance: AttendanceWithCoverage) => {
+  if (props.selectedDate && dayjs(attendance.date).isSame(props.selectedDate, 'day')) {
+    return '#92400e';
+  }
+
   const debt = attendance.coverage.debt?.value;
   if (debt) {
     return debt === 1 ? '#b91c1c' : '#fca5a5'; // even tho it could be a full day, the most important is its non compliant
@@ -96,9 +104,11 @@ const options = computed<
   >
 >(() => ({
   tooltip: {
-    position: 'top',
+    position: ([_x, y]) => {
+      return y <= 80 ? 'bottom' : 'top';
+    },
     show: !state.shouldHideTooltip,
-    backgroundColor: theme.charlestonGreen,
+    backgroundColor: `${theme.charlestonGreen}EE`,
     textStyle: {
       color: '#ffffff',
     },

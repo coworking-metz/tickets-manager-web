@@ -4,21 +4,23 @@ import { HTTP } from '../http';
 
 export const MAX_ATTENDANCE = 40;
 
-export type AttendingMember = MemberListItem & {
-  attendance: {
-    tickets: {
-      count: number; // tickets count consumed
-      amount: number; // amount in euro
-      debt: {
-        count: number; // tickets count consumed when not paid yet
-        amount: number; // debt in euro
-      };
-    };
-    subscriptions: {
-      count: number; // subscriptions count
-      amount: number; // amount in euro
+export type ApiMemberAttendance = {
+  tickets: {
+    count: number; // tickets count consumed
+    amount: number; // amount in euro
+    debt: {
+      count: number; // tickets count consumed when not paid yet
+      amount: number; // debt in euro
     };
   };
+  subscriptions: {
+    count: number; // subscriptions count
+    amount: number; // amount in euro
+  };
+};
+
+export type AttendingMember = MemberListItem & {
+  attendance: ApiMemberAttendance;
 };
 
 export type AttendancePeriod<PeriodType> = {
@@ -54,3 +56,6 @@ export const computeAttendance = (options: {
     end: options.end,
   }).then(({ data }) => data);
 };
+
+export const computeActivityFromAttendance = (attendance: ApiMemberAttendance): number =>
+  attendance.tickets.count + attendance.tickets.debt.count + attendance.subscriptions.count;

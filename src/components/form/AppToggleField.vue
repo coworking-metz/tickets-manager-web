@@ -76,7 +76,7 @@
         v-slot="{ active, checked, disabled: optionDisabled }">
         <div
           :class="[
-            'flex h-full cursor-pointer flex-row items-center justify-center rounded-r-lg border border-gray-300 text-center font-medium transition-colors focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 dark:border-neutral-600 ',
+            'flex h-full cursor-pointer flex-row items-center justify-center rounded-r-lg border border-gray-300 text-center font-medium transition-colors focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 dark:border-neutral-600',
             active && 'z-10 ring-2 ring-offset-0',
             active && (isInvalid ? 'ring-red-500 dark:focus:ring-red-600' : 'ring-indigo-500'),
             checked

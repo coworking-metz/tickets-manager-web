@@ -15,8 +15,10 @@
     <title>Manager — Coworking Metz</title>
     <style>
       html {
+          /* !important to prevent <Dialog /> component from hiding overflow and to keep scroll position intact */
           overflow-x: auto !important;
           overflow-y: scroll !important;
+          padding-right: 0 !important;
           min-width: 320px;
           background-color: #f8fafc; /* slate-50 */
           transition: background-color 500ms;

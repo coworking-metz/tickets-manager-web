@@ -10,6 +10,9 @@
     "readMore": "Learn more",
     "text": "Coworking Metz is a shared office space"
   },
+  "logo": {
+    "label": "Coworking Metz logo"
+  },
   "onLoggedOut": {
     "success": "You have been successfully logged out."
   },

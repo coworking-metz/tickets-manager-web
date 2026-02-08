@@ -17,9 +17,10 @@
 
         <div class="my-4 flex w-full flex-row items-center justify-between">
           <div
-            class="flex h-10 items-stretch overflow-hidden rounded-md border border-gray-300 bg-white shadow-sm md:items-stretch dark:border-neutral-700 dark:bg-neutral-800">
-            <RouterLink
-              class="flex items-center justify-center py-2 pl-3 pr-4 text-gray-400 transition-colors hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:bg-neutral-800 dark:text-gray-400 dark:hover:bg-neutral-900"
+            class="flex min-h-10 max-w-48 shrink grow items-stretch rounded-md border border-gray-300 bg-white shadow-sm md:items-stretch dark:border-neutral-600 dark:bg-neutral-800">
+            <AppButtonText
+              class="!p-2"
+              color="gray"
               :to="{
                 ...currentRoute,
                 query: {
@@ -30,18 +31,19 @@
               <span class="sr-only">{{ $t('attendance.navigation.previousMonth') }}</span>
               <SvgIcon
                 aria-hidden="true"
-                class="size-6 text-gray-400"
+                class="size-5 text-gray-400"
                 :path="mdiChevronLeft"
                 type="mdi" />
-            </RouterLink>
+            </AppButtonText>
             <time
               v-if="state.selectedMonth"
-              class="flex flex-row items-center px-3.5 text-sm font-medium text-gray-900 focus:relative dark:bg-neutral-800 dark:text-gray-100"
+              class="grow self-center px-3.5 text-center text-sm font-medium text-gray-900 focus:relative dark:bg-neutral-800 dark:text-gray-100"
               :datetime="state.selectedMonth">
               {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
             </time>
-            <RouterLink
-              class="flex items-center justify-center py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-neutral-900"
+            <AppButtonText
+              class="!p-2"
+              color="gray"
               :to="{
                 ...currentRoute,
                 query: {
@@ -52,10 +54,10 @@
               <span class="sr-only">{{ $t('attendance.navigation.nextMonth') }}</span>
               <SvgIcon
                 aria-hidden="true"
-                class="size-6 text-gray-400"
+                class="size-5 text-gray-400"
                 :path="mdiChevronRight"
                 type="mdi" />
-            </RouterLink>
+            </AppButtonText>
           </div>
 
           <AppButtonPlain
@@ -135,6 +137,7 @@ import AttendanceCalendarTile from './AttendanceCalendarTile.vue';
 import AttendanceDetail from './AttendanceDetail.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
 import { isSilentError } from '@/helpers/errors';
 import { AttendancePeriod, getAttendancePerPeriod } from '@/services/api/attendance';
 import { statsQueryKeys, useAppQuery } from '@/services/query';

@@ -1,6 +1,7 @@
 {
   "activity": {
-    "count": "absent | present {count} day | present {count} days"
+    "count": "absent | {count} day | {count} days",
+    "label": "absent | present {count} day | present {count} days"
   },
   "daily": {
     "graph": {
@@ -20,6 +21,9 @@
       "debt": {
         "label": "Recoverable",
         "tickets": "{''} | meaning {count} payable ticket | meaning {count} payable tickets"
+      },
+      "detail": {
+        "navigateTo": "View details for the entire period"
       },
       "label": "At a glance",
       "total": {
@@ -47,6 +51,7 @@
       "description": "Apparently, no one showed up that day.",
       "title": "No one"
     },
+    "navigateTo": "Navigate to {name} profile",
     "search": {
       "empty": {
         "title": "No results"
@@ -56,8 +61,8 @@
     "sort": {
       "label": "Sort {suffix}",
       "value": {
+        "activity": "By attendance",
         "debt": "By debt",
-        "name": "By name",
         "usage": "By usage"
       }
     }
@@ -114,7 +119,10 @@
     "label": "No subscription | {count} day covered by subscription | {count} days covered by subscription"
   },
   "tickets": {
-    "debt": "No payable ticket | {count} payable ticket | {count} payable tickets",
+    "debt": {
+      "count": "No debt | {count} payable | {count} payable",
+      "label": "with no payable ticket | with {count} payable ticket | with {count} payable tickets"
+    },
     "label": "No ticket | {count} ticket | {count} tickets"
   },
   "title": "Consumption",

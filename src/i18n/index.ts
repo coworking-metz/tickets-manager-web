@@ -11,6 +11,7 @@ import timezone from 'dayjs/plugin/timezone.js';
 import updateLocale from 'dayjs/plugin/updateLocale.js';
 import utc from 'dayjs/plugin/utc.js';
 import weekday from 'dayjs/plugin/weekday.js';
+import { isString } from 'lodash';
 import { createI18n, IntlDateTimeFormats, IntlNumberFormats, PluralizationRule } from 'vue-i18n';
 import 'dayjs/locale/fr.js';
 import 'dayjs/locale/en-gb.js';
@@ -166,6 +167,22 @@ export const SUPPORTED_LOCALES = ['fr-FR', 'en-GB'] as const;
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
 const initialLocale = localStorage.getItem(LOCALE_STORAGE_KEY) || DEFAULT_LOCALE;
 
+// Replaces white spaces before or after some punctuations by non breaking spaces
+// Eg. replaces " ?" by "&nbsp;?" or "« " by "«&nbsp;" to avoid unwanted line breaks
+// https://github.com/kazupon/vue-i18n/issues/318#issuecomment-749546369
+const addNbspAroundPunctuation = (str: string | unknown[]) =>
+  isString(str)
+    ? str.replace(/\s+([:;»!?/])|([«])\s+/g, (match, left, right) => {
+        if (left) {
+          return `\xa0${left}`;
+        }
+        if (right) {
+          return `${right}\xa0`;
+        }
+        return match;
+      })
+    : str;
+
 export const i18nInstance = createI18n({
   globalInjection: true,
   locale: initialLocale,
@@ -178,6 +195,7 @@ export const i18nInstance = createI18n({
     ['en-GB']: applyingDecimalsAsPluralForEnglishSpeakers,
     ['fr-FR']: applyingDecimalsAsPluralForFrenchSpeakers,
   },
+  postTranslation: addNbspAroundPunctuation as never,
 });
 
 // @see https://vuelidate-next.netlify.app/advanced_usage.html#i18n-support

@@ -47,6 +47,7 @@ export const routes: RouteRecordRaw[] = [
             component: () => import('@/views/Private/Members/MembersDetail.vue'),
             props: (route) => ({
               memberId: route.params.memberId,
+              selectedActivityDate: route.params.date,
             }),
             children: [
               {

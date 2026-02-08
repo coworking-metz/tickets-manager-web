@@ -122,6 +122,10 @@
     "head": {
       "title": "@:audit.list.title"
     },
+    "onEndScrollReached": {
+      "full": "That's all",
+      "loading": "Loading…"
+    },
     "onFetch": {
       "fail": "Unable to retrieve the global history"
     },

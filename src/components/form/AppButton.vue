@@ -9,8 +9,7 @@
       loading && 'pointer-events-none',
     ]"
     :href="href"
-    :target="target"
-    v-bind="$attrs">
+    :target="target">
     <ButtonContent :icon="icon" :loading="loading">
       <slot />
     </ButtonContent>
@@ -24,8 +23,7 @@
       icon ? 'items-start text-left' : 'items-center text-center',
       loading && 'pointer-events-none',
     ]"
-    :to="to"
-    v-bind="$attrs">
+    :to="to">
     <ButtonContent :icon="icon" :loading="loading">
       <slot />
     </ButtonContent>
@@ -40,8 +38,7 @@
       loading && 'pointer-events-none',
     ]"
     :disabled="loading || disabled"
-    :type="type"
-    v-bind="$attrs">
+    :type="type">
     <ButtonContent :icon="icon" :loading="loading">
       <slot />
     </ButtonContent>

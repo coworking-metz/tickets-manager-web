@@ -4,13 +4,13 @@
       <slot name="icon">
         <div
           :class="[
-            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700/50',
+            'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-stone-700/50',
             loading && 'animate-pulse',
           ]">
           <SvgIcon
             v-if="!loading"
             aria-hidden="true"
-            class="size-5 text-gray-500 dark:text-gray-400"
+            class="size-5 text-gray-500 dark:text-zinc-400"
             :path="icon"
             type="mdi" />
         </div>
@@ -27,18 +27,18 @@
 
     <div v-if="loading" class="flex w-full flex-col items-start pb-6">
       <div
-        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50"
+        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-zinc-700/50"
         :style="{
           maxWidth: `${Math.floor(Math.random() * 256) + 128}px`,
         }" />
-      <div class="mt-2 h-3 w-20 animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50" />
+      <div class="mt-2 h-3 w-20 animate-pulse rounded-3xl bg-slate-200 dark:bg-zinc-700/50" />
     </div>
 
     <Disclosure
       v-else-if="event"
       as="div"
       v-slot="{ open }"
-      class="flex grow flex-col gap-1 overflow-hidden pb-6 text-sm text-slate-500 dark:text-slate-400">
+      class="flex grow flex-col gap-1 overflow-hidden pb-6 text-sm text-slate-500 dark:text-neutral-400">
       <DisclosureButton
         :class="[
           'flex flex-row justify-between rounded-md px-2 py-1.5',
@@ -57,15 +57,15 @@
               scope="global"
               tag="p">
               <template #author>
-                <RouterLink
+                <AppLink
                   v-if="event.author?._id && route.params.memberId !== event.author._id"
-                  class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
+                  class="font-medium"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                     params: { memberId: event.author._id },
                   }">
                   {{ event.author.name }}
-                </RouterLink>
+                </AppLink>
                 <span
                   v-else-if="event.author"
                   class="font-medium text-gray-900 dark:text-gray-100"
@@ -91,9 +91,9 @@
               </template>
 
               <template #member v-if="event.context?.member">
-                <RouterLink
+                <AppLink
                   v-if="route.params.memberId !== event.context.member._id"
-                  class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
+                  class="font-medium"
                   :to="{
                     name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
                     params: { memberId: event.context.member._id },
@@ -103,7 +103,7 @@
                       .filter(Boolean)
                       .join(' ')
                   }}
-                </RouterLink>
+                </AppLink>
                 <span v-else class="font-medium text-gray-900 dark:text-gray-100">
                   {{
                     [event.context.member.firstName, event.context.member.lastName]
@@ -115,7 +115,7 @@
             </i18n-t>
           </slot>
           <time
-            class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
+            class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-neutral-400"
             :datetime="event.occurred"
             :title="dayjs(event.occurred).format('llll')">
             {{
@@ -161,6 +161,7 @@
 </template>
 
 <script setup lang="ts">
+import AppLink from '@/components/AppLink.vue';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';

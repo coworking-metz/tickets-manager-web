@@ -2,6 +2,7 @@ import '@/styles/main.css';
 import 'floating-vue/dist/style.css';
 import 'typeface-inter';
 import App from './App.vue';
+import { AppError, AppErrorCode } from './helpers/errors';
 import { i18nInstance } from './i18n';
 import router from './router';
 import { ROUTE_NAMES } from './router/names';
@@ -11,11 +12,13 @@ import { defaultVueQueryPluginOptions } from './services/query';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
+import { useNotificationsStore } from './store/notifications';
 import { useSettingsStore } from './store/settings';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue/client';
 import FloatingVue from 'floating-vue';
+import { includes } from 'lodash';
 import { createApp } from 'vue';
 import VueNumberAnimation from 'vue-number-animation';
 
@@ -32,10 +35,11 @@ app.component('SvgIcon', SvgIcon);
 
 createHttpInterceptors(HTTP);
 
-router.beforeEach(async (to, from, next) => {
-  const httpStore = useHttpStore();
-  const authStore = useAuthStore();
+const httpStore = useHttpStore();
+const authStore = useAuthStore();
+const notificationStore = useNotificationsStore();
 
+router.beforeEach(async (to, from, next) => {
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
   // do not on hash change
@@ -61,6 +65,12 @@ router.beforeEach(async (to, from, next) => {
       if (!authStore.accessToken) {
         await authStore.fetchTokens();
       }
+
+      if (!authStore.user || !includes(authStore.user.roles, 'admin')) {
+        const error = new Error('Missing admin role') as AppError;
+        error.code = AppErrorCode.FORBIDDEN;
+        throw error;
+      }
     }
 
     if (redirect && to.name !== ROUTE_NAMES.LOGIN) {
@@ -69,13 +79,15 @@ router.beforeEach(async (to, from, next) => {
     }
 
     next();
-  })().catch(() => {
+  })().catch(async (error) => {
     // When user has invalid session,
     // set redirectPath to allow loging page to redirect user on desired page afterwards
     next({
       name: ROUTE_NAMES.LOGIN,
       query: { ...otherQueryParams, redirect: to.path },
     });
+
+    setTimeout(() => notificationStore.addErrorNotification(error), 300);
   });
 });
 

@@ -121,6 +121,11 @@
     "head": {
       "title": "@:audit.list.title"
     },
+
+    "onEndScrollReached": {
+      "full": "C'est tout",
+      "loading": "Chargement…"
+    },
     "onFetch": {
       "fail": "Impossible de récupérer l'historique global"
     },

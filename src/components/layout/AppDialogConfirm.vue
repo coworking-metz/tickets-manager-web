@@ -3,9 +3,9 @@
     <template #dialog>
       <DialogPanel
         as="form"
-        class="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg dark:bg-neutral-800"
+        class="relative overflow-hidden rounded-t-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:rounded-2xl dark:bg-neutral-800"
         @submit.prevent="emit('confirm')">
-        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-neutral-800">
+        <div class="bg-white p-4 sm:pr-6 dark:bg-neutral-800">
           <div class="sm:flex sm:items-start">
             <div
               v-if="icon"
@@ -91,13 +91,13 @@ const iconColors = computed(() => {
     case 'critical':
       return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
     case 'warning':
-      return 'text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/20';
+      return 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/20';
     case 'info':
-      return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20';
+      return 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20';
     case 'success':
-      return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
+      return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/20';
     default:
-      return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/20';
+      return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-900/20';
   }
 });
 
@@ -108,7 +108,7 @@ const confirmColor = computed(() => {
     case 'warning':
       return 'amber';
     case 'info':
-      return 'indigo';
+      return 'blue';
     case 'success':
       return 'emerald';
     default:

@@ -4,7 +4,7 @@
     v-bind="$attrs"
     dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-xl h-full grow">
     <LoadingProgressBar v-if="isFetchingUsages" class="absolute top-0 h-px w-full" />
-    <header v-if="title" class="mx-12 flex flex-row items-start justify-center">
+    <header v-if="title" class="mx-3 flex flex-row items-start justify-center sm:mx-12">
       <AppButtonText
         class="mx-auto shrink overflow-hidden"
         color="gray"
@@ -23,39 +23,41 @@
 
     <div class="flex shrink grow basis-0 flex-col">
       <dl
-        v-if="selectedUsageDate && state.isSummaryVisible"
-        class="flex w-full flex-col gap-1 p-4 dark:text-gray-300">
-        <div
-          v-if="selectedUsageDate.data.tickets.debt.count"
-          class="flex flex-row items-start justify-between">
-          <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-            <span
-              class="mt-1.5 block size-3 shrink-0 rounded-full"
-              :style="`background-color: ${statsColors.debt};`"></span>
-            {{
-              $t(`stats.usage.tickets.debt`, {
-                count: selectedUsageDate?.data.tickets.debt.count,
-              })
-            }}
-          </dt>
-          <dd class="text-base font-medium text-gray-400">
-            {{ formatAmount(selectedUsageDate.data.tickets.debt.amount) }}
-          </dd>
-        </div>
-
+        v-if="selectedUsage && state.isSummaryVisible"
+        class="flex w-full flex-col gap-1 p-4 sm:pr-6 dark:text-gray-300">
         <div class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
               class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.ticket};`" />
-            {{
-              $t(`stats.usage.tickets.label`, {
-                count: selectedUsageDate.data.tickets.count,
-              })
-            }}
+            <i18n-t keypath="stats.usage.tickets.label" :plural="totalTicketsCount" scope="global">
+              <template #count>
+                {{ fractionNumber(totalTicketsCount) }}
+              </template>
+            </i18n-t>
           </dt>
-          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ formatAmount(selectedUsageDate.data.tickets.amount) }}
+          <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(totalTicketsAmount) }}
+          </dd>
+        </div>
+        <div
+          v-if="selectedUsage.data.tickets.debt?.count"
+          class="flex flex-row items-start justify-between">
+          <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+            <span
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
+              :style="`background-color: ${statsColors.debt};`" />
+            <i18n-t
+              keypath="stats.usage.tickets.debt.label"
+              :plural="selectedUsage.data.tickets.debt.count"
+              scope="global">
+              <template #count>
+                {{ fractionNumber(selectedUsage.data.tickets.debt.count) }}
+              </template>
+            </i18n-t>
+          </dt>
+          <dd class="font-mono text-base font-medium text-gray-400">
+            {{ `-${formatAmount(selectedUsage.data.tickets.debt.amount)}` }}
           </dd>
         </div>
         <div class="flex flex-row items-start justify-between">
@@ -63,27 +65,33 @@
             <span
               class="mt-1.5 block size-3 shrink-0 rounded-full"
               :style="`background-color: ${statsColors.subscription};`" />
-            {{
-              $t(`stats.usage.subscriptions.label`, {
-                count: selectedUsageDate.data.subscriptions.count,
-              })
-            }}
-            <template v-if="selectedUsageDate.data.subscriptions.attending.count">
+            <i18n-t
+              keypath="stats.usage.subscriptions.label"
+              :plural="selectedUsage.data.subscriptions.count"
+              scope="global">
+              <template #count>
+                {{ fractionNumber(selectedUsage.data.subscriptions.count) }}
+              </template>
+            </i18n-t>
+            <template v-if="selectedUsage.data.subscriptions.attending.count">
               <br />
-              {{
-                $t(`stats.usage.subscriptions.attending`, {
-                  count: selectedUsageDate.data.subscriptions.attending.count,
-                })
-              }}
+              <i18n-t
+                keypath="stats.usage.subscriptions.attending"
+                :plural="selectedUsage.data.subscriptions.attending.count"
+                scope="global">
+                <template #count>
+                  {{ fractionNumber(selectedUsage.data.subscriptions.attending.count) }}
+                </template>
+              </i18n-t>
             </template>
           </dt>
-          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ formatAmount(selectedUsageDate.data.subscriptions.amount) }}
+          <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(selectedUsage.data.subscriptions.amount) }}
           </dd>
         </div>
 
         <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          {{ formatAmount(selectedUsageDate.data.amount) }}
+          {{ formatAmount(selectedUsage.data.amount) }}
         </dd>
 
         <div class="flex flex-row items-start justify-between">
@@ -93,21 +101,20 @@
               :style="`background-color: ${statsColors.charges}`" />
             {{ $t(`${i18nKeyPrefix}.graph.threshold`) }}
           </dt>
-          <dd class="text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ formatAmount(-selectedUsageDate.data.charges) }}
+          <dd class="font-mono text-base font-medium text-gray-400">
+            {{ formatAmount(-selectedUsage.data.charges) }}
           </dd>
         </div>
 
         <div
           :class="[
-            '-mr-2.5 mt-2 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 text-base font-medium',
-            selectedUsageDate.data.amount > selectedUsageDate.data.charges
+            '-mr-2.5 mt-2 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
+            selectedUsage.data.amount > selectedUsage.data.charges
               ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800',
           ]">
           {{
-            `${selectedUsageDate.data.amount > selectedUsageDate.data.charges ? '+' : ''}
-          ${formatAmount(selectedUsageDate.data.amount - selectedUsageDate.data.charges)}`
+            `${selectedUsage.data.amount > selectedUsage.data.charges ? '+' : ''}${formatAmount(selectedUsage.data.amount - selectedUsage.data.charges)}`
           }}
         </div>
       </dl>
@@ -131,7 +138,7 @@
           </template>
         </ErrorState>
         <ErrorState
-          v-else-if="!selectedUsageDate"
+          v-else-if="!selectedUsage"
           class="m-auto"
           :description="$t('stats.usage.members.onMissingDate.description')"
           :title="$t('stats.usage.members.onMissingDate.title')">
@@ -232,7 +239,22 @@
               :key="member._id"
               as="li"
               class="w-full"
-              :member="member" />
+              :member="member">
+              <template v-if="state.sort === 'activity'" #chips:prepend>
+                <span
+                  class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
+                  :style="`background-color: ${statsColors.activity}88; --tw-ring-color: ${statsColors.activity};`">
+                  <i18n-t
+                    keypath="stats.usage.activity.count"
+                    :plural="computeActivityFromUsage(member.usage)"
+                    scope="global">
+                    <template #count>
+                      {{ fractionNumber(computeActivityFromUsage(member.usage)) }}
+                    </template>
+                  </i18n-t>
+                </span>
+              </template>
+            </UsageMemberCard>
           </ol>
         </template>
       </div>
@@ -260,10 +282,16 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
-import { formatAmount } from '@/helpers/currency';
+import { formatAmount, fractionNumber } from '@/helpers/currency';
 import { searchIn } from '@/helpers/text';
 import { Frequency } from '@/services/api/stats/frequency';
-import { getUsagePerFrequency, MemberListItemWithUsage } from '@/services/api/stats/usage';
+import {
+  computeActivityFromUsage,
+  getUsagePerFrequency,
+  MemberListItemWithUsage,
+  StatsUsage,
+  WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
+} from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
@@ -292,21 +320,16 @@ interface ListSorter {
 
 const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
-    key: 'name',
-    sort: (a, b) =>
-      [a.firstName, a.lastName]
-        .filter(Boolean)
-        .join(' ')
-        .toLocaleLowerCase()
-        .localeCompare([b.firstName, b.lastName].filter(Boolean).join(' ').toLocaleLowerCase()),
-  },
-  {
     key: 'usage',
     sort: (a, b) => b.usage.amount - a.usage.amount,
   },
   {
     key: 'debt',
     sort: (a, b) => (b.usage.tickets.debt.count ?? 0) - (a.usage.tickets.debt.count ?? 0),
+  },
+  {
+    key: 'activity',
+    sort: (a, b) => computeActivityFromUsage(b.usage) - computeActivityFromUsage(a.usage),
   },
 ]);
 
@@ -357,23 +380,20 @@ const i18nKeyPrefix = computed(() => {
 });
 
 const filteredList = computed(() => {
-  return (selectedUsageDate.value?.data.members || [])
+  return (selectedUsage.value?.data.members || [])
     .filter((member) =>
       searchIn(
         state.search,
         compact([member.firstName, member.lastName]).join(' '),
         member.email,
         member.usage.tickets.debt.count &&
-          i18n.t('stats.usage.tickets.debt', { count: member.usage.tickets.debt.count }),
+          i18n.t('stats.usage.tickets.debt.count', { count: member.usage.tickets.debt.count }),
         member.usage.tickets.count &&
           i18n.t('stats.usage.tickets.label', { count: member.usage.tickets.count }),
         member.usage.subscriptions.count &&
           i18n.t('stats.usage.subscriptions.count', { count: member.usage.subscriptions.count }),
-        i18n.t('stats.usage.activity.count', {
-          count:
-            member.usage.tickets.count +
-            member.usage.tickets.debt.count +
-            member.usage.subscriptions.attending.count,
+        i18n.t('stats.usage.activity.label', {
+          count: computeActivityFromUsage(member.usage),
         }),
       ),
     )
@@ -394,8 +414,98 @@ const {
   })),
 );
 
-const selectedUsageDate = computed(() => {
-  if (!props.date) return null;
+const addAdditionalDataToUsage = (usage: StatsUsage, additionalData: StatsUsage) => {
+  return {
+    amount: usage.amount + additionalData.amount,
+    tickets: {
+      count: usage.tickets.count + additionalData.tickets.count,
+      amount: usage.tickets.amount + additionalData.tickets.amount,
+      debt: {
+        count: (usage.tickets.debt?.count ?? 0) + (additionalData.tickets.debt?.count ?? 0),
+        amount: (usage.tickets.debt?.amount ?? 0) + (additionalData.tickets.debt?.amount ?? 0),
+      },
+    },
+    subscriptions: {
+      count: usage.subscriptions.count + additionalData.subscriptions.count,
+      amount: usage.subscriptions.amount + additionalData.subscriptions.amount,
+      attending: {
+        count:
+          (usage.subscriptions.attending?.count ?? 0) +
+          (additionalData.subscriptions.attending?.count ?? 0),
+        amount:
+          (usage.subscriptions.attending?.amount ?? 0) +
+          (additionalData.subscriptions.attending?.amount ?? 0),
+      },
+    },
+  };
+};
+
+const selectedUsage = computed(() => {
+  if (props.date === WHOLE_PERIOD_SUMMARY_ROUTE_PARAM) {
+    const totalMembersOverPeriod: MemberListItemWithUsage[] = [];
+    let totalUsageOverPeriod: StatsUsage & { charges: number } = {
+      amount: 0,
+      charges: 0,
+      tickets: {
+        count: 0,
+        amount: 0,
+        debt: {
+          count: 0,
+          amount: 0,
+        },
+      },
+      subscriptions: {
+        count: 0,
+        amount: 0,
+        attending: {
+          count: 0,
+          amount: 0,
+        },
+      },
+    };
+
+    usages.value?.forEach((usage) => {
+      totalUsageOverPeriod = {
+        ...addAdditionalDataToUsage(usage.data, totalUsageOverPeriod),
+        charges: usage.data.charges + totalUsageOverPeriod.charges,
+      };
+      usage.data.members.forEach((member) => {
+        const memberIndexInPeriod = totalMembersOverPeriod.findIndex((m) => m._id === member._id);
+        if (memberIndexInPeriod >= 0) {
+          const memberUsage = addAdditionalDataToUsage(
+            totalMembersOverPeriod[memberIndexInPeriod].usage,
+            member.usage,
+          );
+          totalMembersOverPeriod[memberIndexInPeriod] = {
+            ...totalMembersOverPeriod[memberIndexInPeriod],
+            usage: memberUsage,
+          };
+        } else {
+          totalMembersOverPeriod.push(member);
+        }
+      });
+    });
+
+    return {
+      date: WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
+      data: {
+        ...totalUsageOverPeriod,
+        members: totalMembersOverPeriod,
+      },
+    };
+  }
+
   return usages.value?.find((m) => m.date === props.date) || null;
 });
+
+const totalTicketsCount = computed(
+  () =>
+    (selectedUsage.value?.data.tickets.count ?? 0) +
+    (selectedUsage.value?.data.tickets.debt?.count ?? 0),
+);
+const totalTicketsAmount = computed(
+  () =>
+    (selectedUsage.value?.data.tickets.amount ?? 0) +
+    (selectedUsage.value?.data.tickets.debt?.amount ?? 0),
+);
 </script>
