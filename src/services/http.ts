@@ -1,8 +1,8 @@
-import { APP_NAME, APP_VERSION } from '@/helpers/environment';
+import { API_BASE_URL, APP_NAME, APP_VERSION } from '@/helpers/environment';
 import axios, { AxiosRequestConfig } from 'axios';
 
 export const httpBaseConfig = {
-  baseURL: import.meta.env.VUE_APP_API_URL,
+  baseURL: API_BASE_URL,
   timeout: 10_000,
   headers: {
     'X-APP-NAME': APP_NAME,

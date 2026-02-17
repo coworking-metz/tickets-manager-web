@@ -108,12 +108,33 @@ const options = computed<
       return y <= 80 ? 'bottom' : 'top';
     },
     show: !state.shouldHideTooltip,
-    backgroundColor: `${theme.charlestonGreen}EE`,
-    textStyle: {
-      color: '#ffffff',
+    className:
+      '!p-0 !border-0 !rounded-xl !overflow-hidden !text-gray-700 dark:!text-gray-300 !bg-white dark:!bg-neutral-800',
+    formatter: (params) => {
+      const attendance = (props.activity ?? [])[(params as { dataIndex: number }).dataIndex];
+      return `
+        <div class="flex flex-col px-4 py-3 whitespace-pre-line">${i18n.t(
+          'members.detail.attendance.graph.tooltip',
+          {
+            date: dayjs(attendance.date).format('ll'),
+            amount:
+              attendance.value === 1
+                ? i18n.t('members.detail.attendance.graph.value.FULL')
+                : attendance.value === 0.5
+                  ? i18n.t('members.detail.attendance.graph.value.HALF')
+                  : i18n.t('members.detail.attendance.graph.value.NONE'),
+            ...(attendance.coverage.debt?.value &&
+              attendance.coverage.debt?.value !== attendance.value && {
+                suffix:
+                  attendance.coverage.debt.value === 1
+                    ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
+                    : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
+              }),
+          },
+        )}
+        </div>
+      `;
     },
-    borderColor: 'transparent',
-    formatter: ({ data: { tooltip } }: any) => tooltip,
   },
   visualMap: {
     show: false,
@@ -153,22 +174,6 @@ const options = computed<
         itemStyle: {
           color: getAttendanceColor(attendance),
         },
-        tooltip: i18n.t('members.detail.attendance.graph.tooltip', {
-          date: dayjs(attendance.date).format('ll') + '<br />',
-          amount:
-            attendance.value === 1
-              ? i18n.t('members.detail.attendance.graph.value.FULL')
-              : attendance.value === 0.5
-                ? i18n.t('members.detail.attendance.graph.value.HALF')
-                : i18n.t('members.detail.attendance.graph.value.NONE'),
-          ...(attendance.coverage.debt?.value &&
-            attendance.coverage.debt?.value !== attendance.value && {
-              suffix:
-                attendance.coverage.debt.value === 1
-                  ? i18n.t('members.detail.attendance.graph.withNonCompliantValue.FULL')
-                  : i18n.t('members.detail.attendance.graph.withNonCompliantValue.HALF'),
-            }),
-        }),
       };
     }),
   },

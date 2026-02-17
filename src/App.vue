@@ -13,7 +13,7 @@
   <RouterView v-else />
   <Teleport to="body">
     <Toaster
-      :position="width <= 600 ? 'top-center' : 'bottom-left'"
+      :position="width <= MAX_MOBILE_WIDTH ? 'top-center' : 'bottom-left'"
       :toast-options="{
         unstyled: true,
       }"
@@ -32,7 +32,7 @@ import ErrorState from '@/components/ErrorState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NotificationToast from '@/components/NotificationToast.vue';
-import { ENVIRONMENT, IS_PRODUCTION } from '@/helpers/environment';
+import { ENVIRONMENT, IS_PRODUCTION, MAX_MOBILE_WIDTH } from '@/helpers/environment';
 import { parseErrorText } from '@/helpers/errors';
 import { applyTheme, useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';

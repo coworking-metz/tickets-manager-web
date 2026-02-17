@@ -1,7 +1,7 @@
 <template>
   <VueTailwindDatepicker
     v-model="period"
-    :as-single="width < 640"
+    :as-single="width <= MAX_MOBILE_WIDTH"
     :formatter="{
       date: DATE_FORMAT,
       month: 'MMM',
@@ -65,6 +65,7 @@
 import { type ErrorMessage } from './AppFieldHint.vue';
 import AppTextField from './AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { MAX_MOBILE_WIDTH } from '@/helpers/environment';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, PropType } from 'vue';

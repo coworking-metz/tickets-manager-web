@@ -243,14 +243,15 @@ const getTooltipTitle = (date: string) => {
 
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
-    className: '!p-0 !border-0',
+    className:
+      '!p-0 !border-0 !rounded-xl !overflow-hidden !text-gray-700 dark:!text-gray-300 !bg-white dark:!bg-neutral-800',
     formatter: (params) => {
       const {
         data: { coworkersCount, newCoworkersCount, coworkedDaysAmount },
         date, // @ts-ignore
       } = dailyActivities.value[params[0].dataIndex];
       return `
-        <dl class="flex flex-col min-w-48 items-end gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
+        <dl class="flex flex-col min-w-48 items-end gap-1 p-4">
           <dt class="truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${getTooltipTitle(date)}
           </dt>
