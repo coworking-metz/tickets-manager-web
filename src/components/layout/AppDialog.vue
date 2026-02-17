@@ -27,7 +27,7 @@
               <DialogPanel
                 :class="[
                   `mx-auto max-h-full w-full max-w-4xl overflow-y-auto rounded-t-3xl bg-white shadow-2xl
-                  ring-1 ring-black/5 transition-all sm:rounded-2xl dark:border dark:border-gray-700 dark:bg-neutral-800`,
+                  ring-1 ring-black/5 transition-all sm:rounded-2xl dark:border dark:border-neutral-700 dark:bg-neutral-800`,
                   dialogClass,
                 ]">
                 <slot />

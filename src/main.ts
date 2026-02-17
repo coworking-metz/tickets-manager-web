@@ -62,11 +62,18 @@ router.beforeEach(async (to, from, next) => {
     if (!to.meta.allowAnonymous) {
       // fetch an access token if it's not present
       // on fail, redirect to login page
-      if (!authStore.accessToken) {
+      if (!authStore.accessToken && authStore.refreshToken) {
         await authStore.fetchTokens();
       }
 
-      if (!authStore.user || !includes(authStore.user.roles, 'admin')) {
+      if (!authStore.user) {
+        return next({
+          name: ROUTE_NAMES.LOGIN,
+          query: { ...otherQueryParams, redirect: to.path },
+        });
+      }
+
+      if (!includes(authStore.user.roles, 'admin')) {
         const error = new Error('Missing admin role') as AppError;
         error.code = AppErrorCode.FORBIDDEN;
         throw error;

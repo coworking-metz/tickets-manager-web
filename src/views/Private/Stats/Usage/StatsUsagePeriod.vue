@@ -31,12 +31,8 @@
     </section>
 
     <section class="max-sm:mx-3">
-      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-        {{ $t(`${i18nKeyPrefix}.summary.label`) }}
-      </h3>
-
       <AppLink
-        class="text-sm font-medium"
+        class="text-lg font-medium leading-6"
         color="indigo"
         :to="{
           name: $route.name,
@@ -45,7 +41,7 @@
             date: WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
           },
         }">
-        {{ $t(`${i18nKeyPrefix}.summary.detail.navigateTo`) }}
+        {{ $t(`${i18nKeyPrefix}.summary.label`) }}
       </AppLink>
 
       <dl
@@ -179,7 +175,10 @@
       :from="from"
       :title="
         date === WHOLE_PERIOD_SUMMARY_ROUTE_PARAM
-          ? $t(`${i18nKeyPrefix}.summary.label`)
+          ? $t('period.value', {
+              start: dayjs(from).format('ll'),
+              end: dayjs(to).format('ll'),
+            })
           : getTooltipTitle(date)
       "
       :to="to" />
@@ -198,6 +197,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { MAX_MOBILE_WIDTH } from '@/helpers/environment';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
@@ -205,6 +205,7 @@ import { getUsagePerFrequency, WHOLE_PERIOD_SUMMARY_ROUTE_PARAM } from '@/servic
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
+import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { computed, PropType, reactive, watch } from 'vue';
@@ -319,9 +320,11 @@ const getTooltipTitle = (date: string) => {
   }
 };
 
+const { width } = useWindowSize();
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
-    className: '!p-0 !border-0',
+    className:
+      '!p-0 !border-0 !rounded-xl !overflow-hidden !text-gray-700 dark:!text-gray-300 !bg-white dark:!bg-neutral-800',
     formatter: (params) => {
       const {
         data: { amount, tickets, subscriptions, charges },
@@ -330,7 +333,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       const totalTicketsCount = tickets.count + (tickets.debt?.count ?? 0);
       const totalTicketsAmount = tickets.amount + (tickets.debt?.amount ?? 0);
       return `
-        <dl class="flex flex-col gap-1 p-4 text-gray-700 bg-white dark:text-gray-300 dark:bg-neutral-800">
+        <dl class="flex flex-col gap-1 p-4">
           <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
             ${getTooltipTitle(date)}
           </dt>
@@ -372,9 +375,14 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                 statsColors.value.subscription
               };"></span>
-              ${i18n.t(`stats.usage.subscriptions.label`, {
-                count: subscriptions.count,
-              })}${
+              ${i18n.t(
+                width.value <= MAX_MOBILE_WIDTH
+                  ? `stats.usage.subscriptions.count`
+                  : `stats.usage.subscriptions.label`,
+                {
+                  count: subscriptions.count,
+                },
+              )}${
                 subscriptions.attending.count
                   ? `<br />${i18n.t(`stats.usage.subscriptions.attending`, {
                       count: subscriptions.attending.count,
@@ -393,10 +401,10 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
 
           <div class="flex flex-row justify-between items-start">
             <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
+              <span class="shrink-0 mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
                 statsColors.value.charges
               };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
+              <span class="max-sm:max-w-32 truncate">${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}</span>
             </dt>
             <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
           </div>

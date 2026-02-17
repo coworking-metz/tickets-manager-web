@@ -126,6 +126,7 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         await authStore.disconnect();
 
         const notificationsStore = useNotificationsStore();
+        console.error(error);
         notificationsStore.addErrorNotification(
           error,
           i18nInstance.global.t('errors.onDisconnect.message'),
@@ -193,6 +194,8 @@ const createHttpInterceptors = (httpInstance: AxiosInstance) => {
         );
         return Promise.reject(new Error(errorMessage));
       }
+
+      return Promise.reject(error);
     },
   );
 };
