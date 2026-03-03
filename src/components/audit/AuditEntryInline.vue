@@ -243,6 +243,7 @@ const icon = computed(() => {
       return mdiCardAccountDetailsOutline;
     case AuditAction.KEYS_ACCESS:
     case AuditAction.KEYS_ACCESS_DECK:
+    case AuditAction.KEYS_ACCESS_HUB:
     case AuditAction.KEYS_ACCESS_POULAILLER:
     case AuditAction.KEYS_ACCESS_PTI_POULAILLER:
     case AuditAction.STORAGE_KEYS_ACCESS:

@@ -6,6 +6,9 @@
     "KEYS_ACCESS_DECK": {
       "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte de la terrasse"
     },
+    "KEYS_ACCESS_HUB": {
+      "message": "{author} a recupéré le code d'accès de la boîte à clés pour le Hub"
+    },
     "KEYS_ACCESS_POULAILLER": {
       "message": "{author} a recupéré le code d'accès de la boîte à clés pour la porte du Poulailler"
     },
