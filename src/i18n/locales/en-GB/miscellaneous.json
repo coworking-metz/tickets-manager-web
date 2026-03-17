@@ -10,7 +10,7 @@
     "features": {
       "label": "How does it work?",
       "list": [
-        "The calendar can only be modified with the account \"coworking-metz@gmail.com\".",
+        "The calendar can only be modified from cloud.coworking-metz.fr.",
         "The Markdown format is supported in the event description.",
         "To add pictures in the gallery, paste links ending with \".png\" or \".jpg\".",
         "The first link which is not a picture nor in Markdown format will be used for the \"Check\" button.\nAll other links (outside of Markdown format) will be hidden."

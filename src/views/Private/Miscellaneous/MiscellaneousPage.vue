@@ -83,7 +83,7 @@
           <AppButtonTonal
             class="dark:focus:ring-offset-neutral-800"
             color="indigo"
-            href="https://calendar.google.com/calendar/u/1/r?authuser=coworkingmetz@gmail.com"
+            href="https://cloud.coworking-metz.fr/apps/calendar/"
             :icon="mdiOpenInNew"
             target="_blank">
             {{ $t('miscellaneous.events.navigate') }}
