@@ -2,7 +2,7 @@
   "calendar": {
     "tile": {
       "attending": "Personne | {count} présent | {count} présents",
-      "debt": "Aucune dette | {count} surconsommé | {count} surconsommés"
+      "debt": "Aucune dette | {count} redevable | {count} redevables"
     }
   },
   "description": "Qui était là ? Qui a fait quoi ? Qui doit de la moula ?",

@@ -375,7 +375,7 @@ const filteredList = computed(() => {
           ? dayjs(member.lastSeen).fromNow()
           : dayjs(member.lastSeen).calendar(dayjs()),
         isMemberBalanceInsufficient(member) &&
-          i18n.t('members.detail.orders.tickets.overconsumed', {
+          i18n.t('members.detail.orders.tickets.debt', {
             count: Math.abs(member.balance),
           }),
         isMembershipNonCompliant(member) &&

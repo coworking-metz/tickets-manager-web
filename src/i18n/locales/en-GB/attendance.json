@@ -2,7 +2,7 @@
   "calendar": {
     "tile": {
       "attending": "No one | {count} attendee | {count} attendees",
-      "debt": "No debt | {count} overconsumed | {count} overconsumed"
+      "debt": "No debt | {count} indebted | {count} indebted"
     }
   },
   "description": "Who was there? Who did what? Who owes money?",

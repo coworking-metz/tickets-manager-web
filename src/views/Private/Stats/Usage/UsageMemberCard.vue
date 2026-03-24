@@ -62,9 +62,9 @@
       </MemberCard>
     </DisclosureButton>
     <DisclosurePanel as="dl" class="flex flex-col gap-1 py-4 dark:text-gray-300">
-      <ul class="pl-4 pr-8">
+      <dl class="pl-4 pr-8">
         <template v-if="totalTicketsCount">
-          <li class="flex flex-row place-items-end justify-between">
+          <div class="flex flex-row place-items-end justify-between">
             <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
               <span
                 class="mt-1.5 block size-3 shrink-0 rounded-full"
@@ -81,8 +81,8 @@
             <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
               {{ formatAmount(totalTicketsAmount) }}
             </dd>
-          </li>
-          <li
+          </div>
+          <div
             v-if="member.usage.tickets.debt.count"
             class="flex flex-row items-start justify-between">
             <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
@@ -101,9 +101,9 @@
             <dd class="font-mono text-base font-medium text-gray-400">
               {{ `-${formatAmount(member.usage.tickets.debt.amount)}` }}
             </dd>
-          </li>
+          </div>
         </template>
-        <li
+        <div
           v-if="member.usage.subscriptions.count"
           class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
@@ -133,8 +133,8 @@
           <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
             {{ formatAmount(member.usage.subscriptions.amount) }}
           </dd>
-        </li>
-        <li class="flex flex-row items-start justify-between">
+        </div>
+        <div class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
               class="mt-1.5 block size-3 shrink-0 rounded-full"
@@ -146,8 +146,8 @@
               </template>
             </i18n-t>
           </dt>
-        </li>
-      </ul>
+        </div>
+      </dl>
 
       <AppButtonText
         class="mr-4 mt-5 self-end dark:focus:ring-offset-stone-900"

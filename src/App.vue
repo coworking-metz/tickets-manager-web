@@ -65,10 +65,9 @@ router.isReady().then(() => {
   state.isReady = true;
 });
 
-router.beforeEach((_to, _from, next) => {
+router.beforeEach(() => {
   state.isImporting = true;
   state.routerErrorMessage = null;
-  next();
 });
 
 router.afterEach(() => {

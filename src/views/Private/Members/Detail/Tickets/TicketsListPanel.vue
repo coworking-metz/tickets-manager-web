@@ -16,7 +16,7 @@
         {{
           remaining >= 0
             ? $t('members.detail.orders.tickets.remaining', { count: remaining })
-            : $t('members.detail.orders.tickets.overconsumed', { count: Math.abs(remaining) })
+            : $t('members.detail.orders.tickets.debt', { count: Math.abs(remaining) })
         }}
       </span>
     </template>

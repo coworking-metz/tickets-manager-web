@@ -84,7 +84,7 @@
                   v-if="isMemberBalanceInsufficient(member)"
                   class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
                   {{
-                    $t('members.detail.orders.tickets.overconsumed', {
+                    $t('members.detail.orders.tickets.debt', {
                       count: Math.abs(member.balance),
                     })
                   }}

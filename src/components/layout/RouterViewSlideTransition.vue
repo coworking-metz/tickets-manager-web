@@ -21,9 +21,8 @@ const state = reactive({
   transitionName: 'none' as string,
 });
 
-onBeforeRouteUpdate((to, from, next) => {
+onBeforeRouteUpdate((to, from) => {
   state.transitionName = isRouteAfter(to, from) ? 'slide-left' : 'slide-right';
-  next();
 });
 </script>
 

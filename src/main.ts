@@ -39,7 +39,7 @@ const httpStore = useHttpStore();
 const authStore = useAuthStore();
 const notificationStore = useNotificationsStore();
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   // cancel all requests on route name change
   // @see https://stackoverflow.com/questions/51439338/abort-all-axios-requests-when-change-route-use-vue-router
   // do not on hash change
@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
 
   const { refreshToken, accessToken, redirect, ...otherQueryParams } = to.query;
 
-  await (async () => {
+  return (async () => {
     // retrieve tokens from query params
     if (accessToken) {
       await authStore.setAccessToken(accessToken as string);
@@ -67,10 +67,10 @@ router.beforeEach(async (to, from, next) => {
       }
 
       if (!authStore.user) {
-        return next({
+        return {
           name: ROUTE_NAMES.LOGIN,
           query: { ...otherQueryParams, redirect: to.path },
-        });
+        };
       }
 
       if (!includes(authStore.user.roles, 'admin')) {
@@ -82,19 +82,16 @@ router.beforeEach(async (to, from, next) => {
 
     if (redirect && to.name !== ROUTE_NAMES.LOGIN) {
       const targetRoute = router.resolve({ path: redirect as string });
-      if (targetRoute) return next({ path: targetRoute.path, query: otherQueryParams });
+      if (targetRoute) return { path: targetRoute.path, query: otherQueryParams };
     }
-
-    next();
   })().catch(async (error) => {
+    setTimeout(() => notificationStore.addErrorNotification(error), 300);
     // When user has invalid session,
     // set redirectPath to allow loging page to redirect user on desired page afterwards
-    next({
+    return {
       name: ROUTE_NAMES.LOGIN,
       query: { ...otherQueryParams, redirect: to.path },
-    });
-
-    setTimeout(() => notificationStore.addErrorNotification(error), 300);
+    };
   });
 });
 
