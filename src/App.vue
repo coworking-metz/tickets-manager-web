@@ -57,19 +57,9 @@ const state = reactive({
   routerErrorMessage: null as string | null,
 });
 
-useHead(
-  computed(() => ({
-    titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
-    link: [
-      {
-        rel: 'search',
-        type: 'application/opensearchdescription+xml',
-        href: `opensearch.${i18n.locale.value.slice(0, 2)}.xml`,
-        title: 'Coworking Metz',
-      },
-    ],
-  })),
-);
+useHead(() => ({
+  titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
+}));
 
 router.isReady().then(() => {
   state.isReady = true;
