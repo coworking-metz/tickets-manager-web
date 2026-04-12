@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+	<ShortName>Coworking Metz</ShortName>
+	<Description>Recherche de membres Coworking Metz</Description>
+	<Language>fr-FR</Language>
+	<InputEncoding>UTF-8</InputEncoding>
+	<OutputEncoding>UTF-8</OutputEncoding>
+	<Image height="32" width="32" type="image/png">/favicon-32x32.png</Image>
+	<Url
+		type="text/html"
+		method="get"
+		template="/members?search={searchTerms}" />
+	<Query role="example" searchTerms="Marie-Poule" />
+</OpenSearchDescription>

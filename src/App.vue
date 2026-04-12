@@ -41,7 +41,7 @@ import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { useMagicKeys, useWindowSize, whenever } from '@vueuse/core';
 import { isNil } from 'lodash';
-import { markRaw, reactive, watch } from 'vue';
+import { computed, markRaw, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Toaster, toast } from 'vue-sonner';
@@ -57,9 +57,19 @@ const state = reactive({
   routerErrorMessage: null as string | null,
 });
 
-useHead({
-  titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
-});
+useHead(
+  computed(() => ({
+    titleTemplate: (title?: string) => [title, i18n.t('head.title')].filter(Boolean).join(' — '),
+    link: [
+      {
+        rel: 'search',
+        type: 'application/opensearchdescription+xml',
+        href: `opensearch.${i18n.locale.value.slice(0, 2)}.xml`,
+        title: 'Coworking Metz',
+      },
+    ],
+  })),
+);
 
 router.isReady().then(() => {
   state.isReady = true;
