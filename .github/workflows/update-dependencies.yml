@@ -1,0 +1,70 @@
+# Action to run "ncu -u" weekly and create a pull request with the changes.
+# inspired by https://github.com/readthedocs/addons/blob/main/.github/workflows/ncu.yaml
+name: Update dependencies
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 1 * *" # every first day of the month at 9AM
+
+permissions:
+  contents: read
+
+jobs:
+  update-dependencies:
+    permissions:
+      contents: write # to create branch (peter-evans/create-pull-request)
+      pull-requests: write # to create a PR (peter-evans/create-pull-request)
+
+    name: Update packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          cache: 'npm'
+          cache-dependency-path: './package-lock.json'
+
+      - run: npm ci
+
+      - name: Upgrade dependencies
+        id: upgrade
+        run: |
+          updates=$(npm run update --silent -- --upgrade --jsonUpgraded)
+          if [[ "$updates" != "{}" ]]; then
+            echo "updates=$(echo $updates | jq -c "." )" >> $GITHUB_OUTPUT
+            echo "has_upgraded=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_upgraded=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Clean install them and update "package-lock.json"
+        if: steps.upgrade.outputs.has_upgraded == 'true'
+        run: npm run clean
+
+      - name: Create Pull Request
+        id: create-pull-request
+        if: steps.upgrade.outputs.has_upgraded == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            package*.json
+
+          title: |
+            chore(dependencies): updated using `ncu`
+          # pretty print JSON using toJSON(fromJSON())
+          body: |
+            ## Updated dependencies
+            ```json
+            ${{ toJSON(fromJSON(steps.upgrade.outputs.updates)) }}
+            ```
+
+            ## How to test manually
+            - `npm run clean`
+            - `npm run check`
+            - `npm run dev`
+            - Check for any warning, error in the console
+          commit-message: |
+            chore(dependencies): updated using `ncu`
+          delete-branch: true
+          branch: dependencies/ncu
