@@ -13,7 +13,7 @@
                 'mx-auto flex size-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-10',
                 iconColors,
               ]">
-              <SvgIcon aria-hidden="true" class="size-6" :path="icon" type="mdi" />
+              <AppIcon class="size-6" :icon="icon" />
             </div>
             <div class="max-sm:mt-4 sm:ml-4">
               <DialogTitle
@@ -30,7 +30,7 @@
 
         <footer
           class="flex flex-col gap-3 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:flex-row-reverse sm:px-6 dark:border-neutral-950 dark:bg-neutral-900/80">
-          <slot name="confirm">
+          <slot :color="confirmColor" :loading="confirming" name="confirm">
             <AppButtonPlain
               class="w-full sm:w-auto sm:text-sm dark:focus:ring-offset-neutral-900/80"
               :color="confirmColor"
@@ -52,9 +52,10 @@
 </template>
 
 <script setup lang="ts">
-import AppDialog from './AppDialog.vue';
-import AppButtonIcon from '../form/AppButtonIcon.vue';
+import AppIcon from '@/components/AppIcon.vue';
+import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppDialog from '@/components/layout/AppDialog.vue';
 import { DialogPanel, DialogTitle } from '@headlessui/vue';
 import { mdiClose } from '@mdi/js';
 import { computed } from 'vue';

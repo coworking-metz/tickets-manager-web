@@ -25,15 +25,13 @@
           (label || description) && 'mt-1',
         ]">
         <slot :is-invalid="isInvalid" name="prepend">
-          <SvgIcon
+          <AppIcon
             v-if="prependIcon"
-            aria-hidden="true"
             :class="[
               'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
               isInvalid && 'text-red-500',
             ]"
-            :path="prependIcon"
-            type="mdi" />
+            :icon="prependIcon" />
         </slot>
         <slot :append-icon="appendIcon" :is-invalid="isInvalid" :prepend-icon="prependIcon">
           <input
@@ -88,12 +86,10 @@
           @click.prevent.stop="onClear" />
 
         <slot name="append">
-          <SvgIcon
+          <AppIcon
             v-if="appendIcon"
-            aria-hidden="true"
             class="pointer-events-none absolute inset-y-0 right-0 z-[11] mr-3 min-h-10 w-5 text-gray-400"
-            :path="appendIcon"
-            type="mdi" />
+            :icon="appendIcon" />
         </slot>
 
         <LoadingProgressBar v-if="loading" class="absolute inset-x-1 bottom-0 h-px" />
@@ -112,6 +108,7 @@ import AppButtonIcon from './AppButtonIcon.vue';
 import AppFieldHint from './AppFieldHint.vue';
 import { ErrorMessage } from './AppFieldHint.vue';
 import LoadingProgressBar from '../LoadingProgressBar.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import { mdiClose } from '@mdi/js';
 import { useSlots, PropType, computed } from 'vue';
 

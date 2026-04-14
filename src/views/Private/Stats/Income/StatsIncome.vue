@@ -21,11 +21,7 @@
               ...route,
               query: { ...route.query, from: previousPeriod?.start, to: previousPeriod?.end },
             }">
-            <SvgIcon
-              aria-hidden="true"
-              class="size-6 text-gray-400"
-              :path="mdiChevronLeft"
-              type="mdi" />
+            <AppIcon class="size-6 text-gray-400" :icon="mdiChevronLeft" />
           </component>
         </template>
         <template #after>
@@ -40,11 +36,7 @@
               ...route,
               query: { ...route.query, from: nextPeriod?.start, to: nextPeriod?.end },
             }">
-            <SvgIcon
-              aria-hidden="true"
-              class="size-6 text-gray-400"
-              :path="mdiChevronRight"
-              type="mdi" />
+            <AppIcon class="size-6 text-gray-400" :icon="mdiChevronRight" />
           </component>
         </template>
       </AppPeriodField>
@@ -63,7 +55,6 @@
             class="flex flex-row items-center">
             <svg
               v-if="index !== 0"
-              aria-hidden="true"
               class="mr-4 h-full w-6 shrink-0 text-gray-300 dark:text-neutral-600"
               fill="currentColor"
               preserveAspectRatio="none"
@@ -110,6 +101,7 @@
 
 <script lang="ts" setup>
 import StatsIncomePeriod from './StatsIncomePeriod.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';

@@ -17,12 +17,10 @@
     <div class="inline">
       <span :class="['link-decoration gap-x-1 whitespace-normal', linkIcon && 'inline', textClass]">
         <slot />
-        <SvgIcon
+        <AppIcon
           v-if="linkIcon"
-          aria-hidden="true"
           :class="['ml-0.5 inline size-5 shrink-0 align-sub', iconClass]"
-          :path="linkIcon"
-          type="mdi" />
+          :icon="linkIcon" />
       </span>
     </div>
     <slot name="append" />
@@ -30,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import { mdiOpenInNew } from '@mdi/js';
 import { computed } from 'vue';
 

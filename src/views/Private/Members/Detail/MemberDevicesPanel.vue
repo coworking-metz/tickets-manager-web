@@ -17,11 +17,7 @@
               target="_blank">
               {{ $t('members.detail.profile.macAddresses.description.link') }}
             </a>
-            <SvgIcon
-              aria-hidden="true"
-              class="inline-block size-4 pb-1 text-indigo-600"
-              :path="mdiOpenInNew"
-              type="mdi" />
+            <AppIcon class="inline-block size-4 pb-1 text-indigo-600" :icon="mdiOpenInNew" />
           </template>
         </i18n-t>
         <ul class="mt-1 flex flex-col">
@@ -50,11 +46,7 @@
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.verify') }}
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="ml-1 inline-block size-5"
-                    :path="mdiOpenInNew"
-                    type="mdi" />
+                  <AppIcon class="ml-1 inline-block size-5" :icon="mdiOpenInNew" />
                 </a>
               </template>
 
@@ -129,6 +121,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

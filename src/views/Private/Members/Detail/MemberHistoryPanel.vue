@@ -37,7 +37,7 @@
           v-if="!state.shouldScroll && history.length > MIN_HISTORY_EVENTS"
           class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700 dark:from-neutral-800 dark:text-gray-400 dark:hover:text-gray-200"
           @click="state.shouldScroll = true">
-          <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
+          <AppIcon class="mr-2 size-5" :icon="mdiChevronDoubleDown" />
           {{ $t('members.detail.audit.more') }}
         </button>
       </template>
@@ -45,6 +45,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import PastHistory from '@/assets/animations/past-history.lottie';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';

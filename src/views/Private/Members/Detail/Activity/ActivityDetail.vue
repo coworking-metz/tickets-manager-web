@@ -25,7 +25,7 @@
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
+            <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
         </div>
       </div>
@@ -65,7 +65,7 @@
             params: { date: next.date },
           }">
           {{ dayjs(next.date).format('dddd DD/MM') }}
-          <SvgIcon aria-hidden="true" class="size-5" :path="mdiChevronRight" type="mdi" />
+          <AppIcon class="size-5" :icon="mdiChevronRight" />
         </AppButtonText>
       </nav>
       <form class="mt-6 flex h-full flex-col" @submit.prevent="onSubmit">
@@ -132,13 +132,13 @@
                     </RadioGroupDescription>
                   </span>
                 </span>
-                <SvgIcon
-                  aria-hidden="true"
+                <AppIcon
+                 
                   :class="[!checked && 'invisible', 'size-5 text-indigo-600 dark:text-indigo-500']"
-                  :path="mdiCheckCircle"
-                  type="mdi" />
+                  :icon="mdiCheckCircle"
+                  />
                 <span
-                  aria-hidden="true"
+                 
                   :class="[
                     active ? 'border' : 'border-2',
                     checked ? 'border-indigo-500' : 'border-transparent',
@@ -192,6 +192,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 // import DailyActivityGraph from './DailyActivityGraph.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';

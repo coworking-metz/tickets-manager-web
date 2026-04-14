@@ -19,7 +19,7 @@
             :thumbnail="authStore.user.picture">
             <div
               class="absolute inset-0 flex bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-60">
-              <SvgIcon aria-hidden="true" class="m-auto size-16" :path="mdiAccountEye" type="mdi" />
+              <AppIcon class="m-auto size-16" :icon="mdiAccountEye" />
             </div>
           </MembersThumbnail>
         </RouterLink>
@@ -115,6 +115,7 @@
 
 <script lang="ts" setup>
 import MembersThumbnail from '../Members/MembersThumbnail.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppRadioGroup from '@/components/form/AppRadioGroup.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

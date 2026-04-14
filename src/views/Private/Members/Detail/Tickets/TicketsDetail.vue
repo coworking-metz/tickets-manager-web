@@ -17,7 +17,7 @@
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
+            <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
         </div>
       </div>
@@ -78,11 +78,11 @@
               target="_blank">
               {{ $t('action.navigate') }}
             </a>
-            <SvgIcon
-              aria-hidden="true"
+            <AppIcon
+             
               class="inline-block size-4 text-indigo-600"
-              :path="mdiOpenInNew"
-              type="mdi" />
+              :icon="mdiOpenInNew"
+              />
           </div>
         </template>
       </AppTextField>
@@ -132,6 +132,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import TicketsDeleteDialog from './TicketsDeleteDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';

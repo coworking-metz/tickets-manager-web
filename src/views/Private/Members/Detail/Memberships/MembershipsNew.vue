@@ -10,7 +10,7 @@
             class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
+            <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
         </div>
       </div>
@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';

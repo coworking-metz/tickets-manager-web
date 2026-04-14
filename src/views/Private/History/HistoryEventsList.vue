@@ -3,10 +3,19 @@
     <Head>
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>
-    <h1
-      class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
-      {{ $t('audit.list.title') }}
-    </h1>
+    <header class="mx-3 flex flex-row sm:mx-0">
+      <h1
+        class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+        {{ $t('audit.list.title') }}
+      </h1>
+      <ErrorBadge
+        v-if="fetchHistoryErrorText"
+        class="mb-0.5 ml-2 self-end sm:mb-1"
+        :description="fetchHistoryErrorText"
+        :retrying="isFetchingHistory"
+        :title="$t('audit.list.onFetch.fail')"
+        @retry="refetchHistory" />
+    </header>
     <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
       {{ $t('audit.list.description') }}
     </p>
@@ -37,15 +46,13 @@
             <LoadingSpinner
               v-if="state.isSearching"
               class="pointer-events-none absolute inset-y-0 left-3 z-[11] my-auto size-5 text-gray-400" />
-            <SvgIcon
+            <AppIcon
               v-else
-              aria-hidden="true"
               :class="[
                 'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
                 isInvalid && 'text-red-500',
               ]"
-              :path="mdiMagnify"
-              type="mdi" />
+              :icon="mdiMagnify" />
           </template>
 
           <template #after>
@@ -53,11 +60,7 @@
               <MenuButton
                 class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="size-5 shrink-0 text-gray-400"
-                  :path="mdiSort"
-                  type="mdi" />
+                <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('audit.list.sort.label', {
@@ -67,11 +70,7 @@
                     })
                   }}
                 </span>
-                <SvgIcon
-                  aria-hidden="true"
-                  class="-mr-1.5 ml-2.5 size-5 text-gray-400"
-                  :path="mdiChevronDown"
-                  type="mdi" />
+                <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
               </MenuButton>
               <Transition
                 enter-active-class="transition ease-out duration-100"
@@ -103,12 +102,10 @@
                         }"
                         @click="close">
                         {{ $t(`audit.list.sort.value.${listSorter.key}`) }}
-                        <SvgIcon
+                        <AppIcon
                           v-if="listSorter.key === sort"
-                          aria-hidden="true"
                           class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                          :path="mdiCheck"
-                          type="mdi" />
+                          :icon="mdiCheck" />
                       </RouterLink>
                     </MenuItem>
                   </div>
@@ -127,11 +124,6 @@
             <AuditEntry loading />
           </li>
         </template>
-        <ErrorState
-          v-else-if="historyErrorText"
-          class="m-auto"
-          :description="historyErrorText"
-          :title="$t('audit.list.onFetch.fail')" />
         <EmptyState
           v-else-if="!slicedList.length"
           class="m-auto py-6"
@@ -162,8 +154,9 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
-import ErrorState from '@/components/ErrorState.vue';
+import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
@@ -251,7 +244,8 @@ const {
   isPending: isPendingHistory,
   isFetching: isFetchingHistory,
   data: history,
-  errorText: historyErrorText,
+  errorText: fetchHistoryErrorText,
+  refetch: refetchHistory,
 } = useAppQuery(
   computed(() => ({
     queryKey: auditEventsQueryKeys.allInPeriod(state.period.start, state.period.end),

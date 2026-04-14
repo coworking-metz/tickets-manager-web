@@ -14,7 +14,6 @@ import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
 import { useNotificationsStore } from './store/notifications';
 import { useSettingsStore } from './store/settings';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createHead } from '@unhead/vue/client';
 import FloatingVue from 'floating-vue';
@@ -31,7 +30,6 @@ app.use(head);
 app.use(VueQueryPlugin, defaultVueQueryPluginOptions);
 app.use(FloatingVue);
 app.component('AnimatedCounter', VueNumberAnimation);
-app.component('SvgIcon', SvgIcon);
 
 createHttpInterceptors(HTTP);
 

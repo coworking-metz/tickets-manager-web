@@ -22,11 +22,7 @@
             <div
               v-if="member?.picture"
               class="absolute inset-0 flex rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-60">
-              <SvgIcon
-                aria-hidden="true"
-                class="m-auto size-8 text-white"
-                :path="mdiMagnifyPlusOutline"
-                type="mdi" />
+              <AppIcon class="m-auto size-8 text-white" :icon="mdiMagnifyPlusOutline" />
             </div>
             <span
               v-if="member?.attending"
@@ -107,11 +103,7 @@
                   <span
                     class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
                     {{ $t('members.detail.status.trusted.label') }}
-                    <SvgIcon
-                      aria-hidden="true"
-                      class="size-4"
-                      :path="mdiInformationOutline"
-                      type="mdi" />
+                    <AppIcon class="size-4" :icon="mdiInformationOutline" />
                   </span>
                   <template #popper>
                     <span class="overflow-hidden whitespace-pre-line text-sm">
@@ -123,11 +115,7 @@
                   <span
                     class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
                     {{ $t('members.detail.status.voting.label') }}
-                    <SvgIcon
-                      aria-hidden="true"
-                      class="size-4"
-                      :path="mdiInformationOutline"
-                      type="mdi" />
+                    <AppIcon class="size-4" :icon="mdiInformationOutline" />
                   </span>
                   <template #popper>
                     <span class="overflow-hidden whitespace-pre-line text-sm">
@@ -533,6 +521,7 @@ import SectionRow from './Detail/SectionRow.vue';
 import SubscriptionsListPanel from './Detail/Subscriptions/SubscriptionsListPanel.vue';
 import TicketsListPanel from './Detail/Tickets/TicketsListPanel.vue';
 import MembersThumbnail from './MembersThumbnail.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';

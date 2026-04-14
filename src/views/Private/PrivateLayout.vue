@@ -13,14 +13,12 @@
         <span class="sr-only">
           {{ !state.isMenuOpen ? $t('navigation.open') : $t('navigation.close') }}
         </span>
-        <SvgIcon
-          aria-hidden="true"
+        <AppIcon
           :class="{
             ['size-6 transition-transform duration-300']: true,
             ['!rotate-[540deg]']: !state.isMenuOpen,
           }"
-          :path="state.isMenuOpen ? mdiMenuOpen : mdiMenu"
-          type="mdi" />
+          :icon="state.isMenuOpen ? mdiMenuOpen : mdiMenu" />
       </button>
       <img
         alt="Le Poulailler - Coworking Metz"
@@ -57,6 +55,7 @@
 
 <script setup lang="ts">
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
+import AppIcon from '@/components/AppIcon.vue';
 import NavigationDrawer from '@/components/layout/NavigationDrawer.vue';
 import { mdiMenu, mdiMenuOpen } from '@mdi/js';
 import { reactive } from 'vue';

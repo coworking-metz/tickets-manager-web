@@ -6,7 +6,6 @@
     <section class="mx-auto flex w-full max-w-7xl grow flex-col">
       <div class="relative z-10 flex grow flex-col lg:w-full lg:max-w-2xl">
         <svg
-          aria-hidden="true"
           class="absolute inset-y-0 right-8 hidden h-full w-80 translate-x-1/2 fill-slate-50 duration-500 lg:block dark:fill-stone-900"
           preserveAspectRatio="none"
           viewBox="0 0 100 100">
@@ -34,11 +33,7 @@
                 <span
                   class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500">
                   {{ $t('login.headline.readMore') }}
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="ml-1 size-4"
-                    :path="mdiArrowTopRight"
-                    type="mdi" />
+                  <AppIcon class="ml-1 size-4" :icon="mdiArrowTopRight" />
                 </span>
               </a>
             </div>
@@ -83,6 +78,7 @@
 
 <script setup lang="ts">
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
+import AppIcon from '@/components/AppIcon.vue';
 import LogoMono from '@/components/LogoMono.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import { HTTP } from '@/services/http';

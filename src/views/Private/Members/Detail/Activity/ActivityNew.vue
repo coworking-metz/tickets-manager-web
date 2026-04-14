@@ -12,7 +12,7 @@
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
-            <SvgIcon aria-hidden="true" class="size-6" :path="mdiClose" type="mdi" />
+            <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
         </div>
       </div>
@@ -66,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

@@ -1,11 +1,7 @@
 <!-- eslint-disable tailwindcss/no-custom-classname -->
 <template>
   <div :class="['flex min-h-10 flex-row gap-x-3 rounded-md px-4 py-2.5', backgroundColor]">
-    <SvgIcon
-      aria-hidden="true"
-      :class="['size-5 shrink-0', titleColor]"
-      :path="icon || typeIcon"
-      type="mdi" />
+    <AppIcon :class="['size-5 shrink-0', titleColor]" :icon="icon || typeIcon" />
     <slot>
       <div class="flex flex-col gap-2">
         <h3 v-if="title || $slots.title" :class="['font-medium sm:text-sm', titleColor]">
@@ -27,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import {
   mdiAlertCircleOutline,
   mdiAlertOutline,

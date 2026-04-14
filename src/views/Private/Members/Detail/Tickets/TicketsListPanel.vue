@@ -82,7 +82,7 @@
         v-if="!state.shouldScroll && tickets && tickets.length >= SHOULD_SCROLL_ABOVE_COUNT"
         class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700 dark:from-neutral-800 dark:text-gray-400 dark:hover:text-gray-200"
         @click="state.shouldScroll = true">
-        <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
+        <AppIcon class="mr-2 size-5" :icon="mdiChevronDoubleDown" />
         {{ $t('members.detail.orders.tickets.more') }}
       </button>
     </div>
@@ -100,6 +100,7 @@
   </AppPanel>
 </template>
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';

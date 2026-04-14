@@ -83,7 +83,7 @@
         "
         class="absolute inset-x-0 bottom-0 flex flex-row items-center justify-center bg-gradient-to-t from-white from-0% pb-4 pt-12 text-gray-500 transition hover:text-gray-700 dark:from-neutral-800 dark:text-gray-400 dark:hover:text-gray-200"
         @click="state.shouldScroll = true">
-        <SvgIcon aria-hidden="true" class="mr-2 size-5" :path="mdiChevronDoubleDown" type="mdi" />
+        <AppIcon class="mr-2 size-5" :icon="mdiChevronDoubleDown" />
         {{ $t('members.detail.orders.subscriptions.more') }}
       </button>
     </div>
@@ -101,6 +101,7 @@
   </AppPanel>
 </template>
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
@@ -109,7 +110,6 @@ import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMemberSubscriptions, Subscription } from '@/services/api/subscriptions';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';

@@ -13,11 +13,9 @@
           class="shrink truncate text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
           {{ title }}
         </h2>
-        <SvgIcon
-          aria-hidden="true"
+        <AppIcon
           class="shrink-0 dark:text-gray-500"
-          :path="state.isSummaryVisible ? mdiUnfoldLessHorizontal : mdiUnfoldMoreHorizontal"
-          type="mdi" />
+          :icon="state.isSummaryVisible ? mdiUnfoldLessHorizontal : mdiUnfoldMoreHorizontal" />
       </AppButtonText>
     </header>
 
@@ -160,11 +158,7 @@
               <Menu as="div" class="relative -ml-px block">
                 <MenuButton
                   class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="size-5 shrink-0 text-gray-400"
-                    :path="mdiSort"
-                    type="mdi" />
+                  <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                   <span class="ml-2 whitespace-nowrap max-sm:hidden">
                     {{
                       $t('stats.usage.members.sort.label', {
@@ -176,11 +170,7 @@
                       })
                     }}
                   </span>
-                  <SvgIcon
-                    aria-hidden="true"
-                    class="-mr-1.5 ml-2.5 size-5 text-gray-400"
-                    :path="mdiChevronDown"
-                    type="mdi" />
+                  <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
                 </MenuButton>
                 <Transition
                   enter-active-class="transition ease-out duration-100"
@@ -209,12 +199,10 @@
                             }
                           ">
                           {{ $t(`stats.usage.members.sort.value.${listSorter.key}`) }}
-                          <SvgIcon
+                          <AppIcon
                             v-if="listSorter.key === state.sort"
-                            aria-hidden="true"
                             class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                            :path="mdiCheck"
-                            type="mdi" />
+                            :icon="mdiCheck" />
                         </button>
                       </MenuItem>
                     </div>
@@ -273,6 +261,7 @@
 import UsageMemberCard from './UsageMemberCard.vue';
 import { useStatsColors } from '../statsColors';
 import EmptyOffice from '@/assets/animations/empty-office.lottie';
+import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';

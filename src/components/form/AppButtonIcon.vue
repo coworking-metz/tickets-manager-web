@@ -5,13 +5,14 @@
     type="button">
     <LoadingSpinner v-if="loading" class="max-h-full max-w-full grow" :stroke-width="4" />
     <slot v-else>
-      <SvgIcon aria-hidden="true" class="size-full grow" :path="icon" type="mdi" />
+      <AppIcon class="size-full grow" :icon="icon" />
       <span v-if="$attrs.title" class="sr-only">{{ $attrs.title }}</span>
     </slot>
   </button>
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 
 defineProps({

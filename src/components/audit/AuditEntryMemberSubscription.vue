@@ -29,7 +29,7 @@
             <span
               class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
               {{ $t('audit.author.unknown.label') }}
-              <SvgIcon aria-hidden="true" class="size-4" :path="mdiInformationOutline" type="mdi" />
+              <AppIcon class="size-4" :icon="mdiInformationOutline" />
             </span>
             <template #popper>
               <span class="overflow-hidden whitespace-pre-line text-sm">
@@ -73,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import AuditEntryInline from './AuditEntryInline.vue';
 import AppLink from '@/components/AppLink.vue';
 import { ROUTE_NAMES } from '@/router/names';

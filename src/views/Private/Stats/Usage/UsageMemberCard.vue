@@ -52,11 +52,9 @@
               {{ formatAmount(member.usage.amount) }}
             </dd>
 
-            <SvgIcon
-              aria-hidden="true"
+            <AppIcon
               class="mx-1.5 size-6 shrink-0 text-gray-400 dark:text-gray-500"
-              :path="open ? mdiChevronUp : mdiChevronDown"
-              type="mdi" />
+              :icon="open ? mdiChevronUp : mdiChevronDown" />
           </div>
         </template>
       </MemberCard>
@@ -163,7 +161,7 @@
             name: member.firstName ?? member.lastName ?? member.email,
           })
         }}
-        <SvgIcon aria-hidden="true" class="-mr-2 size-5" :path="mdiChevronRight" type="mdi" />
+        <AppIcon class="-mr-2 size-5" :icon="mdiChevronRight" />
       </AppButtonText>
     </DisclosurePanel>
   </Disclosure>
@@ -171,6 +169,7 @@
 
 <script setup lang="ts">
 import { useStatsColors } from '../statsColors';
+import AppIcon from '@/components/AppIcon.vue';
 import MemberCard from '@/components/MemberCard.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';

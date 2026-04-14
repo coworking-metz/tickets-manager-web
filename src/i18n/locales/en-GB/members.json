@@ -257,7 +257,8 @@
       },
       "totalDebt": {
         "label": "Indebted",
-        "value": "None | {count} ticket | {count} tickets"
+        "none": "No ticket",
+        "value": "{count} | {count} ticket | {count} tickets"
       }
     },
     "onEndScrollReached": {

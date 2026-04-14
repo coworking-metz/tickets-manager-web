@@ -3,10 +3,27 @@
     <Head>
       <title>{{ $t('members.list.head.title') }}</title>
     </Head>
-    <h1
-      class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
-      {{ $t('members.list.title') }}
-    </h1>
+    <header class="mx-3 flex flex-row sm:mx-0">
+      <h1
+        class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+        {{ $t('members.list.title') }}
+      </h1>
+      <ErrorBadge
+        v-if="fetchMembersErrorText"
+        class="mb-0.5 ml-2 self-end sm:mb-1"
+        :description="fetchMembersErrorText"
+        :retrying="isFetchingMembers"
+        :title="$t('members.list.onFetch.fail')"
+        @retry="refetchMembers" />
+      <ErrorBadge
+        v-else-if="tab === 'voting' && fetchVotingMembersErrorText"
+        class="mb-0.5 ml-2 self-end sm:mb-1"
+        :description="fetchVotingMembersErrorText"
+        :retrying="isFetchingVotingMembers"
+        :title="$t('members.list.onFetchVotingMembers.fail')"
+        @retry="refetchVotingMembers" />
+    </header>
+
     <section class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <nav class="flex flex-row gap-x-3 overflow-x-auto px-3 sm:px-0">
         <RouterLink
@@ -61,11 +78,7 @@
               <MenuButton
                 class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="size-5 shrink-0 text-gray-400"
-                  :path="mdiSort"
-                  type="mdi" />
+                <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('members.list.sort.label', {
@@ -75,11 +88,7 @@
                     })
                   }}
                 </span>
-                <SvgIcon
-                  aria-hidden="true"
-                  class="-mr-1.5 ml-2.5 size-5 text-gray-400"
-                  :path="mdiChevronDown"
-                  type="mdi" />
+                <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
               </MenuButton>
               <Transition
                 enter-active-class="transition ease-out duration-100"
@@ -111,12 +120,10 @@
                         }"
                         @click="close">
                         {{ $t(`members.list.sort.value.${listSorter.key}`) }}
-                        <SvgIcon
+                        <AppIcon
                           v-if="listSorter.key === sort"
-                          aria-hidden="true"
                           class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                          :path="mdiCheck"
-                          type="mdi" />
+                          :icon="mdiCheck" />
                       </RouterLink>
                     </MenuItem>
                   </div>
@@ -132,7 +139,7 @@
       <div
         class="relative flex grow flex-col border-t border-gray-200 sm:rounded-t-md dark:border-stone-700">
         <div
-          v-if="isFetching || isFetchingVotingMembers"
+          v-if="isFetchingMembers || isFetchingVotingMembers"
           class="sticky top-[67px] w-full sm:top-[3px]">
           <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
         </div>
@@ -140,7 +147,7 @@
         <ul
           class="grow divide-y divide-gray-200 bg-white shadow sm:rounded-md dark:divide-stone-700 dark:bg-neutral-800"
           role="list">
-          <template v-if="isPending || (tab === 'voting' && isPendingVotingMembers)">
+          <template v-if="isPendingMembers || (tab === 'voting' && isPendingVotingMembers)">
             <li v-for="index in 10" :key="`loading-member-card-${index}`">
               <MembersListCard loading />
             </li>
@@ -193,10 +200,12 @@
                   :duration="1"
                   :format="
                     (count: number) =>
-                      formatAmount(count, {
-                        maximumFractionDigits: 1,
-                        style: 'decimal',
-                      })
+                      count
+                        ? formatAmount(count, {
+                            maximumFractionDigits: 1,
+                            style: 'decimal',
+                          })
+                        : $t('members.list.nonCompliant.totalDebt.none')
                   "
                   :to="totalDebt" />
               </template>
@@ -241,12 +250,13 @@
 
 <script setup lang="ts">
 import MembersListCard from './MembersListCard.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
+import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { formatAmount } from '@/helpers/currency';
-import { isSilentError } from '@/helpers/errors';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import {
@@ -257,7 +267,6 @@ import {
   isMembershipNonCompliant,
 } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
-import { useNotificationsStore } from '@/store/notifications';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
@@ -328,7 +337,6 @@ const props = defineProps({
 const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
-const notificationsStore = useNotificationsStore();
 const state = reactive({
   search: null as string | null,
   slice: Number(props.slice) as number,
@@ -336,14 +344,16 @@ const state = reactive({
 
 const {
   isSuccess,
-  isPending,
-  isFetching,
+  isPending: isPendingMembers,
+  isFetching: isFetchingMembers,
   data: members,
-  error,
+  errorText: fetchMembersErrorText,
+  refetch: refetchMembers,
 } = useAppQuery(
   computed(() => ({
     queryKey: membersQueryKeys.all(),
     queryFn: () => getAllMembers(),
+    refetchOnMount: true,
   })),
 );
 
@@ -351,7 +361,8 @@ const {
   isPending: isPendingVotingMembers,
   isFetching: isFetchingVotingMembers,
   data: votingMembers,
-  error: votingMembersError,
+  errorText: fetchVotingMembersErrorText,
+  refetch: refetchVotingMembers,
 } = useAppQuery(
   computed(() => ({
     queryKey: membersQueryKeys.allVoting(),
@@ -484,27 +495,6 @@ watch(
     }
   },
   { immediate: true },
-);
-
-watch(
-  () => error.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(error, i18n.t('members.list.onFetch.fail'));
-    }
-  },
-);
-
-watch(
-  () => votingMembersError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('members.list.onFetchVotingMembers.fail'),
-      );
-    }
-  },
 );
 
 watch(

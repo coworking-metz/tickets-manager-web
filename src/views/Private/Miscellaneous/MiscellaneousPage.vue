@@ -18,7 +18,7 @@
       <AppPanel>
         <h3
           class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-          <SvgIcon aria-hidden="true" class="size-5" :path="mdiBookOpenVariantOutline" type="mdi" />
+          <AppIcon class="size-5" :icon="mdiBookOpenVariantOutline" />
           {{ $t('miscellaneous.guide.title') }}
         </h3>
         <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
@@ -40,7 +40,7 @@
       <AppPanel>
         <h3
           class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-          <SvgIcon aria-hidden="true" class="size-5" :path="mdiTelevisionGuide" type="mdi" />
+          <AppIcon class="size-5" :icon="mdiTelevisionGuide" />
           {{ $t('miscellaneous.digitalSignage.title') }}
         </h3>
         <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
@@ -61,7 +61,7 @@
       <AppPanel>
         <h3
           class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-          <SvgIcon aria-hidden="true" class="size-5" :path="mdiCalendarMultiple" type="mdi" />
+          <AppIcon class="size-5" :icon="mdiCalendarMultiple" />
           {{ $t('miscellaneous.events.title') }}
         </h3>
         <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
@@ -104,6 +104,7 @@
 </template>
 
 <script lang="ts" setup>
+import AppIcon from '@/components/AppIcon.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppButtonTonal from '@/components/form/AppButtonTonal.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';

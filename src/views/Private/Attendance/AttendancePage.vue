@@ -7,10 +7,24 @@
 
     <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 lg:sticky lg:top-40 lg:py-0">
       <header class="flex flex-col items-start max-sm:px-3">
-        <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
-          {{ $t('attendance.title') }}
-        </h1>
+        <div class="flex flex-row">
+          <h1
+            class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+            {{ $t('attendance.title') }}
+          </h1>
+          <ErrorBadge
+            v-if="fetchAttendanceErrorText"
+            class="mb-0.5 ml-2 self-end sm:mb-1"
+            :description="fetchAttendanceErrorText"
+            :retrying="isFetchingAttendance"
+            :title="
+              $t('attendance.onFetch.fail', {
+                start: dayjs(calendarPeriod?.start).format('L'),
+                end: dayjs(calendarPeriod?.end).format('L'),
+              })
+            "
+            @retry="refetchAttendance" />
+        </div>
         <p class="mt-1 text-base text-slate-500 sm:truncate dark:text-slate-400">
           {{ $t('attendance.description') }}
         </p>
@@ -29,11 +43,7 @@
                 },
               }">
               <span class="sr-only">{{ $t('attendance.navigation.previousMonth') }}</span>
-              <SvgIcon
-                aria-hidden="true"
-                class="size-5 text-gray-400"
-                :path="mdiChevronLeft"
-                type="mdi" />
+              <AppIcon class="size-5 text-gray-400" :icon="mdiChevronLeft" />
             </AppButtonText>
             <time
               v-if="state.selectedMonth"
@@ -52,11 +62,7 @@
                 },
               }">
               <span class="sr-only">{{ $t('attendance.navigation.nextMonth') }}</span>
-              <SvgIcon
-                aria-hidden="true"
-                class="size-5 text-gray-400"
-                :path="mdiChevronRight"
-                type="mdi" />
+              <AppIcon class="size-5 text-gray-400" :icon="mdiChevronRight" />
             </AppButtonText>
           </div>
 
@@ -79,7 +85,7 @@
       </header>
 
       <div class="relative border border-gray-200 dark:border-stone-700">
-        <LoadingProgressBar v-if="isFetching" class="absolute top-0 h-[2px] w-full" />
+        <LoadingProgressBar v-if="isFetchingAttendance" class="absolute top-0 h-[2px] w-full" />
         <div
           v-if="calendarPeriod"
           class="grid grid-cols-7 divide-x divide-gray-300 border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none dark:divide-stone-600 dark:border-stone-600 dark:text-gray-300">
@@ -125,7 +131,7 @@
       <AttendanceDetail
         :attendance="state.selectedAttendance"
         :date="date"
-        :loading="isFetching"
+        :loading="isFetchingAttendance"
         :search="search"
         :sort="sort" />
     </aside>
@@ -135,19 +141,18 @@
 <script lang="ts" setup>
 import AttendanceCalendarTile from './AttendanceCalendarTile.vue';
 import AttendanceDetail from './AttendanceDetail.vue';
+import AppIcon from '@/components/AppIcon.vue';
+import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
-import { isSilentError } from '@/helpers/errors';
 import { AttendancePeriod, getAttendancePerPeriod } from '@/services/api/attendance';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
-import { useNotificationsStore } from '@/store/notifications';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
 import { computed, onMounted, reactive, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -170,8 +175,6 @@ const props = defineProps({
 });
 
 const currentRoute = useRoute();
-const notificationsStore = useNotificationsStore();
-const i18n = useI18n();
 const state = reactive({
   selectedMonth: null as string | null,
   selectedAttendance: null as AttendancePeriod<'day'> | null,
@@ -192,9 +195,10 @@ const calendarPeriod = computed(() => {
 });
 
 const {
-  isFetching,
+  isFetching: isFetchingAttendance,
   data: attendance,
-  error: attendanceError,
+  errorText: fetchAttendanceErrorText,
+  refetch: refetchAttendance,
 } = useAppQuery(
   computed(() => ({
     queryKey: statsQueryKeys.attendanceInPeriod(
@@ -243,21 +247,6 @@ watch(
     }
   },
   { immediate: true },
-);
-
-watch(
-  () => attendanceError.value,
-  (error) => {
-    if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(
-        error,
-        i18n.t('attendance.onFetch.fail', {
-          start: dayjs(calendarPeriod.value?.start).format('L'),
-          end: dayjs(calendarPeriod.value?.end).format('L'),
-        }),
-      );
-    }
-  },
 );
 
 onMounted(() => {

@@ -15,11 +15,9 @@
         }),
       }"
       :temporary="!!notification.timeout">
-      <SvgIcon
-        aria-hidden="true"
+      <AppIcon
         :class="['mt-1 size-6 shrink-0', getIconColorFromType(notification.type)]"
-        :path="notification.icon || getIconFromType(notification.type)"
-        type="mdi" />
+        :icon="notification.icon || getIconFromType(notification.type)" />
       <div class="ml-3 w-0 flex-1 pt-1.5">
         <p class="text-sm font-medium text-gray-100">
           {{ getMessage(notification) }}
@@ -74,8 +72,9 @@
 </template>
 
 <script setup lang="ts">
-import AppButtonIcon from './form/AppButtonIcon.vue';
-import AppButtonText from './form/AppButtonText.vue';
+import AppIcon from '@/components/AppIcon.vue';
+import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
 import { AppErrorCode } from '@/helpers/errors';
 import { AppNotification, StoreNotification, useNotificationsStore } from '@/store/notifications';
 import {

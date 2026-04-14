@@ -257,7 +257,8 @@
       },
       "totalDebt": {
         "label": "Redevable",
-        "value": "Aucune | {count} ticket | {count} tickets"
+        "none": "Aucun",
+        "value": "{count} ticket | {count} ticket | {count} tickets"
       }
     },
     "onEndScrollReached": {

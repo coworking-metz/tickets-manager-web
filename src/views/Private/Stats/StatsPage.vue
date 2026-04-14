@@ -6,11 +6,10 @@
       <MenuButton
         class="group w-full rounded-xl border border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-800">
         <span class="flex w-full flex-row items-start justify-between">
-          <SvgIcon
-            aria-hidden="true"
+          <AppIcon
+            v-if="activeTab?.icon"
             class="size-6 shrink-0 text-indigo-400"
-            :path="activeTab?.icon"
-            type="mdi" />
+            :icon="activeTab.icon" />
           <div class="mx-3 text-left text-sm">
             <p class="text-base font-medium text-gray-900 dark:text-gray-100">
               {{ activeTab?.label }}
@@ -18,11 +17,9 @@
             <p class="mt-1 text-gray-500 dark:text-gray-400">{{ activeTab?.description }}</p>
           </div>
 
-          <SvgIcon
-            aria-hidden="true"
+          <AppIcon
             class="ml-auto size-6 shrink-0 self-center text-gray-400 group-hover:text-gray-500 dark:text-gray-400"
-            :path="mdiUnfoldMoreHorizontal"
-            type="mdi" />
+            :icon="mdiUnfoldMoreHorizontal" />
         </span>
       </MenuButton>
       <transition
@@ -47,11 +44,7 @@
                 ]"
                 :to="tab.to"
                 @click.capture="close">
-                <SvgIcon
-                  aria-hidden="true"
-                  class="size-6 shrink-0 text-indigo-400"
-                  :path="tab.icon"
-                  type="mdi" />
+                <AppIcon class="size-6 shrink-0 text-indigo-400" :icon="tab.icon" />
                 <div class="ml-3 overflow-hidden text-left text-sm">
                   <p class="font-medium text-gray-900 dark:text-gray-100">{{ tab.label }}</p>
                   <p class="mt-1 truncate text-gray-500 dark:text-gray-400">
@@ -87,23 +80,17 @@
                 'group flex border-b border-gray-200 p-6 pr-3 hover:bg-indigo-50/50 active:bg-indigo-50/70 dark:border-stone-700 dark:hover:bg-neutral-900/50 dark:active:bg-neutral-900/70',
               ]"
               :to="tab.to">
-              <SvgIcon
-                aria-hidden="true"
-                class="-mt-0.5 size-6 shrink-0 text-indigo-400"
-                :path="tab.icon"
-                type="mdi" />
+              <AppIcon class="-mt-0.5 size-6 shrink-0 text-indigo-400" :icon="tab.icon" />
               <div class="ml-3 text-sm">
                 <p class="font-medium text-gray-900 dark:text-gray-100">{{ tab.label }}</p>
                 <p class="mt-1 text-gray-500 dark:text-gray-400">{{ tab.description }}</p>
               </div>
-              <SvgIcon
-                aria-hidden="true"
+              <AppIcon
                 :class="[
                   'size-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:!opacity-100 dark:text-gray-400',
                   tab.active ? 'opacity-80' : 'opacity-0',
                 ]"
-                :path="mdiChevronRight"
-                type="mdi" />
+                :icon="mdiChevronRight" />
             </router-link>
           </div>
         </nav>
@@ -118,6 +105,7 @@
 </template>
 
 <script lang="ts" setup>
+import AppIcon from '@/components/AppIcon.vue';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';

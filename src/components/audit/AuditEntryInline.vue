@@ -7,12 +7,7 @@
             'z-10 flex size-8 items-center justify-center rounded-full bg-slate-200 dark:bg-stone-700/50',
             loading && 'animate-pulse',
           ]">
-          <SvgIcon
-            v-if="!loading"
-            aria-hidden="true"
-            class="size-5 text-gray-500 dark:text-zinc-400"
-            :path="icon"
-            type="mdi" />
+          <AppIcon v-if="!loading" class="size-5 text-gray-500 dark:text-zinc-400" :icon="icon" />
         </div>
       </slot>
 
@@ -76,11 +71,7 @@
                   <span
                     class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
                     {{ $t('audit.author.unknown.label') }}
-                    <SvgIcon
-                      aria-hidden="true"
-                      class="size-4"
-                      :path="mdiInformationOutline"
-                      type="mdi" />
+                    <AppIcon class="size-4" :icon="mdiInformationOutline" />
                   </span>
                   <template #popper>
                     <span class="overflow-hidden whitespace-pre-line text-sm">
@@ -126,12 +117,10 @@
           </time>
         </div>
 
-        <SvgIcon
+        <AppIcon
           v-if="!!essentialContext"
-          aria-hidden="true"
           class="size-6 shrink-0 self-center"
-          :path="open ? mdiChevronUp : mdiChevronDown"
-          type="mdi" />
+          :icon="open ? mdiChevronUp : mdiChevronDown" />
       </DisclosureButton>
 
       <div v-if="event.context?.comment" class="prose mt-1">
@@ -161,6 +150,7 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/AppIcon.vue';
 import AppLink from '@/components/AppLink.vue';
 import { ROUTE_NAMES } from '@/router/names';
 import { AuditAction, AuditEvent } from '@/services/api/audit';
