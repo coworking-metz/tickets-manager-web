@@ -18,6 +18,7 @@
     "@intlify/unplugin-vue-i18n": "^11.1.2",
     "@jamescoyle/vue-icon": "^0.1.2",
     "@mdi/js": "^7.4.47",
+    "@sentry/vue": "^10.50.0",
     "@tanstack/vue-query": "^5.100.5",
     "@unhead/vue": "^3.1.0",
     "@vuelidate/core": "^2.0.3",

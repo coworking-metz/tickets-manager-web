@@ -2,6 +2,7 @@ import '@/styles/main.css';
 import 'floating-vue/dist/style.css';
 import 'typeface-inter';
 import App from './App.vue';
+import { IS_PRODUCTION } from './helpers/environment';
 import { AppError, AppErrorCode } from './helpers/errors';
 import { i18nInstance } from './i18n';
 import router from './router';
@@ -9,6 +10,7 @@ import { ROUTE_NAMES } from './router/names';
 import { HTTP } from './services/http';
 import createHttpInterceptors from './services/interceptors';
 import { defaultVueQueryPluginOptions } from './services/query';
+import initSentry from './services/sentry';
 import pinia from './store';
 import { useAuthStore } from './store/auth';
 import { useHttpStore } from './store/http';
@@ -92,6 +94,10 @@ router.beforeEach(async (to, from) => {
     };
   });
 });
+
+if (IS_PRODUCTION) {
+  initSentry(app, router);
+}
 
 app.use(i18nInstance);
 useSettingsStore()
