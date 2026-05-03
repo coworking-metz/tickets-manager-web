@@ -42,7 +42,7 @@ Then go to http://localhost:9090
 ### Update dependencies
 
 ```bash
-npx npm-check-updates -i
+npm run update:interactive
 ```
 
 ## Deploy

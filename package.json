@@ -10,7 +10,9 @@
     "dev": "vite",
     "postinstall": "patch-package",
     "preview": "vite preview",
-    "serve": "docker run --rm --name tickets-manager-web-nginx -v $(pwd)/dist:/usr/share/nginx/html:ro -p9999:80 nginx"
+    "serve": "docker run --rm --name tickets-manager-web-nginx -v $(pwd)/dist:/usr/share/nginx/html:ro -p9999:80 nginx",
+    "update": "ncu --deep --cooldown 7d",
+    "update:interactive": "npm run update -- --interactive"
   },
   "dependencies": {
     "@dotlottie/player-component": "^2.7.12",
@@ -66,6 +68,7 @@
     "eslint-plugin-tailwindcss": "^4.0.0-beta.0",
     "eslint-plugin-vue": "^9.32.0",
     "eslint-plugin-vuejs-accessibility": "^2.5.0",
+    "npm-check-updates": "^22.1.0",
     "patch-package": "^8.0.1",
     "postcss": "^8.5.12",
     "prettier": "^3.8.3",
