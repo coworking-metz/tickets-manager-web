@@ -2,7 +2,7 @@
   "detail": {
     "attendance": {
       "add": "Add attendance",
-      "description": "Attendance is automatically recorded when the member connects to the coworking's WiFi network.",
+      "description": "Attendance is automatically recorded when the member connects to the coworking's Wi-Fi network.",
       "graph": {
         "tooltip": "{date}\n{amount}{suffix}",
         "value": {
@@ -170,8 +170,8 @@
             "label": "Unlock Pedestrian Gate"
           },
           "WIFI_CREDENTIALS_ACCESS": {
-            "description": "Retrieves the WiFi network credentials in the mobile app.",
-            "label": "WiFi Credentials Access"
+            "description": "Retrieves the Wi-Fi network credentials in the mobile app.",
+            "label": "Wi-Fi Credentials Access"
           }
         }
       },
@@ -198,7 +198,7 @@
         "compute": "Synchronize",
         "description": {
           "link": "MAC address",
-          "text": "Check attendance through the presence of a {link} on the WiFi network."
+          "text": "Check attendance through the presence of a {link} on the Wi-Fi network."
         },
         "label": "Device | Device | {count} devices",
         "onUpdate": {

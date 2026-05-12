@@ -183,6 +183,12 @@ const addNbspAroundPunctuation = (str: string | unknown[]) =>
       })
     : str;
 
+// Replaces hyphens by non breaking hyphens to keep related terms on the same line
+// Eg. replaces "coworking-metz" by "coworking\u2011metz" to avoid unwanted line breaks
+const addNonBreakingHyphen = (value: string | unknown[]) => {
+  return isString(value) ? value.replace(/-/g, '\u2011') : value;
+};
+
 export const i18nInstance = createI18n({
   globalInjection: true,
   locale: initialLocale,
@@ -195,7 +201,7 @@ export const i18nInstance = createI18n({
     ['en-GB']: applyingDecimalsAsPluralForEnglishSpeakers,
     ['fr-FR']: applyingDecimalsAsPluralForFrenchSpeakers,
   },
-  postTranslation: addNbspAroundPunctuation as never,
+  postTranslation: (value) => addNbspAroundPunctuation(addNonBreakingHyphen(value)) as never,
 });
 
 // @see https://vuelidate-next.netlify.app/advanced_usage.html#i18n-support

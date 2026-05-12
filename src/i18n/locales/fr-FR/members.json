@@ -2,7 +2,7 @@
   "detail": {
     "attendance": {
       "add": "Ajouter une présence",
-      "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau WiFi du coworking.",
+      "description": "Les présences sont enregistrées automatiquement lorsque le membre se connecte au réseau Wi-Fi du coworking.",
       "graph": {
         "tooltip": "{date}\n{amount}{suffix}",
         "value": {
@@ -170,8 +170,8 @@
             "label": "Déverouiller le portail piéton"
           },
           "WIFI_CREDENTIALS_ACCESS": {
-            "description": "Récupère les identifiants du réseau WiFi dans l'application mobile.",
-            "label": "Accès aux identifiants WiFi"
+            "description": "Récupère les identifiants du réseau Wi-Fi dans l'application mobile.",
+            "label": "Accès aux identifiants Wi-Fi"
           }
         }
       },
