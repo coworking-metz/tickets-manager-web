@@ -3,7 +3,7 @@
     <Head>
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>
-    <header class="mx-3 flex flex-row sm:mx-0">
+    <header class="flex flex-row">
       <h1
         class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
         {{ $t('audit.list.title') }}
@@ -64,8 +64,8 @@
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('audit.list.sort.label', {
-                      ...(sort && {
-                        suffix: $t(`audit.list.sort.value.${sort}`).toLocaleLowerCase(),
+                      ...(queryState.sort && {
+                        suffix: $t(`audit.list.sort.value.${queryState.sort}`).toLocaleLowerCase(),
                       }),
                     })
                   }}
@@ -86,7 +86,7 @@
                       v-for="listSorter in ALL_LIST_SORTERS"
                       :key="`history-list-sort-${listSorter.key}`"
                       v-slot="{ active, close }">
-                      <RouterLink
+                      <button
                         :class="[
                           active &&
                             'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
@@ -97,16 +97,21 @@
                           ...route,
                           query: {
                             ...route.query,
-                            sort: listSorter.key !== sort ? listSorter.key : undefined,
+                            sort: listSorter.key !== queryState.sort ? listSorter.key : undefined,
                           },
                         }"
-                        @click="close">
+                        @click="
+                          () => {
+                            queryState.sort = listSorter.key;
+                            close();
+                          }
+                        ">
                         {{ $t(`audit.list.sort.value.${listSorter.key}`) }}
                         <AppIcon
-                          v-if="listSorter.key === sort"
+                          v-if="listSorter.key === queryState.sort"
                           class="-mr-1.5 ml-2.5 size-4 shrink-0"
                           :icon="mdiCheck" />
-                      </RouterLink>
+                      </button>
                     </MenuItem>
                   </div>
                 </MenuItems>
@@ -128,7 +133,9 @@
           v-else-if="!slicedList.length"
           class="m-auto py-6"
           :description="
-            state.search ? $t('audit.list.empty.description', { search: state.search }) : ''
+            queryState.search
+              ? $t('audit.list.empty.description', { search: queryState.search })
+              : ''
           "
           :title="$t('audit.list.empty.title')" />
         <li v-else v-for="(event, eventIndex) in slicedList" :key="`event-${event._id}`">
@@ -144,7 +151,7 @@
         ref="endOfList"
         class="p-6 text-center text-gray-500 dark:text-gray-400">
         {{
-          state.slice < filteredList.length
+          queryState.slice < filteredList.length
             ? $t('audit.list.onEndScrollReached.loading')
             : $t('audit.list.onEndScrollReached.full')
         }}
@@ -163,7 +170,6 @@ import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';
-import { ROUTE_NAMES } from '@/router/names';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
 import { auditEventsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
@@ -171,9 +177,10 @@ import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { useDebounceFn, useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { compact, isNil } from 'lodash';
+import { compact } from 'lodash';
 import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { numberCodec, queryReactive } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
 
 interface ListSorter {
@@ -202,41 +209,25 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
 
 const SLICE_STEP = 16;
 
-const props = defineProps({
-  search: {
-    type: String,
-    default: null,
-  },
-  sort: {
-    type: String,
-    default: 'occurred',
-  },
-  slice: {
-    type: [String, Number],
-    default: SLICE_STEP, // eslint-disable-line vue/valid-define-props
-  },
-  from: {
-    type: String,
-    default: null,
-  },
-  to: {
-    type: String,
-    default: null,
-  },
-});
-
 const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
 const now = dayjs();
 const state = reactive({
   isSearching: false as boolean,
-  search: null as string | null,
-  slice: Number(props.slice) as number,
+  search: '' as string,
   period: {
     start: now.subtract(7, 'days').format(DATE_FORMAT) as string,
     end: now.format(DATE_FORMAT) as string,
   },
+});
+
+const queryState = queryReactive({
+  search: { defaultValue: '' },
+  sort: { defaultValue: 'occurred' },
+  slice: { defaultValue: SLICE_STEP, codec: numberCodec },
+  to: { defaultValue: state.period.end },
+  from: { defaultValue: state.period.start },
 });
 
 const {
@@ -262,7 +253,7 @@ const filteredList = computed(() => {
     )
     .filter((event) =>
       searchIn(
-        props.search,
+        queryState.search,
         event.author && event.author._id === event.context?.member?._id
           ? i18n.t(`audit.action.${event.action}.self`)
           : i18n.t(`audit.action.${event.action}.message`),
@@ -270,42 +261,24 @@ const filteredList = computed(() => {
         JSON.stringify(event),
       ),
     )
-    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
+    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === queryState.sort)?.sort);
 });
 
-const slicedList = computed(() => filteredList.value.slice(0, state.slice));
+const slicedList = computed(() => filteredList.value.slice(0, queryState.slice));
 
 const endOfList = ref<HTMLLIElement>();
 const endOfListVisible = useElementVisibility(endOfList);
 
 watch(endOfListVisible, (isVisible) => {
   if (isVisible) {
-    if (filteredList.value.length && state.slice < filteredList.value.length) {
-      state.slice += SLICE_STEP;
+    if (filteredList.value.length && queryState.slice < filteredList.value.length) {
+      queryState.slice += SLICE_STEP;
     }
   }
 });
 
 watch(
-  () => props.search,
-  (search) => {
-    state.search = search;
-  },
-  { immediate: true },
-);
-
-watch(
-  () => props.slice,
-  (slice) => {
-    if (!isNil(slice)) {
-      state.slice = Number(slice);
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  [() => props.from, () => props.to],
+  [() => queryState.from, () => queryState.to],
   ([from, to]) => {
     const parsedFrom = dayjs(from);
     if (parsedFrom.isValid()) {
@@ -320,33 +293,39 @@ watch(
   { immediate: true },
 );
 
-const debounceQueryParams = useDebounceFn(
-  (search: string | null, slice: number, period: { start: string; end: string }) => {
-    if (router.currentRoute.value?.name === ROUTE_NAMES.HISTORY) {
-      router.replace({
-        ...router.currentRoute.value,
-        query: {
-          ...router.currentRoute.value.query,
-          search: search || undefined,
-          slice: slice || undefined,
-          from: period.start || undefined,
-          to: period.end || undefined,
-        },
-      });
+const debounceSearch = useDebounceFn((search: string) => {
+  queryState.search = search;
+  state.isSearching = false;
+}, 300);
+
+watch(
+  () => state.search,
+  (search) => {
+    if (search) {
+      state.isSearching = true;
+      debounceSearch(search);
+    } else {
+      queryState.search = '';
       state.isSearching = false;
     }
   },
-  300,
 );
 
 watch(
-  [() => state.search, () => state.slice, () => state.period],
-  ([search, slice, period], [_previousSearch, previousSlice]) => {
-    if (Number(slice) >= Number(previousSlice)) {
-      state.isSearching = true;
-      debounceQueryParams(search, slice, period);
-    }
+  () => queryState.search,
+  (search) => {
+    state.search = search;
   },
+  { immediate: true },
+);
+
+watch(
+  () => state.period,
+  (period) => {
+    queryState.from = period.start;
+    queryState.to = period.end;
+  },
+  { deep: true },
 );
 
 watch(
@@ -355,7 +334,7 @@ watch(
     if (success) {
       const top = (router.options.history.state.scroll as { top: number; left: number } | null)
         ?.top;
-      if (top && props.slice) {
+      if (top && queryState.slice) {
         nextTick(() => {
           scrollTo({ top, behavior: 'smooth' });
         });

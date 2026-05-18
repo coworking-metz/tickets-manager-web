@@ -22,7 +22,7 @@
 
         <AppTextField
           id="members-search"
-          v-model="state.search"
+          v-model="queryState.search"
           class="my-4 w-full"
           clearable
           hide-details
@@ -41,8 +41,10 @@
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('attendance.detail.sort.label', {
-                      ...(sort && {
-                        suffix: $t(`attendance.detail.sort.value.${sort}`).toLocaleLowerCase(),
+                      ...(queryState.sort && {
+                        suffix: $t(
+                          `attendance.detail.sort.value.${queryState.sort}`,
+                        ).toLocaleLowerCase(),
                       }),
                     })
                   }}
@@ -63,27 +65,24 @@
                       v-for="listSorter in ALL_LIST_SORTERS"
                       :key="`members-list-sort-${listSorter.key}`"
                       v-slot="{ active, close }">
-                      <RouterLink
+                      <button
                         :class="[
                           active &&
                             'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
                           'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
-                        replace
-                        :to="{
-                          ...currentRoute,
-                          query: {
-                            ...currentRoute.query,
-                            sort: listSorter.key !== sort ? listSorter.key : undefined,
-                          },
-                        }"
-                        @click="close">
+                        @click="
+                          () => {
+                            queryState.sort = listSorter.key;
+                            close();
+                          }
+                        ">
                         {{ $t(`attendance.detail.sort.value.${listSorter.key}`) }}
                         <AppIcon
-                          v-if="listSorter.key === sort"
+                          v-if="listSorter.key === queryState.sort"
                           class="-mr-1.5 ml-2.5 size-4 shrink-0"
                           :icon="mdiCheck" />
-                      </RouterLink>
+                      </button>
                     </MenuItem>
                   </div>
                 </MenuItems>
@@ -103,7 +102,7 @@
           loop
           :title="$t('attendance.detail.empty.title')" />
         <EmptyState
-          v-else-if="state.search && !filteredList.length"
+          v-else-if="queryState.search && !filteredList.length"
           class="mx-auto my-16 lg:my-32"
           :title="$t('attendance.detail.search.empty.title')" />
         <ol
@@ -148,11 +147,11 @@ import {
   computeActivityFromAttendance,
 } from '@/services/api/attendance';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort, mdiChevronRight } from '@mdi/js';
+import { mdiCheck, mdiChevronDown, mdiChevronRight, mdiMagnify, mdiSort } from '@mdi/js';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
-import { PropType, computed, reactive, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { PropType, computed } from 'vue';
+import { queryReactive } from 'vue-qs';
 
 interface ListSorter {
   key: string;
@@ -189,55 +188,23 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  search: {
-    type: String,
-    default: null,
-  },
-  sort: {
-    type: String,
-    default: null,
-  },
 });
 
-const currentRoute = useRoute();
-const router = useRouter();
-const state = reactive({
-  search: null as string | null,
+const queryState = queryReactive({
+  search: { defaultValue: '' },
+  sort: { defaultValue: 'activity' },
 });
 
 const filteredList = computed(() => {
   return (props.attendance?.data.members || [])
     .filter((member) =>
       searchIn(
-        state.search,
+        queryState.search,
         [member.firstName, member.lastName].filter(Boolean).join(' '),
         [member.lastName, member.firstName].filter(Boolean).join(' '),
         member.email,
       ),
     )
-    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
+    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === queryState.sort)?.sort);
 });
-
-watch(
-  () => props.search,
-  (search) => {
-    state.search = search;
-  },
-  { immediate: true },
-);
-
-watch(
-  () => state.search,
-  (search) => {
-    if (search !== props.search) {
-      router.replace({
-        ...router.currentRoute.value,
-        query: {
-          ...router.currentRoute.value.query,
-          search: search || undefined,
-        },
-      });
-    }
-  },
-);
 </script>

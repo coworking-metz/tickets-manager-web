@@ -131,9 +131,7 @@
       <AttendanceDetail
         :attendance="state.selectedAttendance"
         :date="date"
-        :loading="isFetchingAttendance"
-        :search="search"
-        :sort="sort" />
+        :loading="isFetchingAttendance" />
     </aside>
   </article>
 </template>
@@ -163,14 +161,6 @@ const props = defineProps({
   date: {
     type: String,
     default: null,
-  },
-  search: {
-    type: String,
-    default: null,
-  },
-  sort: {
-    type: String,
-    default: 'activity',
   },
 });
 

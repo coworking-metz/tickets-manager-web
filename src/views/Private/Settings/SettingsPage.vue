@@ -107,12 +107,10 @@ import { helpers, requiredIf, macAddress as vuelidateMacAddress } from '@vuelida
 import dayjs from 'dayjs';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { queryReactive } from 'vue-qs';
 
-const props = defineProps({
-  macAddress: {
-    type: String,
-    default: null,
-  },
+const queryState = queryReactive({
+  macAddress: { defaultValue: '' },
 });
 
 const now = dayjs();
@@ -197,7 +195,7 @@ const onClearCache = async () => {
 };
 
 watch(
-  () => props.macAddress,
+  () => queryState.macAddress,
   (newMacAddress) => {
     state.macAddress = newMacAddress;
   },

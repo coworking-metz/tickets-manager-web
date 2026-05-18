@@ -22,11 +22,17 @@ import FloatingVue from 'floating-vue';
 import { includes } from 'lodash';
 import { createApp } from 'vue';
 import VueNumberAnimation from 'vue-number-animation';
+import { createVueQsPlugin, createVueRouterAdapter } from 'vue-qs';
 
 const app = createApp(App);
 const head = createHead();
 
 app.use(pinia);
+app.use(
+  createVueQsPlugin({
+    queryAdapter: createVueRouterAdapter(router),
+  }),
+);
 app.use(router);
 app.use(head);
 app.use(VueQueryPlugin, defaultVueQueryPluginOptions);

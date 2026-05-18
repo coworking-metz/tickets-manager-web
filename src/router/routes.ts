@@ -36,9 +36,6 @@ export const routes: RouteRecordRaw[] = [
             component: () => import('@/views/Private/Members/MembersList.vue'),
             props: (route) => ({
               tab: route.hash.replace('#', ''),
-              search: route.query.search,
-              sort: route.query.sort,
-              slice: route.query.slice,
             }),
           },
           {
@@ -161,13 +158,6 @@ export const routes: RouteRecordRaw[] = [
         path: 'history',
         name: ROUTE_NAMES.HISTORY,
         component: () => import('@/views/Private/History/HistoryEventsList.vue'),
-        props: (route) => ({
-          search: route.query.search,
-          sort: route.query.sort,
-          slice: route.query.slice,
-          from: route.query.from,
-          to: route.query.to,
-        }),
       },
       {
         path: 'attendance/:date?',
@@ -176,17 +166,12 @@ export const routes: RouteRecordRaw[] = [
         props: (route) => ({
           month: route.query.month,
           date: route.params.date,
-          search: route.query.search,
-          sort: route.query.sort,
         }),
       },
       {
         path: 'settings',
         name: ROUTE_NAMES.SETTINGS,
         component: () => import('@/views/Private/Settings/SettingsPage.vue'),
-        props: (route) => ({
-          macAddress: route.query.macAddress,
-        }),
       },
       {
         path: 'miscellaneous',

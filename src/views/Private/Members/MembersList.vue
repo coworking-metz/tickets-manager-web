@@ -64,7 +64,7 @@
         <label class="sr-only" for="members-search">{{ $t('members.list.search.label') }}</label>
         <AppTextField
           id="members-search"
-          v-model="state.search"
+          v-model="queryState.search"
           clearable
           hide-details
           input-class="pr-0"
@@ -82,8 +82,10 @@
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
                     $t('members.list.sort.label', {
-                      ...(sort && {
-                        suffix: $t(`members.list.sort.value.${sort}`).toLocaleLowerCase(),
+                      ...(queryState.sort && {
+                        suffix: $t(
+                          `members.list.sort.value.${queryState.sort}`,
+                        ).toLocaleLowerCase(),
                       }),
                     })
                   }}
@@ -104,27 +106,24 @@
                       v-for="listSorter in ALL_LIST_SORTERS"
                       :key="`members-list-sort-${listSorter.key}`"
                       v-slot="{ active, close }">
-                      <RouterLink
+                      <button
                         :class="[
                           active &&
                             'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
                           'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
                         ]"
-                        replace
-                        :to="{
-                          ...route,
-                          query: {
-                            ...route.query,
-                            sort: listSorter.key !== sort ? listSorter.key : undefined,
-                          },
-                        }"
-                        @click="close">
+                        @click="
+                          () => {
+                            queryState.sort = listSorter.key;
+                            close();
+                          }
+                        ">
                         {{ $t(`members.list.sort.value.${listSorter.key}`) }}
                         <AppIcon
-                          v-if="listSorter.key === sort"
-                          class="-mr-1.5 ml-2.5 size-4 shrink-0"
+                          v-if="listSorter.key === queryState.sort"
+                          class="-mr-1.5 ml-2.5 mt-0.5 size-4 shrink-0"
                           :icon="mdiCheck" />
-                      </RouterLink>
+                      </button>
                     </MenuItem>
                   </div>
                 </MenuItems>
@@ -175,7 +174,7 @@
           ref="endOfList"
           class="p-6 text-center text-gray-500 dark:text-gray-400">
           {{
-            state.slice < tabFilteredList.length
+            queryState.slice < tabFilteredList.length
               ? $t('members.list.onEndScrollReached.loading')
               : $t('members.list.onEndScrollReached.full')
           }}
@@ -273,8 +272,9 @@ import { Head } from '@unhead/vue/components';
 import { useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { numberCodec, queryReactive } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
 
 interface Tab {
@@ -315,32 +315,19 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
 
 const SLICE_STEP = 16;
 
-const props = defineProps({
-  tab: {
-    type: String,
-    default: null,
-  },
-  search: {
-    type: String,
-    default: null,
-  },
-  sort: {
-    type: String,
-    default: 'lastSeen',
-  },
-  slice: {
-    type: [String, Number],
-    default: SLICE_STEP, // eslint-disable-line vue/valid-define-props
-  },
+const props = defineProps<{
+  tab: string;
+}>();
+
+const queryState = queryReactive({
+  search: { defaultValue: '' },
+  sort: { defaultValue: 'lastSeen' },
+  slice: { defaultValue: SLICE_STEP, codec: numberCodec },
 });
 
 const route = useRoute();
 const router = useRouter();
 const i18n = useI18n();
-const state = reactive({
-  search: null as string | null,
-  slice: Number(props.slice) as number,
-});
 
 const {
   isSuccess,
@@ -375,7 +362,7 @@ const filteredList = computed(() => {
   return (members.value || [])
     .filter((member) =>
       searchIn(
-        state.search,
+        queryState.search,
         [member.firstName, member.lastName].filter(Boolean).join(' '),
         [member.lastName, member.firstName].filter(Boolean).join(' '),
         member.email,
@@ -395,7 +382,7 @@ const filteredList = computed(() => {
             : i18n.t('members.detail.membership.none')),
       ),
     )
-    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === props.sort)?.sort);
+    .sort(ALL_LIST_SORTERS.value.find((s) => s.key === queryState.sort)?.sort);
 });
 
 const ALL_TABS = computed<Tab[]>(() => [
@@ -432,7 +419,7 @@ const tabFilteredList = computed(() =>
   filteredList.value.filter(selectedTab.value?.filter ?? (() => true)),
 );
 
-const slicedList = computed(() => tabFilteredList.value.slice(0, state.slice));
+const slicedList = computed(() => tabFilteredList.value.slice(0, queryState.slice));
 
 const totalDebt = computed(() =>
   filteredList.value.reduce(
@@ -450,59 +437,11 @@ const endOfListVisible = useElementVisibility(endOfList);
 
 watch(endOfListVisible, (isVisible) => {
   if (isVisible) {
-    if (tabFilteredList.value.length && state.slice < tabFilteredList.value.length) {
-      state.slice += SLICE_STEP;
+    if (tabFilteredList.value.length && queryState.slice < tabFilteredList.value.length) {
+      queryState.slice += SLICE_STEP;
     }
   }
 });
-
-watch(
-  () => props.search,
-  (search) => {
-    state.search = search;
-  },
-  { immediate: true },
-);
-
-watch(
-  () => props.slice,
-  (slice) => {
-    if (!isNil(slice)) {
-      state.slice = Number(slice);
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  () => state.search,
-  (search) => {
-    if (search !== props.search) {
-      router.replace({
-        ...router.currentRoute.value,
-        query: {
-          ...router.currentRoute.value.query,
-          search: search || undefined,
-        },
-        replace: true,
-      });
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  () => state.slice,
-  () => {
-    router.replace({
-      ...router.currentRoute.value,
-      query: {
-        ...router.currentRoute.value.query,
-        slice: state.slice,
-      },
-    });
-  },
-);
 
 watch(
   () => isSuccess.value,
@@ -510,7 +449,7 @@ watch(
     if (success) {
       const top = (router.options.history.state.scroll as { top: number; left: number } | null)
         ?.top;
-      if (top && props.slice) {
+      if (top && queryState.slice) {
         nextTick(() => {
           scrollTo({ top, behavior: 'smooth' });
         });
