@@ -424,12 +424,6 @@ const ALL_TABS = computed<Tab[]>(() => [
           (member) => votingMembers.value?.some(({ email }) => member.email === email) || false,
         ).length,
   },
-  {
-    key: 'attending',
-    hash: 'attending',
-    filter: (member: MemberListItem) => member.attending,
-    count: filteredList.value.filter((member) => member.attending).length,
-  },
 ]);
 
 const selectedTab = computed(() => ALL_TABS.value.find((t) => t.hash === props.tab));
