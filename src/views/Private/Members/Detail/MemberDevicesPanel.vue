@@ -11,12 +11,13 @@
           scope="global"
           tag="span">
           <template #link>
-            <a
-              class="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
+            <AppLink
+              class="font-medium text-indigo-600 dark:text-indigo-500"
               href="https://www.studentinternet.eu/fr/docs/nederlands/depannage/comment-puis-je-trouver-ladresse-mac-de-mon-appareil/"
+              icon=""
               target="_blank">
               {{ $t('members.detail.profile.macAddresses.description.link') }}
-            </a>
+            </AppLink>
             <AppIcon class="inline-block size-4 pb-1 text-indigo-600" :icon="mdiOpenInNew" />
           </template>
         </i18n-t>
@@ -37,17 +38,16 @@
               required
               @update:model-value="(value: string) => onMacAddressInput(index, value)">
               <template #append>
-                <a
+                <AppLink
                   v-if="
                     state.devices[index].macAddress &&
                     !vuelidate.devices.$each.$response.$data[index].macAddress.$error
                   "
-                  class="absolute inset-y-0 right-0 z-20 flex items-center px-3 font-medium text-indigo-600 hover:underline max-sm:hidden sm:text-sm dark:text-indigo-500"
+                  class="absolute inset-y-0 right-0 z-20 flex flex-row items-center px-3 font-medium text-indigo-600 max-sm:hidden sm:text-sm dark:text-indigo-500"
                   :href="`https://maclookup.app/search/result?mac=${state.devices[index].macAddress}`"
                   target="_blank">
                   {{ $t('members.detail.profile.macAddresses.verify') }}
-                  <AppIcon class="ml-1 inline-block size-5" :icon="mdiOpenInNew" />
-                </a>
+                </AppLink>
               </template>
 
               <template #after>
@@ -122,6 +122,7 @@
 
 <script setup lang="ts">
 import AppIcon from '@/components/AppIcon.vue';
+import AppLink from '@/components/AppLink.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppTextField from '@/components/form/AppTextField.vue';

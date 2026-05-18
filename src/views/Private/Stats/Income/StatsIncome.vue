@@ -62,7 +62,7 @@
               xmlns="http://www.w3.org/2000/svg">
               <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
             </svg>
-            <router-link
+            <RouterLink
               :aria-current="frequency === freq ? 'page' : undefined"
               :class="[
                 frequency === freq
@@ -74,7 +74,7 @@
               replace
               :to="{ ...route, query: { ...route.query, frequency: freq } }">
               {{ $t(`stats.incomes.frequency.value.${freq}`) }}
-            </router-link>
+            </RouterLink>
           </li>
         </ol>
       </div>

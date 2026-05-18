@@ -36,7 +36,7 @@
               v-for="tab in tabs.filter(({ active }) => !active)"
               :key="tab.label"
               v-slot="{ close }">
-              <router-link
+              <RouterLink
                 :aria-current="tab.active ? 'page' : undefined"
                 :class="[
                   tab.active ? 'bg-gray-100 text-gray-900 dark:text-gray-100' : 'text-gray-700',
@@ -51,7 +51,7 @@
                     {{ tab.description }}
                   </p>
                 </div>
-              </router-link>
+              </RouterLink>
             </MenuItem>
           </div>
         </MenuItems>
@@ -71,7 +71,7 @@
             </h1>
           </div>
           <div class="min-h-0 flex-1 overflow-y-auto">
-            <router-link
+            <RouterLink
               v-for="tab in tabs"
               :key="tab.label"
               :aria-current="tab.active ? 'page' : undefined"
@@ -91,7 +91,7 @@
                   tab.active ? 'opacity-80' : 'opacity-0',
                 ]"
                 :icon="mdiChevronRight" />
-            </router-link>
+            </RouterLink>
           </div>
         </nav>
       </aside>

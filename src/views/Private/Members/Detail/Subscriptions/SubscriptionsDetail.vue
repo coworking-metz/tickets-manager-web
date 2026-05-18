@@ -71,17 +71,14 @@
           "
           #append>
           <div class="absolute inset-y-0 right-3 z-[11] flex h-10 items-center gap-1">
-            <a
-              class="text-base font-medium !leading-10 text-indigo-600 hover:underline sm:text-sm dark:text-indigo-500"
+            <AppLink
+              class="text-base font-medium !leading-10 text-indigo-600 sm:text-sm dark:text-indigo-500"
               :href="buildWordpressSearchOrderByReferenceUrl(selectedSubscription.orderReference)"
+              icon=""
               target="_blank">
               {{ $t('action.navigate') }}
-            </a>
-            <AppIcon
-             
-              class="inline-block size-4 text-indigo-600"
-              :icon="mdiOpenInNew"
-              />
+            </AppLink>
+            <AppIcon class="inline-block size-4 text-indigo-600" :icon="mdiOpenInNew" />
           </div>
         </template>
       </AppTextField>
@@ -131,8 +128,9 @@
 </template>
 
 <script setup lang="ts">
-import AppIcon from '@/components/AppIcon.vue';
 import SubscriptionsDeleteDialog from './SubscriptionsDeleteDialog.vue';
+import AppIcon from '@/components/AppIcon.vue';
+import AppLink from '@/components/AppLink.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
