@@ -50,17 +50,25 @@
       ]">
       <RouterView class="sm:pl-36 sm:pr-4" />
     </main>
+
+    <MessagesNewDialog
+      v-if="ARE_MESSAGES_ENABLED"
+      v-model="messagesStore.isNewMessageDialogVisible" />
   </div>
 </template>
 
 <script setup lang="ts">
+import MessagesNewDialog from './Messages/MessagesNewDialog.vue';
 import typoLePoulailler from '@/assets/typo-lepoulailler.png';
 import AppIcon from '@/components/AppIcon.vue';
 import NavigationDrawer from '@/components/layout/NavigationDrawer.vue';
+import { ARE_MESSAGES_ENABLED } from '@/helpers/environment';
+import { useMessagesStore } from '@/store/messages';
 import { mdiMenu, mdiMenuOpen } from '@mdi/js';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
+const messagesStore = useMessagesStore();
 const router = useRouter();
 const state = reactive({
   isMenuOpen: false,

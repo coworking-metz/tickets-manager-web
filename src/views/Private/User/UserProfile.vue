@@ -1,5 +1,6 @@
 <template>
-  <article class="mx-auto flex w-full max-w-7xl grow flex-col px-3 py-12 sm:pt-40">
+  <article
+    class="mx-auto flex w-full max-w-7xl grow flex-col px-3 py-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
     <Head>
       <title>{{ $t('user.profile.head.title') }}</title>
     </Head>

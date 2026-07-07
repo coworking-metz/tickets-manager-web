@@ -86,8 +86,8 @@
 </template>
 
 <script setup lang="ts">
-import AppIcon from '@/components/AppIcon.vue';
 import AuditEntryInline from './AuditEntryInline.vue';
+import AppIcon from '@/components/AppIcon.vue';
 import AppLink from '@/components/AppLink.vue';
 import { ActivityDuration, getActivityDuration } from '@/helpers/activity';
 import { ROUTE_NAMES } from '@/router/names';

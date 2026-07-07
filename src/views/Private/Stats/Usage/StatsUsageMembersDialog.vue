@@ -143,7 +143,7 @@
           <template #action><i></i></template>
         </ErrorState>
         <template v-else>
-          <AppTextField
+          <AppSearchField
             id="members-search"
             v-model="state.search"
             class="m-4 self-stretch"
@@ -151,9 +151,7 @@
             hide-details
             input-class="pr-0"
             name="members-search"
-            :placeholder="$t('stats.usage.members.search.placeholder')"
-            :prepend-icon="mdiMagnify"
-            type="search">
+            :placeholder="$t('stats.usage.members.search.placeholder')">
             <template #after>
               <Menu as="div" class="relative -ml-px block">
                 <MenuButton
@@ -210,7 +208,7 @@
                 </Transition>
               </Menu>
             </template>
-          </AppTextField>
+          </AppSearchField>
           <EmptyState
             v-if="!filteredList.length"
             :animation="EmptyOffice"
@@ -269,6 +267,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
+import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';

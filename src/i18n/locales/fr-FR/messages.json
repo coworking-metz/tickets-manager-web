@@ -1,0 +1,90 @@
+{
+  "card": {
+    "createdOn": "Créé le",
+    "draft": "Brouillon",
+    "published": "Publié",
+    "publishedOn": "Publié le",
+    "recipients": "{count} destinataire | {count} destinataires",
+    "untitled": "Sans titre"
+  },
+  "delete": {
+    "description": "Êtes-vous sûr de vouloir supprimer ce message ?\nCette action est irréversible.",
+    "title": "Supprimer le message"
+  },
+  "detail": {
+    "head": {
+      "title": "@:messages.detail.title"
+    },
+    "published": {
+      "label": "Date de publication"
+    },
+    "recipients": {
+      "label": "Destinataires"
+    },
+    "title": {
+      "label": "Sujet"
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Aucun message"
+    },
+    "head": {
+      "title": "@:messages.title"
+    },
+    "new": "Nouveau message",
+    "search": {
+      "label": "Rechercher un message",
+      "placeholder": "Rechercher par titre ou contenu..."
+    },
+    "title": "Annonces"
+  },
+  "new": {
+    "body": {
+      "hint": "Le contenu du message. Vous pouvez utiliser le Markdown pour formater le texte.",
+      "label": "Message",
+      "placeholder": "Rédigez votre message ici..."
+    },
+    "head": {
+      "title": "@:messages.new.title"
+    },
+    "published": {
+      "hint": "Laissez vide pour sauvegarder en brouillon. Une fois publié, le message sera envoyé à tous les membres.",
+      "label": "Date de publication"
+    },
+    "recipients": {
+      "description": "Sélectionnez les membres qui recevront ce message.",
+      "dialog": {
+        "empty": "Aucun membre trouvé",
+        "search": "Rechercher un membre...",
+        "title": "Sélectionner les destinataires"
+      },
+      "empty": "Aucun destinataire sélectionné",
+      "label": "Destinataires",
+      "modify": "Modifier la sélection",
+      "select": "Sélectionner les destinataires"
+    },
+    "title": "Nouveau message",
+    "titleField": {
+      "label": "Titre",
+      "placeholder": "Titre de votre annonce (optionnel)"
+    }
+  },
+  "onAdd": {
+    "fail": "Impossible de créer le message",
+    "success": "Message créé avec succès"
+  },
+  "onDelete": {
+    "fail": "Impossible de supprimer le message"
+  },
+  "onFetch": {
+    "fail": "Impossible de récupérer le message"
+  },
+  "onFetchAll": {
+    "fail": "Impossible de récupérer les messages"
+  },
+  "onUpdate": {
+    "fail": "Impossible de mettre à jour le message"
+  },
+  "title": "Annonces"
+}

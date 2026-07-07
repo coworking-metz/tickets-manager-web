@@ -1,4 +1,5 @@
 import { ROUTE_NAMES, ROUTE_QUERY_ARRAY_SEPARATOR } from './names';
+import { ARE_MESSAGES_ENABLED } from '@/helpers/environment';
 import { compact } from 'lodash';
 import { RouteRecordRaw } from 'vue-router';
 
@@ -24,7 +25,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '',
     component: () => import('@/views/Private/PrivateLayout.vue'),
-    children: [
+    children: compact([
       { path: '', name: ROUTE_NAMES.HOME, redirect: { name: ROUTE_NAMES.MEMBERS.LIST } },
       {
         path: 'members',
@@ -154,6 +155,37 @@ export const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      ...(ARE_MESSAGES_ENABLED
+        ? [
+            {
+              path: 'messages',
+              component: () => import('@/views/Private/Messages/MessagesPage.vue'),
+              props: (route) => ({
+                messageId: route.params.messageId,
+              }),
+              children: [
+                {
+                  path: '',
+                  name: ROUTE_NAMES.MESSAGES.LIST,
+                  component: () => import('@/views/Private/Messages/MessagesList.vue'),
+                  props: (route) => ({
+                    search: route.query.search,
+                    sort: route.query.sort,
+                    slice: route.query.slice,
+                  }),
+                },
+                {
+                  path: ':messageId',
+                  name: ROUTE_NAMES.MESSAGES.DETAIL,
+                  component: () => import('@/views/Private/Messages/MessagesDetail.vue'),
+                  props: (route) => ({
+                    messageId: route.params.messageId,
+                  }),
+                },
+              ],
+            },
+          ]
+        : []),
       {
         path: 'history',
         name: ROUTE_NAMES.HISTORY,
@@ -183,7 +215,7 @@ export const routes: RouteRecordRaw[] = [
         name: ROUTE_NAMES.USER.PROFILE,
         component: () => import('@/views/Private/User/UserProfile.vue'),
       },
-    ],
+    ]),
   },
   { path: '/:catchAll(.*)', redirect: '/' },
 ];

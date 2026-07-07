@@ -9,7 +9,7 @@
       :title="$t('attendance.detail.select.title')" />
     <template v-else>
       <header
-        class="z-10 flex flex-col items-start border-b border-gray-200 bg-slate-50/90 backdrop-blur-sm max-sm:px-3 lg:sticky lg:top-0 lg:pt-40 dark:border-neutral-700 dark:bg-stone-900/90">
+        class="z-10 flex flex-col items-start border-b border-gray-200 bg-slate-50/90 backdrop-blur-sm max-sm:px-3 lg:sticky lg:top-0 lg:pt-12 dark:border-neutral-700 dark:bg-stone-900/90 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
         <h1
           class="w-full text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ capitalize(dayjs(date).format('dddd LL')) }}
@@ -20,7 +20,7 @@
           {{ $t('attendance.detail.attending', { count: attendance?.data.members.length }) }}
         </p>
 
-        <AppTextField
+        <AppSearchField
           id="members-search"
           v-model="queryState.search"
           class="my-4 w-full"
@@ -30,8 +30,7 @@
           name="members-search"
           :placeholder="$t('attendance.detail.search.placeholder')"
           :prepend-icon="mdiMagnify"
-          tabindex="1"
-          type="search">
+          tabindex="1">
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
@@ -89,7 +88,7 @@
               </Transition>
             </Menu>
           </template>
-        </AppTextField>
+        </AppSearchField>
       </header>
 
       <template v-if="attendance?.date && attendance.date === date">
@@ -138,6 +137,7 @@ import SelectCalendarDate from '@/assets/animations/select-calendar-date.lottie'
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';

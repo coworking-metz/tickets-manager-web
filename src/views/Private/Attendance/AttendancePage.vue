@@ -5,7 +5,8 @@
       <title>{{ $t('attendance.head.title') }}</title>
     </Head>
 
-    <section class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 lg:sticky lg:top-40 lg:py-0">
+    <section
+      class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 lg:sticky lg:top-12 lg:py-0 [@media_((min-height:840px)_and_(min-width:1024px))]:top-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <div class="flex flex-row">
           <h1

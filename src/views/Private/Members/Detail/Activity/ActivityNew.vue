@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col">
+  <div class="flex min-h-full flex-col bg-white shadow-xl dark:bg-neutral-800">
     <div class="flex flex-col gap-1 bg-indigo-700 px-4 py-6 sm:px-6">
       <div class="flex flex-row items-center justify-between">
         <DialogTitle
@@ -18,50 +18,48 @@
       </div>
     </div>
     <LoadingSpinner v-if="loading" class="m-auto size-16" />
-    <div v-else class="flex flex-col px-4 py-6 sm:px-6">
-      <form class="flex h-full flex-col" @submit.prevent="onSubmit">
-        <AppTextField
-          id="date"
-          v-model="state.date"
-          :errors="vuelidate.date.$errors.map(({ $message }) => $message as string)"
-          :label="$t('activity.new.date.label')"
-          :prepend-icon="mdiCalendar"
-          required
-          type="date" />
+    <form v-else class="flex h-full flex-col px-4 py-6 sm:px-6" @submit.prevent="onSubmit">
+      <AppTextField
+        id="date"
+        v-model="state.date"
+        :errors="vuelidate.date.$errors.map(({ $message }) => $message as string)"
+        :label="$t('activity.new.date.label')"
+        :prepend-icon="mdiCalendar"
+        required
+        type="date" />
 
-        <AppToggleField
-          v-model="state.duration"
-          :errors="vuelidate.duration.$errors.map(({ $message }) => $message as string)"
-          :format="
-            (option) =>
-              option === ActivityDuration.HALF
-                ? $t('activity.detail.duration.half')
-                : $t('activity.detail.duration.count', {
-                    count: option,
-                  })
-          "
-          :label="$t('activity.detail.duration.label')"
-          :options="[ActivityDuration.HALF, ActivityDuration.FULL]"
-          :other-placeholder="$t('activity.detail.duration.other')" />
+      <AppToggleField
+        v-model="state.duration"
+        :errors="vuelidate.duration.$errors.map(({ $message }) => $message as string)"
+        :format="
+          (option) =>
+            option === ActivityDuration.HALF
+              ? $t('activity.detail.duration.half')
+              : $t('activity.detail.duration.count', {
+                  count: option,
+                })
+        "
+        :label="$t('activity.detail.duration.label')"
+        :options="[ActivityDuration.HALF, ActivityDuration.FULL]"
+        :other-placeholder="$t('activity.detail.duration.other')" />
 
-        <AppTextareaField
-          id="comment"
-          v-model="state.comment"
-          :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
-          :label="$t('activity.detail.comment.label')"
-          :placeholder="$t('activity.detail.comment.placeholder')"
-          required />
+      <AppTextareaField
+        id="comment"
+        v-model="state.comment"
+        :errors="vuelidate.comment.$errors.map(({ $message }) => $message as string)"
+        :label="$t('activity.detail.comment.label')"
+        :placeholder="$t('activity.detail.comment.placeholder')"
+        required />
 
-        <AppButtonPlain
-          class="mt-1 self-start dark:focus:ring-offset-neutral-800"
-          color="indigo"
-          :icon="mdiPlus"
-          :loading="state.isSubmitting"
-          type="submit">
-          {{ $t('action.add') }}
-        </AppButtonPlain>
-      </form>
-    </div>
+      <AppButtonPlain
+        class="mt-1 self-start dark:focus:ring-offset-neutral-800"
+        color="indigo"
+        :icon="mdiPlus"
+        :loading="state.isSubmitting"
+        type="submit">
+        {{ $t('action.add') }}
+      </AppButtonPlain>
+    </form>
   </div>
 </template>
 

@@ -27,6 +27,7 @@
         class="px-0.5"
         :to="{ name: ROUTE_NAMES.USER.PROFILE }">
         <MembersThumbnail
+          class="text-sm"
           :email="authStore.user?.email"
           :name="authStore.user?.name"
           :thumbnail="authStore.user?.picture" />
@@ -39,13 +40,15 @@
 <script setup lang="ts">
 import NavigationDrawerLink from './NavigationDrawerLink.vue';
 import LogoMono from '../LogoMono.vue';
+import { ARE_MESSAGES_ENABLED } from '@/helpers/environment';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { useAuthStore } from '@/store/auth';
 import MembersThumbnail from '@/views/Private/Members/MembersThumbnail.vue';
 import {
-  mdiAccountGroup,
-  mdiCalendarMultiselect,
+  mdiAccountGroupOutline,
+  mdiBullhornOutline,
+  mdiCalendarMultiselectOutline,
   mdiCogOutline,
   mdiFinance,
   mdiHistory,
@@ -71,7 +74,7 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     to: {
       name: ROUTE_NAMES.MEMBERS.LIST,
     },
-    icon: mdiAccountGroup,
+    icon: mdiAccountGroupOutline,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.MEMBERS),
   },
   {
@@ -82,6 +85,18 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     icon: mdiFinance,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.STATS),
   },
+  ...(ARE_MESSAGES_ENABLED
+    ? [
+        {
+          label: i18n.t('navigation.messages'),
+          to: {
+            name: ROUTE_NAMES.MESSAGES.LIST,
+          },
+          icon: mdiBullhornOutline,
+          active: doesRouteBelongsTo(route, ROUTE_NAMES.MESSAGES),
+        },
+      ]
+    : []),
   {
     label: i18n.t('navigation.history'),
     to: {
@@ -95,7 +110,7 @@ const sidebarNavigation = computed<NavigationItem[]>(() => [
     to: {
       name: ROUTE_NAMES.ATTENDANCE,
     },
-    icon: mdiCalendarMultiselect,
+    icon: mdiCalendarMultiselectOutline,
     active: doesRouteBelongsTo(route, ROUTE_NAMES.ATTENDANCE),
   },
   {

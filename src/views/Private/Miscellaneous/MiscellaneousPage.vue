@@ -4,7 +4,8 @@
       <title>{{ $t('miscellaneous.head.title') }}</title>
     </Head>
 
-    <div class="flex max-w-3xl shrink-0 grow flex-col gap-6 pb-6 pt-12 sm:pt-40">
+    <div
+      class="flex max-w-3xl shrink-0 grow flex-col gap-6 pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
           class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">

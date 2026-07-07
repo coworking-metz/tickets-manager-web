@@ -31,3 +31,45 @@ export const getInitials = (name?: string, email?: string): string => {
     .splice(0, 3)
     .join('');
 };
+
+export const formatConjonction = (
+  list: (string | boolean | null | undefined)[],
+  locale: string,
+  // @ts-ignore
+  options?: Intl.ListFormatOptions,
+) => {
+  try {
+    // https://github.com/microsoft/TypeScript/issues/46907
+    // @ts-ignore
+    return new Intl.ListFormat(locale, {
+      style: 'long',
+      type: 'conjunction',
+      ...options,
+    }).format(list.filter(Boolean) as string[]);
+  } catch (error) {
+    // fallback to a simple string
+    // as ListFormat isn't supported on all browsers yet
+    return list.join(' - ');
+  }
+};
+
+export const formatDisjunction = (
+  list: (string | boolean | null | undefined)[],
+  locale: string,
+  // @ts-ignore
+  options?: Intl.ListFormatOptions,
+) => {
+  try {
+    // https://github.com/microsoft/TypeScript/issues/46907
+    // @ts-ignore
+    return new Intl.ListFormat(locale, {
+      style: 'long',
+      type: 'disjunction',
+      ...options,
+    }).format(list.filter(Boolean) as string[]);
+  } catch (error) {
+    // fallback to a simple string
+    // as ListFormat isn't supported on all browsers yet
+    return list.join(' - ');
+  }
+};

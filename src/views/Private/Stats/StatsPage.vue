@@ -1,5 +1,5 @@
 <template>
-  <main class="flex grow flex-col">
+  <div class="flex grow flex-col">
     <Menu
       as="nav"
       class="relative z-20 mb-6 mt-3 inline-block text-left max-sm:mx-3 sm:mt-6 xl:hidden">
@@ -101,7 +101,7 @@
         <RouterView />
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <script lang="ts" setup>

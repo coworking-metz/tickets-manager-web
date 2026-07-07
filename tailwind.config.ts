@@ -24,7 +24,7 @@ export default {
         '3xl': '1648px',
         '4xl': '1776px',
         '5xl': '1921px', // Full HD + 1 to keep things compact below FullHD
-        '6xl': '2560px', // WQHD
+        '6xl': '2560px', // WQHD,
       },
     },
   },

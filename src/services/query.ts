@@ -68,3 +68,9 @@ export const statsQueryKeys = {
   attendanceInPeriod: (frequency: Frequency, from: string, to: string) =>
     [...statsQueryKeys.allAttendancePeriods(), frequency, from, to] as const,
 };
+
+export const messagesQueryKeys = {
+  all: () => ['messages'] as const,
+  byId: (id: string | number) => [...messagesQueryKeys.all(), `${id}`] as const,
+  historyById: (id: string | number) => [...messagesQueryKeys.byId(id), 'history'] as const,
+};

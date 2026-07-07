@@ -1,0 +1,60 @@
+{
+  "card": {
+    "createdOn": "Created on",
+    "draft": "Draft",
+    "published": "Published",
+    "publishedOn": "Published on",
+    "recipients": "{count} recipient | {count} recipients",
+    "untitled": "Untitled"
+  },
+  "list": {
+    "empty": {
+      "title": "No messages"
+    },
+    "head": {
+      "title": "@:messages.title"
+    },
+    "new": "New message",
+    "search": {
+      "label": "Search for a message",
+      "placeholder": "Search by title or content..."
+    },
+    "title": "Announcements"
+  },
+  "new": {
+    "body": {
+      "hint": "The message content. You can use Markdown to format the text.",
+      "label": "Message",
+      "placeholder": "Write your message here..."
+    },
+    "head": {
+      "title": "@:messages.new.title"
+    },
+    "onAdd": {
+      "fail": "Failed to create message",
+      "success": "Message created successfully"
+    },
+    "published": {
+      "hint": "Leave empty to save as draft. Once published, the message will be sent to all members.",
+      "label": "Publication date"
+    },
+    "recipients": {
+      "description": "Select the members who will receive this message.",
+      "dialog": {
+        "empty": "No members found",
+        "search": "Search for a member...",
+        "title": "Select recipients"
+      },
+      "empty": "No recipients selected",
+      "label": "Recipients",
+      "modify": "Modify selection",
+      "select": "Select recipients"
+    },
+    "title": "New message",
+    "titleField": {
+      "label": "Title",
+      "placeholder": "Your announcement title (optional)"
+    }
+  },
+  "title": "Announcements"
+}
