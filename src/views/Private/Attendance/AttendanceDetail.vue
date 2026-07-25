@@ -138,7 +138,6 @@ import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import {

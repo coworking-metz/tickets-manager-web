@@ -14,10 +14,7 @@
 <script setup lang="ts">
 import MessagesDetail from './MessagesDetail.vue';
 import MessagesList from './MessagesList.vue';
-import MessagesNew from './MessagesNew.vue';
-import MessagesNewDialog from './MessagesNewDialog.vue';
 import RouterViewSlideTransition from '@/components/layout/RouterViewSlideTransition.vue';
-import { ROUTE_NAMES } from '@/router/names';
 import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps({

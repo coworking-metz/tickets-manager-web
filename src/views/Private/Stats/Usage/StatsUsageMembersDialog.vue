@@ -268,7 +268,6 @@ import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
 import { searchIn } from '@/helpers/text';
@@ -286,7 +285,6 @@ import {
   mdiCheck,
   mdiChevronDown,
   mdiClose,
-  mdiMagnify,
   mdiRefresh,
   mdiSort,
   mdiUnfoldLessHorizontal,

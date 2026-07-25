@@ -72,12 +72,7 @@
 import AppIcon from '@/components/AppIcon.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import { ApiMessage } from '@/services/api/messages';
-import {
-  mdiAccountMultipleOutline,
-  mdiCheckCircleOutline,
-  mdiClockOutline,
-  mdiEmailOutline,
-} from '@mdi/js';
+import { mdiAccountMultipleOutline, mdiCheckCircleOutline, mdiClockOutline } from '@mdi/js';
 import dayjs from 'dayjs';
 import { computed, PropType } from 'vue';
 

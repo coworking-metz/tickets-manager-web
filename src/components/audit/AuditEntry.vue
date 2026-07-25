@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import AuditEntryAirConditioner from './AuditEntryAirConditioner.vue';
 import AuditEntryInline from './AuditEntryInline.vue';
 import AuditEntryMemberActivity from './AuditEntryMemberActivity.vue';
 import AuditEntryMemberMembership from './AuditEntryMemberMembership.vue';
@@ -35,6 +36,10 @@ const auditComponent = computed(() => {
     case AuditAction.MEMBER_MEMBERSHIP_UPDATE:
     case AuditAction.MEMBER_MEMBERSHIP_REMOVE:
       return AuditEntryMemberMembership;
+    case AuditAction.AIR_CONDITIONER_TURN_ON:
+    case AuditAction.AIR_CONDITIONER_TURN_OFF:
+    case AuditAction.AIR_CONDITIONER_SET_TARGET_TEMPERATURE:
+      return AuditEntryAirConditioner;
     default:
       return AuditEntryInline;
   }

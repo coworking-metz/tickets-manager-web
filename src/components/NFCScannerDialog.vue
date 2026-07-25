@@ -216,7 +216,9 @@ const isVisible = defineModel({
   default: false,
 });
 
-const emit = defineEmits(['update:identifier']);
+const emit = defineEmits({
+  'update:identifier': (_id: string | null) => true,
+});
 
 const HAS_NFC = 'NDEFReader' in window;
 const route = useRoute();

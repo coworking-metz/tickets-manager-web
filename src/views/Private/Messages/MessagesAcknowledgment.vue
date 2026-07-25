@@ -95,12 +95,7 @@ const props = defineProps({
   },
 });
 
-const {
-  isPending: isPendingMembers,
-  isFetching: isFetching,
-  data: members,
-  errorText: membersErrorText,
-} = useAppQuery(
+const { data: members } = useAppQuery(
   computed(() => ({
     queryKey: membersQueryKeys.all(),
     queryFn: () => getAllMembers(),

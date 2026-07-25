@@ -151,17 +151,15 @@
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorBadge from '@/components/ErrorBadge.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppPeriodField from '@/components/form/AppPeriodField.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
 import { auditEventsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { mdiCheck, mdiChevronDown, mdiMagnify, mdiSort } from '@mdi/js';
+import { mdiCheck, mdiChevronDown, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
 import { useDebounceFn, useElementVisibility } from '@vueuse/core';
 import dayjs from 'dayjs';

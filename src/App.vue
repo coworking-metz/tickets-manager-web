@@ -41,7 +41,7 @@ import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
 import { useMagicKeys, useWindowSize, whenever } from '@vueuse/core';
 import { isNil } from 'lodash';
-import { computed, markRaw, reactive, watch } from 'vue';
+import { markRaw, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Toaster, toast } from 'vue-sonner';

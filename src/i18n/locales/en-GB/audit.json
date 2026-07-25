@@ -1,5 +1,14 @@
 {
   "action": {
+    "AIR_CONDITIONER_SET_TARGET_TEMPERATURE": {
+      "message": "{author} set the target temperature of the air conditioner to {temperature}°C"
+    },
+    "AIR_CONDITIONER_TURN_OFF": {
+      "message": "{author} turned off the air conditioner"
+    },
+    "AIR_CONDITIONER_TURN_ON": {
+      "message": "{author} turned on the air conditioner"
+    },
     "KEYS_ACCESS": {
       "message": "{author} retrieved the access code for the key box"
     },

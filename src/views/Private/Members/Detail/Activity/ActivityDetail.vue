@@ -133,12 +133,9 @@
                   </span>
                 </span>
                 <AppIcon
-                 
                   :class="[!checked && 'invisible', 'size-5 text-indigo-600 dark:text-indigo-500']"
-                  :icon="mdiCheckCircle"
-                  />
+                  :icon="mdiCheckCircle" />
                 <span
-                 
                   :class="[
                     active ? 'border' : 'border-2',
                     checked ? 'border-indigo-500' : 'border-transparent',

@@ -100,7 +100,6 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppDateField from '@/components/form/AppDateField.vue';
 import AppMarkdownComposer from '@/components/form/AppMarkdownComposer.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
-import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
