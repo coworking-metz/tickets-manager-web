@@ -138,343 +138,455 @@
       <div class="min-w-48 shrink grow basis-0" />
     </section>
 
-    <SectionRow class="mt-6">
-      <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-[172px] w-12" />
-      <div v-else class="relative">
-        <span
-          v-if="
-            state.shouldRenderAllActivity &&
-            firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
-          "
-          class="absolute left-0 z-10 h-[172px] w-10 bg-gradient-to-r from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
-        <span
-          v-if="
-            state.shouldRenderAllActivity &&
-            firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
-          "
-          class="absolute right-0 z-10 h-[172px] w-10 bg-gradient-to-l from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+    <nav
+      aria-label="Sections"
+      class="mt-10 flex flex-row flex-wrap items-end gap-1 px-3 sm:px-0"
+      role="tablist">
+      <RouterLink
+        v-for="tab in MEMBER_DETAIL_TABS"
+        :key="`member-tab-${tab}`"
+        :aria-selected="activeTab === tab"
+        :class="[
+          '-mb-px whitespace-nowrap rounded-t-lg border px-6 py-3 text-base font-medium transition-colors',
+          activeTab === tab
+            ? 'border-gray-200 border-b-transparent bg-white text-gray-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-100'
+            : 'border-transparent text-gray-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100',
+        ]"
+        role="tab"
+        :to="buildTabLocation(tab)">
+        {{ $t(`members.detail.tabs.${tab}`) }}
+      </RouterLink>
+    </nav>
 
-        <ActivityGraph
-          :key="`activity-graph-${state.shouldRenderAllActivity}`"
-          v-bind="
-            state.shouldRenderAllActivity &&
-            firstActivityDate &&
-            lastActivityDate && {
-              class:
-                firstActivityDate.isBefore(dayjs().subtract(6, 'months')) && 'overflow-x-auto pr-2',
-              endDate: lastActivityDate.format('YYYY-MM-DD'),
-              startDate: firstActivityDate.format('YYYY-MM-DD'),
-            }
-          "
-          :activity="activity"
-          class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
-          :selected-date="selectedActivityDate" />
-      </div>
+    <div
+      class="mx-3 rounded-lg border border-gray-200 bg-white px-3 pb-10 sm:mx-0 sm:px-6 dark:border-neutral-700 dark:bg-neutral-800"
+      :class="activeTab === MEMBER_DETAIL_TABS[0] ? 'rounded-tl-none' : ''">
+      <SectionRow v-if="isTabVisible('attendance')" class="mt-6">
+        <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-[172px] w-12" />
+        <div v-else class="relative">
+          <span
+            v-if="
+              state.shouldRenderAllActivity &&
+              firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
+            "
+            class="absolute left-0 z-10 h-[172px] w-10 bg-gradient-to-r from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+          <span
+            v-if="
+              state.shouldRenderAllActivity &&
+              firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
+            "
+            class="absolute right-0 z-10 h-[172px] w-10 bg-gradient-to-l from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
 
-      <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
-        <AppSegmentedControl
-          v-model="state.shouldRenderAllActivity"
-          :format="
-            (option: boolean) =>
-              option
-                ? $t('members.detail.attendance.period.allTime')
-                : $t('members.detail.attendance.period.last6Months')
-          "
-          hide-details
-          :options="[false, true]" />
+          <ActivityGraph
+            :key="`activity-graph-${state.shouldRenderAllActivity}`"
+            v-bind="
+              state.shouldRenderAllActivity &&
+              firstActivityDate &&
+              lastActivityDate && {
+                class:
+                  firstActivityDate.isBefore(dayjs().subtract(6, 'months')) &&
+                  'overflow-x-auto pr-2',
+                endDate: lastActivityDate.format('YYYY-MM-DD'),
+                startDate: firstActivityDate.format('YYYY-MM-DD'),
+              }
+            "
+            :activity="activity"
+            class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
+            :selected-date="selectedActivityDate" />
+        </div>
 
-        <AppButtonPlain
-          class="self-start dark:focus:ring-offset-stone-900"
-          color="neutral"
-          :icon="mdiPlus"
-          replace
-          :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
-          {{ $t('members.detail.attendance.add') }}
-        </AppButtonPlain>
-      </div>
-      <AppAlert
-        v-if="activityErrorText"
-        class="mt-3 self-start max-sm:mx-3"
-        :description="activityErrorText"
-        :title="$t('members.detail.attendance.onFetch.fail')"
-        type="error" />
+        <div class="mt-1 flex flex-row flex-wrap items-center justify-between gap-3 max-sm:mx-3">
+          <AppSegmentedControl
+            v-model="state.shouldRenderAllActivity"
+            :format="
+              (option: boolean) =>
+                option
+                  ? $t('members.detail.attendance.period.allTime')
+                  : $t('members.detail.attendance.period.last6Months')
+            "
+            hide-details
+            :options="[false, true]" />
 
-      <template #title>
-        <h2 class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0 dark:text-gray-100">
-          {{ $t('members.detail.attendance.title') }}
-        </h2>
-      </template>
-      <template #description>
-        <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0 dark:text-gray-400">
-          {{ $t('members.detail.attendance.description') }}
-        </p>
-      </template>
-      <template #append>
-        <dl class="sticky top-3 flex flex-row flex-wrap gap-3 px-3 sm:px-0">
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.attendance.summary.label') }}
-            </dt>
-            <i18n-t
-              class="mt-1 text-gray-800 dark:text-gray-200"
-              :keypath="
-                state.shouldRenderAllActivity
-                  ? 'members.detail.attendance.summary.allTime'
-                  : 'members.detail.attendance.summary.last6Months'
-              "
-              scope="global"
-              tag="dd">
-              <template #amount>
-                <LoadingSkeleton v-if="isPendingMember" class="mb-1 h-8 w-32 rounded-3xl" />
-                <span
-                  v-else-if="!periodAttendance"
-                  class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                  {{ $t('members.detail.attendance.summary.empty') }}
-                </span>
+          <AppButtonPlain
+            class="self-start dark:focus:ring-offset-stone-900"
+            color="neutral"
+            :icon="mdiPlus"
+            replace
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW }">
+            {{ $t('members.detail.attendance.add') }}
+          </AppButtonPlain>
+        </div>
+        <AppAlert
+          v-if="activityErrorText"
+          class="mt-3 self-start max-sm:mx-3"
+          :description="activityErrorText"
+          :title="$t('members.detail.attendance.onFetch.fail')"
+          type="error" />
+
+        <template #title>
+          <h2
+            class="mx-3 text-3xl font-bold tracking-tight text-gray-900 sm:mx-0 dark:text-gray-100">
+            {{ $t('members.detail.attendance.title') }}
+          </h2>
+        </template>
+        <template #description>
+          <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0 dark:text-gray-400">
+            {{ $t('members.detail.attendance.description') }}
+          </p>
+        </template>
+        <template #append>
+          <dl class="sticky top-3 flex flex-row flex-wrap gap-3 px-3 sm:px-0">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                {{ $t('members.detail.attendance.summary.label') }}
+              </dt>
+              <i18n-t
+                class="mt-1 text-gray-800 dark:text-gray-200"
+                :keypath="
+                  state.shouldRenderAllActivity
+                    ? 'members.detail.attendance.summary.allTime'
+                    : 'members.detail.attendance.summary.last6Months'
+                "
+                scope="global"
+                tag="dd">
+                <template #amount>
+                  <LoadingSkeleton v-if="isPendingMember" class="mb-1 h-8 w-32 rounded-3xl" />
+                  <span
+                    v-else-if="!periodAttendance"
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                    {{ $t('members.detail.attendance.summary.empty') }}
+                  </span>
+                  <i18n-t
+                    v-else
+                    class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                    keypath="members.detail.attendance.summary.value"
+                    :plural="periodAttendance"
+                    scope="global"
+                    tag="span">
+                    <template #count>
+                      <AnimatedCounter
+                        :duration="1"
+                        :format="
+                          (amount: number) =>
+                            formatAmount(amount, {
+                              style: 'decimal',
+                              maximumFractionDigits: 1,
+                            })
+                        "
+                        :to="periodAttendance" />
+                    </template>
+                  </i18n-t>
+                </template>
+              </i18n-t>
+            </AppPanel>
+
+            <div class="flex w-full flex-row gap-3">
+              <AppPanel class="flex min-w-0 shrink grow basis-0 flex-col">
+                <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                  {{ $t('members.detail.profile.since.label') }}
+                </dt>
+                <LoadingSkeleton v-if="isPendingMember" class="mt-2 h-8 w-32 rounded-3xl" />
+                <dd
+                  v-else
+                  class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                  {{ dayjs(member?.created).format('ll') }}
+                </dd>
+              </AppPanel>
+
+              <AppPanel class="flex min-w-0 shrink grow basis-0 flex-col">
+                <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                  {{ $t('members.detail.orders.tickets.used.label') }}
+                </dt>
+                <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
                 <i18n-t
                   v-else
-                  class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                  keypath="members.detail.attendance.summary.value"
-                  :plural="periodAttendance"
-                  scope="global"
-                  tag="span">
-                  <template #count>
-                    <AnimatedCounter
-                      :duration="1"
-                      :format="
-                        (amount: number) =>
-                          formatAmount(amount, {
-                            style: 'decimal',
-                            maximumFractionDigits: 1,
-                          })
-                      "
-                      :to="periodAttendance" />
-                  </template>
-                </i18n-t>
-              </template>
-            </i18n-t>
-          </AppPanel>
-        </dl>
-      </template>
-    </SectionRow>
-
-    <SectionRow
-      class="mt-16 px-3 sm:px-0"
-      :description="$t('members.detail.audit.description')"
-      :title="$t('members.detail.audit.title')">
-      <MemberHistoryPanel :member-id="memberId" />
-    </SectionRow>
-
-    <SectionRow
-      class="mt-16 px-3 sm:px-0"
-      :description="$t('members.detail.profile.description')"
-      :title="$t('members.detail.profile.title')">
-      <MemberProfilePanel :member-id="memberId" />
-      <MemberDevicesPanel class="mt-3" :member-id="memberId" />
-      <MemberCapabilitesPanel class="mt-3" :member-id="memberId" />
-      <MemberWordpressPanel class="mt-3" :member-id="memberId" />
-      <MemberImpersonationPanel class="mt-3" :member-id="memberId" />
-
-      <template #append>
-        <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.profile.since.label') }}
-            </dt>
-            <LoadingSkeleton v-if="isPendingMember" class="mt-2 h-8 w-32 rounded-3xl" />
-            <dd
-              v-else
-              class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-              {{ dayjs(member?.created).format('ll') }}
-            </dd>
-          </AppPanel>
-
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.orders.tickets.used.label') }}
-            </dt>
-            <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
-            <i18n-t
-              v-else
-              class="mt-1 text-gray-800 dark:text-gray-200"
-              keypath="members.detail.orders.tickets.used.text"
-              :plural="totalTicketsUsed"
-              scope="global"
-              tag="dd">
-              <template #count>
-                <i18n-t
-                  class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                  keypath="members.detail.orders.tickets.used.count"
+                  class="mt-1 text-gray-800 dark:text-gray-200"
+                  keypath="members.detail.orders.tickets.used.text"
                   :plural="totalTicketsUsed"
                   scope="global"
-                  tag="strong">
-                  <AnimatedCounter
-                    :duration="1"
-                    :format="
-                      (count: number) =>
-                        formatAmount(count, {
-                          style: 'decimal',
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 1,
-                        })
-                    "
-                    :to="totalTicketsUsed" />
-                </i18n-t>
-              </template>
-              <template #orders>
-                <i18n-t
-                  keypath="members.detail.orders.tickets.used.orders"
-                  :plural="totalTicketsCount"
-                  scope="global"
-                  tag="span">
+                  tag="dd">
                   <template #count>
-                    <span
-                      class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                      {{
-                        formatAmount(totalTicketsCount, {
-                          style: 'decimal',
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 1,
-                        })
-                      }}
-                    </span>
+                    <i18n-t
+                      class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                      keypath="members.detail.orders.tickets.used.count"
+                      :plural="totalTicketsUsed"
+                      scope="global"
+                      tag="strong">
+                      <AnimatedCounter
+                        :duration="1"
+                        :format="
+                          (count: number) =>
+                            formatAmount(count, {
+                              style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
+                            })
+                        "
+                        :to="totalTicketsUsed" />
+                    </i18n-t>
+                  </template>
+                  <template #orders>
+                    <i18n-t
+                      keypath="members.detail.orders.tickets.used.orders"
+                      :plural="totalTicketsCount"
+                      scope="global"
+                      tag="span">
+                      <template #count>
+                        <span
+                          class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
+                          {{
+                            formatAmount(totalTicketsCount, {
+                              style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
+                            })
+                          }}
+                        </span>
+                      </template>
+                    </i18n-t>
                   </template>
                 </i18n-t>
-              </template>
-            </i18n-t>
-          </AppPanel>
+              </AppPanel>
 
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.orders.subscriptions.coverage.label') }}
-            </dt>
-            <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
-            <i18n-t
-              v-else
-              class="mt-1 text-gray-800 dark:text-gray-200"
-              keypath="members.detail.orders.subscriptions.coverage.text"
-              :plural="attendanceCoveredBySubscriptions"
-              scope="global"
-              tag="dd">
-              <template #attendance>
+              <AppPanel class="flex min-w-0 shrink grow basis-0 flex-col">
+                <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                  {{ $t('members.detail.orders.subscriptions.coverage.label') }}
+                </dt>
+                <LoadingSkeleton v-if="isFetchingActivity" class="mt-2 h-8 w-32 rounded-3xl" />
                 <i18n-t
-                  class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                  keypath="members.detail.orders.subscriptions.coverage.attendance"
+                  v-else
+                  class="mt-1 text-gray-800 dark:text-gray-200"
+                  keypath="members.detail.orders.subscriptions.coverage.text"
                   :plural="attendanceCoveredBySubscriptions"
                   scope="global"
-                  tag="strong">
-                  <AnimatedCounter
-                    :duration="1"
-                    :format="
-                      (count: number) =>
-                        formatAmount(count, {
-                          style: 'decimal',
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 1,
-                        })
-                    "
-                    :to="attendanceCoveredBySubscriptions" />
-                </i18n-t>
-              </template>
-              <template #orders>
-                <i18n-t
-                  keypath="members.detail.orders.subscriptions.coverage.orders"
-                  :plural="totalSubscriptionsCount"
-                  scope="global"
-                  tag="span">
-                  <template #count>
-                    <span
-                      class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                      {{
-                        formatAmount(totalSubscriptionsCount, {
-                          style: 'decimal',
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 1,
-                        })
-                      }}
-                    </span>
+                  tag="dd">
+                  <template #attendance>
+                    <i18n-t
+                      class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                      keypath="members.detail.orders.subscriptions.coverage.attendance"
+                      :plural="attendanceCoveredBySubscriptions"
+                      scope="global"
+                      tag="strong">
+                      <AnimatedCounter
+                        :duration="1"
+                        :format="
+                          (count: number) =>
+                            formatAmount(count, {
+                              style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
+                            })
+                        "
+                        :to="attendanceCoveredBySubscriptions" />
+                    </i18n-t>
+                  </template>
+                  <template #orders>
+                    <i18n-t
+                      keypath="members.detail.orders.subscriptions.coverage.orders"
+                      :plural="totalSubscriptionsCount"
+                      scope="global"
+                      tag="span">
+                      <template #count>
+                        <span
+                          class="inline-block font-bold tracking-tight text-gray-900 dark:text-gray-100">
+                          {{
+                            formatAmount(totalSubscriptionsCount, {
+                              style: 'decimal',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 1,
+                            })
+                          }}
+                        </span>
+                      </template>
+                    </i18n-t>
                   </template>
                 </i18n-t>
-              </template>
-            </i18n-t>
-          </AppPanel>
-        </dl>
-      </template>
-    </SectionRow>
+              </AppPanel>
+            </div>
+          </dl>
+        </template>
+      </SectionRow>
 
-    <SectionRow class="mt-16 px-3 sm:px-0" :title="$t('members.detail.orders.title')">
-      <template #description>
-        <p class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
-          {{ $t('members.detail.orders.description') }}
-        </p>
+      <SectionRow
+        v-if="isTabVisible('history')"
+        class="mt-16 px-3 sm:px-0"
+        :description="$t('members.detail.audit.description')"
+        :title="$t('members.detail.audit.title')">
+        <MemberHistoryPanel :member-id="memberId" />
+      </SectionRow>
 
-        <AppButtonText
-          v-if="!isNil(member?.wpUserId)"
-          class="mt-5 self-start dark:focus:ring-offset-stone-900"
-          color="indigo"
-          :href="buildMemberWordpressOrdersUrl(member.wpUserId)"
-          :icon="mdiOpenInNew"
-          target="_blank">
-          {{ $t('members.detail.wordpress.orders') }}
-        </AppButtonText>
-      </template>
+      <SectionRow
+        v-if="isTabVisible('profile')"
+        class="mt-16 px-3 sm:px-0"
+        :description="$t('members.detail.profile.description')"
+        :title="$t('members.detail.profile.title')">
+        <nav class="mb-0 flex flex-row flex-wrap items-end gap-1" role="tablist">
+          <RouterLink
+            v-for="section in PROFILE_SECTIONS"
+            :key="`profile-section-${section}`"
+            :aria-selected="activeProfileSection === section"
+            :class="[
+              '-mb-px whitespace-nowrap rounded-t-lg border px-4 py-2 text-sm font-medium transition-colors',
+              activeProfileSection === section
+                ? 'border-gray-200 border-b-transparent bg-white text-gray-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-100'
+                : 'border-transparent text-gray-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100',
+            ]"
+            role="tab"
+            :to="buildProfileSectionLocation(section)">
+            {{ $t(`members.detail.profile.sections.${section}`) }}
+          </RouterLink>
+        </nav>
 
-      <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
-        <TicketsListPanel
-          class="max-h-[32rem] min-w-64 shrink grow basis-0"
-          :member-id="memberId"
-          :remaining="member?.balance" />
-        <SubscriptionsListPanel
-          class="max-h-[32rem] min-w-64 shrink grow basis-0"
-          :member-id="memberId" />
-        <MembershipsListPanel
-          class="max-h-[32rem] min-w-64 shrink grow basis-0"
-          :member-id="memberId" />
-      </div>
+        <div
+          class="rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+          :class="activeProfileSection === PROFILE_SECTIONS[0] ? 'rounded-tl-none' : ''">
+          <MemberProfilePanel v-if="isProfileSectionVisible('account')" :member-id="memberId" />
+          <MemberDevicesPanel
+            v-if="isProfileSectionVisible('devices')"
+            :class="{ 'mt-3': !isFirstVisibleProfileSection('devices') }"
+            :member-id="memberId" />
+          <MemberCapabilitesPanel
+            v-if="isProfileSectionVisible('capabilities')"
+            :class="{ 'mt-3': !isFirstVisibleProfileSection('capabilities') }"
+            :member-id="memberId" />
+          <MemberWordpressPanel
+            v-if="isProfileSectionVisible('wordpress')"
+            :class="{ 'mt-3': !isFirstVisibleProfileSection('wordpress') }"
+            :member-id="memberId" />
+          <MemberImpersonationPanel
+            v-if="isProfileSectionVisible('impersonation')"
+            :class="{ 'mt-3': !isFirstVisibleProfileSection('impersonation') }"
+            :member-id="memberId" />
+        </div>
 
-      <template #append>
-        <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.orders.spent.daily.label') }}
-            </dt>
-            <i18n-t
-              class="mt-1 text-gray-800 dark:text-gray-200"
-              keypath="members.detail.orders.spent.daily.value"
-              :plural="averageDailyAmountConsumed"
-              scope="global"
-              tag="dd">
-              <template #amount>
-                <AnimatedCounter
-                  class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                  :duration="1"
-                  :format="fractionAmount"
-                  :to="averageDailyAmountConsumed" />
-              </template>
-            </i18n-t>
-          </AppPanel>
-          <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
-            <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-              {{ $t('members.detail.orders.spent.total.label') }}
-            </dt>
-            <i18n-t
-              class="mt-1 text-gray-800 dark:text-gray-200"
-              keypath="members.detail.orders.spent.total.value"
-              :plural="totalAmountSpent"
-              scope="global"
-              tag="dd">
-              <template #count>
-                <AnimatedCounter
-                  class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                  :duration="1"
-                  :format="fractionAmount"
-                  :to="totalAmountSpent" />
-              </template>
-            </i18n-t>
-          </AppPanel>
-        </dl>
-      </template>
-    </SectionRow>
+        <nav
+          v-if="previousProfileSection || nextProfileSection"
+          class="mt-3 flex flex-row items-center justify-between gap-3">
+          <RouterLink
+            v-if="previousProfileSection"
+            class="group flex flex-row items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100"
+            :to="buildProfileSectionLocation(previousProfileSection)">
+            <AppIcon
+              class="size-5 transition-transform group-hover:-translate-x-0.5"
+              :icon="mdiChevronLeft" />
+            {{ $t(`members.detail.profile.sections.${previousProfileSection}`) }}
+          </RouterLink>
+          <span v-else />
+
+          <RouterLink
+            v-if="nextProfileSection"
+            class="group flex flex-row items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100"
+            :to="buildProfileSectionLocation(nextProfileSection)">
+            {{ $t(`members.detail.profile.sections.${nextProfileSection}`) }}
+            <AppIcon
+              class="size-5 transition-transform group-hover:translate-x-0.5"
+              :icon="mdiChevronRight" />
+          </RouterLink>
+        </nav>
+      </SectionRow>
+
+      <SectionRow
+        v-if="isTabVisible('orders')"
+        class="mt-16 px-3 sm:px-0"
+        :title="$t('members.detail.orders.title')">
+        <template #description>
+          <p class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+            {{ $t('members.detail.orders.description') }}
+          </p>
+
+          <AppButtonText
+            v-if="!isNil(member?.wpUserId)"
+            class="mt-5 self-start dark:focus:ring-offset-stone-900"
+            color="indigo"
+            :href="buildMemberWordpressOrdersUrl(member.wpUserId)"
+            :icon="mdiOpenInNew"
+            target="_blank">
+            {{ $t('members.detail.wordpress.orders') }}
+          </AppButtonText>
+        </template>
+
+        <div class="flex min-h-full flex-row flex-wrap items-stretch gap-3">
+          <TicketsListPanel
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
+            :member-id="memberId"
+            :remaining="member?.balance" />
+          <SubscriptionsListPanel
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
+            :member-id="memberId" />
+          <MembershipsListPanel
+            class="max-h-[32rem] min-w-64 shrink grow basis-0"
+            :member-id="memberId" />
+        </div>
+
+        <template #append>
+          <dl class="sticky top-3 flex flex-row flex-wrap gap-3">
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                {{ $t('members.detail.orders.spent.daily.label') }}
+              </dt>
+              <i18n-t
+                class="mt-1 text-gray-800 dark:text-gray-200"
+                keypath="members.detail.orders.spent.daily.value"
+                :plural="averageDailyAmountConsumed"
+                scope="global"
+                tag="dd">
+                <template #amount>
+                  <AnimatedCounter
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                    :duration="1"
+                    :format="fractionAmount"
+                    :to="averageDailyAmountConsumed" />
+                </template>
+              </i18n-t>
+            </AppPanel>
+            <AppPanel class="flex min-w-48 shrink grow basis-0 flex-col">
+              <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
+                {{ $t('members.detail.orders.spent.total.label') }}
+              </dt>
+              <i18n-t
+                class="mt-1 text-gray-800 dark:text-gray-200"
+                keypath="members.detail.orders.spent.total.value"
+                :plural="totalAmountSpent"
+                scope="global"
+                tag="dd">
+                <template #count>
+                  <AnimatedCounter
+                    class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                    :duration="1"
+                    :format="fractionAmount"
+                    :to="totalAmountSpent" />
+                </template>
+              </i18n-t>
+            </AppPanel>
+          </dl>
+        </template>
+      </SectionRow>
+    </div>
+
+    <nav
+      v-if="previousTab || nextTab"
+      class="mt-4 flex flex-row items-center justify-between gap-3 px-3 sm:px-0">
+      <RouterLink
+        v-if="previousTab"
+        class="group flex flex-row items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100"
+        :to="buildTabLocation(previousTab)">
+        <AppIcon
+          class="size-5 transition-transform group-hover:-translate-x-0.5"
+          :icon="mdiChevronLeft" />
+        {{ $t(`members.detail.tabs.${previousTab}`) }}
+      </RouterLink>
+      <span v-else />
+
+      <RouterLink
+        v-if="nextTab"
+        class="group flex flex-row items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-neutral-400 dark:hover:text-gray-100"
+        :to="buildTabLocation(nextTab)">
+        {{ $t(`members.detail.tabs.${nextTab}`) }}
+        <AppIcon
+          class="size-5 transition-transform group-hover:translate-x-0.5"
+          :icon="mdiChevronRight" />
+      </RouterLink>
+    </nav>
 
     <SideDialog
       :model-value="
@@ -546,6 +658,8 @@ import { getAllMemberSubscriptions } from '@/services/api/subscriptions';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import {
+  mdiChevronLeft,
+  mdiChevronRight,
   mdiClose,
   mdiInformationOutline,
   mdiMagnifyPlusOutline,
@@ -556,7 +670,7 @@ import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, PropType, reactive, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   memberId: {
@@ -575,6 +689,115 @@ const state = reactive({
   shouldRenderAllActivity: false as boolean,
   isPictureDialogVisible: false as boolean,
 });
+
+/**
+ * The page is long: sections can be browsed one at a time.
+ * `all` is the way back to the original layout, everything stacked. It stays in
+ * the list so the choice can always be undone.
+ */
+const MEMBER_DETAIL_TABS = ['attendance', 'history', 'profile', 'orders', 'all'] as const;
+type MemberDetailTab = (typeof MEMBER_DETAIL_TABS)[number];
+
+// The first of the row is what shows up without a parameter; `all` is the
+// opt-in back to the original stacked layout.
+const DEFAULT_TAB: MemberDetailTab = MEMBER_DETAIL_TABS[0];
+const ALL_TABS: MemberDetailTab = 'all';
+
+/**
+ * The URL holds the selected tab, so a section can be linked to and survives a
+ * reload or a back navigation. A query parameter rather than a path segment:
+ * this route already has children for the side dialogs (`tickets/new`,
+ * `subscriptions/:id`…), which a new path segment would collide with.
+ */
+const activeTab = computed<MemberDetailTab>(() => {
+  const tab = route.query.tab as MemberDetailTab;
+  return MEMBER_DETAIL_TABS.includes(tab) ? tab : DEFAULT_TAB;
+});
+
+// Relative location: keeps the current path, hence any open side dialog.
+// The default tab carries no parameter, to keep the canonical URL clean.
+const buildTabLocation = (tab: MemberDetailTab) => ({
+  query: {
+    ...route.query,
+    tab: tab === DEFAULT_TAB ? undefined : tab,
+  },
+});
+
+const isTabVisible = (tab: MemberDetailTab) =>
+  activeTab.value === ALL_TABS || activeTab.value === tab;
+
+/**
+ * Sequential navigation from one section to the next, under the content.
+ * `all` is left out: it is a display mode, not a section one reads through,
+ * so no previous/next link shows up while it is selected.
+ */
+const NAVIGABLE_TABS: readonly MemberDetailTab[] = MEMBER_DETAIL_TABS.filter(
+  (tab) => tab !== ALL_TABS,
+);
+
+const previousTab = computed<MemberDetailTab | null>(() => {
+  const index = NAVIGABLE_TABS.indexOf(activeTab.value);
+  return index > 0 ? NAVIGABLE_TABS[index - 1] : null;
+});
+
+const nextTab = computed<MemberDetailTab | null>(() => {
+  const index = NAVIGABLE_TABS.indexOf(activeTab.value);
+  return index >= 0 && index < NAVIGABLE_TABS.length - 1 ? NAVIGABLE_TABS[index + 1] : null;
+});
+
+/* Sub-tabs of the profile section, same principle one level down */
+
+const PROFILE_SECTIONS = [
+  'account',
+  'devices',
+  'capabilities',
+  'wordpress',
+  'impersonation',
+  'all',
+] as const;
+type ProfileSection = (typeof PROFILE_SECTIONS)[number];
+
+const DEFAULT_PROFILE_SECTION: ProfileSection = PROFILE_SECTIONS[0];
+const ALL_PROFILE_SECTIONS: ProfileSection = 'all';
+
+const activeProfileSection = computed<ProfileSection>(() => {
+  const section = route.query.section as ProfileSection;
+  return PROFILE_SECTIONS.includes(section) ? section : DEFAULT_PROFILE_SECTION;
+});
+
+// Selecting a sub-tab implies its parent tab, so the link stays meaningful when
+// shared from the "show all" view.
+const buildProfileSectionLocation = (section: ProfileSection) => ({
+  query: {
+    ...route.query,
+    tab: 'profile',
+    section: section === DEFAULT_PROFILE_SECTION ? undefined : section,
+  },
+});
+
+const isProfileSectionVisible = (section: ProfileSection) =>
+  activeProfileSection.value === ALL_PROFILE_SECTIONS || activeProfileSection.value === section;
+
+const NAVIGABLE_PROFILE_SECTIONS: readonly ProfileSection[] = PROFILE_SECTIONS.filter(
+  (section) => section !== ALL_PROFILE_SECTIONS,
+);
+
+const previousProfileSection = computed<ProfileSection | null>(() => {
+  const index = NAVIGABLE_PROFILE_SECTIONS.indexOf(activeProfileSection.value);
+  return index > 0 ? NAVIGABLE_PROFILE_SECTIONS[index - 1] : null;
+});
+
+const nextProfileSection = computed<ProfileSection | null>(() => {
+  const index = NAVIGABLE_PROFILE_SECTIONS.indexOf(activeProfileSection.value);
+  return index >= 0 && index < NAVIGABLE_PROFILE_SECTIONS.length - 1
+    ? NAVIGABLE_PROFILE_SECTIONS[index + 1]
+    : null;
+});
+
+// Only the topmost visible panel goes without a margin.
+const isFirstVisibleProfileSection = (section: ProfileSection) =>
+  PROFILE_SECTIONS.filter((s) => s !== ALL_PROFILE_SECTIONS).find(isProfileSectionVisible) ===
+  section;
 
 const {
   isPending: isPendingMember,
