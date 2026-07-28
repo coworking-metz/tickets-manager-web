@@ -215,6 +215,14 @@
       "picture": {
         "label": "Photo de profil"
       },
+      "sections": {
+        "account": "Compte",
+        "all": "Tout afficher",
+        "capabilities": "Capacités",
+        "devices": "Appareils",
+        "impersonation": "Impersonation",
+        "wordpress": "WordPress"
+      },
       "since": {
         "label": "Membre depuis le"
       },
@@ -230,6 +238,13 @@
         "label": "Électeur⸱rice"
       }
     },
+    "tabs": {
+      "all": "Tout afficher",
+      "attendance": "Présence",
+      "history": "Historique",
+      "orders": "Commandes",
+      "profile": "Profil"
+    },
     "wordpress": {
       "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets, d'abonnements et d'adhésions se mettront à jour.",
       "navigate": "Consulter le profil",
@@ -237,7 +252,7 @@
         "fail": "Impossible de synchroniser {name}",
         "success": "{name} synchronisé"
       },
-      "orders": "Consulter toutes les\u00A0commandes",
+      "orders": "Consulter toutes les commandes",
       "sync": "Synchroniser",
       "title": "Synchronisation avec Wordpress"
     }

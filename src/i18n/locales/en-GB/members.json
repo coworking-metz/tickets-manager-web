@@ -215,6 +215,14 @@
       "picture": {
         "label": "Profile Picture"
       },
+      "sections": {
+        "account": "Account",
+        "all": "Show all",
+        "capabilities": "Capabilities",
+        "devices": "Devices",
+        "impersonation": "Impersonation",
+        "wordpress": "WordPress"
+      },
       "since": {
         "label": "Member since"
       },
@@ -229,6 +237,13 @@
         "description": "Has acquired at least 20 days of presence over the last 6 months.\nCan vote during general assemblies.",
         "label": "Voting"
       }
+    },
+    "tabs": {
+      "all": "Show all",
+      "attendance": "Attendance",
+      "history": "History",
+      "orders": "Orders",
+      "profile": "Profile"
     },
     "wordpress": {
       "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket, subscription and membership orders will be updated.",
