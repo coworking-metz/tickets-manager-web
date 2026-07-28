@@ -65,7 +65,26 @@ export interface Member extends MemberListItem {
   trustedUser: boolean; // with at least 10 days of totalActivity
   activeUser: boolean; // with at least 20 days of activity (in the last 180 days)
   badgeId?: string;
+  // Whether the admin flag can be toggled from here: some accounts hold several
+  // roles and must be changed in WordPress itself.
+  isAdminEditable: boolean;
+  canPayByBankTransfer: boolean;
+  isEligibleToReducedRate: boolean;
+  isBoardCandidate: boolean;
+  polaroidName: string;
+  polaroidDescription: string;
+  legalStatus: string;
+  activityType: string;
 }
+
+/**
+ * Values allowed for the member attributes backed by a closed list.
+ * Where they are actually stored is the API's business, not ours.
+ */
+export type MemberAttributes = {
+  legalStatus: string[];
+  activityType: string[];
+};
 
 export const isMembershipNonCompliant = (member: Member | MemberListItem) => {
   return Boolean(
@@ -99,7 +118,11 @@ export const getMember = (id: string): Promise<Member> => {
   return HTTP.get(`/api/members/${id}`).then(({ data }) => data);
 };
 
-export const updateMember = (id: string, member: Member): Promise<Member> => {
+/**
+ * Update a member. Send whichever attributes changed: the API knows where each
+ * of them is actually stored, and ignores the read-only ones.
+ */
+export const updateMember = (id: string, member: Partial<Member>): Promise<Member> => {
   return HTTP.put(`/api/members/${id}`, member).then(({ data }) => data);
 };
 
@@ -177,6 +200,10 @@ export const updateMemberCapabilities = (
   capabilities: Partial<MemberCapabilities>,
 ): Promise<MemberCapabilities> => {
   return HTTP.put(`/api/members/${id}/capabilities`, capabilities).then(({ data }) => data);
+};
+
+export const getMemberAttributes = (): Promise<MemberAttributes> => {
+  return HTTP.get('/api/members/attributes').then(({ data }) => data);
 };
 
 export const impersonateMember = (

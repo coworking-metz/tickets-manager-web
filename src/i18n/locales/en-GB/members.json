@@ -117,6 +117,10 @@
       "title": "Orders"
     },
     "profile": {
+      "activityType": {
+        "description": "",
+        "label": "Activity type"
+      },
       "attending": "Currently attending{location}",
       "badge": {
         "description": "Identifier of the badge assigned by Bliiida and used to access the location.",
@@ -125,6 +129,10 @@
       },
       "birthdate": {
         "label": "Birthdate"
+      },
+      "canPayByBankTransfer": {
+        "description": "The \"Bank transfer\" payment method is only offered to the member when this option is enabled.",
+        "label": "Can pay by bank transfer"
       },
       "capabilities": {
         "apply": "Update capabilities",
@@ -150,8 +158,9 @@
             "label": "Key Box Access"
           },
           "MANAGER": {
-            "description": "Manage members and services as well as access all features. Basically: full powers.\nThis setting is changed on the Wordpress profile.",
-            "label": "Administrator"
+            "description": "Manage members and services, and access every feature. Basically: full powers.",
+            "label": "Administrator",
+            "readonly": "Manage members and services, and access every feature. Basically: full powers.\nThis account holds several WordPress roles: the change must be made on the WordPress profile itself."
           },
           "PARKING_ACCESS": {
             "description": "Open the parking barrier.",
@@ -182,9 +191,21 @@
       "firstname": {
         "label": "First Name"
       },
+      "isBoardCandidate": {
+        "description": "Is running for the board at the next general meeting.",
+        "label": "Board candidate at the next general meeting"
+      },
+      "isEligibleToReducedRate": {
+        "description": "Reserved for students and job seekers. Without this option, products in the \"Reduced rates\" category cannot be purchased.",
+        "label": "Eligible to reduced rates"
+      },
       "lastSeen": "Last seen {date}{location}",
       "lastname": {
         "label": "Last Name"
+      },
+      "legalStatus": {
+        "description": "",
+        "label": "Legal status"
       },
       "location": {
         "cantina": "{' '}inside Cantina",
@@ -214,6 +235,14 @@
       },
       "picture": {
         "label": "Profile Picture"
+      },
+      "polaroidDescription": {
+        "description": "",
+        "label": "Description on the polaroid"
+      },
+      "polaroidName": {
+        "description": "",
+        "label": "Name on the polaroid"
       },
       "since": {
         "label": "Member since"

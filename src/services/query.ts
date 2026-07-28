@@ -43,6 +43,7 @@ export const membersQueryKeys = {
   historyById: (id: string | number) => [...membersQueryKeys.byId(id), 'history'] as const,
   capabilitiesById: (id: string | number) =>
     [...membersQueryKeys.byId(id), 'capabilities'] as const,
+  attributes: () => [...membersQueryKeys.all(), 'attributes'] as const,
   ticketsById: (id: string | number) => [...membersQueryKeys.byId(id), 'tickets'] as const,
   subscriptionsById: (id: string | number) =>
     [...membersQueryKeys.byId(id), 'subscriptions'] as const,

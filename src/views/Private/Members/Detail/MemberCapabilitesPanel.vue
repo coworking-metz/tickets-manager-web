@@ -3,11 +3,16 @@
     <ul class="flex flex-col gap-4">
       <AppSwitchField
         as="li"
-        :description="$t('members.detail.profile.capabilities.values.MANAGER.description')"
-        disabled
+        :description="
+          member?.isAdminEditable
+            ? $t('members.detail.profile.capabilities.values.MANAGER.description')
+            : $t('members.detail.profile.capabilities.values.MANAGER.readonly')
+        "
+        :disabled="!member?.isAdminEditable"
         :label="$t('members.detail.profile.capabilities.values.MANAGER.label')"
         :loading="isFetchingMember"
-        :model-value="member?.isAdmin" />
+        :model-value="state.isAdmin"
+        @update:model-value="(enabled: boolean) => (state.isAdmin = enabled)" />
 
       <AppSwitchField
         v-for="capability in uniq([
@@ -87,6 +92,7 @@ import {
   getMember,
   getMemberCapabilities,
   MemberCapabilities,
+  updateMember,
   updateMemberCapabilities,
 } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
@@ -111,6 +117,9 @@ const notificationsStore = useNotificationsStore();
 const i18n = useI18n();
 const state = reactive({
   capabilities: null as MemberCapabilities | null,
+  // The admin flag is a WordPress role, not one of our capabilities: it travels
+  // through the regular member update route.
+  isAdmin: false as boolean,
 
   isSubmitting: false as boolean,
   isResetDialogVisible: false as boolean,
@@ -157,7 +166,12 @@ const onSubmit = async () => {
   vuelidate.value.$reset();
 
   state.isSubmitting = true;
-  updateMemberCapabilities(props.memberId, state.capabilities as MemberCapabilities)
+  Promise.all([
+    updateMemberCapabilities(props.memberId, state.capabilities as MemberCapabilities),
+    state.isAdmin === Boolean(member.value?.isAdmin)
+      ? Promise.resolve()
+      : updateMember(props.memberId, { isAdmin: state.isAdmin }),
+  ])
     .then(() => {
       notificationsStore.addSuccessNotification(
         i18n.t('members.detail.profile.capabilities.onUpdate.success', {
@@ -166,6 +180,9 @@ const onSubmit = async () => {
       );
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.historyById(props.memberId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membersQueryKeys.profileById(props.memberId),
       });
     })
     .catch(handleSilentError)
@@ -223,6 +240,14 @@ watch(
     if (memberCapabilities) {
       state.capabilities = { ...memberCapabilities };
     }
+  },
+  { immediate: true },
+);
+
+watch(
+  member,
+  (fetchedMember) => {
+    state.isAdmin = Boolean(fetchedMember?.isAdmin);
   },
   { immediate: true },
 );

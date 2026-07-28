@@ -7,7 +7,6 @@
           v-model="state.firstname"
           autocomplete="given-name"
           class="min-w-48 shrink grow basis-0"
-          disabled
           :errors="vuelidate.firstname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.firstname.label')"
           :loading="isFetchingMember"
@@ -20,7 +19,6 @@
           v-model="state.lastname"
           autocomplete="family-name"
           class="min-w-48 shrink grow basis-0"
-          disabled
           :errors="vuelidate.lastname.$errors.map(({ $message }) => $message as string)"
           :label="$t('members.detail.profile.lastname.label')"
           :loading="isFetchingMember"
@@ -49,13 +47,49 @@
           v-model="state.birthdate"
           autocomplete="bday"
           class="min-w-48 shrink grow basis-0"
-          disabled
           :label="$t('members.detail.profile.birthdate.label')"
           :loading="isFetchingMember"
           name="birthdate"
           :prepend-icon="mdiCakeVariantOutline"
-          type="date"
-          @update:model-value="(birthdate) => (state.birthdate = birthdate)" />
+          type="date" />
+      </div>
+
+      <div class="flex flex-row flex-wrap gap-x-6">
+        <AppTextField
+          id="polaroid-name"
+          v-model="state.polaroidName"
+          class="min-w-48 shrink grow basis-0"
+          :label="$t('members.detail.profile.polaroidName.label')"
+          :loading="isFetchingMember"
+          name="polaroid-name"
+          type="text" />
+        <AppTextField
+          id="polaroid-description"
+          v-model="state.polaroidDescription"
+          class="min-w-48 shrink grow basis-0"
+          :label="$t('members.detail.profile.polaroidDescription.label')"
+          :loading="isFetchingMember"
+          name="polaroid-description"
+          type="text" />
+      </div>
+
+      <div class="flex flex-row flex-wrap gap-x-6">
+        <AppSelectField
+          id="legal-status"
+          v-model="state.legalStatus"
+          class="min-w-48 shrink grow basis-0"
+          :label="$t('members.detail.profile.legalStatus.label')"
+          :loading="isFetchingMember"
+          name="legal-status"
+          :options="attributes?.legalStatus ?? []" />
+        <AppSelectField
+          id="activity-type"
+          v-model="state.activityType"
+          class="min-w-48 shrink grow basis-0"
+          :label="$t('members.detail.profile.activityType.label')"
+          :loading="isFetchingMember"
+          name="activity-type"
+          :options="attributes?.activityType ?? []" />
       </div>
 
       <AppTextField
@@ -84,7 +118,19 @@
 
       <NFCScannerDialog
         v-model="state.isScannerVisible"
-        @update:identifier="(id) => (state.badgeId = id)" />
+        @update:identifier="(id: string) => (state.badgeId = id)" />
+
+      <ul class="mb-5 mt-2 flex flex-col gap-4">
+        <AppSwitchField
+          v-for="name in SWITCH_FIELDS"
+          :key="`member-attribute-${name}`"
+          as="li"
+          :description="$t(`members.detail.profile.${name}.description`)"
+          :label="$t(`members.detail.profile.${name}.label`)"
+          :loading="isFetchingMember"
+          :model-value="state[name]"
+          @update:model-value="(enabled: boolean) => (state[name] = enabled)" />
+      </ul>
 
       <AppAlert
         v-if="memberErrorText"
@@ -120,6 +166,8 @@
 import NFCScannerDialog from '@/components/NFCScannerDialog.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppSelectField from '@/components/form/AppSelectField.vue';
+import AppSwitchField from '@/components/form/AppSwitchField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import {
@@ -128,7 +176,7 @@ import {
   scrollToFirstError,
 } from '@/helpers/errors';
 import { withAppI18nMessage } from '@/i18n';
-import { getMember, updateMemberBagdeId } from '@/services/api/members';
+import { getMember, getMemberAttributes, updateMember } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
@@ -138,6 +186,12 @@ import { email, required } from '@vuelidate/validators';
 import { compact } from 'lodash';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+const SWITCH_FIELDS = [
+  'canPayByBankTransfer',
+  'isEligibleToReducedRate',
+  'isBoardCandidate',
+] as const;
 
 const props = defineProps({
   memberId: {
@@ -156,6 +210,14 @@ const state = reactive({
   birthdate: null as string | null,
   badgeId: null as string | null,
 
+  polaroidName: '' as string,
+  polaroidDescription: '' as string,
+  legalStatus: '' as string,
+  activityType: '' as string,
+  canPayByBankTransfer: false as boolean,
+  isEligibleToReducedRate: false as boolean,
+  isBoardCandidate: false as boolean,
+
   isSubmitting: false as boolean,
   hasFailValidationOnce: false as boolean,
 
@@ -170,6 +232,16 @@ const {
   computed(() => ({
     queryKey: membersQueryKeys.profileById(props.memberId),
     queryFn: () => getMember(props.memberId),
+  })),
+);
+
+// Values allowed for the fields backed by a closed list. Shared by every member,
+// hence cached longer than a profile.
+const { data: attributes } = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.attributes(),
+    queryFn: () => getMemberAttributes(),
+    staleTime: 60 * 60 * 1000, // 1 hour
   })),
 );
 
@@ -206,7 +278,20 @@ const onSubmit = async () => {
   vuelidate.value.$reset();
 
   state.isSubmitting = true;
-  updateMemberBagdeId(props.memberId, state.badgeId as string)
+  // A single call: the API dispatches each attribute to wherever it is stored.
+  updateMember(props.memberId, {
+    firstName: state.firstname ?? '',
+    lastName: state.lastname ?? '',
+    badgeId: state.badgeId as string,
+    birthDate: state.birthdate ?? '',
+    polaroidName: state.polaroidName,
+    polaroidDescription: state.polaroidDescription,
+    legalStatus: state.legalStatus,
+    activityType: state.activityType,
+    canPayByBankTransfer: state.canPayByBankTransfer,
+    isEligibleToReducedRate: state.isEligibleToReducedRate,
+    isBoardCandidate: state.isBoardCandidate,
+  })
     .then(() => {
       notificationsStore.addSuccessNotification(
         i18n.t('members.detail.profile.onUpdate.success', {
@@ -244,6 +329,14 @@ watch(
       state.email = fetchedMember.email || null;
       state.birthdate = fetchedMember.birthDate || null;
       state.badgeId = fetchedMember.badgeId || null;
+
+      state.polaroidName = fetchedMember.polaroidName ?? '';
+      state.polaroidDescription = fetchedMember.polaroidDescription ?? '';
+      state.legalStatus = fetchedMember.legalStatus ?? '';
+      state.activityType = fetchedMember.activityType ?? '';
+      state.canPayByBankTransfer = Boolean(fetchedMember.canPayByBankTransfer);
+      state.isEligibleToReducedRate = Boolean(fetchedMember.isEligibleToReducedRate);
+      state.isBoardCandidate = Boolean(fetchedMember.isBoardCandidate);
     }
   },
   { immediate: true },
