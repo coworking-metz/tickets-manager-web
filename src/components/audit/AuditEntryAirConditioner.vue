@@ -1,13 +1,9 @@
 <template>
   <AuditEntryInline :event="event">
-    <template #message:count>
-      <strong class="font-bold text-gray-900 dark:text-gray-100">
-        {{ event.context?.count ?? event.context?.ticketsOrder?.count }}
-      </strong>
-    </template>
-
-    <template #message:previousCount>
-      {{ event.context?.previousCount }}
+    <template #message:temperature>
+      <span class="font-medium text-gray-900 dark:text-gray-100">
+        {{ event.context?.airConditioner?.targetTemperature }}
+      </span>
     </template>
   </AuditEntryInline>
 </template>

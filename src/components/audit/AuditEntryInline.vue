@@ -52,56 +52,67 @@
               scope="global"
               tag="p">
               <template #author>
-                <AppLink
-                  v-if="event.author?._id && route.params.memberId !== event.author._id"
-                  class="font-medium"
-                  :to="{
-                    name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-                    params: { memberId: event.author._id },
-                  }">
-                  {{ event.author.name }}
-                </AppLink>
-                <span
-                  v-else-if="event.author"
-                  class="font-medium text-gray-900 dark:text-gray-100"
-                  :title="event.author.email">
-                  {{ authorName }}
-                </span>
-                <VTooltip v-else class="inline">
+                <slot :author="event.author" name="message:author">
+                  <AppLink
+                    v-if="event.author?._id && route.params.memberId !== event.author._id"
+                    class="font-medium"
+                    :to="{
+                      name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                      params: { memberId: event.author._id },
+                    }">
+                    {{ event.author.name }}
+                  </AppLink>
                   <span
-                    class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
-                    {{ $t('audit.author.unknown.label') }}
-                    <AppIcon class="size-4" :icon="mdiInformationOutline" />
+                    v-else-if="event.author"
+                    class="font-medium text-gray-900 dark:text-gray-100"
+                    :title="event.author.email">
+                    {{ authorName }}
                   </span>
-                  <template #popper>
-                    <span class="overflow-hidden whitespace-pre-line text-sm">
-                      {{ $t('audit.author.unknown.hint') }}
+                  <VTooltip v-else class="inline">
+                    <span
+                      class="inline-flex flex-row items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
+                      {{ $t('audit.author.unknown.label') }}
+                      <AppIcon class="size-4" :icon="mdiInformationOutline" />
                     </span>
-                  </template>
-                </VTooltip>
+                    <template #popper>
+                      <span class="overflow-hidden whitespace-pre-line text-sm">
+                        {{ $t('audit.author.unknown.hint') }}
+                      </span>
+                    </template>
+                  </VTooltip>
+                </slot>
               </template>
 
               <template #member v-if="event.context?.member">
-                <AppLink
-                  v-if="route.params.memberId !== event.context.member._id"
-                  class="font-medium"
-                  :to="{
-                    name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
-                    params: { memberId: event.context.member._id },
-                  }">
-                  {{
-                    [event.context.member.firstName, event.context.member.lastName]
-                      .filter(Boolean)
-                      .join(' ')
-                  }}
-                </AppLink>
-                <span v-else class="font-medium text-gray-900 dark:text-gray-100">
-                  {{
-                    [event.context.member.firstName, event.context.member.lastName]
-                      .filter(Boolean)
-                      .join(' ')
-                  }}
-                </span>
+                <slot :member="event.context.member" name="message:member">
+                  <AppLink
+                    v-if="route.params.memberId !== event.context.member._id"
+                    class="font-medium"
+                    :to="{
+                      name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                      params: { memberId: event.context.member._id },
+                    }">
+                    {{
+                      [event.context.member.firstName, event.context.member.lastName]
+                        .filter(Boolean)
+                        .join(' ')
+                    }}
+                  </AppLink>
+                  <span v-else class="font-medium text-gray-900 dark:text-gray-100">
+                    {{
+                      [event.context.member.firstName, event.context.member.lastName]
+                        .filter(Boolean)
+                        .join(' ')
+                    }}
+                  </span>
+                </slot>
+              </template>
+
+              <template
+                v-for="slot in additionalMessageSlotNames"
+                :key="slot"
+                #[slot.slice(MESSAGE_SLOT_PREFIX.length)]="scope">
+                <slot :name="slot" v-bind="scope ?? {}" />
               </template>
             </i18n-t>
           </slot>
@@ -166,6 +177,8 @@ import {
   mdiCreditCardOutline,
   mdiDevices,
   mdiDoor,
+  mdiFan,
+  mdiFanOff,
   mdiHeadCogOutline,
   mdiHelp,
   mdiInformationOutline,
@@ -176,10 +189,21 @@ import {
 } from '@mdi/js';
 import dayjs from 'dayjs';
 import { compact, isEmpty } from 'lodash';
-import { computed, PropType } from 'vue';
+import { computed, PropType, useSlots } from 'vue';
 import { useRoute } from 'vue-router';
 
+const MESSAGE_SLOT_PREFIX = 'message:';
+// already forwarded explicitly to the `author`/`member` i18n-t templates above
+const RESERVED_MESSAGE_SLOT_NAMES = ['message:author', 'message:member'];
+
 const route = useRoute();
+const slots = useSlots();
+const additionalMessageSlotNames = computed(() =>
+  Object.keys(slots).filter(
+    (name) => name.startsWith(MESSAGE_SLOT_PREFIX) && !RESERVED_MESSAGE_SLOT_NAMES.includes(name),
+  ),
+);
+
 const props = defineProps({
   event: {
     type: Object as PropType<AuditEvent>,
@@ -253,6 +277,11 @@ const icon = computed(() => {
       return mdiHeadCogOutline;
     case AuditAction.WIFI_CREDENTIALS_ACCESS:
       return mdiWifiCog;
+    case AuditAction.AIR_CONDITIONER_TURN_ON:
+    case AuditAction.AIR_CONDITIONER_SET_TARGET_TEMPERATURE:
+      return mdiFan;
+    case AuditAction.AIR_CONDITIONER_TURN_OFF:
+      return mdiFanOff;
     default:
       return mdiHelp;
   }

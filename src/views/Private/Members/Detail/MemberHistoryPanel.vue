@@ -45,8 +45,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppIcon from '@/components/AppIcon.vue';
 import PastHistory from '@/assets/animations/past-history.lottie';
+import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';

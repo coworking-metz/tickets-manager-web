@@ -1,7 +1,7 @@
 import { ROUTE_NAMES, ROUTE_QUERY_ARRAY_SEPARATOR } from './names';
 import { ARE_MESSAGES_ENABLED } from '@/helpers/environment';
 import { compact } from 'lodash';
-import { RouteRecordRaw } from 'vue-router';
+import { RouteLocation, RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -160,7 +160,7 @@ export const routes: RouteRecordRaw[] = [
             {
               path: 'messages',
               component: () => import('@/views/Private/Messages/MessagesPage.vue'),
-              props: (route) => ({
+              props: (route: RouteLocation) => ({
                 messageId: route.params.messageId,
               }),
               children: [
@@ -168,7 +168,7 @@ export const routes: RouteRecordRaw[] = [
                   path: '',
                   name: ROUTE_NAMES.MESSAGES.LIST,
                   component: () => import('@/views/Private/Messages/MessagesList.vue'),
-                  props: (route) => ({
+                  props: (route: RouteLocation) => ({
                     search: route.query.search,
                     sort: route.query.sort,
                     slice: route.query.slice,
@@ -178,7 +178,7 @@ export const routes: RouteRecordRaw[] = [
                   path: ':messageId',
                   name: ROUTE_NAMES.MESSAGES.DETAIL,
                   component: () => import('@/views/Private/Messages/MessagesDetail.vue'),
-                  props: (route) => ({
+                  props: (route: RouteLocation) => ({
                     messageId: route.params.messageId,
                   }),
                 },
@@ -195,7 +195,7 @@ export const routes: RouteRecordRaw[] = [
         path: 'attendance/:date?',
         name: ROUTE_NAMES.ATTENDANCE,
         component: () => import('@/views/Private/Attendance/AttendancePage.vue'),
-        props: (route) => ({
+        props: (route: RouteLocation) => ({
           month: route.query.month,
           date: route.params.date,
         }),

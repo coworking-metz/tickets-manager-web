@@ -103,7 +103,7 @@ import { getAllMembers, MemberListItem } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import MembersThumbnail from '@/views/Private/Members/MembersThumbnail.vue';
 import { mdiCheck, mdiMagnify } from '@mdi/js';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import 'vue-virtual-scroller/index.css';
 

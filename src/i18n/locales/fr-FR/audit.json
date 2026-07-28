@@ -1,5 +1,14 @@
 {
   "action": {
+    "AIR_CONDITIONER_SET_TARGET_TEMPERATURE": {
+      "message": "{author} a réglé la température souhaitée de la climatisation sur {temperature}°C"
+    },
+    "AIR_CONDITIONER_TURN_OFF": {
+      "message": "{author} a éteint la climatisation"
+    },
+    "AIR_CONDITIONER_TURN_ON": {
+      "message": "{author} a allumé la climatisation"
+    },
     "KEYS_ACCESS": {
       "message": "{author} a recupéré le code d'accès de la boîte à clés"
     },

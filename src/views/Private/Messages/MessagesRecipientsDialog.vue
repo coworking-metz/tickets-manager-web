@@ -64,13 +64,12 @@ import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
-import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialogConfirm from '@/components/layout/AppDialogConfirm.vue';
 import { searchIn } from '@/helpers/text';
 import { getAllMembers } from '@/services/api/members';
 import { ApiMessageAcknowledgement } from '@/services/api/messages';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
-import { mdiCheck, mdiMagnify } from '@mdi/js';
+import { mdiCheck } from '@mdi/js';
 import { computed, ref, watch } from 'vue';
 
 const isVisible = defineModel({
