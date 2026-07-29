@@ -153,6 +153,10 @@
           "title": "Réinitialiser les capacités"
         },
         "values": {
+          "AIR_CONDITIONING_ACCESS": {
+            "description": "Peut allumer/éteindre la climatisation et changer sa température dans le Poulailler.",
+            "label": "Accès à la climatisation"
+          },
           "KEYS_ACCESS": {
             "description": "Récupère le code des boîtes à clés dans l'application mobile pour accéder aux espaces de travail en toute autonomie.",
             "label": "Accès à la boîte à clés"
