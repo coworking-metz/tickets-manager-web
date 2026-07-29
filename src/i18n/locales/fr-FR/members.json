@@ -117,6 +117,10 @@
       "title": "Commandes"
     },
     "profile": {
+      "activityType": {
+        "description": "",
+        "label": "Type d'activité"
+      },
       "attending": "Actuellement présent⸱e{location}",
       "badge": {
         "description": "Le numéro ou identifiant du badge attribué par Bliiida et utilisé pour accéder au tiers lieu.",
@@ -125,6 +129,10 @@
       },
       "birthdate": {
         "label": "Date de naissance"
+      },
+      "canPayByBankTransfer": {
+        "description": "Le moyen de paiement « Virement » n'est proposé au membre que si cette option est active.",
+        "label": "Peut payer par virement bancaire"
       },
       "capabilities": {
         "apply": "Modifier les capacités",
@@ -150,8 +158,9 @@
             "label": "Accès à la boîte à clés"
           },
           "MANAGER": {
-            "description": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.\nCe paramètre se change sur le profil Wordpress.",
-            "label": "Administrateur"
+            "description": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.",
+            "label": "Administrateur",
+            "readonly": "Gérer les membres et les services ainsi qu'accéder à toutes les fonctionnalités. En gros : les pleins pouvoirs.\nCe compte porte plusieurs rôles WordPress : le changement doit se faire directement sur le profil WordPress."
           },
           "PARKING_ACCESS": {
             "description": "Ouvrir la barrière du parking.",
@@ -182,9 +191,21 @@
       "firstname": {
         "label": "Prénom"
       },
+      "isBoardCandidate": {
+        "description": "Se porte candidat au Conseil d'Administration lors de la prochaine Assemblée Générale.",
+        "label": "Candidat au CA à la prochaine AG"
+      },
+      "isEligibleToReducedRate": {
+        "description": "Réservé aux étudiants et aux personnes en recherche d'emploi. Sans cette option, les produits de la catégorie « Tarifs réduits » ne sont pas achetables.",
+        "label": "Éligible aux tarifs réduits"
+      },
       "lastSeen": "Présent⸱e pour la dernière fois {date}{location}",
       "lastname": {
         "label": "Nom"
+      },
+      "legalStatus": {
+        "description": "",
+        "label": "Statut juridique"
       },
       "location": {
         "cantina": "{' '}dans la Cantina",
@@ -215,6 +236,14 @@
       "picture": {
         "label": "Photo de profil"
       },
+      "polaroidDescription": {
+        "description": "",
+        "label": "Description sur le polaroid"
+      },
+      "polaroidName": {
+        "description": "",
+        "label": "Nom sur le polaroid"
+      },
       "since": {
         "label": "Membre depuis le"
       },
@@ -237,7 +266,7 @@
         "fail": "Impossible de synchroniser {name}",
         "success": "{name} synchronisé"
       },
-      "orders": "Consulter toutes les\u00A0commandes",
+      "orders": "Consulter toutes les commandes",
       "sync": "Synchroniser",
       "title": "Synchronisation avec Wordpress"
     }
