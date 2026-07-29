@@ -153,6 +153,10 @@
           "title": "Reset Capabilities"
         },
         "values": {
+          "AIR_CONDITIONING_ACCESS": {
+            "description": "Can turn toggle the air conditioning and change its temperature in the Poulailler coworking space.",
+            "label": "Air Conditioning Access"
+          },
           "KEYS_ACCESS": {
             "description": "Retrieves the key box codes in the mobile app to access the coworking spaces autonomously.",
             "label": "Key Box Access"
