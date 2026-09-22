@@ -263,6 +263,11 @@
         "label": "Voting"
       }
     },
+    "tabs": {
+      "orders": "Orders",
+      "profile": "Profile",
+      "timeline": "Timeline"
+    },
     "wordpress": {
       "description": "Retrieves and processes member data from the WordPress server.\nThe first name, last name, and date of birth will be overwritten.\nTicket, subscription and membership orders will be updated.",
       "navigate": "View Profile",

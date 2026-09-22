@@ -1,5 +1,5 @@
 <template>
-  <AppTextField input-class="!pr-8" inputmode="numeric" type="number" v-bind="$attrs">
+  <AppNumericField input-class="!pr-8" :options="amountOptions" v-bind="$attrs">
     <template v-for="(_, slot) of $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />
     </template>
@@ -10,10 +10,29 @@
         {{ getCurrencySymbol($i18n.locale) }}
       </span>
     </template>
-  </AppTextField>
+  </AppNumericField>
 </template>
 
 <script lang="ts" setup>
-import AppTextField from './AppTextField.vue';
+import AppNumericField from './AppNumericField.vue';
 import { getCurrencySymbol } from '@/helpers/currency';
+
+import { computed } from 'vue';
+
+const props = defineProps({
+  required: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const amountOptions = computed(() => ({
+  allowDecimalPadding: 'floats',
+  emptyInputBehavior: props.required ? 'zero' : 'null',
+  modifyValueOnWheel: false,
+  decimalPlaces: 2,
+  decimalCharacter: ',',
+  decimalCharacterAlternative: '.',
+  digitGroupSeparator: ' ',
+}));
 </script>

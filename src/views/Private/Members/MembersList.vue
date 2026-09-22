@@ -195,7 +195,7 @@
               scope="global"
               tag="dd">
               <template #count>
-                <AnimatedCounter
+                <AnimatedNumber
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="
@@ -226,7 +226,7 @@
               scope="global"
               tag="dd">
               <template #count>
-                <AnimatedCounter
+                <AnimatedNumber
                   class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   :duration="1"
                   :format="
@@ -250,6 +250,7 @@
 
 <script setup lang="ts">
 import MembersListCard from './MembersListCard.vue';
+import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorBadge from '@/components/ErrorBadge.vue';

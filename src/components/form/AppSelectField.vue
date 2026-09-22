@@ -114,7 +114,7 @@
                       rounded-full bg-opacity-[75%] p-0.5 backdrop-blur-md transition-colors`,
                       active ? 'text-white' : 'text-sky-600 dark:text-sky-500 ',
                     ]">
-                    <SvgIcon aria-hidden="true" class="size-5" :path="mdiCheck" type="mdi" />
+                    <AppIcon class="size-5" :icon="mdiCheck" />
                   </span>
                 </li>
               </slot>

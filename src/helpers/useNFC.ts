@@ -74,7 +74,6 @@ const latestWrite = ref();
 
 ndef.addEventListener('reading', (event) => {
   if (!_ignoreRead) {
-    console.log('NFC read ev', event);
     latestRead.value = event as NDEFReadingEvent;
   }
 });

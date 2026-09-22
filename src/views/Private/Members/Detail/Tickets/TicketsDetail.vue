@@ -15,7 +15,7 @@
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -37,22 +37,21 @@
       v-else-if="selectedTicket"
       class="flex flex-col px-4 pt-6 sm:px-6"
       @submit.prevent="onSubmit">
-      <AppTextField
+      <AppNumericField
         id="ticket-count"
         v-model.number="state.count"
         :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
         input-class="!pr-16"
         :label="$t('tickets.detail.count.label')"
         :prepend-icon="mdiTicket"
-        required
-        type="number">
+        required>
         <template #append>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 z-20 flex w-14 items-center text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>
-      </AppTextField>
+      </AppNumericField>
 
       <AppAmountField
         id="ticket-amount"
@@ -138,6 +137,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonOutline from '@/components/form/AppButtonOutline.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppNumericField from '@/components/form/AppNumericField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -218,7 +218,7 @@ const rules = computed(() => ({
 const vuelidate = useVuelidate(rules, state, { $scope: 'tickets-detail' });
 
 const onChanged = async () => {
-  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.profileById(props.memberId),
   });
