@@ -10,7 +10,7 @@
           <RouterLink
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             replace
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -133,11 +133,11 @@ const onSubmit = async () => {
   })
     .then(async () => {
       notificationsStore.addSuccessNotification(
-        i18n.t('activity.detail.onAdd.success', {
+        i18n.t('activity.new.onAdd.success', {
           date: dayjs(state.date).format('dddd LL'),
         }),
       );
-      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.profileById(props.memberId),
       });

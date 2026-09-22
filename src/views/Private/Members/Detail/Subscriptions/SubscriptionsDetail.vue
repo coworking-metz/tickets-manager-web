@@ -19,7 +19,7 @@
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -226,7 +226,7 @@ const rules = computed(() => ({
 const vuelidate = useVuelidate(rules, state, { $scope: 'subscriptions-detail' });
 
 const onChanged = async () => {
-  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+  await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX });
   queryClient.invalidateQueries({
     queryKey: membersQueryKeys.profileById(props.memberId),
   });

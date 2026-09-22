@@ -8,7 +8,7 @@
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
             class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -19,7 +19,7 @@
       <Head>
         <title>{{ $t('tickets.new.head.title') }}</title>
       </Head>
-      <AppTextField
+      <AppNumericField
         id="ticket-count"
         v-model.number="state.count"
         :errors="vuelidate.count.$errors.map(({ $message }) => $message as string)"
@@ -28,15 +28,14 @@
         min="0.5"
         :prepend-icon="mdiTicket"
         required
-        step="0.5"
-        type="number">
+        step="0.5">
         <template #append>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 z-20 flex w-14 items-center text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t('tickets.detail.count.unit', { count: state.count }) }}
           </span>
         </template>
-      </AppTextField>
+      </AppNumericField>
       <AppAmountField
         id="ticket-amount"
         v-model.number="state.amount"
@@ -82,6 +81,7 @@
 import AppIcon from '@/components/AppIcon.vue';
 import AppAmountField from '@/components/form/AppAmountField.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppNumericField from '@/components/form/AppNumericField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppTextareaField from '@/components/form/AppTextareaField.vue';
 import { handleSilentError, scrollToFirstError } from '@/helpers/errors';
@@ -160,7 +160,7 @@ const onSubmit = async () => {
     comment: state.comment as string,
   })
     .then(async () => {
-      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX });
       notificationsStore.addSuccessNotification(i18n.t('tickets.new.onAdd.success'));
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.profileById(props.memberId),

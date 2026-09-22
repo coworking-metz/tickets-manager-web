@@ -5,6 +5,7 @@
     :title="$t('members.detail.orders.subscriptions.title')">
     <template #title:append>
       <span
+        v-if="subscriptions?.length"
         :class="[
           'shrink-0 rounded-full px-3 py-1 leading-6 ring-1 ring-inset sm:text-sm',
           hasActiveSubscription
@@ -37,12 +38,12 @@
             :class="[
               'flex flex-col gap-1 p-4 transition-colors hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-900 dark:active:bg-zinc-950',
               route.params.subscriptionId === `${subscription._id}` &&
-                route.name === ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL &&
+                route.name === ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.SUBSCRIPTIONS.DETAIL &&
                 'bg-slate-50 dark:bg-zinc-900/80',
             ]"
             replace
             :to="{
-              name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
+              name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.SUBSCRIPTIONS.DETAIL,
               params: { subscriptionId: subscription._id },
             }">
             <div class="flex min-h-9 flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
@@ -94,7 +95,7 @@
         color="neutral"
         :icon="mdiPlus"
         replace
-        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW }">
+        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.SUBSCRIPTIONS.NEW }">
         {{ $t('members.detail.orders.subscriptions.add') }}
       </AppButtonPlain>
     </template>

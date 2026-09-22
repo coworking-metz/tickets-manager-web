@@ -37,7 +37,7 @@
             <div
               v-if="isFetchingActivities"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
-            <AnimatedCounter
+            <AnimatedNumber
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
@@ -78,7 +78,7 @@
                   : 'bg-green-100 text-green-800',
               ]">
               {{ `${averagePeopleCount > MAX_ATTENDANCE ? '+' : ''}` }}
-              <AnimatedCounter
+              <AnimatedNumber
                 :duration="1"
                 :format="(count: number) => fractionPercentage(count, $i18n.locale)"
                 :to="
@@ -98,7 +98,7 @@
             <div
               v-if="isFetchingActivities"
               class="mb-1 h-8 w-32 animate-pulse rounded-3xl bg-slate-200" />
-            <AnimatedCounter
+            <AnimatedNumber
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
@@ -132,6 +132,7 @@
 <script lang="ts" setup>
 import StatsActivityPeriodGraph from './StatsActivityPeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
+import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';

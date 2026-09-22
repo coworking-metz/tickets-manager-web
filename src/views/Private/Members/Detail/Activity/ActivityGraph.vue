@@ -191,7 +191,7 @@ const onSelect = ({ data }: any) => {
 
     router
       .replace({
-        name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+        name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.ACTIVITY.DETAIL,
         params: {
           date: selected.date,
           id: router.currentRoute.value.params.id,

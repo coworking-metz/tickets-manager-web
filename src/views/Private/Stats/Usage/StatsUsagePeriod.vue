@@ -53,7 +53,7 @@
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
-            <AnimatedCounter
+            <AnimatedNumber
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
@@ -95,7 +95,7 @@
           </dt>
           <dd class="mt-1 flex flex-col">
             <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
-            <AnimatedCounter
+            <AnimatedNumber
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
@@ -139,7 +139,7 @@
           </dt>
           <dd class="mt-1 flex flex-col">
             <LoadingSkeleton v-if="isPendingUsages" class="mb-1 h-8 w-32 rounded-full" />
-            <AnimatedCounter
+            <AnimatedNumber
               v-else
               class="block text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
               :duration="1"
@@ -189,6 +189,7 @@
 import StatsUsageMembersDialog from './StatsUsageMembersDialog.vue';
 import StatsUsagePeriodGraph from './StatsUsagePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
+import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import AppLink from '@/components/AppLink.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';

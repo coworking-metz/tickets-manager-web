@@ -8,7 +8,7 @@
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
             class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -150,7 +150,7 @@ const onSubmit = async () => {
     comment: state.comment as string,
   })
     .then(async (newMembership) => {
-      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX });
       notificationsStore.addSuccessNotification(
         i18n.t('memberships.new.onAdd.success', {
           year: dayjs(newMembership.membershipStart).year(),

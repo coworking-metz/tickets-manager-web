@@ -23,7 +23,7 @@
           <RouterLink
             class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
             replace
-            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX }">
+            :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
           </RouterLink>
@@ -50,7 +50,7 @@
           :icon="mdiChevronLeft"
           replace
           :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+            name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.ACTIVITY.DETAIL,
             params: { date: previous.date },
           }">
           {{ dayjs(previous.date).format('dddd DD/MM') }}
@@ -61,7 +61,7 @@
           color="gray"
           replace
           :to="{
-            name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
+            name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.ACTIVITY.DETAIL,
             params: { date: next.date },
           }">
           {{ dayjs(next.date).format('dddd DD/MM') }}
@@ -309,7 +309,7 @@ const onSubmit = async () => {
           date: dayjs(props.date).format('dddd LL'),
         }),
       );
-      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX });
+      await router.replace({ name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX });
       queryClient.invalidateQueries({
         queryKey: membersQueryKeys.profileById(props.memberId),
       });

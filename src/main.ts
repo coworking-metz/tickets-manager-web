@@ -21,7 +21,6 @@ import { createHead } from '@unhead/vue/client';
 import FloatingVue from 'floating-vue';
 import { includes } from 'lodash';
 import { createApp } from 'vue';
-import VueNumberAnimation from 'vue-number-animation';
 import { createVueQsPlugin, createVueRouterAdapter } from 'vue-qs';
 
 const app = createApp(App);
@@ -37,7 +36,6 @@ app.use(router);
 app.use(head);
 app.use(VueQueryPlugin, defaultVueQueryPluginOptions);
 app.use(FloatingVue);
-app.component('AnimatedCounter', VueNumberAnimation);
 
 createHttpInterceptors(HTTP);
 

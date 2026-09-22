@@ -41,71 +41,109 @@ export const routes: RouteRecordRaw[] = [
           },
           {
             path: ':memberId',
-            name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
             component: () => import('@/views/Private/Members/MembersDetail.vue'),
             props: (route) => ({
               memberId: route.params.memberId,
-              selectedActivityDate: route.params.date,
             }),
             children: [
               {
-                path: 'tickets/new',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW,
-                component: () => import('@/views/Private/Members/Detail/Tickets/TicketsNew.vue'),
+                path: '',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
+                redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX },
               },
               {
-                path: 'tickets/:ticketId',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
-                component: () => import('@/views/Private/Members/Detail/Tickets/TicketsDetail.vue'),
+                path: 'timeline',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX,
+                component: () => import('@/views/Private/Members/Detail/MemberTimelineTab.vue'),
                 props: (route) => ({
-                  id: route.params.ticketId,
+                  memberId: route.params.memberId,
+                  selectedActivityDate: route.params.date,
+                }),
+                children: [
+                  {
+                    path: 'activity/new',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.ACTIVITY.NEW,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Activity/ActivityNew.vue'),
+                  },
+                  {
+                    path: 'activity/:date',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.ACTIVITY.DETAIL,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Activity/ActivityDetail.vue'),
+                    props: (route) => ({
+                      date: route.params.date,
+                    }),
+                  },
+                ],
+              },
+              {
+                path: 'profile',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.PROFILE.INDEX,
+                component: () => import('@/views/Private/Members/Detail/MemberProfileTab.vue'),
+                props: (route) => ({
+                  memberId: route.params.memberId,
                 }),
               },
               {
-                path: 'subscriptions/new',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.NEW,
-                component: () =>
-                  import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsNew.vue'),
-              },
-              {
-                path: 'subscriptions/:subscriptionId',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.SUBSCRIPTIONS.DETAIL,
-                component: () =>
-                  import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsDetail.vue'),
+                path: 'orders',
+                name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX,
+                component: () => import('@/views/Private/Members/Detail/MemberOrdersTab.vue'),
                 props: (route) => ({
-                  id: route.params.subscriptionId,
+                  memberId: route.params.memberId,
                 }),
+                children: [
+                  {
+                    path: 'tickets/new',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.TICKETS.NEW,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Tickets/TicketsNew.vue'),
+                  },
+                  {
+                    path: 'tickets/:ticketId',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.TICKETS.DETAIL,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Tickets/TicketsDetail.vue'),
+                    props: (route) => ({
+                      id: route.params.ticketId,
+                    }),
+                  },
+                  {
+                    path: 'subscriptions/new',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.SUBSCRIPTIONS.NEW,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsNew.vue'),
+                  },
+                  {
+                    path: 'subscriptions/:subscriptionId',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.SUBSCRIPTIONS.DETAIL,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Subscriptions/SubscriptionsDetail.vue'),
+                    props: (route) => ({
+                      id: route.params.subscriptionId,
+                    }),
+                  },
+                  {
+                    path: 'memberships/new',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.MEMBERSHIPS.NEW,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Memberships/MembershipsNew.vue'),
+                  },
+                  {
+                    path: 'memberships/:membershipId',
+                    name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.MEMBERSHIPS.DETAIL,
+                    component: () =>
+                      import('@/views/Private/Members/Detail/Memberships/MembershipsDetail.vue'),
+                    props: (route) => ({
+                      id: route.params.membershipId,
+                    }),
+                  },
+                ],
               },
               {
-                path: 'memberships/new',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW,
-                component: () =>
-                  import('@/views/Private/Members/Detail/Memberships/MembershipsNew.vue'),
+                path: ':catchAll(.*)',
+                redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX },
               },
-              {
-                path: 'memberships/:membershipId',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL,
-                component: () =>
-                  import('@/views/Private/Members/Detail/Memberships/MembershipsDetail.vue'),
-                props: (route) => ({
-                  id: route.params.membershipId,
-                }),
-              },
-              {
-                path: 'activity/new',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.NEW,
-                component: () => import('@/views/Private/Members/Detail/Activity/ActivityNew.vue'),
-              },
-              {
-                path: 'activity/:date',
-                name: ROUTE_NAMES.MEMBERS.DETAIL.ACTIVITY.DETAIL,
-                component: () =>
-                  import('@/views/Private/Members/Detail/Activity/ActivityDetail.vue'),
-                props: (route) => ({
-                  date: route.params.date,
-                }),
-              },
-              { path: ':catchAll(.*)', redirect: { name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX } },
             ],
           },
         ],

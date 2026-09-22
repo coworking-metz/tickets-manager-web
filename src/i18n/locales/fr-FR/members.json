@@ -76,7 +76,7 @@
         },
         "total": {
           "label": "En tout",
-          "value": "{count} dépensé | {count} dépensé | {count} dépensés"
+          "value": "{count} contribué | {count} contribué | {count} contribués"
         }
       },
       "subscriptions": {
@@ -262,6 +262,11 @@
         "description": "A acquis au moins 20 jours de présence sur les 6 derniers mois.\nPeut voter lors des assemblées générales.",
         "label": "Électeur⸱rice"
       }
+    },
+    "tabs": {
+      "orders": "Commandes",
+      "profile": "Profil",
+      "timeline": "Timeline"
     },
     "wordpress": {
       "description": "Récupère et traite les données de ce membre auprès du serveur Wordpress.\nLes nom, prénom, et date de naissance seront écrasés.\nLes commandes de tickets, d'abonnements et d'adhésions se mettront à jour.",

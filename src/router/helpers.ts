@@ -17,15 +17,18 @@ export const isRouteAfter = (to: RouteLocation, from: RouteLocation) => {
       const fromNameParts = (from.name as string)
         .split(ROUTE_NAME_SEPARATOR)
         .filter((part) => !!part);
+
       if (toNameParts.length === fromNameParts.length) {
         // find common part to determine which parentRouteName they have in common
-        const commonNameParts = toNameParts.filter(
-          (value, index) => fromNameParts.indexOf(value) === index,
+        const commonNameParts = toNameParts.slice(
+          0,
+          toNameParts.findIndex((value, index) => fromNameParts.indexOf(value) !== index),
         );
         const commonParent = commonNameParts.reduce(
           (acc: any, part) => (includes(Object.keys(acc), part) ? acc[part] : acc),
           ROUTE_NAMES,
         );
+
         // compare indexes from the common parent children
         const childrenNames = Object.entries(commonParent);
         const toIndexInCommonParent = childrenNames.findIndex(([childNamePart, childValue]) =>
@@ -38,6 +41,7 @@ export const isRouteAfter = (to: RouteLocation, from: RouteLocation) => {
             ? from.name === childValue
             : includes(fromNameParts, childNamePart),
         );
+
         // should not be the case but I don't trust my future self
         if (toIndexInCommonParent !== fromIndexInCommonParent) {
           return toIndexInCommonParent > fromIndexInCommonParent;

@@ -31,12 +31,12 @@
             :class="[
               'flex flex-col gap-1 p-4 transition-colors hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-900 dark:active:bg-zinc-950',
               route.params.membershipId === `${membership._id}` &&
-                route.name === ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL &&
+                route.name === ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.MEMBERSHIPS.DETAIL &&
                 'bg-slate-50 dark:bg-zinc-900/80',
             ]"
             replace
             :to="{
-              name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.DETAIL,
+              name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.MEMBERSHIPS.DETAIL,
               params: { membershipId: membership._id },
             }">
             <div class="flex flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
@@ -83,7 +83,7 @@
         color="neutral"
         :icon="mdiPlus"
         replace
-        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.MEMBERSHIPS.NEW }">
+        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.MEMBERSHIPS.NEW }">
         {{ $t('members.detail.orders.memberships.add') }}
       </AppButtonPlain>
     </template>

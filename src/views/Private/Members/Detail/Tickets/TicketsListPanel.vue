@@ -4,19 +4,21 @@
     class="flex flex-col"
     :title="$t('members.detail.orders.tickets.title')">
     <template #title:append>
+      <LoadingSkeleton v-if="isPendingMember" class="h-6 w-16 rounded-md" />
       <span
+        v-else-if="member"
         :class="[
           'shrink-0 rounded-full px-3 py-1 leading-6 ring-1 ring-inset sm:text-sm',
-          remaining > 0
+          member?.balance > 0
             ? 'bg-indigo-500/10 text-indigo-400 ring-indigo-500/20'
-            : remaining < 0
+            : member?.balance < 0
               ? 'bg-red-500/10 text-red-400 ring-red-500/20'
               : 'bg-gray-500/10 text-gray-400 ring-gray-500/20',
         ]">
         {{
-          remaining >= 0
-            ? $t('members.detail.orders.tickets.remaining', { count: remaining })
-            : $t('members.detail.orders.tickets.debt', { count: Math.abs(remaining) })
+          member?.balance >= 0
+            ? $t('members.detail.orders.tickets.remaining', { count: member?.balance })
+            : $t('members.detail.orders.tickets.debt', { count: Math.abs(member?.balance) })
         }}
       </span>
     </template>
@@ -41,12 +43,12 @@
             :class="[
               'flex flex-col gap-1 p-4 transition-colors hover:bg-slate-100 active:bg-slate-200 sm:px-6 dark:hover:bg-zinc-900 dark:active:bg-zinc-950',
               route.params.ticketId === `${ticket._id}` &&
-                route.name === ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL &&
+                route.name === ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.TICKETS.DETAIL &&
                 'bg-slate-50 dark:bg-zinc-900/80',
             ]"
             replace
             :to="{
-              name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.DETAIL,
+              name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.TICKETS.DETAIL,
               params: { ticketId: ticket._id },
             }">
             <div class="flex flex-row items-end gap-1 text-gray-900 dark:text-gray-100">
@@ -93,7 +95,7 @@
         color="neutral"
         :icon="mdiPlus"
         replace
-        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TICKETS.NEW }">
+        :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.TICKETS.NEW }">
         {{ $t('members.detail.orders.tickets.add') }}
       </AppButtonPlain>
     </template>
@@ -101,12 +103,14 @@
 </template>
 <script setup lang="ts">
 import AppIcon from '@/components/AppIcon.vue';
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { fractionAmount } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
+import { getMember } from '@/services/api/members';
 import { getAllMemberTickets } from '@/services/api/tickets';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiChevronDoubleDown, mdiPlus } from '@mdi/js';
@@ -121,11 +125,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  remaining: {
-    type: Number,
-    default: 0,
-  },
 });
+
+const { isPending: isPendingMember, data: member } = useAppQuery(
+  computed(() => ({
+    queryKey: membersQueryKeys.profileById(props.memberId),
+    queryFn: () => getMember(props.memberId),
+  })),
+);
 
 const {
   isFetching: isFetchingTickets,
