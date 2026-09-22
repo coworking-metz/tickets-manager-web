@@ -2,7 +2,7 @@
   <div class="flex grow flex-col">
     <Menu
       as="nav"
-      class="relative z-20 mb-6 mt-3 inline-block text-left max-sm:mx-3 sm:mt-6 xl:hidden">
+      class="relative z-20 mt-3 mb-6 inline-block text-left max-sm:mx-3 sm:mt-6 xl:hidden">
       <MenuButton
         class="group w-full rounded-xl border border-gray-200 bg-white px-4 py-5 text-gray-700 hover:bg-gray-200 sm:px-6 dark:border-stone-700 dark:bg-neutral-800 dark:hover:bg-neutral-700/50 dark:active:bg-neutral-800">
         <span class="flex w-full flex-row items-start justify-between">
@@ -30,7 +30,7 @@
         leave-from-class="transform opacity-100 scale-100"
         leave-to-class="transform opacity-0 scale-95">
         <MenuItems
-          class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:divide-stone-700 dark:bg-neutral-800">
+          class="absolute inset-x-0 z-10 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none dark:divide-stone-700 dark:bg-neutral-800">
           <div class="py-1">
             <MenuItem
               v-for="tab in tabs.filter(({ active }) => !active)"
@@ -59,14 +59,14 @@
     </Menu>
 
     <div class="flex shrink grow basis-0 flex-row">
-      <aside class="flex h-screen max-h-[1440px] w-96 shrink-0 flex-col py-3 pr-6 max-xl:hidden">
+      <aside class="flex h-screen max-h-360 w-96 shrink-0 flex-col py-3 pr-6 max-xl:hidden">
         <nav
           aria-label="Sections"
-          class="my-auto h-full max-h-[840px] rounded-xl border bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
+          class="my-auto h-full max-h-210 rounded-xl border bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
           <div
             class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6 dark:border-stone-700">
             <h1
-              class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+              class="text-2xl leading-7 font-bold text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
               {{ $t('stats.title') }}
             </h1>
           </div>
@@ -87,7 +87,7 @@
               </div>
               <AppIcon
                 :class="[
-                  'size-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:!opacity-100 dark:text-gray-400',
+                  'size-6 shrink-0 self-center text-gray-500 group-hover:text-gray-600 group-hover:opacity-100! dark:text-gray-400',
                   tab.active ? 'opacity-80' : 'opacity-0',
                 ]"
                 :icon="mdiChevronRight" />

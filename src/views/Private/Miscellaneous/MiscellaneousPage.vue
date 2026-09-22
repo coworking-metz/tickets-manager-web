@@ -5,10 +5,10 @@
     </Head>
 
     <div
-      class="flex max-w-3xl shrink-0 grow flex-col gap-6 pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
+      class="flex max-w-3xl shrink-0 grow flex-col gap-6 pt-12 pb-6 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+          class="text-2xl leading-7 font-bold text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('miscellaneous.title') }}
         </h1>
         <p class="mt-1 text-base text-slate-500 dark:text-slate-400">
@@ -18,11 +18,11 @@
 
       <AppPanel>
         <h3
-          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
           <AppIcon class="size-5" :icon="mdiBookOpenVariantOutline" />
           {{ $t('miscellaneous.guide.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ $t('miscellaneous.guide.description') }}
         </p>
         <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
@@ -40,11 +40,11 @@
 
       <AppPanel>
         <h3
-          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
           <AppIcon class="size-5" :icon="mdiTelevisionGuide" />
           {{ $t('miscellaneous.digitalSignage.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ $t('miscellaneous.digitalSignage.description') }}
         </p>
         <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
@@ -61,15 +61,15 @@
 
       <AppPanel>
         <h3
-          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
           <AppIcon class="size-5" :icon="mdiCalendarMultiple" />
           {{ $t('miscellaneous.events.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ $t('miscellaneous.events.description') }}
         </p>
         <h4
-          class="mt-5 max-w-prose text-base font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="mt-5 max-w-prose text-base leading-6 font-medium text-gray-900 dark:text-gray-100">
           {{ $t('miscellaneous.events.features.label') }}
         </h4>
         <ul class="mt-2 max-w-prose pl-6">

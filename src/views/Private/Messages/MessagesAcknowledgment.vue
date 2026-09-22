@@ -21,7 +21,7 @@
 
     <div v-if="loading" class="flex w-full flex-col items-start pb-6">
       <div
-        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50"
+        class="mt-2 mb-1 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-gray-700/50"
         :style="{
           maxWidth: `${Math.floor(Math.random() * 256) + 128}px`,
         }" />
@@ -56,7 +56,7 @@
       </i18n-t>
       <time
         v-if="updated"
-        class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-gray-400"
+        class="text-xs font-light whitespace-nowrap text-gray-500 lowercase dark:text-gray-400"
         :datetime="updated"
         :title="dayjs(updated).format('llll')">
         {{

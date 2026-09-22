@@ -1,10 +1,10 @@
 <template>
-  <article class="flex flex-col pb-12 max-sm:grow sm:min-h-full sm:!px-0 sm:pb-24">
+  <article class="flex flex-col pb-12 max-sm:grow sm:min-h-full sm:px-0! sm:pb-24">
     <Head>
       <title>{{ fullname }}</title>
     </Head>
     <section
-      class="my-6 flex flex-row flex-wrap max-sm:px-3 sm:pl-36 sm:pr-4 sm:pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
+      class="my-6 flex flex-row flex-wrap max-sm:px-3 sm:pt-12 sm:pr-4 sm:pl-36 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
       <div class="min-w-48 shrink grow basis-0" />
       <header class="flex w-full max-w-2xl shrink-0 grow flex-col">
         <div class="flex flex-row space-x-5">
@@ -27,7 +27,7 @@
             </div>
             <span
               v-if="member?.attending"
-              class="absolute bottom-0.5 right-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50 dark:ring-stone-900" />
+              class="absolute right-0.5 bottom-0.5 block size-3 rounded-full bg-emerald-500 ring-4 ring-slate-50 dark:ring-stone-900" />
           </component>
 
           <div class="flex flex-col gap-1">
@@ -60,7 +60,7 @@
                 tag="p">
                 <template #date>
                   <time
-                    class="mr-1 inline-block lowercase text-gray-900 dark:text-gray-100"
+                    class="mr-1 inline-block text-gray-900 lowercase dark:text-gray-100"
                     :datetime="member.lastSeen"
                     :title="dayjs(member.lastSeen).format('llll')">
                     {{
@@ -79,7 +79,7 @@
               <div class="mt-1 flex flex-row flex-wrap items-center gap-2">
                 <span
                   v-if="isMemberBalanceInsufficient(member)"
-                  class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+                  class="shrink basis-0 rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-red-400 ring-1 ring-red-500/20 ring-inset">
                   {{
                     $t('members.detail.orders.tickets.debt', {
                       count: Math.abs(member.balance),
@@ -88,12 +88,12 @@
                 </span>
                 <span
                   v-if="member.membershipOk"
-                  class="shrink basis-0 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                  class="shrink basis-0 rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-indigo-400 ring-1 ring-indigo-500/20 ring-inset">
                   {{ $t('members.detail.membership.current', { year: member.lastMembership }) }}
                 </span>
                 <span
                   v-else
-                  class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                  class="shrink basis-0 rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-neutral-500 ring-1 ring-neutral-500/20 ring-inset">
                   {{
                     member.lastMembership
                       ? $t('members.detail.membership.last', { year: member.lastMembership })
@@ -102,24 +102,24 @@
                 </span>
                 <VTooltip v-if="member.trustedUser">
                   <span
-                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    class="flex shrink basis-0 flex-row items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-indigo-400 ring-1 ring-indigo-500/20 ring-inset">
                     {{ $t('members.detail.status.trusted.label') }}
                     <AppIcon class="size-4" :icon="mdiInformationOutline" />
                   </span>
                   <template #popper>
-                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                    <span class="overflow-hidden text-sm whitespace-pre-line">
                       {{ $t('members.detail.status.trusted.description') }}
                     </span>
                   </template>
                 </VTooltip>
                 <VTooltip v-if="member.activeUser">
                   <span
-                    class="flex shrink basis-0 flex-row items-center gap-1 whitespace-nowrap rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
+                    class="flex shrink basis-0 flex-row items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-indigo-400 ring-1 ring-indigo-500/20 ring-inset">
                     {{ $t('members.detail.status.voting.label') }}
                     <AppIcon class="size-4" :icon="mdiInformationOutline" />
                   </span>
                   <template #popper>
-                    <span class="overflow-hidden whitespace-pre-line text-sm">
+                    <span class="overflow-hidden text-sm whitespace-pre-line">
                       {{ $t('members.detail.status.voting.description') }}
                     </span>
                   </template>
@@ -143,7 +143,7 @@
               tab.active
                 ? 'border-indigo-500 text-indigo-600 dark:text-indigo-500'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 hover:dark:border-gray-600 hover:dark:text-gray-200',
-              'whitespace-nowrap border-b-2 px-1 pb-4 pt-2.5 text-sm font-medium',
+              'border-b-2 px-1 pt-2.5 pb-4 text-sm font-medium whitespace-nowrap',
             ]"
             :to="{ name: tab.to.name }">
             {{ tab.label }}
@@ -155,7 +155,7 @@
     </section>
 
     <RouterViewSlideTransition
-      class="mx-auto w-full max-w-7xl sm:pl-36 sm:pr-4"
+      class="mx-auto w-full max-w-7xl sm:pr-4 sm:pl-36"
       :member-id="memberId" />
 
     <AppDialog
@@ -166,7 +166,7 @@
         class="max-h-[80vh] w-full object-contain"
         :src="member.picture" />
       <AppButtonIcon
-        class="absolute right-3 top-3 bg-black/40 !text-white hover:!bg-black/60 focus:ring-offset-black"
+        class="absolute top-3 right-3 bg-black/40 text-white! hover:bg-black/60! focus:ring-offset-black"
         :icon="mdiClose"
         :title="$t('action.close')"
         @click="() => (state.isPictureDialogVisible = false)" />

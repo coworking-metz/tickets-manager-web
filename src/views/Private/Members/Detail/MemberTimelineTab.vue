@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-col">
     <SectionRow>
-      <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-[172px] w-12" />
+      <LoadingSpinner v-if="isFetchingActivity" class="mx-auto h-43 w-12" />
       <div v-else class="relative">
         <span
           v-if="
             state.shouldRenderAllActivity &&
             firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
           "
-          class="absolute left-0 z-10 h-[172px] w-10 bg-gradient-to-r from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+          class="absolute left-0 z-10 h-43 w-10 bg-linear-to-r from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
         <span
           v-if="
             state.shouldRenderAllActivity &&
             firstActivityDate?.isBefore(dayjs().subtract(6, 'months'))
           "
-          class="absolute right-0 z-10 h-[172px] w-10 bg-gradient-to-l from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
+          class="absolute right-0 z-10 h-43 w-10 bg-linear-to-l from-slate-50 from-0% max-sm:hidden dark:from-stone-900" />
 
         <ActivityGraph
           :key="`activity-graph-${state.shouldRenderAllActivity}`"
@@ -67,7 +67,7 @@
         </h2>
       </template>
       <template #description>
-        <p class="mx-3 mt-1 whitespace-pre-line text-sm text-gray-500 sm:mx-0 dark:text-gray-400">
+        <p class="mx-3 mt-1 text-sm whitespace-pre-line text-gray-500 sm:mx-0 dark:text-gray-400">
           {{ $t('members.detail.attendance.description') }}
         </p>
       </template>
@@ -95,7 +95,7 @@
                 </span>
                 <i18n-t
                   v-else
-                  class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                  class="block text-3xl font-semibold tracking-tight whitespace-nowrap text-gray-900 dark:text-gray-100"
                   keypath="members.detail.attendance.summary.value"
                   :plural="periodAttendance"
                   scope="global"

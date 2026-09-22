@@ -1,9 +1,9 @@
 <template>
   <AppPanel>
-    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
       {{ $t('members.detail.wordpress.title') }}
     </h3>
-    <p class="mt-2 max-w-xl whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+    <p class="mt-2 max-w-xl text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
       {{ $t('members.detail.wordpress.description') }}
     </p>
     <div class="mt-5 flex flex-row flex-wrap items-center gap-3">

@@ -1,7 +1,7 @@
 <template>
   <SectionRow class="max-sm:px-3" :title="$t('members.detail.orders.title')">
     <template #description>
-      <p class="mt-1 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
         {{ $t('members.detail.orders.description') }}
       </p>
 
@@ -16,9 +16,9 @@
       </AppButtonText>
     </template>
 
-    <TicketsListPanel class="max-h-[32rem] w-full" :member-id="memberId" />
-    <SubscriptionsListPanel class="mt-8 max-h-[32rem] w-full" :member-id="memberId" />
-    <MembershipsListPanel class="mt-8 max-h-[32rem] w-full" :member-id="memberId" />
+    <TicketsListPanel class="max-h-128 w-full" :member-id="memberId" />
+    <SubscriptionsListPanel class="mt-8 max-h-128 w-full" :member-id="memberId" />
+    <MembershipsListPanel class="mt-8 max-h-128 w-full" :member-id="memberId" />
 
     <template #append>
       <dl class="sticky top-3 flex flex-row flex-wrap gap-3">

@@ -6,7 +6,7 @@
         background-color="#FFFFFF"
         class="h-16 w-auto text-amber-500 dark:text-amber-900" />
     </div>
-    <ol class="mb-2 mt-6 flex w-full grow flex-col gap-1 px-2">
+    <ol class="mt-6 mb-2 flex w-full grow flex-col gap-1 px-2">
       <NavigationDrawerLink
         v-for="item in sidebarNavigation"
         :key="item.label"

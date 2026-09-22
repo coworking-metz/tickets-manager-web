@@ -1,5 +1,5 @@
 <template>
-  <article class="flex max-h-[1280px] grow flex-col pb-12 xl:pt-8">
+  <article class="flex max-h-320 grow flex-col pb-12 xl:pt-8">
     <div class="mx-auto flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-6 max-sm:px-3">
       <AppPeriodField
         id="incomes-period"
@@ -13,7 +13,7 @@
           <component
             :is="previousPeriod ? 'RouterLink' : 'button'"
             :class="[
-              'relative z-10 -mr-px mt-1 inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
+              'relative z-10 mt-1 -mr-px inline-flex items-center justify-center rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
               previousPeriod && 'hover:bg-gray-100 dark:hover:bg-zinc-700/50',
             ]"
             :disabled="!previousPeriod"
@@ -28,7 +28,7 @@
           <component
             :is="nextPeriod ? 'RouterLink' : 'button'"
             :class="[
-              'relative -ml-px mt-1 inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
+              'relative mt-1 -ml-px inline-flex items-center justify-center rounded-r-md border border-gray-300 bg-gray-50 px-3 py-1 font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:active:bg-zinc-700/80',
               nextPeriod && 'hover:bg-gray-100 dark:hover:bg-zinc-700/50',
             ]"
             :disabled="!nextPeriod"
@@ -98,7 +98,7 @@
               @input="() => onToggleWeekDay(weekDayIndex)" />
             <label
               :class="[
-                'flex size-8 cursor-pointer select-none items-center justify-center rounded-full text-sm font-medium ring-1 ring-inset transition-colors  focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+                'flex size-8 cursor-pointer items-center justify-center rounded-full text-sm font-medium ring-1 transition-colors select-none ring-inset  focus:z-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none',
                 includes(state.selectedWeekDays, weekDayIndex)
                   ? 'bg-indigo-500/10 text-indigo-700 ring-indigo-500/20 hover:bg-indigo-500/20 active:bg-indigo-500/30'
                   : 'bg-white text-gray-700 ring-gray-500/20 hover:bg-gray-200 active:bg-gray-300 dark:bg-neutral-800',

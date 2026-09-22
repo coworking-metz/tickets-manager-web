@@ -3,7 +3,7 @@
     <EmptyState
       v-if="!date"
       :animation="SelectCalendarDate"
-      class="mx-auto mb-16 lg:mb-32 lg:mt-72"
+      class="mx-auto mb-16 lg:mt-72 lg:mb-32"
       :description="$t('attendance.detail.select.description')"
       loop
       :title="$t('attendance.detail.select.title')" />
@@ -11,7 +11,7 @@
       <header
         class="z-10 flex flex-col items-start border-b border-gray-200 bg-slate-50/90 backdrop-blur-sm max-sm:px-3 lg:sticky lg:top-0 lg:pt-12 dark:border-neutral-700 dark:bg-stone-900/90 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
         <h1
-          class="w-full text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+          class="w-full text-2xl leading-7 font-bold text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ capitalize(dayjs(date).format('dddd LL')) }}
         </h1>
         <p
@@ -34,7 +34,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
                 <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
@@ -58,7 +58,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -117,7 +117,7 @@
               <AttendingMemberCard class="w-full" :member="member">
                 <template #append>
                   <AppIcon
-                    class="ml-auto mr-1.5 size-6 shrink-0 text-gray-400 dark:text-gray-500"
+                    class="mr-1.5 ml-auto size-6 shrink-0 text-gray-400 dark:text-gray-500"
                     :icon="mdiChevronRight" />
                 </template>
               </AttendingMemberCard>

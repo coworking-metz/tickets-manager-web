@@ -6,11 +6,11 @@
     </Head>
 
     <section
-      class="flex max-w-xl shrink-0 grow flex-col pb-6 pt-12 lg:sticky lg:top-12 lg:py-0 [@media_((min-height:840px)_and_(min-width:1024px))]:top-40">
+      class="flex max-w-xl shrink-0 grow flex-col pt-12 pb-6 lg:sticky lg:top-12 lg:py-0 [@media_((min-height:840px)_and_(min-width:1024px))]:top-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <div class="flex flex-row">
           <h1
-            class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+            class="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
             {{ $t('attendance.title') }}
           </h1>
           <ErrorBadge
@@ -34,7 +34,7 @@
           <div
             class="flex min-h-10 max-w-48 shrink grow items-stretch rounded-md border border-gray-300 bg-white shadow-sm md:items-stretch dark:border-neutral-600 dark:bg-neutral-800">
             <AppButtonText
-              class="!p-2"
+              class="p-2!"
               color="gray"
               :to="{
                 ...currentRoute,
@@ -53,7 +53,7 @@
               {{ capitalize(dayjs(state.selectedMonth).format('MMM YYYY')) }}
             </time>
             <AppButtonText
-              class="!p-2"
+              class="p-2!"
               color="gray"
               :to="{
                 ...currentRoute,
@@ -89,7 +89,7 @@
         <LoadingProgressBar v-if="isFetchingAttendance" class="absolute top-0 h-[2px] w-full" />
         <div
           v-if="calendarPeriod"
-          class="grid grid-cols-7 divide-x divide-gray-300 border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none dark:divide-stone-600 dark:border-stone-600 dark:text-gray-300">
+          class="grid grid-cols-7 divide-x divide-gray-300 border-b border-gray-300 bg-gray-200 text-center text-xs leading-6 font-semibold text-gray-700 lg:flex-none dark:divide-stone-600 dark:border-stone-600 dark:text-gray-300">
           <div
             v-for="weekIndex in 7"
             :key="`weekday-${weekIndex}`"
@@ -128,7 +128,7 @@
       </div>
     </section>
 
-    <aside class="relative min-w-[320px] shrink grow basis-0 self-stretch">
+    <aside class="relative min-w-80 shrink grow basis-0 self-stretch">
       <AttendanceDetail
         :attendance="state.selectedAttendance"
         :date="date"

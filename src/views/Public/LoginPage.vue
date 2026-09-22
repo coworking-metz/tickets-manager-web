@@ -12,7 +12,7 @@
           <polygon points="0,0 90,0 50,100 0,100" />
         </svg>
 
-        <div class="relative px-6 pt-6 lg:pl-8 lg:pr-0">
+        <div class="relative px-6 pt-6 lg:pr-0 lg:pl-8">
           <nav
             aria-label="Global"
             class="flex items-center justify-between sm:h-10 lg:justify-start">
@@ -22,7 +22,7 @@
           </nav>
         </div>
 
-        <div class="relative flex max-h-[960px] min-h-[480px] grow flex-col px-6 lg:px-8 lg:pr-0">
+        <div class="relative flex max-h-240 min-h-120 grow flex-col px-6 lg:px-8 lg:pr-0">
           <div class="m-auto max-w-2xl lg:mx-0 lg:max-w-xl">
             <div class="hidden sm:mb-10 sm:flex">
               <a
@@ -31,7 +31,7 @@
                 target="_blank">
                 {{ $t('login.headline.text') }}
                 <span
-                  class="inline-flex flex-row items-center whitespace-nowrap font-semibold text-indigo-600 dark:text-indigo-500">
+                  class="inline-flex flex-row items-center font-semibold whitespace-nowrap text-indigo-600 dark:text-indigo-500">
                   {{ $t('login.headline.readMore') }}
                   <AppIcon class="ml-1 size-4" :icon="mdiArrowTopRight" />
                 </span>
@@ -41,7 +41,7 @@
               class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl dark:text-gray-100">
               {{ $t('login.title') }}
             </h1>
-            <p class="mt-6 whitespace-pre-line text-lg leading-8 text-gray-600 dark:text-gray-400">
+            <p class="mt-6 text-lg leading-8 whitespace-pre-line text-gray-600 dark:text-gray-400">
               {{ $t('login.description') }}
             </p>
             <div class="mt-10 flex items-center gap-x-6">
@@ -60,7 +60,7 @@
       </div>
     </section>
     <section
-      class="relative flex min-h-64 flex-col overflow-hidden bg-gray-50 max-lg:max-h-[320px] lg:absolute lg:inset-y-0 lg:right-0 lg:min-h-[420px] lg:w-1/2">
+      class="relative flex min-h-64 flex-col overflow-hidden bg-gray-50 max-lg:max-h-80 lg:absolute lg:inset-y-0 lg:right-0 lg:min-h-105 lg:w-1/2">
       <img
         :alt="$t('login.background.label')"
         class="aspect-auto h-full object-cover grayscale lg:w-full"
@@ -70,7 +70,7 @@
         style="background-color: rgb(243, 175, 16, 0.6)" />
       <img
         :alt="$t('login.logo.label')"
-        class="pointer-events-none absolute inset-0 size-full max-h-[320px] max-w-[320px] place-self-center object-contain lg:ml-40"
+        class="pointer-events-none absolute inset-0 size-full max-h-80 max-w-80 place-self-center object-contain lg:ml-40"
         :src="typoLePoulailler" />
     </section>
   </article>

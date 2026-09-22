@@ -109,7 +109,7 @@ const options = computed<
     },
     show: !state.shouldHideTooltip,
     className:
-      '!p-0 !border-0 !rounded-xl !overflow-hidden !text-gray-700 dark:!text-gray-300 !bg-white dark:!bg-neutral-800',
+      'p-0! border-0! rounded-xl! overflow-hidden! text-gray-700! dark:text-gray-300! bg-white! dark:bg-neutral-800!',
     formatter: (params) => {
       const attendance = (props.activity ?? [])[(params as { dataIndex: number }).dataIndex];
       return `

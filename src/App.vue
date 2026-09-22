@@ -22,7 +22,7 @@
 
   <small
     v-if="!IS_PRODUCTION"
-    class="fixed -right-6 top-3 z-50 flex h-5 w-24 rotate-45 items-center justify-center overflow-hidden truncate bg-indigo-700 text-xs lowercase text-white shadow">
+    class="fixed top-3 -right-6 z-50 flex h-5 w-24 rotate-45 items-center justify-center truncate overflow-hidden bg-indigo-700 text-xs text-white lowercase shadow">
     {{ ENVIRONMENT }}
   </small>
 </template>

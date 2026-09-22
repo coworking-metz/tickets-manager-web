@@ -31,8 +31,8 @@
           :aria-invalid="isInvalid"
           :as="as"
           :class="[
-            `min-h-10 w-full rounded-md border bg-white py-2 pl-3 pr-8 shadow-sm transition-colors
-            focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:border-gray-200
+            `min-h-10 w-full rounded-md border bg-white py-2 pr-8 pl-3 shadow-sm transition-colors
+            focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200
             disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm dark:bg-slate-800
             dark:disabled:border-gray-700 dark:disabled:bg-slate-700 dark:disabled:text-gray-400`,
             isInvalid
@@ -69,7 +69,7 @@
             !(disabled || readonly) &&
             (isArray(selectedOptions) ? selectedOptions.length > 0 : !isNil(selectedOptions))
           "
-          class="absolute right-8 top-1/2 size-7 -translate-y-1/2 bg-white/10 opacity-0 backdrop-blur-md transition-opacity focus:opacity-100 group-hover:opacity-100 dark:bg-slate-900/10"
+          class="absolute top-1/2 right-8 size-7 -translate-y-1/2 bg-white/10 opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100 focus:opacity-100 dark:bg-slate-900/10"
           :icon="mdiClose"
           :title="$t('action.clear')"
           @click.stop.prevent="onClear" />
@@ -86,7 +86,7 @@
           leave-to-class="transform scale-95 opacity-0">
           <ComboboxOptions
             v-if="filteredOptions.length > 0"
-            class="absolute z-30 mt-1 max-h-60 w-full overflow-y-auto overflow-x-hidden overscroll-contain rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none max-sm:bottom-full sm:top-full sm:text-sm dark:border-gray-700 dark:bg-slate-900">
+            class="absolute z-30 mt-1 max-h-60 w-full overflow-x-hidden overflow-y-auto overscroll-contain rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none max-sm:bottom-full sm:top-full sm:text-sm dark:border-gray-700 dark:bg-slate-900">
             <ComboboxOption
               v-for="option in filteredOptions"
               :key="option"
@@ -96,7 +96,7 @@
               <slot :active="active" name="option" :option="option" :selected="selected">
                 <li
                   :class="[
-                    'relative cursor-default select-none py-2 pl-3 pr-9',
+                    'relative cursor-default py-2 pr-9 pl-3 select-none',
                     active
                       ? 'bg-sky-600 text-white dark:bg-sky-700'
                       : 'text-gray-900 dark:text-gray-100',
@@ -110,8 +110,8 @@
                   <span
                     v-if="selected"
                     :class="[
-                      `absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center
-                      rounded-full bg-opacity-[75%] p-0.5 backdrop-blur-md transition-colors`,
+                      `absolute top-1/2 right-2 flex size-6 -translate-y-1/2
+                      items-center rounded-full p-0.5 backdrop-blur-md transition-colors`,
                       active ? 'text-white' : 'text-sky-600 dark:text-sky-500 ',
                     ]">
                     <AppIcon class="size-5" :icon="mdiCheck" />

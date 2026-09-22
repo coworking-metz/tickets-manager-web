@@ -4,7 +4,7 @@
     :aria-current="active ? 'page' : undefined"
     :class="[
       'navigation-drawer-link',
-      'group flex w-full flex-col items-center rounded-xl p-3 text-xs font-medium no-underline outline-none transition-colors focus:ring-2 focus:ring-white  focus:ring-offset-amber-600 active:bg-amber-700 dark:active:bg-amber-950/50',
+      'group flex w-full flex-col items-center rounded-xl p-3 text-xs font-medium no-underline transition-colors outline-none focus:ring-2 focus:ring-white  focus:ring-offset-amber-600 active:bg-amber-700 dark:active:bg-amber-950/50',
       active
         ? 'bg-amber-600 text-white dark:bg-amber-950/80'
         : 'text-amber-100 hover:bg-amber-600 hover:text-white dark:text-zinc-200 dark:hover:bg-amber-950/80',

@@ -1,8 +1,8 @@
 <template>
   <AppButton
     :class="[
-      `border border-transparent font-medium outline-none transition-all
-      focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900`,
+      `border border-transparent font-medium transition-all outline-none
+      focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-slate-900`,
       colors,
     ]">
     <slot />

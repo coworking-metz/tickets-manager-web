@@ -14,11 +14,11 @@
         v-slot="{ checked }">
         <button
           :class="[
-            `flex items-center rounded-md py-2 pl-2.5 pr-3.5 text-sm font-medium transition-colors
+            `flex items-center rounded-md py-2 pr-3.5 pl-2.5 text-sm font-medium transition-colors
             focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500
             focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100`,
             checked
-              ? 'bg-white shadow-sm ring-1 ring-black ring-opacity-[5%] dark:bg-neutral-800'
+              ? 'bg-white shadow-sm ring-1 ring-black/5 dark:bg-neutral-800'
               : 'hover:bg-white dark:hover:bg-neutral-800/80',
           ]"
           type="button">

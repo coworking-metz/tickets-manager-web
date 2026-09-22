@@ -19,7 +19,7 @@
               <DialogTitle
                 v-if="title"
                 as="h3"
-                class="flex flex-row items-center text-lg font-medium leading-6 text-gray-900 max-sm:justify-center max-sm:text-center sm:min-h-10 sm:pr-6 dark:text-gray-100">
+                class="flex flex-row items-center text-lg leading-6 font-medium text-gray-900 max-sm:justify-center max-sm:text-center sm:min-h-10 sm:pr-6 dark:text-gray-100">
                 {{ title }}
               </DialogTitle>
 
@@ -42,7 +42,7 @@
         </footer>
 
         <AppButtonIcon
-          class="absolute right-3 top-3 sm:right-4 dark:ring-offset-neutral-800"
+          class="absolute top-3 right-3 sm:right-4 dark:ring-offset-neutral-800"
           :icon="mdiClose"
           :title="$t('action.close')"
           @click="isVisible = false" />

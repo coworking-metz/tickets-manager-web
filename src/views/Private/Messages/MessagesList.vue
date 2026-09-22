@@ -4,7 +4,7 @@
       <title>{{ $t('messages.list.head.title') }}</title>
     </Head>
     <h1
-      class="mx-3 text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+      class="mx-3 text-2xl leading-7 font-bold text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
       {{ $t('messages.list.title') }}
     </h1>
 
@@ -46,7 +46,7 @@
           </template>
           <EmptyState
             v-else-if="!slicedList.length"
-            class="m-auto pb-24 pt-6"
+            class="m-auto pt-6 pb-24"
             :title="$t('messages.list.empty.title')" />
           <li v-else v-for="message in slicedList" :key="`message-${message._id}`">
             <RouterLink

@@ -14,14 +14,14 @@
       <slot name="title">
         <h3
           v-if="title"
-          class="whitespace-pre-line text-base font-medium text-gray-900 dark:text-gray-100">
+          class="text-base font-medium whitespace-pre-line text-gray-900 dark:text-gray-100">
           {{ title }}
         </h3>
       </slot>
       <slot name="description">
         <p
           v-if="description"
-          class="mt-2 whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+          class="mt-2 text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ description }}
         </p>
       </slot>

@@ -106,7 +106,7 @@
 
         <div
           :class="[
-            '-mr-2.5 mt-2 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
+            'mt-2 -mr-2.5 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
             selectedUsage.data.amount > selectedUsage.data.charges
               ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800',
@@ -155,7 +155,7 @@
             <template #after>
               <Menu as="div" class="relative -ml-px block">
                 <MenuButton
-                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
+                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
                   <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                   <span class="ml-2 whitespace-nowrap max-sm:hidden">
                     {{
@@ -178,7 +178,7 @@
                   leave-from-class="transform opacity-100 scale-100"
                   leave-to-class="transform opacity-0 scale-95">
                   <MenuItems
-                    class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                    class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                     <div class="py-1">
                       <MenuItem
                         v-for="listSorter in ALL_LIST_SORTERS"
@@ -228,7 +228,7 @@
               :member="member">
               <template v-if="state.sort === 'activity'" #chips:prepend>
                 <span
-                  class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
+                  class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
                   :style="`background-color: ${statsColors.activity}88; --tw-ring-color: ${statsColors.activity};`">
                   <i18n-t
                     keypath="stats.usage.activity.count"
@@ -247,7 +247,7 @@
     </div>
 
     <AppButtonIcon
-      class="absolute right-3 top-3 dark:ring-offset-neutral-800"
+      class="absolute top-3 right-3 dark:ring-offset-neutral-800"
       :icon="mdiClose"
       tabindex="1"
       :title="$t('action.close')"

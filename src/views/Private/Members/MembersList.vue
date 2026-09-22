@@ -1,12 +1,12 @@
 <template>
   <article
-    class="mx-auto flex w-full max-w-7xl grow flex-col pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
+    class="mx-auto flex w-full max-w-7xl grow flex-col pt-12 pb-6 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
     <Head>
       <title>{{ $t('members.list.head.title') }}</title>
     </Head>
     <header class="mx-3 flex flex-row sm:mx-0">
       <h1
-        class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+        class="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
         {{ $t('members.list.title') }}
       </h1>
       <ErrorBadge
@@ -35,7 +35,7 @@
             listTab.hash === tab
               ? 'border-indigo-500 text-indigo-600 dark:text-indigo-500'
               : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 hover:dark:border-gray-600 hover:dark:text-gray-200',
-            'whitespace-nowrap border-b-2 px-1 pb-4 pt-2.5 text-sm font-medium',
+            'border-b-2 px-1 pt-2.5 pb-4 text-sm font-medium whitespace-nowrap',
           ]"
           replace
           :to="{
@@ -61,7 +61,7 @@
         </RouterLink>
       </nav>
 
-      <div class="mx-3 w-full min-w-96 max-w-lg shrink grow basis-0 sm:mx-0">
+      <div class="mx-3 w-full max-w-lg min-w-96 shrink grow basis-0 sm:mx-0">
         <label class="sr-only" for="members-search">{{ $t('members.list.search.label') }}</label>
         <AppSearchField
           id="members-search"
@@ -77,7 +77,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
                 <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
@@ -101,7 +101,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"
@@ -122,7 +122,7 @@
                         {{ $t(`members.list.sort.value.${listSorter.key}`) }}
                         <AppIcon
                           v-if="listSorter.key === queryState.sort"
-                          class="-mr-1.5 ml-2.5 mt-0.5 size-4 shrink-0"
+                          class="mt-0.5 -mr-1.5 ml-2.5 size-4 shrink-0"
                           :icon="mdiCheck" />
                       </button>
                     </MenuItem>
@@ -154,7 +154,7 @@
           </template>
           <EmptyState
             v-else-if="!slicedList.length"
-            class="m-auto pb-24 pt-6"
+            class="m-auto pt-6 pb-24"
             :title="$t('members.list.empty.title')" />
           <template v-else>
             <li v-for="member in slicedList" :key="`member-${member._id}`">
