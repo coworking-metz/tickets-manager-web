@@ -3,7 +3,10 @@
     <template #dialog>
       <DialogPanel
         as="form"
-        class="relative overflow-hidden rounded-t-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:rounded-2xl dark:bg-neutral-800"
+        :class="[
+          'relative overflow-hidden rounded-t-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:rounded-2xl dark:bg-neutral-800',
+          panelClass || 'sm:max-w-lg',
+        ]"
         @submit.prevent="emit('confirm')">
         <div class="bg-white p-4 sm:pr-6 dark:bg-neutral-800">
           <div class="sm:flex sm:items-start">
@@ -79,6 +82,10 @@ const props = defineProps({
   },
   type: {
     type: String as () => 'critical' | 'warning' | 'info' | 'success' | '',
+    default: '',
+  },
+  panelClass: {
+    type: String,
     default: '',
   },
   confirming: {

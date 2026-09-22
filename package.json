@@ -59,7 +59,6 @@
     "vue-qs": "^0.1.18",
     "vue-router": "^5.3.1",
     "vue-sonner": "^2.0.9",
-    "vue-tailwind-datepicker": "1.7.4",
     "vue-virtual-scroller": "^3.0.5"
   },
   "devDependencies": {

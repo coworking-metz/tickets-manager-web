@@ -23,7 +23,7 @@
 
     <section class="mt-6 flex flex-row flex-wrap-reverse place-items-start justify-between gap-3">
       <div class="grow sm:max-w-64">
-        <AppPeriodField
+        <AppDateRangeField
           v-model="state.period"
           class="min-w-52 shrink grow basis-0"
           hide-details
@@ -152,7 +152,7 @@ import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorBadge from '@/components/ErrorBadge.vue';
 import AuditEntry from '@/components/audit/AuditEntry.vue';
-import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppDateRangeField from '@/components/form/AppDateRangeField.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { searchIn } from '@/helpers/text';

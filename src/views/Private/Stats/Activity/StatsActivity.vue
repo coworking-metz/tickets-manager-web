@@ -1,14 +1,14 @@
 <template>
   <article class="flex max-h-320 grow flex-col pb-12 xl:pt-8">
     <div class="mx-auto flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-6 max-sm:px-3">
-      <AppPeriodField
+      <AppDateRangeField
         id="incomes-period"
         v-model="state.period"
         class="shrink grow sm:w-auto"
         hide-details
         :label="$t('stats.activity.period.label')"
         :placeholder="$t('stats.activity.period.placeholder')"
-        :shortcuts="shortcuts">
+        :preset-dates="presetDates">
         <template #before>
           <component
             :is="previousPeriod ? 'RouterLink' : 'button'"
@@ -39,7 +39,7 @@
             <AppIcon class="size-6 text-gray-400" :icon="mdiChevronRight" />
           </component>
         </template>
-      </AppPeriodField>
+      </AppDateRangeField>
 
       <div class="flex w-auto flex-col gap-1 overflow-hidden">
         <p class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
@@ -123,7 +123,7 @@
 <script lang="ts" setup>
 import StatsActivityPeriod from './StatsActivityPeriod.vue';
 import AppIcon from '@/components/AppIcon.vue';
-import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppDateRangeField from '@/components/form/AppDateRangeField.vue';
 import { DATE_FORMAT, WEEK_DAYS_INDEXES } from '@/helpers/dates';
 import { ROUTE_QUERY_ARRAY_SEPARATOR } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
@@ -172,45 +172,45 @@ const state = reactive({
   selectedWeekDays: WEEK_DAYS_INDEXES as number[],
 });
 
-const shortcuts = computed(() => () => [
+const presetDates = computed(() => [
   {
     label: i18n.t('stats.activity.period.shortcuts.currentWeek'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('week').format(DATE_FORMAT), now.endOf('week').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.currentMonth'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('month').format(DATE_FORMAT), now.endOf('month').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.currentYear'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.endOf('year').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.last30days'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.subtract(30, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.last6Months'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.subtract(6, 'month').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.lastYear'),
-    atClick: () => {
+    value: () => {
       const lastYear = dayjs().subtract(1, 'year');
       return [
         lastYear.startOf('year').format(DATE_FORMAT),
@@ -220,14 +220,14 @@ const shortcuts = computed(() => () => [
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.sinceYearStart'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.activity.period.shortcuts.sinceFirstDay'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.year(2014).startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },

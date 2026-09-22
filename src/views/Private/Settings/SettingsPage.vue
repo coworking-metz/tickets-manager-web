@@ -26,7 +26,7 @@
         </p>
         <form class="mt-6 flex flex-col" @submit.prevent="onComputeAttendance">
           <div class="flex flex-row flex-wrap items-start gap-x-3">
-            <AppPeriodField
+            <AppDateRangeField
               v-model="state.period"
               class="min-w-52 shrink grow basis-0"
               :errors="vuelidate.period.start.$errors.map(({ $message }) => $message as string)"
@@ -91,7 +91,7 @@
 <script lang="ts" setup>
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppDateRangeField from '@/components/form/AppDateRangeField.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
