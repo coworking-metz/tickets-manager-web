@@ -1,12 +1,12 @@
 <template>
   <article
-    class="mx-auto flex w-full max-w-7xl grow flex-col px-3 pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
+    class="mx-auto flex w-full max-w-7xl grow flex-col pt-12 pb-6 max-sm:px-3 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
     <Head>
       <title>{{ $t('audit.list.head.title') }}</title>
     </Head>
     <header class="flex flex-row">
       <h1
-        class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+        class="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
         {{ $t('audit.list.title') }}
       </h1>
       <ErrorBadge
@@ -45,7 +45,7 @@
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
                 tabindex="1">
                 <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
@@ -67,7 +67,7 @@
                 leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
                 <MenuItems
-                  class="absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black ring-opacity-[5%] focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
                   <div class="py-1">
                     <MenuItem
                       v-for="listSorter in ALL_LIST_SORTERS"

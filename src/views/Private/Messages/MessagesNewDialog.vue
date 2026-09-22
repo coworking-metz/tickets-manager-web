@@ -7,9 +7,9 @@
       </h1>
     </header>
 
-    <div class="mt-6 flex max-h-[1280px] grow flex-row flex-wrap gap-3">
+    <div class="mt-6 flex max-h-320 grow flex-row flex-wrap gap-3">
       <form
-        class="flex shrink grow basis-0 flex-col px-3 sm:min-w-[480px] sm:px-0"
+        class="flex shrink grow basis-0 flex-col px-3 sm:min-w-120 sm:px-0"
         @submit.prevent="onSubmit">
         <AppTextField
           id="message-title"
@@ -74,7 +74,7 @@
           <li v-else v-for="recipient in state.to" :key="recipient.memberId" class="group relative">
             <MembersListCard :member="getMemberById(recipient.memberId)" />
             <button
-              class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-red-100 p-1.5 text-red-600 opacity-0 transition-opacity hover:bg-red-200 group-hover:opacity-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+              class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-red-100 p-1.5 text-red-600 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
               type="button"
               @click="removeMember(recipient.memberId)">
               <AppIcon class="size-4" :icon="mdiClose" />

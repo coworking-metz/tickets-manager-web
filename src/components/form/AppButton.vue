@@ -3,7 +3,7 @@
     v-if="href"
     :class="[
       `relative inline-flex min-h-10 justify-center gap-x-2 rounded-md px-4 py-2.5 font-medium
-      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none
       disabled:cursor-not-allowed sm:text-sm`,
       icon ? 'items-start text-left' : 'items-center text-center',
       loading && 'pointer-events-none',
@@ -18,7 +18,7 @@
     v-else-if="to"
     :class="[
       `relative inline-flex min-h-10 justify-center gap-x-2 rounded-md px-4 py-2.5 font-medium
-      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none
       sm:text-sm`,
       icon ? 'items-start text-left' : 'items-center text-center',
       loading && 'pointer-events-none',
@@ -32,7 +32,7 @@
     v-else
     :class="[
       `relative inline-flex min-h-10 justify-center gap-x-2 rounded-md px-4 py-2.5 font-medium
-      transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none
+      transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none
       sm:text-sm`,
       icon ? 'items-start text-left' : 'items-center text-center',
       loading && 'pointer-events-none',

@@ -18,7 +18,7 @@
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
-            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:ring-2 focus:ring-white focus:outline-none"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
@@ -78,9 +78,9 @@
             isMemberOrderFromWordpress(selectedMembership.orderReference)
           "
           #append>
-          <div class="absolute inset-y-0 right-3 z-[11] flex h-10 items-center gap-1">
+          <div class="absolute inset-y-0 right-3 z-11 flex h-10 items-center gap-1">
             <AppLink
-              class="text-base font-medium !leading-10 text-indigo-600 sm:text-sm dark:text-indigo-500"
+              class="text-base leading-10! font-medium text-indigo-600 sm:text-sm dark:text-indigo-500"
               :href="buildWordpressSearchOrderByReferenceUrl(selectedMembership.orderReference)"
               icon=""
               target="_blank">

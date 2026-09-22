@@ -11,13 +11,13 @@
         v-for="(option, index) in options"
         :key="`radio-group-option-${option}`"
         as="li"
-        class="focus-visible:outline-none focus-visible:ring-0"
+        class="focus-visible:ring-0 focus-visible:outline-none"
         :disabled="disabled"
         :value="option"
         v-slot="{ active, checked }">
         <div
           :class="[
-            'relative flex flex-col border p-4 transition-colors focus:outline-none md:pl-4 md:pr-6',
+            'relative flex flex-col border p-4 transition-colors focus:outline-none md:pr-6 md:pl-4',
             disabled ? 'cursor-not-allowed' : 'cursor-pointer',
             index === 0 && 'rounded-t-md',
             index === options.length - 1 && 'rounded-b-md',
@@ -45,7 +45,7 @@
             </span>
             <RadioGroupLabel
               as="span"
-              class="ml-3 shrink grow basis-0 truncate whitespace-pre-line font-medium text-gray-800 dark:text-gray-100">
+              class="ml-3 shrink grow basis-0 truncate font-medium whitespace-pre-line text-gray-800 dark:text-gray-100">
               {{ format(option) }}
             </RadioGroupLabel>
           </span>

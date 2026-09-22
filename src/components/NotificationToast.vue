@@ -3,7 +3,7 @@
     v-if="notification"
     :class="[
       'app-notification group pointer-events-auto relative max-w-96 max-sm:mx-auto sm:w-screen',
-      notification.type === 'error' && '2xl:max-w-[512px]',
+      notification.type === 'error' && '2xl:max-w-lg',
     ]"
     @animationend="() => onTimeoutAnimationEnd(notification)">
     <div
@@ -24,7 +24,7 @@
         </p>
         <p
           v-if="notification.description"
-          class="mt-1 whitespace-pre-line pb-1.5 text-sm text-gray-400">
+          class="mt-1 pb-1.5 text-sm whitespace-pre-line text-gray-400">
           {{ notification.description }}
         </p>
         <div v-if="notification.actions?.length" class="-ml-2 flex flex-row gap-6">
@@ -32,7 +32,7 @@
             v-for="(action, index) in notification.actions"
             :key="`notification-${notification.id}-action-${action.label}`"
             :class="[
-              'whitespace-nowrap !px-2 !py-1',
+              'px-2! py-1! whitespace-nowrap',
               index === 0
                 ? `text-sky-600 hover:bg-sky-950 hover:text-sky-500 focus:ring-sky-500
                   focus:ring-offset-sky-950`
@@ -53,7 +53,7 @@
       </div>
       <AppButtonIcon
         :id="`notification-${notification.id}-close`"
-        class="ml-4 shrink-0 rounded-md !text-gray-400 hover:!bg-gray-400/30 hover:!text-gray-300 active:!bg-gray-400/40 active:!text-gray-100"
+        class="ml-4 shrink-0 rounded-md text-gray-400! hover:bg-gray-400/30! hover:text-gray-300! active:bg-gray-400/40! active:text-gray-100!"
         :icon="mdiClose"
         :title="$t('action.close')"
         @click="() => onClose(notificationId)" />
@@ -63,7 +63,7 @@
         notificationsStore?.openCount > 1 && notificationsStore.lastOpen?.id === notification.id
       "
       :id="`notification-close-all`"
-      class="absolute -right-2.5 -top-2.5 z-10 !bg-slate-800 !text-gray-400 transition hover:!bg-slate-700 hover:!text-gray-300 active:!bg-slate-900 active:!text-gray-100 group-hover:opacity-100 sm:opacity-0"
+      class="absolute -top-2.5 -right-2.5 z-10 bg-slate-800! text-gray-400! transition group-hover:opacity-100 hover:bg-slate-700! hover:text-gray-300! active:bg-slate-900! active:text-gray-100! sm:opacity-0"
       :icon="mdiNotificationClearAll"
       :title="$t('action.closeAll')"
       type="button"

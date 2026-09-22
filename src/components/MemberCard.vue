@@ -9,7 +9,7 @@
           :thumbnail="member?.thumbnail" />
         <span
           v-if="member?.attending"
-          class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-neutral-800" />
+          class="absolute right-0 bottom-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-neutral-800" />
       </div>
       <div class="flex shrink grow basis-0 flex-col items-start overflow-hidden pl-4">
         <template v-if="member">
@@ -19,7 +19,7 @@
           </p>
 
           <p
-            class="mt-1 w-full overflow-hidden truncate text-left text-sm text-gray-500 dark:text-gray-400">
+            class="mt-1 w-full truncate overflow-hidden text-left text-sm text-gray-500 dark:text-gray-400">
             {{ member.email }}
           </p>
 

@@ -1,6 +1,6 @@
 <template>
   <AppButton
-    :class="['shadow-sm outline-none transition-all', colors, $attrs.disabled && 'opacity-50']"
+    :class="['shadow-sm transition-all outline-none', colors, $attrs.disabled && 'opacity-50']"
     v-bind="props">
     <slot />
   </AppButton>

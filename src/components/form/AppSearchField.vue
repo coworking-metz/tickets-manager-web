@@ -7,11 +7,11 @@
     <template #prepend="{ isInvalid }">
       <LoadingSpinner
         v-if="loading"
-        class="absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400" />
+        class="absolute inset-y-0 left-0 z-11 ml-3 min-h-10 w-5 text-gray-400" />
       <AppIcon
         v-else
         :class="[
-          'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
+          'pointer-events-none absolute inset-y-0 left-0 z-11 ml-3 min-h-10 w-5 text-gray-400',
           isInvalid && 'text-red-500',
         ]"
         :icon="prependIcon" />

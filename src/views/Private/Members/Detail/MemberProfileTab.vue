@@ -37,7 +37,7 @@
             tag="dd">
             <template #count>
               <i18n-t
-                class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                class="block text-3xl font-semibold tracking-tight whitespace-nowrap text-gray-900 dark:text-gray-100"
                 keypath="members.detail.orders.tickets.used.count"
                 :plural="totalTicketsUsed"
                 scope="global"
@@ -92,7 +92,7 @@
             tag="dd">
             <template #attendance>
               <i18n-t
-                class="block whitespace-nowrap text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                class="block text-3xl font-semibold tracking-tight whitespace-nowrap text-gray-900 dark:text-gray-100"
                 keypath="members.detail.orders.subscriptions.coverage.attendance"
                 :plural="attendanceCoveredBySubscriptions"
                 scope="global"

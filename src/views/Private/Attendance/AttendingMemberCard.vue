@@ -2,13 +2,13 @@
   <MemberCard :loading="loading" :member="member">
     <div class="mt-3 flex shrink flex-row flex-wrap items-center gap-1">
       <span
-        class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 ring-1 ring-inset dark:text-gray-100"
+        class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap ring-1 ring-inset dark:text-gray-100"
         :style="`color:${statsColors.activity}; background-color: ${statsColors.activity}44; --tw-ring-color: ${statsColors.activity}88;`">
         {{ $t(`attendance.detail.activity.value.${ActivityDuration[activityDuration]}`) }}
       </span>
       <span
         v-if="member.attendance.tickets.debt.count"
-        class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+        class="shrink basis-0 rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-red-400 ring-1 ring-red-500/20 ring-inset">
         {{
           $t('members.detail.orders.tickets.debt', {
             count: member.attendance.tickets.debt.count,
@@ -29,9 +29,9 @@ import { AttendingMember, computeActivityFromAttendance } from '@/services/api/a
 import { PropType, computed } from 'vue';
 
 enum ActivityDuration {
-  'NONE' = 0,
-  'HALF' = 0.5,
-  'FULL' = 1,
+  NONE = 0,
+  HALF = 0.5,
+  FULL = 1,
 }
 
 const statsColors = useStatsColors();

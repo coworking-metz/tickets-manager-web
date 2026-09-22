@@ -1,8 +1,8 @@
 <template>
   <RouterViewSlideTransition v-if="width <= 1024" />
   <div v-else class="flex flex-row items-stretch">
-    <div class="flex h-screen max-h-[1440px] w-80 shrink-0 flex-col pr-6">
-      <aside aria-label="Sections" class="my-auto flex h-full max-h-[840px] flex-col">
+    <div class="flex h-screen max-h-360 w-80 shrink-0 flex-col pr-6">
+      <aside aria-label="Sections" class="my-auto flex h-full max-h-210 flex-col">
         <MessagesList />
       </aside>
     </div>

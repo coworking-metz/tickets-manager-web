@@ -14,20 +14,20 @@
           <div class="mt-2 flex shrink flex-row items-center gap-2">
             <span
               v-if="message.published"
-              class="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400 ring-1 ring-inset ring-green-500/20">
+              class="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400 ring-1 ring-green-500/20 ring-inset">
               <AppIcon class="size-3" :icon="mdiCheckCircleOutline" />
               {{ $t('messages.card.published') }}
             </span>
             <span
               v-else
-              class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-400 ring-1 ring-inset ring-amber-500/20">
+              class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-400 ring-1 ring-amber-500/20 ring-inset">
               <AppIcon class="size-3" :icon="mdiClockOutline" />
               {{ $t('messages.card.draft') }}
             </span>
 
             <span
               v-if="acknowledgedCount !== undefined"
-              class="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-xs text-blue-400 ring-1 ring-inset ring-blue-500/20">
+              class="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-xs text-blue-400 ring-1 ring-blue-500/20 ring-inset">
               <AppIcon class="size-3" :icon="mdiAccountMultipleOutline" />
               {{ $t('messages.card.recipients', { count: acknowledgedCount }) }}
             </span>

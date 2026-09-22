@@ -8,7 +8,7 @@
         </DialogTitle>
         <div class="flex h-7 shrink-0 items-center">
           <RouterLink
-            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            class="rounded-md bg-indigo-700 p-1 text-indigo-200 hover:bg-indigo-900 hover:text-white focus:ring-2 focus:ring-white focus:outline-none"
             replace
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.TIMELINE.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>

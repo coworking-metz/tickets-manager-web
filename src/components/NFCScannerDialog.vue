@@ -122,7 +122,7 @@
         </transition-group>
       </div>
       <p
-        class="relative mt-4 h-12 overflow-hidden whitespace-pre-line text-center text-base font-medium text-gray-900 dark:text-gray-100">
+        class="relative mt-4 h-12 overflow-hidden text-center text-base font-medium whitespace-pre-line text-gray-900 dark:text-gray-100">
         <transition-group
           enter-active-class="transition ease-in-out duration-[1500ms]"
           enter-from-class="transform translate-x-[-100%] opacity-0"
@@ -143,7 +143,7 @@
             {{ $t('nfc.scan.onRead.fail') }}
             <p
               v-if="nfc.error.value"
-              class="whitespace-pre-line text-sm font-normal text-gray-500 dark:text-gray-400">
+              class="text-sm font-normal whitespace-pre-line text-gray-500 dark:text-gray-400">
               {{ nfc.error.value }}
             </p>
           </span>
@@ -180,7 +180,7 @@
     </div>
 
     <AppButtonIcon
-      class="absolute right-3 top-3 dark:ring-offset-neutral-800"
+      class="absolute top-3 right-3 dark:ring-offset-neutral-800"
       :icon="mdiClose"
       :title="$t('action.close')"
       @click="

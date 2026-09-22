@@ -107,7 +107,7 @@
         @update:model-value="onBadgeIdInput">
         <template #after>
           <AppButtonPlain
-            class="relative -ml-px mt-1 self-stretch rounded-none rounded-r-md dark:focus:ring-offset-neutral-800"
+            class="relative mt-1 -ml-px self-stretch rounded-none rounded-r-md dark:focus:ring-offset-neutral-800"
             color="gray"
             :icon="mdiCellphoneNfc"
             @click="state.isScannerVisible = true">
@@ -120,7 +120,7 @@
         v-model="state.isScannerVisible"
         @update:identifier="(id: string) => (state.badgeId = id)" />
 
-      <ul class="mb-5 mt-2 flex flex-col gap-4">
+      <ul class="mt-2 mb-5 flex flex-col gap-4">
         <AppSwitchField
           v-for="name in SWITCH_FIELDS"
           :key="`member-attribute-${name}`"

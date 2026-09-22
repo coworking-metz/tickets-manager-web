@@ -1,6 +1,6 @@
 <template>
-  <article class="flex max-h-[1280px] grow flex-row flex-wrap pb-12 xl:pt-8">
-    <form class="flex shrink grow basis-0 flex-col sm:min-w-[480px]" @submit.prevent="onSubmit">
+  <article class="flex max-h-320 grow flex-row flex-wrap pb-12 xl:pt-8">
+    <form class="flex shrink grow basis-0 flex-col sm:min-w-120" @submit.prevent="onSubmit">
       <!-- <pre>{{ JSON.stringify(message, null, 2) }}</pre> -->
 
       <AppTextField

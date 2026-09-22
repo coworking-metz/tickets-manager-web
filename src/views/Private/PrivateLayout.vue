@@ -7,7 +7,7 @@
     <header
       class="fixed top-0 z-30 flex h-16 w-full shrink-0 justify-between border-b border-gray-200 bg-white/75 shadow-sm backdrop-blur sm:hidden dark:border-stone-700 dark:bg-neutral-800/75">
       <button
-        class="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden dark:text-gray-400"
+        class="px-4 text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:ring-inset md:hidden dark:text-gray-400"
         type="button"
         @click="state.isMenuOpen = !state.isMenuOpen">
         <span class="sr-only">
@@ -16,7 +16,7 @@
         <AppIcon
           :class="{
             ['size-6 transition-transform duration-300']: true,
-            ['!rotate-[540deg]']: !state.isMenuOpen,
+            ['rotate-540!']: !state.isMenuOpen,
           }"
           :icon="state.isMenuOpen ? mdiMenuOpen : mdiMenu" />
       </button>
@@ -28,14 +28,14 @@
 
     <aside
       :class="[
-        `fixed inset-y-0 z-[1] flex
+        `fixed inset-y-0 z-1 flex
         shrink-0 flex-col max-sm:h-full max-sm:max-w-0 max-sm:overflow-x-hidden max-sm:transition-[max-width]
-        sm:h-screen sm:max-h-[1440px] sm:py-3 sm:pl-3`,
+        sm:h-screen sm:max-h-360 sm:py-3 sm:pl-3`,
         state.isMenuOpen && 'max-sm:max-w-28',
       ]">
       <NavigationDrawer
         id="navigation-drawer"
-        class="w-28 grow overflow-y-auto overflow-x-hidden max-sm:pt-16 sm:my-auto sm:max-h-[840px] sm:rounded-3xl sm:shadow-xl" />
+        class="w-28 grow overflow-x-hidden overflow-y-auto max-sm:pt-16 sm:my-auto sm:max-h-210 sm:rounded-3xl sm:shadow-xl" />
     </aside>
 
     <div
@@ -46,9 +46,9 @@
     <main
       :class="[
         'flex w-0 shrink grow basis-0 flex-col self-stretch max-sm:min-w-full max-sm:pt-16',
-        state.isMenuOpen && 'z-[2] shadow-2xl',
+        state.isMenuOpen && 'z-2 shadow-2xl',
       ]">
-      <RouterView class="sm:pl-36 sm:pr-4" />
+      <RouterView class="sm:pr-4 sm:pl-36" />
     </main>
 
     <MessagesNewDialog

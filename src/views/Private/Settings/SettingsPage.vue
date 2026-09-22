@@ -5,10 +5,10 @@
     </Head>
 
     <div
-      class="flex max-w-3xl shrink-0 grow flex-col gap-6 pb-6 pt-12 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
+      class="flex max-w-3xl shrink-0 grow flex-col gap-6 pt-12 pb-6 [@media_((min-height:840px)_and_(min-width:1024px))]:pt-40">
       <header class="flex flex-col items-start max-sm:px-3">
         <h1
-          class="text-2xl font-bold leading-7 text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
+          class="text-2xl leading-7 font-bold text-gray-900 sm:mx-0 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-100">
           {{ $t('settings.title') }}
         </h1>
         <p class="mt-1 truncate text-base text-slate-500 dark:text-slate-400">
@@ -18,10 +18,10 @@
 
       <AppPanel body-class="rounded-lg" class="overflow-visible">
         <h3
-          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
           {{ $t('settings.computeAttendance.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ $t('settings.computeAttendance.description') }}
         </p>
         <form class="mt-6 flex flex-col" @submit.prevent="onComputeAttendance">
@@ -69,10 +69,10 @@
 
       <AppPanel body-class="rounded-lg" class="overflow-visible">
         <h3
-          class="flex flex-row items-center gap-2 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
           {{ $t('settings.cache.title') }}
         </h3>
-        <p class="mt-2 max-w-prose whitespace-pre-line text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
           {{ $t('settings.cache.description') }}
         </p>
         <AppButtonPlain

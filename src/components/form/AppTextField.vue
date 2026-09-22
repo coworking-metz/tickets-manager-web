@@ -28,7 +28,7 @@
           <AppIcon
             v-if="prependIcon"
             :class="[
-              'pointer-events-none absolute inset-y-0 left-0 z-[11] ml-3 min-h-10 w-5 text-gray-400',
+              'pointer-events-none absolute inset-y-0 left-0 z-11 ml-3 min-h-10 w-5 text-gray-400',
               isInvalid && 'text-red-500',
             ]"
             :icon="prependIcon" />
@@ -78,7 +78,7 @@
           v-if="modelValue && clearable"
           :class="[
             `absolute top-1/2 z-10 size-7 -translate-y-1/2 bg-white opacity-0 backdrop-blur-md transition-opacity
-            focus:opacity-100 group-hover:opacity-100 dark:bg-neutral-800/10`,
+            group-hover:opacity-100 focus:opacity-100 dark:bg-neutral-800/10`,
             $slots.append || appendIcon ? 'right-9' : 'right-2',
           ]"
           :icon="mdiClose"
@@ -88,7 +88,7 @@
         <slot name="append">
           <AppIcon
             v-if="appendIcon"
-            class="pointer-events-none absolute inset-y-0 right-0 z-[11] mr-3 min-h-10 w-5 text-gray-400"
+            class="pointer-events-none absolute inset-y-0 right-0 z-11 mr-3 min-h-10 w-5 text-gray-400"
             :icon="appendIcon" />
         </slot>
 

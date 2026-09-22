@@ -7,7 +7,7 @@
           <slot name="chips:prepend" />
           <span
             v-if="member.usage.tickets.count"
-            class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
+            class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.ticket}88; --tw-ring-color: ${statsColors.ticket};`">
             <i18n-t keypath="stats.usage.tickets.label" :plural="totalTicketsCount" scope="global">
               <template #count>
@@ -18,7 +18,7 @@
 
           <span
             v-if="member.usage.tickets.debt.count"
-            class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
+            class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.debt}88; --tw-ring-color: ${statsColors.debt};`">
             <i18n-t
               keypath="stats.usage.tickets.debt.count"
@@ -32,7 +32,7 @@
 
           <span
             v-if="member.usage.subscriptions.count"
-            class="shrink truncate whitespace-nowrap rounded-full px-2 py-0.5 text-center text-xs leading-6 text-gray-800 ring-1 ring-inset dark:text-gray-100"
+            class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.subscription}88; --tw-ring-color: ${statsColors.subscription};`">
             <i18n-t
               keypath="stats.usage.subscriptions.count"
@@ -60,7 +60,7 @@
       </MemberCard>
     </DisclosureButton>
     <DisclosurePanel as="dl" class="flex flex-col gap-1 py-4 dark:text-gray-300">
-      <dl class="pl-4 pr-8">
+      <dl class="pr-8 pl-4">
         <template v-if="totalTicketsCount">
           <div class="flex flex-row place-items-end justify-between">
             <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
@@ -148,7 +148,7 @@
       </dl>
 
       <AppButtonText
-        class="mr-4 mt-5 self-end dark:focus:ring-offset-stone-900"
+        class="mt-5 mr-4 self-end dark:focus:ring-offset-stone-900"
         color="indigo"
         :to="{
           name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,

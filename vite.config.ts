@@ -1,4 +1,5 @@
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import colors from 'tailwindcss/colors';
 import { readFileSync } from 'fs';
@@ -15,6 +16,7 @@ export default ({ mode }: { mode: string }) => {
     envDir: resolve(dirname(fileURLToPath(import.meta.url)), './src/config'),
     envPrefix: 'VUE_',
     plugins: [
+      tailwindcss(),
       vue({
         template: {
           compilerOptions: {

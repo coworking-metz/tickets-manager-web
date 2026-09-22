@@ -22,7 +22,7 @@
 
     <div v-if="loading" class="flex w-full flex-col items-start pb-6">
       <div
-        class="mb-1 mt-2 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-zinc-700/50"
+        class="mt-2 mb-1 h-5 w-full animate-pulse rounded-3xl bg-slate-200 dark:bg-zinc-700/50"
         :style="{
           maxWidth: `${Math.floor(Math.random() * 256) + 128}px`,
         }" />
@@ -75,7 +75,7 @@
                       <AppIcon class="size-4" :icon="mdiInformationOutline" />
                     </span>
                     <template #popper>
-                      <span class="overflow-hidden whitespace-pre-line text-sm">
+                      <span class="overflow-hidden text-sm whitespace-pre-line">
                         {{ $t('audit.author.unknown.hint') }}
                       </span>
                     </template>
@@ -117,7 +117,7 @@
             </i18n-t>
           </slot>
           <time
-            class="whitespace-nowrap text-xs font-light lowercase text-gray-500 dark:text-neutral-400"
+            class="text-xs font-light whitespace-nowrap text-gray-500 lowercase dark:text-neutral-400"
             :datetime="event.occurred"
             :title="dayjs(event.occurred).format('llll')">
             {{
@@ -135,7 +135,7 @@
       </DisclosureButton>
 
       <div v-if="event.context?.comment" class="prose mt-1">
-        <blockquote class="whitespace-pre-line text-sm text-gray-900 dark:text-gray-100">
+        <blockquote class="text-sm whitespace-pre-line text-gray-900 dark:text-gray-100">
           {{ event.context.comment }}
         </blockquote>
       </div>
@@ -150,7 +150,7 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0">
           <DisclosurePanel
-            class="mt-1 select-text rounded-md bg-slate-800 px-2 py-1 text-gray-200 dark:bg-stone-950"
+            class="mt-1 rounded-md bg-slate-800 px-2 py-1 text-gray-200 select-text dark:bg-stone-950"
             tag="pre">
             <code class="whitespace-pre-wrap">{{ JSON.stringify(essentialContext, null, 2) }}</code>
           </DisclosurePanel>

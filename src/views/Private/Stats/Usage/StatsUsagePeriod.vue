@@ -32,7 +32,7 @@
 
     <section class="max-sm:mx-3">
       <AppLink
-        class="text-lg font-medium leading-6"
+        class="text-lg leading-6 font-medium"
         color="indigo"
         :to="{
           name: $route.name,
@@ -325,7 +325,7 @@ const { width } = useWindowSize();
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
     className:
-      '!p-0 !border-0 !rounded-xl !overflow-hidden !text-gray-700 dark:!text-gray-300 !bg-white dark:!bg-neutral-800',
+      'p-0! border-0! rounded-xl! overflow-hidden! text-gray-700! dark:text-gray-300! bg-white! dark:bg-neutral-800!',
     formatter: (params) => {
       const {
         data: { amount, tickets, subscriptions, charges },

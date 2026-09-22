@@ -9,7 +9,7 @@
           :thumbnail="member?.thumbnail" />
         <span
           v-if="member?.attending"
-          class="absolute bottom-0 right-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-neutral-800" />
+          class="absolute right-0 bottom-0 block size-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-neutral-800" />
       </div>
       <div class="flex min-w-0 flex-1 flex-row flex-wrap justify-between gap-3 pl-4">
         <div class="flex min-w-48 shrink grow basis-0 flex-col items-start">
@@ -35,7 +35,7 @@
               class="mt-3 flex shrink flex-row items-center gap-1">
               <span
                 v-if="isMemberBalanceInsufficient(member)"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 text-red-400 ring-1 ring-inset ring-red-500/20">
+                class="shrink basis-0 rounded-full bg-red-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-red-400 ring-1 ring-red-500/20 ring-inset">
                 {{
                   $t('members.detail.orders.tickets.debt', {
                     count: Math.abs(member.balance),
@@ -44,7 +44,7 @@
               </span>
               <span
                 v-if="isMembershipNonCompliant(member)"
-                class="shrink basis-0 whitespace-nowrap rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 text-neutral-500 ring-1 ring-inset ring-neutral-500/20">
+                class="shrink basis-0 rounded-full bg-neutral-500/10 px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-neutral-500 ring-1 ring-neutral-500/20 ring-inset">
                 {{
                   member.lastMembership
                     ? $t('members.detail.membership.last', { year: member.lastMembership })
@@ -78,7 +78,7 @@
           tag="p">
           <template #date>
             <time
-              class="inline-block font-medium lowercase text-gray-900 dark:text-gray-100"
+              class="inline-block font-medium text-gray-900 lowercase dark:text-gray-100"
               :datetime="member.lastSeen">
               {{
                 dayjs().diff(member.lastSeen, 'hour') < 1

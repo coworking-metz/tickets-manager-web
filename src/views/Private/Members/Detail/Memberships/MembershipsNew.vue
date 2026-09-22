@@ -7,7 +7,7 @@
         </DialogTitle>
         <div class="ml-3 flex h-7 items-center">
           <RouterLink
-            class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            class="rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:ring-2 focus:ring-white focus:outline-none"
             :to="{ name: ROUTE_NAMES.MEMBERS.DETAIL.ORDERS.INDEX }">
             <span class="sr-only">{{ $t('action.close') }}</span>
             <AppIcon class="size-6" :icon="mdiClose" />
