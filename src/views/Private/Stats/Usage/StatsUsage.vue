@@ -1,14 +1,14 @@
 <template>
   <article class="flex max-h-320 grow flex-col pb-12 xl:pt-8">
     <div class="mx-auto flex w-full max-w-5xl flex-row flex-wrap place-items-end gap-6 max-sm:px-3">
-      <AppPeriodField
+      <AppDateRangeField
         id="incomes-period"
         v-model="state.period"
         class="shrink grow sm:w-auto"
         hide-details
         :label="$t('stats.usage.period.label')"
         :placeholder="$t('stats.usage.period.placeholder')"
-        :shortcuts="shortcuts">
+        :preset-dates="presetDates">
         <template #before>
           <component
             :is="previousPeriod ? 'RouterLink' : 'button'"
@@ -39,7 +39,7 @@
             <AppIcon class="size-6 text-gray-400" :icon="mdiChevronRight" />
           </component>
         </template>
-      </AppPeriodField>
+      </AppDateRangeField>
 
       <div class="flex w-auto flex-col gap-1 overflow-hidden">
         <p class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100">
@@ -104,7 +104,7 @@
 import StatsUsagePeriod from './StatsUsagePeriod.vue';
 import AppIcon from '@/components/AppIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppPeriodField from '@/components/form/AppPeriodField.vue';
+import AppDateRangeField from '@/components/form/AppDateRangeField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
 import { Frequency } from '@/services/api/stats/frequency';
 import { mdiChartWaterfall, mdiChevronLeft, mdiChevronRight } from '@mdi/js';
@@ -146,45 +146,45 @@ const state = reactive({
   },
 });
 
-const shortcuts = computed(() => () => [
+const presetDates = computed(() => [
   {
     label: i18n.t('stats.usage.period.shortcuts.currentWeek'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('week').format(DATE_FORMAT), now.endOf('week').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.currentMonth'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('month').format(DATE_FORMAT), now.endOf('month').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.currentYear'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.endOf('year').format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.last30days'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.subtract(30, 'day').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.last6Months'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.subtract(6, 'month').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.lastYear'),
-    atClick: () => {
+    value: () => {
       const lastYear = dayjs().subtract(1, 'year');
       return [
         lastYear.startOf('year').format(DATE_FORMAT),
@@ -194,14 +194,14 @@ const shortcuts = computed(() => () => [
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.sinceYearStart'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
   },
   {
     label: i18n.t('stats.usage.period.shortcuts.sinceFirstDay'),
-    atClick: () => {
+    value: () => {
       const now = dayjs();
       return [now.year(2014).startOf('year').format(DATE_FORMAT), now.format(DATE_FORMAT)];
     },
