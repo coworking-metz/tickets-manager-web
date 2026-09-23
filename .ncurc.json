@@ -1,18 +1,3 @@
 {
-  "reject": [
-    "@intlify/eslint-plugin-vue-i18n",
-    "@typescript-eslint/eslint-plugin",
-    "@typescript-eslint/parser",
-    "@vue/eslint-config-prettier",
-    "@vue/eslint-config-typescript",
-    "echarts",
-    "eslint",
-    "eslint-config-prettier",
-    "eslint-import-resolver-typescript",
-    "eslint-plugin-vue",
-    "eslint-plugin-jsonc",
-    "vue-echarts",
-    "tailwindcss",
-    "vue-tailwind-datepicker"
-  ]
+  "reject": ["echarts", "vue-echarts", "tailwindcss"]
 }
