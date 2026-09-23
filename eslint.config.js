@@ -6,6 +6,7 @@ import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescrip
 import importX from 'eslint-plugin-import-x';
 import jsonc from 'eslint-plugin-jsonc';
 import prettierPlugin from 'eslint-plugin-prettier';
+import storybook from 'eslint-plugin-storybook';
 import tailwindcss from 'eslint-plugin-tailwindcss';
 import pluginVue from 'eslint-plugin-vue';
 import vuejsAccessibility from 'eslint-plugin-vuejs-accessibility';
@@ -199,4 +200,5 @@ export default withVueTs(
       ],
     },
   },
+  ...storybook.configs['flat/recommended'],
 );

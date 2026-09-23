@@ -22,3 +22,6 @@ dist-ssr
 *.sw?
 
 TODO.md
+
+*storybook.log
+storybook-static
