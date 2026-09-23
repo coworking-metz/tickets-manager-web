@@ -14,7 +14,9 @@
     "preview": "vite preview",
     "serve": "docker run --rm --name tickets-manager-web-nginx -v $(pwd)/dist:/usr/share/nginx/html:ro -p9999:80 nginx",
     "update": "ncu --deep --cooldown 7d",
-    "update:interactive": "npm run update -- --interactive"
+    "update:interactive": "npm run update -- --interactive",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@dotlottie/player-component": "^2.7.12",
@@ -63,6 +65,9 @@
   },
   "devDependencies": {
     "@intlify/eslint-plugin-vue-i18n": "^4.5.1",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/vue3-vite": "^10.6.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
@@ -78,6 +83,7 @@
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-jsonc": "^3.4.2",
     "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-storybook": "^10.6.0",
     "eslint-plugin-tailwindcss": "^4.4.0",
     "eslint-plugin-vue": "^10.11.0",
     "eslint-plugin-vuejs-accessibility": "^2.6.0",
@@ -86,6 +92,7 @@
     "patch-package": "^8.0.1",
     "postcss": "^8.5.28",
     "prettier": "^3.9.6",
+    "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^8.3.0",
