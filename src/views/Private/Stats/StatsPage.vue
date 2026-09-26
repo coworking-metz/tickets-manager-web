@@ -62,7 +62,7 @@
       <aside class="flex h-screen max-h-360 w-96 shrink-0 flex-col py-3 pr-6 max-xl:hidden">
         <nav
           aria-label="Sections"
-          class="my-auto h-full max-h-210 rounded-xl border bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
+          class="my-auto h-full max-h-210 rounded-xl border border-gray-200 bg-white xl:flex xl:flex-col dark:border-stone-700 dark:bg-neutral-800">
           <div
             class="flex h-24 shrink-0 items-center border-b border-gray-200 px-3 sm:px-6 dark:border-stone-700">
             <h1

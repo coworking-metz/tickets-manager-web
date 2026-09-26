@@ -4,7 +4,7 @@
       <DialogPanel
         as="form"
         :class="[
-          'relative overflow-hidden rounded-t-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:rounded-2xl dark:bg-neutral-800',
+          'relative w-full overflow-hidden rounded-t-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:rounded-2xl dark:bg-neutral-800',
           panelClass || 'sm:max-w-lg',
         ]"
         @submit.prevent="emit('confirm')">

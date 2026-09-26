@@ -32,3 +32,8 @@ export const Clearable: Story = {
 export const Disabled: Story = {
   args: { disabled: true, modelValue: { start: '2024-06-01', end: '2024-06-30' } },
 };
+
+export const Mobile: Story = {
+  args: { modelValue: { start: '2024-06-01', end: '2024-06-30' } },
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+};

@@ -13,7 +13,7 @@
   <RouterView v-else />
   <Teleport to="body">
     <Toaster
-      :position="width <= MAX_MOBILE_WIDTH ? 'top-center' : 'bottom-left'"
+      :position="isMobile ? 'top-center' : 'bottom-left'"
       :toast-options="{
         unstyled: true,
       }"
@@ -28,18 +28,19 @@
 </template>
 
 <script lang="ts" setup>
+import { useMobileWidth } from './helpers/screen';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NotificationToast from '@/components/NotificationToast.vue';
-import { ENVIRONMENT, IS_PRODUCTION, MAX_MOBILE_WIDTH } from '@/helpers/environment';
+import { ENVIRONMENT, IS_PRODUCTION } from '@/helpers/environment';
 import { parseErrorText } from '@/helpers/errors';
 import { applyTheme, useTheme } from '@/services/theme';
 import { useNotificationsStore } from '@/store/notifications';
 import { useSettingsStore } from '@/store/settings';
 import { useHead } from '@unhead/vue';
 import { Head } from '@unhead/vue/components';
-import { useMagicKeys, useWindowSize, whenever } from '@vueuse/core';
+import { useMagicKeys, whenever } from '@vueuse/core';
 import { isNil } from 'lodash';
 import { markRaw, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -47,7 +48,7 @@ import { useRouter } from 'vue-router';
 import { Toaster, toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
 
-const { width } = useWindowSize();
+const isMobile = useMobileWidth();
 const i18n = useI18n();
 const router = useRouter();
 const notificationsStore = useNotificationsStore();

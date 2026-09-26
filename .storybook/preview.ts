@@ -1,9 +1,11 @@
 import '@/styles/main.css';
 import 'floating-vue/dist/style.css';
 import 'typeface-inter';
-import { i18nInstance } from '@/i18n';
+import { DEFAULT_LOCALE, i18nInstance } from '@/i18n';
+import pinia from '@/store';
+import { setup, type Preview } from '@storybook/vue3-vite';
+import dayjs from 'dayjs';
 import FloatingVue from 'floating-vue';
-import type { Preview } from '@storybook/vue3-vite';
 
 const preview: Preview = {
   parameters: {
@@ -20,10 +22,24 @@ const preview: Preview = {
       test: 'todo',
     },
   },
-  setup(app) {
-    app.use(i18nInstance);
-    app.use(FloatingVue);
-  },
+  loaders: [
+    // in the app, messages are lazy-loaded by the settings store
+    async () => {
+      if (!Object.keys(i18nInstance.global.messages).includes(DEFAULT_LOCALE)) {
+        const messages = await import(`@/i18n/locales/${DEFAULT_LOCALE}/index.ts`);
+        i18nInstance.global.setLocaleMessage(DEFAULT_LOCALE, messages.default);
+      }
+      dayjs.locale(DEFAULT_LOCALE.substring(0, 2));
+      i18nInstance.global.locale.value = DEFAULT_LOCALE;
+      return {};
+    },
+  ],
 };
+
+setup((app) => {
+  app.use(pinia);
+  app.use(i18nInstance);
+  app.use(FloatingVue);
+});
 
 export default preview;
