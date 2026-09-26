@@ -198,7 +198,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { MAX_MOBILE_WIDTH } from '@/helpers/environment';
+import { useMobileWidth } from '@/helpers/screen';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
@@ -244,6 +244,7 @@ const props = defineProps({
 const router = useRouter();
 const i18n = useI18n();
 const statsColors = useStatsColors();
+const isMobile = useMobileWidth();
 const state = reactive({
   isDialogVisible: false,
 });
@@ -377,9 +378,7 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
                 statsColors.value.subscription
               };"></span>
               ${i18n.t(
-                width.value <= MAX_MOBILE_WIDTH
-                  ? `stats.usage.subscriptions.count`
-                  : `stats.usage.subscriptions.label`,
+                isMobile ? `stats.usage.subscriptions.count` : `stats.usage.subscriptions.label`,
                 {
                   count: subscriptions.count,
                 },

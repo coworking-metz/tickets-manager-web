@@ -22,9 +22,9 @@
     :required="required"
     :tabindex="tabindex"
     @clear="onClear"
-    @click="openDialog"
-    @keydown.enter.prevent="openDialog"
-    @keydown.space.prevent="openDialog">
+    @click="open"
+    @keydown.enter.prevent="open"
+    @keydown.space.prevent="open">
     <template #before>
       <slot name="before" />
     </template>
@@ -37,51 +37,67 @@
   </AppTextField>
 
   <AppDialogConfirm
-    v-model="isDialogVisible"
+    v-model="state.isCalendarOpen"
     panel-class="sm:max-w-4xl"
     :title="label"
     @confirm="onConfirm">
     <VueDatePicker
-      v-model="stagedRange"
+      v-model="state.range"
       :action-row="{ showSelect: false, showCancel: false }"
       auto-apply
-      class="mt-4"
+      :config="{
+        monthChangeOnScroll: false,
+      }"
+      :dark="theme === 'dark'"
       :enable-time-picker="false"
       :hide-navigation="['time']"
       inline
       model-type="yyyy-MM-dd"
-      :multi-calendars="showSingleCalendar ? 1 : 2"
+      :multi-calendars="width > 768"
       :preset-dates="resolvedPresetDates"
       range
-      :week-start="1" />
+      :week-start="1">
+      <template v-for="preset in resolvedPresetDates" :key="preset.slot" #[preset.slot]>
+        <AppButtonText
+          class="justify-start p-2! text-sm whitespace-nowrap sm:w-full"
+          color="gray"
+          @click="onPresetSelect(preset)">
+          {{ preset.label }}
+        </AppButtonText>
+      </template>
+    </VueDatePicker>
 
-    <template #confirm>
+    <template #confirm="{ loading: confirming }">
       <AppButtonPlain
-        class="w-full sm:w-auto sm:text-sm"
-        color="neutral"
-        type="button"
-        @click="isDialogVisible = false">
-        {{ $t('action.cancel') }}
-      </AppButtonPlain>
-      <AppButtonPlain class="w-full sm:w-auto sm:text-sm" color="indigo" type="submit">
-        {{ $t('action.confirm') }}
+        class="w-full sm:w-auto sm:text-sm dark:focus:ring-offset-neutral-900/80"
+        color="indigo"
+        :loading="confirming"
+        type="submit">
+        {{ $t('action.apply') }}
       </AppButtonPlain>
     </template>
   </AppDialogConfirm>
 </template>
 
 <script setup lang="ts">
-import AppButtonPlain from './AppButtonPlain.vue';
-import { type ErrorMessage } from './AppFieldHint.vue';
-import AppTextField from './AppTextField.vue';
+import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppButtonText from '@/components/form/AppButtonText.vue';
+import { type ErrorMessage } from '@/components/form/AppFieldHint.vue';
+import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialogConfirm from '@/components/layout/AppDialogConfirm.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { useMobileWidth } from '@/helpers/screen';
+import { useTheme } from '@/services/theme';
 import { PresetDate, VueDatePicker } from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import { useWindowSize } from '@vueuse/core';
+import { createReusableTemplate, onKeyStroke, useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
-import { computed, PropType, ref, useSlots, watch } from 'vue';
+import { computed, PropType, reactive, toValue, useSlots, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+defineOptions({
+  inheritAttrs: false,
+});
 
 const period = defineModel({
   type: Object as PropType<{ start: string; end: string }>,
@@ -174,20 +190,21 @@ const props = defineProps({
   },
 });
 
+const i18n = useI18n();
+const isMobile = useMobileWidth();
+const theme = useTheme();
+const { width } = useWindowSize();
+const state = reactive({
+  isCalendarOpen: false,
+  range: null as [string, string] | null,
+});
+
 const slots = useSlots();
 const otherSlots = computed(() =>
   Object.fromEntries(Object.entries(slots).filter(([name]) => !['before', 'after'].includes(name))),
 );
 
-const i18n = useI18n();
-const { width } = useWindowSize();
-// two side-by-side calendars plus the presets sidebar need more room than the app's
-// usual mobile breakpoint, so this dialog uses its own, wider threshold
-const CALENDARS_MIN_WIDTH = 900;
-const showSingleCalendar = computed(() => width.value < CALENDARS_MIN_WIDTH);
-
-const isDialogVisible = ref(false);
-const stagedRange = ref<[string, string] | null>(null);
+const [DefinePicker, ReusePicker] = createReusableTemplate();
 
 const displayValue = computed(() =>
   period.value.start && period.value.end
@@ -247,28 +264,77 @@ const defaultPresetDates = computed<PresetDate[]>(() => {
   ];
 });
 
-const resolvedPresetDates = computed(() => props.presetDates ?? defaultPresetDates.value);
+// each preset gets its own slot so that selecting it applies the range right away
+const resolvedPresetDates = computed(() =>
+  (props.presetDates ?? defaultPresetDates.value).map((preset, index) => ({
+    ...preset,
+    slot: `preset-${index}`,
+  })),
+);
 
-const openDialog = () => {
-  if (props.disabled) return;
-  isDialogVisible.value = true;
+const onPresetSelect = (preset: PresetDate) => {
+  const [start, end] = [toValue(preset.value)].flat();
+  period.value = {
+    start: dayjs(start).format(DATE_FORMAT),
+    end: dayjs(end ?? start).format(DATE_FORMAT),
+  };
+  state.isCalendarOpen = false;
 };
 
-watch(isDialogVisible, (visible) => {
-  if (visible) {
-    stagedRange.value =
-      period.value.start && period.value.end ? [period.value.start, period.value.end] : null;
-  }
+const open = () => {
+  if (props.disabled) return;
+  state.isCalendarOpen = true;
+};
+
+// the dialog handles Escape by itself, the dropdown doesn't
+onKeyStroke('Escape', () => {
+  state.isCalendarOpen = false;
 });
 
-const onConfirm = () => {
-  period.value = stagedRange.value
-    ? { start: stagedRange.value[0], end: stagedRange.value[1] }
-    : { start: '', end: '' };
-  isDialogVisible.value = false;
-};
+watch(
+  () => state.isCalendarOpen,
+  (visible) => {
+    if (visible) {
+      state.range =
+        period.value.start && period.value.end ? [period.value.start, period.value.end] : null;
+    }
+  },
+);
 
 const onClear = () => {
   period.value = { start: '', end: '' };
 };
+
+const onConfirm = () => {
+  if (state.range) {
+    const [start, end] = state.range;
+    period.value = {
+      start: dayjs(start).format(DATE_FORMAT),
+      end: dayjs(end ?? start).format(DATE_FORMAT),
+    };
+  }
+  state.isCalendarOpen = false;
+};
 </script>
+
+<style>
+/* the popper content brings its own panel styling */
+.app-date-range-popper .v-popper__inner {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-date-range-popper .v-popper__arrow-container {
+  display: none;
+}
+
+.dp--menu {
+  border: none;
+}
+
+.dp--preset-dates {
+  max-width: 204px;
+}
+</style>

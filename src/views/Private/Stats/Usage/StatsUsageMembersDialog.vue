@@ -5,6 +5,12 @@
     dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-xl h-full grow">
     <LoadingProgressBar v-if="isFetchingUsages" class="absolute top-0 h-px w-full" />
     <header v-if="title" class="mx-3 flex flex-row items-start justify-center sm:mx-12">
+      <AppButtonIcon
+        class="absolute top-3 right-3 dark:ring-offset-neutral-800"
+        :icon="mdiClose"
+        tabindex="0"
+        :title="$t('action.close')"
+        @click="() => (isVisible = false)" />
       <AppButtonText
         class="mx-auto shrink overflow-hidden"
         color="gray"
@@ -245,13 +251,6 @@
         </template>
       </div>
     </div>
-
-    <AppButtonIcon
-      class="absolute top-3 right-3 dark:ring-offset-neutral-800"
-      :icon="mdiClose"
-      tabindex="1"
-      :title="$t('action.close')"
-      @click="() => (isVisible = false)" />
   </AppDialog>
 </template>
 
