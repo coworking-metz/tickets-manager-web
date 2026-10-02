@@ -195,6 +195,10 @@
       "firstname": {
         "label": "Prénom"
       },
+      "isBlidaResident": {
+        "description": "Réservé aux résidents de Blida. Sans cette option, les produits de la catégorie « Résidents Blida » ne sont pas achetables.",
+        "label": "Résident⸱e Blida"
+      },
       "isBoardCandidate": {
         "description": "Se porte candidat au Conseil d'Administration lors de la prochaine Assemblée Générale.",
         "label": "Candidat au CA à la prochaine AG"
