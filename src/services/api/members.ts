@@ -70,6 +70,7 @@ export interface Member extends MemberListItem {
   isAdminEditable: boolean;
   canPayByBankTransfer: boolean;
   isEligibleToReducedRate: boolean;
+  isBlidaResident: boolean;
   isBoardCandidate: boolean;
   polaroidName: string;
   polaroidDescription: string;

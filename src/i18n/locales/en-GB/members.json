@@ -195,6 +195,10 @@
       "firstname": {
         "label": "First Name"
       },
+      "isBlidaResident": {
+        "description": "Reserved for Blida residents. Without this option, products in the \"Blida residents\" category cannot be purchased.",
+        "label": "Blida resident"
+      },
       "isBoardCandidate": {
         "description": "Is running for the board at the next general meeting.",
         "label": "Board candidate at the next general meeting"

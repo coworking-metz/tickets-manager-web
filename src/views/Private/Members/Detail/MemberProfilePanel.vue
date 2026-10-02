@@ -190,6 +190,7 @@ import { useI18n } from 'vue-i18n';
 const SWITCH_FIELDS = [
   'canPayByBankTransfer',
   'isEligibleToReducedRate',
+  'isBlidaResident',
   'isBoardCandidate',
 ] as const;
 
@@ -216,6 +217,7 @@ const state = reactive({
   activityType: '' as string,
   canPayByBankTransfer: false as boolean,
   isEligibleToReducedRate: false as boolean,
+  isBlidaResident: false as boolean,
   isBoardCandidate: false as boolean,
 
   isSubmitting: false as boolean,
@@ -290,6 +292,7 @@ const onSubmit = async () => {
     activityType: state.activityType,
     canPayByBankTransfer: state.canPayByBankTransfer,
     isEligibleToReducedRate: state.isEligibleToReducedRate,
+    isBlidaResident: state.isBlidaResident,
     isBoardCandidate: state.isBoardCandidate,
   })
     .then(() => {
@@ -336,6 +339,7 @@ watch(
       state.activityType = fetchedMember.activityType ?? '';
       state.canPayByBankTransfer = Boolean(fetchedMember.canPayByBankTransfer);
       state.isEligibleToReducedRate = Boolean(fetchedMember.isEligibleToReducedRate);
+      state.isBlidaResident = Boolean(fetchedMember.isBlidaResident);
       state.isBoardCandidate = Boolean(fetchedMember.isBoardCandidate);
     }
   },
