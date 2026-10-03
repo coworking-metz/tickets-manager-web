@@ -92,6 +92,7 @@
     </div>
 
     <StatsIncomePeriod
+      :date="date"
       :frequency="frequency"
       :from="state.period.start"
       :net="net"
@@ -128,6 +129,10 @@ const props = defineProps({
   frequency: {
     type: String as PropType<Frequency>,
     default: 'day',
+  },
+  date: {
+    type: String,
+    default: null,
   },
 });
 

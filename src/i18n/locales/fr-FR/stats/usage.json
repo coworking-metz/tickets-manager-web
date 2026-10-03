@@ -33,6 +33,11 @@
     }
   },
   "description": "L'usage des tickets/abonnements ainsi que les bénéfices ou pertes par rapport aux charges fixes.",
+  "distribution": {
+    "debt": "Dette",
+    "subscriptions": "Abonnements",
+    "tickets": "Tickets"
+  },
   "empty": {
     "description": "Précisez la période pour visualiser les consommations.",
     "title": "Rien à afficher"

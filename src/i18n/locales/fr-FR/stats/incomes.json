@@ -1,4 +1,15 @@
 {
+  "charges": {
+    "bankFees": "Frais bancaires",
+    "deficit": "Déficit",
+    "insurance": "Assurance",
+    "internet": "Internet",
+    "label": "Charges",
+    "other": "Autre",
+    "poulaillerRent": "Loyer Poulailler",
+    "ptiPoulaillerRent": "Loyer P'ti Poulailler",
+    "transactionFees": "Frais de transaction"
+  },
   "daily": {
     "graph": {
       "threshold": "Charges\nfixes\njournalières\n{amount}",
@@ -25,6 +36,9 @@
         "label": "Revenu moyen journalier",
         "threshold": "sur {amount} de charges fixes journalières"
       },
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -33,6 +47,13 @@
     }
   },
   "description": "L'argent rentré dans les caisses via les commandes des membres.",
+  "distribution": {
+    "memberships": "Adhésions",
+    "subscriptionByPrice": "Abonnements à {price}",
+    "subscriptions": "Abonnements",
+    "ticketByPrice": "Tickets à {price}",
+    "tickets": "Tickets"
+  },
   "empty": {
     "description": "Précisez la période pour visualiser les revenus.",
     "title": "Rien à afficher"
@@ -45,6 +66,35 @@
       "week": "Semaine",
       "year": "Année"
     }
+  },
+  "members": {
+    "empty": {
+      "description": "Apparemment, personne n'a rien acheté ce jour-ci.",
+      "title": "Personne"
+    },
+    "navigateTo": "Consulter le profil de {name}",
+    "onMissingDate": {
+      "description": "Sélectionnez une date pour visualiser le détail des revenus.",
+      "title": "Aucune donnée"
+    },
+    "search": {
+      "empty": {
+        "title": "Aucun résultat"
+      },
+      "placeholder": "Rechercher un membre"
+    },
+    "sort": {
+      "label": "Trier {suffix}",
+      "value": {
+        "income": "Par contribution",
+        "memberships": "Par adhésions",
+        "subscriptions": "Par abonnements",
+        "tickets": "Par tickets"
+      }
+    }
+  },
+  "memberships": {
+    "label": "Aucune adhésion | {count} adhésion | {count} adhésions"
   },
   "mode": {
     "waterfall": {
@@ -77,6 +127,9 @@
         "label": "Revenu moyen mensuel",
         "threshold": "sur {amount} de charges fixes mensuelles"
       },
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
+      },
       "label": "En quelques chiffres",
       "total": {
         "label": "Au total",
@@ -98,6 +151,18 @@
       "sinceYearStart": "Depuis le début de l'année"
     },
     "value": "Du {start} au {end}"
+  },
+  "subscriptions": {
+    "byPrice": {
+      "label": "Aucun abonnement à {price} | {count} abonnement à {price} | {count} abonnements à {price}"
+    },
+    "label": "Aucun abonnement | {count} abonnement | {count} abonnements"
+  },
+  "tickets": {
+    "byPrice": {
+      "label": "Aucun ticket à {price} | {count} ticket à {price} | {count} tickets à {price}"
+    },
+    "label": "Aucun ticket | {count} ticket | {count} tickets"
   },
   "title": "Revenus",
   "weekly": {
@@ -128,6 +193,9 @@
       "average": {
         "label": "Revenu moyen hebdomadaire",
         "threshold": "sur {amount} de charges fixes hebdomadaires"
+      },
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
       },
       "label": "En quelques chiffres",
       "total": {
@@ -161,6 +229,9 @@
       "average": {
         "label": "Revenu moyen annuel",
         "threshold": "sur {amount} de charges fixes annuelles"
+      },
+      "detail": {
+        "navigateTo": "Voir le détail sur toute la période"
       },
       "label": "En quelques chiffres",
       "total": {

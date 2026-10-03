@@ -303,9 +303,6 @@
       "full": "C'est tout",
       "loading": "Chargement…"
     },
-    "onFetch": {
-      "fail": "Impossible de récupérer la liste des membres"
-    },
     "onFetchVotingMembers": {
       "fail": "Impossible de récupérer la liste des membres électeurs"
     },
@@ -329,5 +326,8 @@
       "voting": "Électeur⸱rice | Électeur⸱rice⸱s"
     },
     "title": "Membres"
+  },
+  "onFetchAll": {
+    "fail": "Impossible de récupérer la liste des membres"
   }
 }

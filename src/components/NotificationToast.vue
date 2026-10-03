@@ -20,7 +20,7 @@
         :icon="notification.icon || getIconFromType(notification.type)" />
       <div class="ml-3 w-0 flex-1 pt-1.5">
         <p class="text-sm font-medium text-gray-100">
-          {{ getMessage(notification) }}
+          {{ state.message }}
         </p>
         <p
           v-if="notification.description"
@@ -88,7 +88,7 @@ import {
 } from '@mdi/js';
 import { sample } from 'lodash';
 // import colors from 'tailwindcss/colors';
-import { computed } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const i18n = useI18n();
@@ -101,6 +101,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+});
+
+const state = reactive({
+  message: null as string | null,
 });
 
 const notification = computed(() =>
@@ -163,22 +167,31 @@ const onTimeoutAnimationEnd = (notification?: StoreNotification) => {
   }
 };
 
-const getMessage = (notification: AppNotification) => {
-  if (notification.message) {
-    return notification.message;
-  }
+watch(
+  notification,
+  (newNotification) => {
+    if (state.message) return;
 
-  if (notification.type === 'error') {
-    switch (notification.errorCode) {
-      case AppErrorCode.DISCONNECTED:
-        return i18n.t('errors.onDisconnect.message');
-      case AppErrorCode.FORBIDDEN:
-        return i18n.t('errors.onForbidden.message');
-      default:
-        return sample(i18n.tm('errors.onUnknown.message'));
+    if (newNotification?.message) {
+      state.message = newNotification.message;
+      return;
     }
-  }
-};
+
+    if (newNotification?.type === 'error') {
+      switch (newNotification.errorCode) {
+        case AppErrorCode.DISCONNECTED:
+          state.message = i18n.t('errors.onDisconnect.message');
+          break;
+        case AppErrorCode.FORBIDDEN:
+          state.message = i18n.t('errors.onForbidden.message');
+          break;
+        default:
+          state.message = sample(i18n.tm('errors.onUnknown.message'));
+      }
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
