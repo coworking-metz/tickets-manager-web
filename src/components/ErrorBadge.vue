@@ -1,6 +1,6 @@
 <template>
   <button
-    class="group relative size-6 rounded-full"
+    class="group relative size-6 cursor-pointer rounded-full"
     type="button"
     @click="isErrorSheetVisible = true">
     <i class="absolute inset-[16%] size-2/3 rounded-full bg-black" />
@@ -32,7 +32,9 @@
       </template>
 
       <pre v-if="isJSON(description)" class="mt-6 p-3">{{ description }}</pre>
-      <p v-else class="mt-2 text-gray-500 sm:text-sm dark:text-gray-400">{{ description }}</p>
+      <p v-else class="mt-2 whitespace-pre-line text-gray-500 sm:text-sm dark:text-gray-400">
+        {{ description }}
+      </p>
     </AppDialogConfirm>
   </button>
 </template>

@@ -170,7 +170,7 @@ export const routes: RouteRecordRaw[] = [
             }),
           },
           {
-            path: 'income',
+            path: 'income/:date?',
             name: ROUTE_NAMES.STATS.INCOME,
             component: () => import('@/views/Private/Stats/Income/StatsIncome.vue'),
             props: (route) => ({
@@ -178,6 +178,7 @@ export const routes: RouteRecordRaw[] = [
               to: route.query.to,
               net: Boolean(route.query.net === 'true'),
               frequency: route.query.frequency,
+              date: route.params.date,
             }),
           },
           {

@@ -182,7 +182,7 @@ watch(
   () => error.value,
   (error) => {
     if (error && !isSilentError(error)) {
-      notificationsStore.addErrorNotification(error, i18n.t('messages.list.onFetch.fail'));
+      notificationsStore.addErrorNotification(error, i18n.t('messages.onFetchAll.fail'));
     }
   },
 );

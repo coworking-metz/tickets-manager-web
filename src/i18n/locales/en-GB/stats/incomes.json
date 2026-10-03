@@ -1,4 +1,15 @@
 {
+  "charges": {
+    "bankFees": "Bank fees",
+    "deficit": "Deficit",
+    "insurance": "Insurance",
+    "internet": "Internet",
+    "label": "Expenses",
+    "other": "Other",
+    "poulaillerRent": "Poulailler rent",
+    "ptiPoulaillerRent": "P'ti Poulailler rent",
+    "transactionFees": "Transaction fees"
+  },
   "daily": {
     "graph": {
       "threshold": "Daily\nfixed\ncharges\n{amount}",
@@ -25,6 +36,9 @@
         "label": "Average Daily Revenue",
         "threshold": "on {amount} of daily fixed charges"
       },
+      "detail": {
+        "navigateTo": "View details for the entire period"
+      },
       "label": "At a glance",
       "total": {
         "label": "Total",
@@ -33,6 +47,13 @@
     }
   },
   "description": "Visualize revenue per day, week, month, or year as well as profit or loss.",
+  "distribution": {
+    "memberships": "Memberships",
+    "subscriptionByPrice": "{price} subscriptions",
+    "subscriptions": "Subscriptions",
+    "ticketByPrice": "{price} tickets",
+    "tickets": "Tickets"
+  },
   "empty": {
     "description": "Specify the period to visualize revenue.",
     "title": "Nothing to display"
@@ -45,6 +66,35 @@
       "week": "Week",
       "year": "Year"
     }
+  },
+  "members": {
+    "empty": {
+      "description": "Apparently, no one purchased anything that day.",
+      "title": "No one"
+    },
+    "navigateTo": "Navigate to {name} profile",
+    "onMissingDate": {
+      "description": "Select a date to visualize revenue details.",
+      "title": "No data"
+    },
+    "search": {
+      "empty": {
+        "title": "No results"
+      },
+      "placeholder": "Search for a member"
+    },
+    "sort": {
+      "label": "Sort {suffix}",
+      "value": {
+        "income": "By income",
+        "memberships": "By memberships",
+        "subscriptions": "By subscriptions",
+        "tickets": "By tickets"
+      }
+    }
+  },
+  "memberships": {
+    "label": "No membership | {count} membership | {count} memberships"
   },
   "mode": {
     "waterfall": {
@@ -77,6 +127,9 @@
         "label": "Average Monthly Revenue",
         "threshold": "on {amount} of monthly fixed charges"
       },
+      "detail": {
+        "navigateTo": "View details for the entire period"
+      },
       "label": "At a glance",
       "total": {
         "label": "Total",
@@ -98,6 +151,18 @@
       "sinceYearStart": "Since year start"
     },
     "value": "From {start} to {end}"
+  },
+  "subscriptions": {
+    "byPrice": {
+      "label": "No {price} subscription | {count} {price} subscription | {count} {price} subscriptions"
+    },
+    "label": "No subscription | {count} subscription | {count} subscriptions"
+  },
+  "tickets": {
+    "byPrice": {
+      "label": "No {price} ticket | {count} {price} ticket | {count} {price} tickets"
+    },
+    "label": "No ticket | {count} ticket | {count} tickets"
   },
   "title": "Revenue",
   "weekly": {
@@ -128,6 +193,9 @@
       "average": {
         "label": "Average Weekly Revenue",
         "threshold": "on {amount} of weekly fixed charges"
+      },
+      "detail": {
+        "navigateTo": "View details for the entire period"
       },
       "label": "At a glance",
       "total": {
@@ -161,6 +229,9 @@
       "average": {
         "label": "Average Yearly Revenue",
         "threshold": "on {amount} of yearly fixed charges"
+      },
+      "detail": {
+        "navigateTo": "View details for the entire period"
       },
       "label": "At a glance",
       "total": {

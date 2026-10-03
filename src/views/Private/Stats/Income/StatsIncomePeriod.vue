@@ -32,11 +32,22 @@
     </section>
 
     <section class="max-sm:mx-3">
-      <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+      <AppLink
+        class="text-lg leading-6 font-medium"
+        color="indigo"
+        :to="{
+          name: $route.name,
+          query: $route.query,
+          params: {
+            date: WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
+          },
+        }">
         {{ $t(`${i18nKeyPrefix}.summary.label`) }}
-      </h3>
+      </AppLink>
+
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-2 lg:divide-x lg:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
+        class="relative mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow lg:grid-cols-2 lg:divide-x lg:divide-y-0 dark:divide-stone-700 dark:bg-neutral-800">
+        <LoadingProgressBar v-if="isFetchingIncomes" class="absolute inset-x-0 h-[2px]" />
         <div class="px-4 py-5 sm:p-6">
           <dt class="truncate font-medium text-gray-500 sm:text-sm dark:text-gray-400">
             {{ $t(`${i18nKeyPrefix}.summary.average.label`) }}
@@ -124,26 +135,51 @@
         </div>
       </dl>
     </section>
+
+    <StatsIncomeMembersDialog
+      v-model="state.isDialogVisible"
+      :date="date"
+      :frequency="frequency"
+      :from="from"
+      :title="
+        date === WHOLE_PERIOD_SUMMARY_ROUTE_PARAM
+          ? $t('period.value', {
+              start: dayjs(from).format('ll'),
+              end: dayjs(to).format('ll'),
+            })
+          : getTooltipTitle(date)
+      "
+      :to="to" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import StatsIncomeMembersDialog from './StatsIncomeMembersDialog.vue';
 import StatsIncomePeriodGraph from './StatsIncomePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
+import AppLink from '@/components/AppLink.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
+import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { Frequency, getChildFrequency } from '@/services/api/stats/frequency';
-import { getIncomePerPeriod, IncomePeriod } from '@/services/api/stats/income';
+import { doesRouteBelongsTo } from '@/router/helpers';
+import { ROUTE_NAMES } from '@/router/names';
+import { Frequency } from '@/services/api/stats/frequency';
+import {
+  getIncomePerPeriod,
+  IncomePeriod,
+  WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
+} from '@/services/api/stats/income';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
-import { computed, PropType } from 'vue';
+import { debounce } from 'lodash';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components.js';
@@ -169,11 +205,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  date: {
+    type: String,
+    default: null,
+  },
 });
 
 const router = useRouter();
 const i18n = useI18n();
 const statsColors = useStatsColors();
+const state = reactive({
+  isDialogVisible: false,
+});
 
 const i18nKeyPrefix = computed(() => {
   switch (props.frequency) {
@@ -278,6 +321,23 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
               tickets.amount,
             )}</dd>
           </div>
+          ${
+            tickets.byPrice.length > 1
+              ? tickets.byPrice
+                  .map(
+                    ({ price, count }) => `
+            <div class="flex flex-row justify-between place-items-end pl-4">
+              <dt class="text-sm text-gray-500 dark:text-gray-400">
+                ${i18n.t('stats.incomes.tickets.byPrice.label', {
+                  count,
+                  price: formatAmount(price),
+                })}
+              </dt>
+            </div>`,
+                  )
+                  .join('')
+              : ''
+          }
           <div class="flex flex-row justify-between place-items-end">
             <dt class="flex flex-row gap-1 items-center text-base font-normal">
               <span class="block h-3 w-3 rounded-full" style="background-color: ${
@@ -334,15 +394,31 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
 
 const onSelectDate = ({ dataIndex }: { dataIndex: number }) => {
   const element = (incomes.value ?? [])[dataIndex];
-  const { date, type } = element;
+  const { date } = element;
   router.push({
     name: router.currentRoute.value.name,
-    query: {
-      ...router.currentRoute.value.query,
-      from: dayjs(date).startOf(props.frequency).format(DATE_FORMAT),
-      to: dayjs(date).endOf(props.frequency).format(DATE_FORMAT),
-      frequency: getChildFrequency(type),
+    query: router.currentRoute.value.query,
+    params: {
+      date: dayjs(date).format(DATE_FORMAT),
     },
   });
 };
+
+const onDialogChange = debounce((isVisible: boolean) => {
+  if (!isVisible && doesRouteBelongsTo(router.currentRoute.value, ROUTE_NAMES.STATS.INCOME)) {
+    router.replace({
+      name: router.currentRoute.value.name,
+      query: router.currentRoute.value.query,
+    });
+  }
+}, 300);
+
+watch(() => state.isDialogVisible, onDialogChange);
+watch(
+  () => props.date,
+  (newDate) => {
+    state.isDialogVisible = !!newDate;
+  },
+  { immediate: true },
+);
 </script>

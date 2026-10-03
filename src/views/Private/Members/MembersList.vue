@@ -14,7 +14,7 @@
         class="mb-0.5 ml-2 self-end sm:mb-1"
         :description="fetchMembersErrorText"
         :retrying="isFetchingMembers"
-        :title="$t('members.list.onFetch.fail')"
+        :title="$t('members.onFetchAll.fail')"
         @retry="refetchMembers" />
       <ErrorBadge
         v-else-if="tab === 'voting' && fetchVotingMembersErrorText"

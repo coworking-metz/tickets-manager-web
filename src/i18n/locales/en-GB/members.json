@@ -307,9 +307,6 @@
       "full": "That's all",
       "loading": "Loading…"
     },
-    "onFetch": {
-      "fail": "Unable to fetch members list"
-    },
     "onFetchVotingMembers": {
       "fail": "Unable to fetch voting members list"
     },
@@ -333,5 +330,8 @@
       "voting": "Voting"
     },
     "title": "Members"
+  },
+  "onFetchAll": {
+    "fail": "Unable to fetch members list"
   }
 }

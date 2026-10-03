@@ -33,6 +33,11 @@
     }
   },
   "description": "The use of tickets/subscriptions as well as the gains or losses compared to fixed charges.",
+  "distribution": {
+    "debt": "Debt",
+    "subscriptions": "Subscriptions",
+    "tickets": "Tickets"
+  },
   "empty": {
     "description": "Select a period to display consumption data.",
     "title": "Nothing to display"
