@@ -1,10 +1,10 @@
 <template>
-  <VueECharts autoresize :option="options" />
+  <VueECharts autoresize :option="options" @click="onClick" />
 </template>
 
 <script lang="ts" setup>
 import { formatAmount } from '@/helpers/currency';
-import { StatsUsage } from '@/services/api/stats/usage';
+import { StatsUsage, UsageCategory } from '@/services/api/stats/usage';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { PieChart } from 'echarts/charts.js';
 import { TooltipComponent } from 'echarts/components.js';
@@ -30,7 +30,19 @@ const props = defineProps({
   },
 });
 
+const selected = defineModel<UsageCategory[]>('selected', {
+  default: () => [],
+});
+
 const i18n = useI18n();
+
+const onClick = (params: { dataIndex: number; data?: unknown }) => {
+  const id = (params.data as { id?: UsageCategory } | undefined)?.id;
+  if (!id) return;
+  selected.value = selected.value.includes(id)
+    ? selected.value.filter((category) => category !== id)
+    : [...selected.value, id];
+};
 const statsColors = useStatsColors();
 
 const options = computed<ComposeOption<PieSeriesOption | TooltipComponentOption>>(() => ({
@@ -56,23 +68,39 @@ const options = computed<ComposeOption<PieSeriesOption | TooltipComponentOption>
         scale: true,
         scaleSize: 4,
       },
-      data: [
-        {
-          name: i18n.t('stats.usage.distribution.tickets'),
-          value: props.usage.tickets.amount,
-          itemStyle: { color: statsColors.value.ticket },
-        },
-        {
-          name: i18n.t('stats.usage.distribution.debt'),
-          value: props.usage.tickets.debt?.amount ?? 0,
-          itemStyle: { color: statsColors.value.debt },
-        },
-        {
-          name: i18n.t('stats.usage.distribution.subscriptions'),
-          value: props.usage.subscriptions.amount,
-          itemStyle: { color: statsColors.value.subscription },
-        },
-      ].filter(({ value }) => value > 0),
+      cursor: 'pointer',
+      data: (
+        [
+          {
+            id: 'tickets',
+            name: i18n.t('stats.usage.distribution.tickets'),
+            value: props.usage.tickets.amount,
+            color: statsColors.value.ticket,
+          },
+          {
+            id: 'debt',
+            name: i18n.t('stats.usage.distribution.debt'),
+            value: props.usage.tickets.debt?.amount ?? 0,
+            color: statsColors.value.debt,
+          },
+          {
+            id: 'subscriptions',
+            name: i18n.t('stats.usage.distribution.subscriptions'),
+            value: props.usage.subscriptions.amount,
+            color: statsColors.value.subscription,
+          },
+        ] as const
+      )
+        .filter(({ value }) => value > 0)
+        .map(({ id, name, value, color }) => ({
+          id,
+          name,
+          value,
+          itemStyle: {
+            color,
+            opacity: !selected.value.length || selected.value.includes(id) ? 1 : 0.3,
+          },
+        })),
     },
   ],
 }));

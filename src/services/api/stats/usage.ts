@@ -53,3 +53,38 @@ export const computeActivityFromUsage = (usage: StatsUsage): number =>
   usage.tickets.count + usage.tickets.debt.count + usage.subscriptions.attending.count;
 
 export const WHOLE_PERIOD_SUMMARY_ROUTE_PARAM = 'all';
+
+export type UsageCategory = 'tickets' | 'debt' | 'subscriptions';
+
+/**
+ * Whether a usage has any contribution in at least one of the given categories.
+ * An empty list of categories means no filter at all.
+ */
+export const isUsageInCategories = (usage: StatsUsage, categories: UsageCategory[]): boolean =>
+  !categories.length ||
+  categories.some((category) => {
+    switch (category) {
+      case 'tickets':
+        return usage.tickets.count > 0;
+      case 'debt':
+        return (usage.tickets.debt?.count ?? 0) > 0;
+      case 'subscriptions':
+        return usage.subscriptions.count > 0;
+      default:
+        return false;
+    }
+  });
+
+/**
+ * Amount of a usage restricted to the given categories.
+ * An empty list of categories returns the whole amount.
+ */
+export const computeUsageAmountInCategories = (
+  usage: StatsUsage,
+  categories: UsageCategory[],
+): number =>
+  categories.length
+    ? (categories.includes('tickets') ? usage.tickets.amount : 0) +
+      (categories.includes('debt') ? (usage.tickets.debt?.amount ?? 0) : 0) +
+      (categories.includes('subscriptions') ? usage.subscriptions.amount : 0)
+    : usage.amount;
