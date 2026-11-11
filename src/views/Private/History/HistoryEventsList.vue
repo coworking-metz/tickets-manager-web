@@ -166,7 +166,7 @@ import dayjs from 'dayjs';
 import { compact } from 'lodash';
 import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { numberCodec, queryReactive } from 'vue-qs';
+import { parseAsIndex, parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
 
 interface ListSorter {
@@ -208,12 +208,12 @@ const state = reactive({
   },
 });
 
-const queryState = queryReactive({
-  search: { defaultValue: '' },
-  sort: { defaultValue: 'occurred' },
-  slice: { defaultValue: SLICE_STEP, codec: numberCodec },
-  to: { defaultValue: state.period.end },
-  from: { defaultValue: state.period.start },
+const queryState = useQueryStates({
+  search: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault('occurred'),
+  slice: parseAsInteger.withDefault(SLICE_STEP),
+  to: parseAsString.withDefault(state.period.end),
+  from: parseAsString.withDefault(state.period.start),
 });
 
 const {

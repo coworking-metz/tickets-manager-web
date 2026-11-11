@@ -276,7 +276,7 @@ import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { computed, nextTick, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { numberCodec, queryReactive } from 'vue-qs';
+import { parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
 
 interface Tab {
@@ -326,10 +326,10 @@ const state = reactive({
   isSearching: false as boolean,
 });
 
-const queryState = queryReactive({
-  search: { defaultValue: '' },
-  sort: { defaultValue: 'lastSeen' },
-  slice: { defaultValue: SLICE_STEP, codec: numberCodec },
+const queryState = useQueryStates({
+  search: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault('lastSeen'),
+  slice: parseAsInteger.withDefault(SLICE_STEP),
 });
 
 const route = useRoute();

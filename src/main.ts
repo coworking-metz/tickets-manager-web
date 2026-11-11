@@ -21,17 +21,14 @@ import { createHead } from '@unhead/vue/client';
 import FloatingVue from 'floating-vue';
 import { includes } from 'lodash';
 import { createApp } from 'vue';
-import { createVueQsPlugin, createVueRouterAdapter } from 'vue-qs';
+import { createVueQs } from 'vue-qs';
+import { createVueRouterAdapter } from 'vue-qs/adapters/vue-router';
 
 const app = createApp(App);
 const head = createHead();
 
 app.use(pinia);
-app.use(
-  createVueQsPlugin({
-    queryAdapter: createVueRouterAdapter(router),
-  }),
-);
+app.use(createVueQs({ adapter: createVueRouterAdapter(router) }));
 app.use(router);
 app.use(head);
 app.use(VueQueryPlugin, defaultVueQueryPluginOptions);

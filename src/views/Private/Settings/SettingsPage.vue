@@ -108,10 +108,10 @@ import { helpers, requiredIf, macAddress as vuelidateMacAddress } from '@vuelida
 import dayjs from 'dayjs';
 import { computed, nextTick, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { queryReactive } from 'vue-qs';
+import { parseAsString, useQueryStates } from 'vue-qs';
 
-const queryState = queryReactive({
-  macAddress: { defaultValue: '' },
+const queryState = useQueryStates({
+  macAddress: parseAsString.withDefault(''),
 });
 
 const now = dayjs();

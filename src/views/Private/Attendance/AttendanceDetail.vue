@@ -150,7 +150,7 @@ import { mdiCheck, mdiChevronDown, mdiChevronRight, mdiMagnify, mdiSort } from '
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
 import { PropType, computed } from 'vue';
-import { queryReactive } from 'vue-qs';
+import { parseAsString, useQueryStates } from 'vue-qs';
 
 interface ListSorter {
   key: string;
@@ -189,9 +189,9 @@ const props = defineProps({
   },
 });
 
-const queryState = queryReactive({
-  search: { defaultValue: '' },
-  sort: { defaultValue: 'activity' },
+const queryState = useQueryStates({
+  search: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault('activity'),
 });
 
 const filteredList = computed(() => {
