@@ -6,18 +6,21 @@
         <div v-if="!open" class="mt-3 flex w-full shrink flex-row flex-wrap items-center gap-1">
           <slot name="chips:prepend" />
           <span
-            v-if="member.usage.tickets.count"
+            v-if="isVisible('tickets') && displayedTicketsCount"
             class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.ticket}88; --tw-ring-color: ${statsColors.ticket};`">
-            <i18n-t keypath="stats.usage.tickets.label" :plural="totalTicketsCount" scope="global">
+            <i18n-t
+              keypath="stats.usage.tickets.label"
+              :plural="displayedTicketsCount"
+              scope="global">
               <template #count>
-                {{ fractionNumber(totalTicketsCount) }}
+                {{ fractionNumber(displayedTicketsCount) }}
               </template>
             </i18n-t>
           </span>
 
           <span
-            v-if="member.usage.tickets.debt.count"
+            v-if="isVisible('debt') && member.usage.tickets.debt.count"
             class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.debt}88; --tw-ring-color: ${statsColors.debt};`">
             <i18n-t
@@ -31,7 +34,7 @@
           </span>
 
           <span
-            v-if="member.usage.subscriptions.count"
+            v-if="isVisible('subscriptions') && member.usage.subscriptions.count"
             class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.subscription}88; --tw-ring-color: ${statsColors.subscription};`">
             <i18n-t
@@ -49,7 +52,7 @@
         <template #append>
           <div class="ml-auto flex flex-row items-center self-start">
             <dd class="text-xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100">
-              {{ formatAmount(member.usage.amount) }}
+              {{ formatAmount(displayedAmount) }}
             </dd>
 
             <AppIcon
@@ -61,48 +64,52 @@
     </DisclosureButton>
     <DisclosurePanel as="dl" class="flex flex-col gap-1 py-4 dark:text-gray-300">
       <dl class="pr-8 pl-4">
-        <template v-if="totalTicketsCount">
-          <div class="flex flex-row place-items-end justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.ticket};`" />
-              <i18n-t
-                keypath="stats.usage.tickets.label"
-                :plural="totalTicketsCount"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(totalTicketsCount) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(totalTicketsAmount) }}
-            </dd>
-          </div>
-          <div
-            v-if="member.usage.tickets.debt.count"
-            class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.debt};`" />
-              <i18n-t
-                keypath="stats.usage.tickets.debt.label"
-                :plural="member.usage.tickets.debt.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(member.usage.tickets.debt.count) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-400">
-              {{ `-${formatAmount(member.usage.tickets.debt.amount)}` }}
-            </dd>
-          </div>
-        </template>
         <div
-          v-if="member.usage.subscriptions.count"
+          v-if="isVisible('tickets') && displayedTicketsCount"
+          class="flex flex-row place-items-end justify-between">
+          <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+            <span
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
+              :style="`background-color: ${statsColors.ticket};`" />
+            <i18n-t
+              keypath="stats.usage.tickets.label"
+              :plural="displayedTicketsCount"
+              scope="global">
+              <template #count>
+                {{ fractionNumber(displayedTicketsCount) }}
+              </template>
+            </i18n-t>
+          </dt>
+          <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+            {{ formatAmount(displayedTicketsAmount) }}
+          </dd>
+        </div>
+        <div
+          v-if="isVisible('debt') && member.usage.tickets.debt.count"
+          class="flex flex-row items-start justify-between">
+          <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+            <span
+              class="mt-1.5 block size-3 shrink-0 rounded-full"
+              :style="`background-color: ${statsColors.debt};`" />
+            <i18n-t
+              keypath="stats.usage.tickets.debt.label"
+              :plural="member.usage.tickets.debt.count"
+              scope="global">
+              <template #count>
+                {{ fractionNumber(member.usage.tickets.debt.count) }}
+              </template>
+            </i18n-t>
+          </dt>
+          <dd class="font-mono text-base font-medium text-gray-400">
+            {{
+              isVisible('tickets')
+                ? `-${formatAmount(member.usage.tickets.debt.amount)}`
+                : formatAmount(member.usage.tickets.debt.amount)
+            }}
+          </dd>
+        </div>
+        <div
+          v-if="isVisible('subscriptions') && member.usage.subscriptions.count"
           class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
@@ -174,7 +181,12 @@ import MemberCard from '@/components/MemberCard.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
-import { computeActivityFromUsage, MemberListItemWithUsage } from '@/services/api/stats/usage';
+import {
+  computeActivityFromUsage,
+  computeUsageAmountInCategories,
+  MemberListItemWithUsage,
+  UsageCategory,
+} from '@/services/api/stats/usage';
 import { theme } from '@/styles/colors';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { mdiChevronDown, mdiChevronRight, mdiChevronUp } from '@mdi/js';
@@ -189,15 +201,34 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Only display the contributions of these categories.
+   * An empty list displays all of them.
+   */
+  categories: {
+    type: Array as PropType<UsageCategory[]>,
+    default: () => [],
+  },
 });
 
 const statsColors = useStatsColors();
 
 const totalActivity = computed(() => computeActivityFromUsage(props.member.usage));
-const totalTicketsCount = computed(
-  () => props.member.usage.tickets.count + (props.member.usage.tickets.debt?.count ?? 0),
+const isVisible = (category: UsageCategory) =>
+  !props.categories.length || props.categories.includes(category);
+
+// Tickets line includes debt only when debt is displayed too
+const displayedTicketsCount = computed(
+  () =>
+    props.member.usage.tickets.count +
+    (isVisible('debt') ? (props.member.usage.tickets.debt?.count ?? 0) : 0),
 );
-const totalTicketsAmount = computed(
-  () => props.member.usage.tickets.amount + (props.member.usage.tickets.debt?.amount ?? 0),
+const displayedTicketsAmount = computed(
+  () =>
+    props.member.usage.tickets.amount +
+    (isVisible('debt') ? (props.member.usage.tickets.debt?.amount ?? 0) : 0),
+);
+const displayedAmount = computed(() =>
+  computeUsageAmountInCategories(props.member.usage, props.categories),
 );
 </script>

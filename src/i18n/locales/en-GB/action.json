@@ -15,5 +15,6 @@
   "logout": "Logout",
   "navigate": "View",
   "reload": "Reload",
+  "reset": "Reset",
   "retry": "Retry"
 }

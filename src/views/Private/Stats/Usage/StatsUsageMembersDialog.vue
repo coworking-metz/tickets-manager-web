@@ -30,9 +30,18 @@
       <section
         v-if="selectedUsage && state.isSummaryVisible"
         class="flex h-full shrink grow basis-0 flex-col items-center gap-4 overflow-hidden p-4 sm:pr-6">
-        <StatsUsageDistributionChart
-          class="shrink grow basis-0 overflow-hidden"
-          :usage="selectedUsage.data" />
+        <div class="relative flex w-full shrink grow basis-0 flex-col overflow-hidden">
+          <StatsUsageDistributionChart
+            v-model:selected="state.categories"
+            class="shrink grow basis-0 overflow-hidden"
+            :usage="selectedUsage.data" />
+          <AppButtonIcon
+            v-if="state.categories.length"
+            class="absolute! top-1/2 left-1/2 -translate-1/2"
+            :icon="mdiRestore"
+            :title="$t('action.reset')"
+            @click="() => (state.categories = [])" />
+        </div>
         <dl class="flex w-full shrink grow basis-0 flex-col gap-1 dark:text-gray-300">
           <div class="flex flex-row items-start justify-between">
             <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
@@ -239,6 +248,7 @@
               v-for="member in filteredList"
               :key="member._id"
               as="li"
+              :categories="state.categories"
               class="w-full"
               :member="member">
               <template v-if="state.sort === 'activity'" #chips:prepend>
@@ -283,9 +293,12 @@ import { searchIn } from '@/helpers/text';
 import { Frequency } from '@/services/api/stats/frequency';
 import {
   computeActivityFromUsage,
+  computeUsageAmountInCategories,
   getUsagePerFrequency,
+  isUsageInCategories,
   MemberListItemWithUsage,
   StatsUsage,
+  UsageCategory,
   WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
 } from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
@@ -295,12 +308,13 @@ import {
   mdiChevronDown,
   mdiClose,
   mdiRefresh,
+  mdiRestore,
   mdiSort,
   mdiUnfoldLessHorizontal,
   mdiUnfoldMoreHorizontal,
 } from '@mdi/js';
 import { compact } from 'lodash';
-import { computed, PropType, reactive } from 'vue';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const isVisible = defineModel({
@@ -316,7 +330,9 @@ interface ListSorter {
 const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'usage',
-    sort: (a, b) => b.usage.amount - a.usage.amount,
+    sort: (a, b) =>
+      computeUsageAmountInCategories(b.usage, state.categories) -
+      computeUsageAmountInCategories(a.usage, state.categories),
   },
   {
     key: 'debt',
@@ -357,6 +373,7 @@ const state = reactive({
   search: null as string | null,
   sort: 'usage' as string | null,
   isSummaryVisible: false,
+  categories: [] as UsageCategory[],
 });
 
 const i18nKeyPrefix = computed(() => {
@@ -376,6 +393,7 @@ const i18nKeyPrefix = computed(() => {
 
 const filteredList = computed(() => {
   return (selectedUsage.value?.data.members || [])
+    .filter((member) => isUsageInCategories(member.usage, state.categories))
     .filter((member) =>
       searchIn(
         state.search,
@@ -498,6 +516,13 @@ const selectedUsage = computed(() => {
 
   return usages.value?.find((m) => m.date === props.date) || null;
 });
+
+watch(
+  () => [props.date, state.isSummaryVisible],
+  () => {
+    state.categories = [];
+  },
+);
 
 const totalTicketsCount = computed(
   () =>
