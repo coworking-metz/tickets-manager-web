@@ -62,7 +62,7 @@
                   <time
                     class="mr-1 inline-block text-gray-900 lowercase dark:text-gray-100"
                     :datetime="member.lastSeen"
-                    :title="dayjs(member.lastSeen).format('llll')">
+                    :title="dayjs(member.lastSeen).format('ll LTS')">
                     {{
                       dayjs().diff(member.lastSeen, 'hour') < 1
                         ? dayjs(member.lastSeen).fromNow()

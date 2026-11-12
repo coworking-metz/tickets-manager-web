@@ -138,7 +138,7 @@
         ref="endOfList"
         class="p-6 text-center text-gray-500 dark:text-gray-400">
         {{
-          queryState.slice < filteredList.length
+          hasMore
             ? $t('audit.list.onEndScrollReached.loading')
             : $t('audit.list.onEndScrollReached.full')
         }}
@@ -155,16 +155,17 @@ import AuditEntry from '@/components/audit/AuditEntry.vue';
 import AppDateRangeField from '@/components/form/AppDateRangeField.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { useIncrementalList } from '@/helpers/list';
 import { searchIn } from '@/helpers/text';
 import { AuditEvent, getAllAuditEvents } from '@/services/api/audit';
 import { auditEventsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useDebounceFn, useElementVisibility } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { compact } from 'lodash';
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { parseAsIndex, parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
@@ -250,17 +251,11 @@ const filteredList = computed(() => {
     .sort(ALL_LIST_SORTERS.value.find((s) => s.key === queryState.sort)?.sort);
 });
 
-const slicedList = computed(() => filteredList.value.slice(0, queryState.slice));
-
-const endOfList = ref<HTMLLIElement>();
-const endOfListVisible = useElementVisibility(endOfList);
-
-watch(endOfListVisible, (isVisible) => {
-  if (isVisible) {
-    if (filteredList.value.length && queryState.slice < filteredList.value.length) {
-      queryState.slice += SLICE_STEP;
-    }
-  }
+const endOfList = ref<HTMLElement>();
+// The number of rendered items is kept in the route query to restore the scroll position
+const { slicedList, hasMore } = useIncrementalList(filteredList, endOfList, {
+  step: SLICE_STEP,
+  count: toRef(queryState, 'slice'),
 });
 
 watch(

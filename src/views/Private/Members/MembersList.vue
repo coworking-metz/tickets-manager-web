@@ -72,13 +72,11 @@
           :loading="state.isSearching"
           name="members-search"
           :placeholder="$t('members.list.search.placeholder')"
-          tabindex="1"
           type="search">
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
-                tabindex="1">
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
                 <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
@@ -144,6 +142,7 @@
           <LoadingProgressBar class="absolute top-[-3px] h-[2px] w-full" />
         </div>
 
+        <!-- eslint-disable-next-line vuejs-accessibility/no-redundant-roles -- Safari/VoiceOver drops the list semantics of unstyled lists (list-style: none) -->
         <ul
           class="grow divide-y divide-gray-200 bg-white shadow sm:rounded-md dark:divide-stone-700 dark:bg-neutral-800"
           role="list">
@@ -175,7 +174,7 @@
           ref="endOfList"
           class="p-6 text-center text-gray-500 dark:text-gray-400">
           {{
-            queryState.slice < tabFilteredList.length
+            hasMore
               ? $t('members.list.onEndScrollReached.loading')
               : $t('members.list.onEndScrollReached.full')
           }}
@@ -258,6 +257,7 @@ import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import { formatAmount } from '@/helpers/currency';
+import { useIncrementalList } from '@/helpers/list';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import {
@@ -271,10 +271,10 @@ import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { mdiCheck, mdiChevronDown, mdiSort } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useDebounceFn, useElementVisibility } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { isNil } from 'lodash';
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
@@ -426,8 +426,6 @@ const tabFilteredList = computed(() =>
   filteredList.value.filter(selectedTab.value?.filter ?? (() => true)),
 );
 
-const slicedList = computed(() => tabFilteredList.value.slice(0, queryState.slice));
-
 const totalDebt = computed(() =>
   filteredList.value.reduce(
     (acc, member) => acc + (member.balance < 0 ? Math.abs(member.balance) : 0),
@@ -465,15 +463,11 @@ watch(
   { immediate: true },
 );
 
-const endOfList = ref<HTMLLIElement>();
-const endOfListVisible = useElementVisibility(endOfList);
-
-watch(endOfListVisible, (isVisible) => {
-  if (isVisible) {
-    if (tabFilteredList.value.length && queryState.slice < tabFilteredList.value.length) {
-      queryState.slice += SLICE_STEP;
-    }
-  }
+const endOfList = ref<HTMLElement>();
+// The number of rendered items is kept in the route query to restore the scroll position
+const { slicedList, hasMore } = useIncrementalList(tabFilteredList, endOfList, {
+  step: SLICE_STEP,
+  count: toRef(queryState, 'slice'),
 });
 
 watch(

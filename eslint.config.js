@@ -85,6 +85,9 @@ export default withVueTs(
           'warn',
         ]),
       ),
+      // A label is associated to its control either by nesting it or with `for` + `id`:
+      // the default requires both, which is impossible when the control is inside a component
+      'vuejs-accessibility/label-has-for': ['warn', { required: { some: ['nesting', 'id'] } }],
       'import-x/prefer-default-export': OFF,
       '@intlify/vue-i18n/no-raw-text': [ERROR],
       // as long as the project doesn't support split namespaces structure
