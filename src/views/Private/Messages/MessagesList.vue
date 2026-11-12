@@ -59,6 +59,10 @@
             </RouterLink>
           </li>
         </ul>
+        <!-- Next messages are rendered when reaching the end of the list -->
+        <div v-if="hasMore" ref="endOfList" class="flex justify-center p-6">
+          <LoadingSpinner class="size-6" />
+        </div>
       </div>
     </div>
   </article>
@@ -69,9 +73,11 @@ import MessagesListCard from './MessagesListCard.vue';
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import { isSilentError } from '@/helpers/errors';
+import { useIncrementalList } from '@/helpers/list';
 import { searchIn } from '@/helpers/text';
 import { ROUTE_NAMES } from '@/router/names';
 import { getAllMessages } from '@/services/api/messages';
@@ -80,9 +86,8 @@ import { useMessagesStore } from '@/store/messages';
 import { useNotificationsStore } from '@/store/notifications';
 import { mdiPlus } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
-import { useInfiniteScroll } from '@vueuse/core';
 import { isNil } from 'lodash';
-import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -127,21 +132,12 @@ const filteredList = computed(() => {
   );
 });
 
-const slicedList = computed(() => filteredList.value.slice(0, state.slice));
-
-const scrollElement = ref<Document>();
-useInfiniteScroll(
-  scrollElement,
-  () => {
-    // load more
-    if (slicedList.value.length && state.slice < slicedList.value.length) {
-      state.slice += SLICE_STEP;
-    }
-  },
-  { distance: 100 },
-);
-
-onMounted(() => (scrollElement.value = document));
+const endOfList = ref<HTMLElement>();
+// The number of rendered items is kept in the route query to restore the scroll position
+const { slicedList, hasMore } = useIncrementalList(filteredList, endOfList, {
+  step: SLICE_STEP,
+  count: toRef(state, 'slice'),
+});
 
 watch(
   () => props.search,

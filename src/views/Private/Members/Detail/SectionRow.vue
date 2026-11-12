@@ -9,7 +9,7 @@
     <AppDivider class="my-3 w-full" />
 
     <div class="flex w-full flex-row flex-wrap gap-3">
-      <aside class="flex min-w-48 shrink grow basis-0 flex-col">
+      <aside class="flex max-w-2xl min-w-48 shrink grow basis-0 flex-col">
         <slot name="description">
           <p
             v-if="description"

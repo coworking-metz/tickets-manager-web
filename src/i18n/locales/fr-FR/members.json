@@ -40,6 +40,13 @@
       "onFetch": {
         "fail": "Impossible de récupérer l'historique"
       },
+      "search": {
+        "empty": {
+          "title": "Aucun évènement ne correspond"
+        },
+        "label": "Rechercher dans l'historique",
+        "placeholder": "Rechercher"
+      },
       "title": "Historique"
     },
     "impersonation": {

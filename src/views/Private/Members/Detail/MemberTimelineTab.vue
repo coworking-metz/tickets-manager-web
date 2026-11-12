@@ -126,11 +126,25 @@
       </SideDialog>
     </SectionRow>
 
-    <SectionRow
-      class="mt-16 max-sm:px-3"
-      :description="$t('members.detail.audit.description')"
-      :title="$t('members.detail.audit.title')">
-      <MemberHistoryPanel :member-id="memberId" />
+    <SectionRow class="mt-16 max-sm:px-3" :title="$t('members.detail.audit.title')">
+      <MemberHistoryPanel :member-id="memberId" :search="state.auditSearch" />
+
+      <template #description>
+        <p class="mt-1 text-sm whitespace-pre-line text-gray-500 dark:text-neutral-400">
+          {{ $t('members.detail.audit.description') }}
+        </p>
+        <label class="sr-only" for="member-audit-search">
+          {{ $t('members.detail.audit.search.label') }}
+        </label>
+        <AppSearchField
+          id="member-audit-search"
+          v-model="state.auditSearch"
+          class="mt-3 md:sticky md:top-3"
+          clearable
+          hide-details
+          name="member-audit-search"
+          :placeholder="$t('members.detail.audit.search.placeholder')" />
+      </template>
     </SectionRow>
   </div>
 </template>
@@ -144,6 +158,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
+import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppSegmentedControl from '@/components/form/AppSegmentedControl.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import SideDialog from '@/components/layout/SideDialog.vue';
@@ -154,7 +169,7 @@ import { getMember, getMemberActivity } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { mdiPlus } from '@mdi/js';
 import dayjs from 'dayjs';
-import { PropType, computed, reactive } from 'vue';
+import { PropType, computed, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
@@ -172,6 +187,7 @@ const route = useRoute();
 const router = useRouter();
 const state = reactive({
   shouldRenderAllActivity: false as boolean,
+  auditSearch: null as string | null,
 });
 
 const { isPending: isPendingMember, data: member } = useAppQuery(
@@ -205,6 +221,13 @@ const lastActivityDate = computed(() => {
   }
   return null;
 });
+
+watch(
+  () => props.memberId,
+  () => {
+    state.auditSearch = null;
+  },
+);
 
 const periodAttendance = computed<number>(() => {
   return (

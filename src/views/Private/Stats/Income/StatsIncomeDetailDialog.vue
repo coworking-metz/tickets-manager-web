@@ -299,13 +299,18 @@
             :title="$t('stats.incomes.members.empty.title')" />
           <ol
             v-else
+            ref="membersList"
             class="grow divide-y divide-gray-200 overflow-y-scroll border-t border-gray-200 bg-white pb-4 text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
             <IncomeMemberCard
-              v-for="member in filteredList"
+              v-for="member in slicedList"
               :key="member._id"
               as="li"
               class="w-full"
               :member="member" />
+            <!-- Next members are rendered when reaching the end of the list -->
+            <li v-if="hasMore" ref="endOfList" class="flex justify-center py-4">
+              <LoadingSpinner class="size-6" />
+            </li>
           </ol>
         </template>
       </section>
@@ -328,6 +333,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
+import { useIncrementalList } from '@/helpers/list';
 import { searchIn } from '@/helpers/text';
 import { Frequency } from '@/services/api/stats/frequency';
 import {
@@ -353,7 +359,7 @@ import {
 } from '@mdi/js';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { compact } from 'lodash';
-import { computed, PropType, reactive, watch } from 'vue';
+import { computed, PropType, reactive, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const isVisible = defineModel({
@@ -455,6 +461,15 @@ const filteredList = computed(() => {
       ),
     )
     .sort(ALL_LIST_SORTERS.value.find((s) => s.key === state.sort)?.sort);
+});
+
+// Rendering hundreds of member cards at once is slow: render them progressively while scrolling
+const membersList = useTemplateRef<HTMLElement>('membersList');
+const endOfList = useTemplateRef<HTMLElement>('endOfList');
+const { slicedList, hasMore } = useIncrementalList(filteredList, endOfList, {
+  step: 20,
+  resetOn: [() => state.search, () => state.sort, () => props.date],
+  onReset: () => membersList.value?.scrollTo({ top: 0 }),
 });
 
 const {
