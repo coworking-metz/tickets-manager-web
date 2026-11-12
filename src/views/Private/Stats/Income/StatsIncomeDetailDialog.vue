@@ -5,11 +5,20 @@
     dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-[1680px] h-full grow">
     <LoadingProgressBar v-if="isFetchingIncomes" class="absolute top-0 h-px w-full" />
     <header class="mx-3 flex flex-row items-start justify-center sm:mx-24">
-      <h2
-        v-if="title"
-        class="mx-auto shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-        {{ title }}
-      </h2>
+      <div class="mx-auto flex shrink flex-row items-center overflow-hidden">
+        <h2
+          v-if="title"
+          class="shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+          {{ title }}
+        </h2>
+        <ErrorBadge
+          v-if="incomesErrorText"
+          class="ml-2 shrink-0"
+          :description="incomesErrorText"
+          :retrying="isFetchingIncomes"
+          :title="$t('stats.incomes.onFetch.fail')"
+          @retry="refetchIncomes" />
+      </div>
       <div
         class="absolute top-3 right-3 flex flex-row items-center gap-1 rounded-full bg-white/5 backdrop-blur-xl dark:bg-neutral-800/5">
         <div class="relative">
@@ -43,276 +52,288 @@
 
     <div
       class="flex shrink grow basis-0 flex-row divide-x divide-gray-200 overflow-hidden dark:divide-neutral-700">
-      <!-- Scrolls on its own when its content does not fit -->
+      <!-- Summary: skeleton while loading, content, or empty state. Scrolls on its own when its content does not fit -->
       <section
-        v-if="selectedIncome"
         class="flex h-full shrink grow basis-0 flex-col items-center gap-4 overflow-y-auto p-4 sm:pr-6">
-        <StatsIncomeSankeyChart
-          class="min-h-64 w-full shrink grow basis-0 overflow-hidden"
-          :income="selectedIncome.data" />
-        <dl
-          class="flex w-full max-w-md min-w-80 shrink grow basis-0 flex-col gap-1 dark:text-gray-300">
+        <template v-if="isPendingIncomes">
+          <!-- Sankey: columns of nodes -->
           <div
-            v-if="selectedIncome.data.tickets.count"
-            class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.ticketOrder};`" />
-              <i18n-t
-                keypath="stats.incomes.tickets.label"
-                :plural="selectedIncome.data.tickets.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(selectedIncome.data.tickets.count) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(selectedIncome.data.tickets.amount) }}
-            </dd>
+            class="flex min-h-64 w-full shrink grow basis-0 flex-row items-stretch justify-between">
+            <div class="flex w-3 flex-col gap-2">
+              <LoadingSkeleton class="basis-2/5" />
+              <LoadingSkeleton class="basis-1/5" />
+              <LoadingSkeleton class="basis-1/5" />
+              <LoadingSkeleton class="basis-1/5" />
+            </div>
+            <div class="flex w-3 flex-col justify-center gap-2">
+              <LoadingSkeleton class="basis-3/5" />
+              <LoadingSkeleton class="basis-1/5" />
+            </div>
+            <div class="flex w-3 flex-col">
+              <LoadingSkeleton class="grow" />
+            </div>
+            <div class="flex w-3 flex-col justify-end gap-2">
+              <LoadingSkeleton class="basis-2/5" />
+              <LoadingSkeleton class="basis-2/5" />
+            </div>
           </div>
-          <div
-            v-for="entry in selectedIncome.data.tickets.byPrice.length > 1
-              ? selectedIncome.data.tickets.byPrice
-              : []"
-            :key="`tickets-price-${entry.price}`"
-            class="flex flex-row items-start justify-between pl-4">
-            <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              <i18n-t
-                keypath="stats.incomes.tickets.byPrice.label"
-                :plural="entry.count"
-                scope="global">
-                <template #count>{{ fractionNumber(entry.count) }}</template>
-                <template #price>{{ formatAmount(entry.price) }}</template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
-              {{ formatAmount(entry.amount) }}
-            </dd>
-          </div>
-          <div
-            v-if="selectedIncome.data.subscriptions.count"
-            class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.subscriptionOrder};`" />
-              <i18n-t
-                keypath="stats.incomes.subscriptions.label"
-                :plural="selectedIncome.data.subscriptions.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(selectedIncome.data.subscriptions.count) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(selectedIncome.data.subscriptions.amount) }}
-            </dd>
-          </div>
-          <div
-            v-for="entry in selectedIncome.data.subscriptions.byPrice.length > 1
-              ? selectedIncome.data.subscriptions.byPrice
-              : []"
-            :key="`subscriptions-price-${entry.price}`"
-            class="flex flex-row items-start justify-between pl-4">
-            <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              <i18n-t
-                keypath="stats.incomes.subscriptions.byPrice.label"
-                :plural="entry.count"
-                scope="global">
-                <template #count>{{ fractionNumber(entry.count) }}</template>
-                <template #price>{{ formatAmount(entry.price) }}</template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
-              {{ formatAmount(entry.amount) }}
-            </dd>
-          </div>
-          <div
-            v-if="selectedIncome.data.memberships.count"
-            class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.membershipOrder};`" />
-              <i18n-t
-                keypath="stats.incomes.memberships.label"
-                :plural="selectedIncome.data.memberships.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(selectedIncome.data.memberships.count) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(selectedIncome.data.memberships.amount) }}
-            </dd>
-          </div>
+          <StatsPeriodSummarySkeleton class="w-full max-w-md min-w-80 shrink grow basis-0" />
+        </template>
+        <template v-else-if="selectedIncome">
+          <StatsIncomeSankeyChart
+            class="min-h-64 w-full shrink grow basis-0 overflow-hidden"
+            :income="selectedIncome.data" />
+          <dl
+            class="flex w-full max-w-md min-w-80 shrink grow basis-0 flex-col gap-1 dark:text-gray-300">
+            <div
+              v-if="selectedIncome.data.tickets.count"
+              class="flex flex-row items-start justify-between">
+              <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+                <span
+                  class="mt-1.5 block size-3 shrink-0 rounded-full"
+                  :style="`background-color: ${statsColors.ticketOrder};`" />
+                <i18n-t
+                  keypath="stats.incomes.tickets.label"
+                  :plural="selectedIncome.data.tickets.count"
+                  scope="global">
+                  <template #count>
+                    {{ fractionNumber(selectedIncome.data.tickets.count) }}
+                  </template>
+                </i18n-t>
+              </dt>
+              <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+                {{ formatAmount(selectedIncome.data.tickets.amount) }}
+              </dd>
+            </div>
+            <div
+              v-for="entry in selectedIncome.data.tickets.byPrice.length > 1
+                ? selectedIncome.data.tickets.byPrice
+                : []"
+              :key="`tickets-price-${entry.price}`"
+              class="flex flex-row items-start justify-between pl-4">
+              <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                <i18n-t
+                  keypath="stats.incomes.tickets.byPrice.label"
+                  :plural="entry.count"
+                  scope="global">
+                  <template #count>{{ fractionNumber(entry.count) }}</template>
+                  <template #price>{{ formatAmount(entry.price) }}</template>
+                </i18n-t>
+              </dt>
+              <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
+                {{ formatAmount(entry.amount) }}
+              </dd>
+            </div>
+            <div
+              v-if="selectedIncome.data.subscriptions.count"
+              class="flex flex-row items-start justify-between">
+              <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+                <span
+                  class="mt-1.5 block size-3 shrink-0 rounded-full"
+                  :style="`background-color: ${statsColors.subscriptionOrder};`" />
+                <i18n-t
+                  keypath="stats.incomes.subscriptions.label"
+                  :plural="selectedIncome.data.subscriptions.count"
+                  scope="global">
+                  <template #count>
+                    {{ fractionNumber(selectedIncome.data.subscriptions.count) }}
+                  </template>
+                </i18n-t>
+              </dt>
+              <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+                {{ formatAmount(selectedIncome.data.subscriptions.amount) }}
+              </dd>
+            </div>
+            <div
+              v-for="entry in selectedIncome.data.subscriptions.byPrice.length > 1
+                ? selectedIncome.data.subscriptions.byPrice
+                : []"
+              :key="`subscriptions-price-${entry.price}`"
+              class="flex flex-row items-start justify-between pl-4">
+              <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                <i18n-t
+                  keypath="stats.incomes.subscriptions.byPrice.label"
+                  :plural="entry.count"
+                  scope="global">
+                  <template #count>{{ fractionNumber(entry.count) }}</template>
+                  <template #price>{{ formatAmount(entry.price) }}</template>
+                </i18n-t>
+              </dt>
+              <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
+                {{ formatAmount(entry.amount) }}
+              </dd>
+            </div>
+            <div
+              v-if="selectedIncome.data.memberships.count"
+              class="flex flex-row items-start justify-between">
+              <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+                <span
+                  class="mt-1.5 block size-3 shrink-0 rounded-full"
+                  :style="`background-color: ${statsColors.membershipOrder};`" />
+                <i18n-t
+                  keypath="stats.incomes.memberships.label"
+                  :plural="selectedIncome.data.memberships.count"
+                  scope="global">
+                  <template #count>
+                    {{ fractionNumber(selectedIncome.data.memberships.count) }}
+                  </template>
+                </i18n-t>
+              </dt>
+              <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
+                {{ formatAmount(selectedIncome.data.memberships.amount) }}
+              </dd>
+            </div>
 
-          <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            {{ formatAmount(selectedIncome.data.income) }}
-          </dd>
-
-          <div class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.charges}`" />
-              {{ $t(`${i18nKeyPrefix}.graph.threshold`) }}
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-400">
-              {{ formatAmount(-selectedIncome.data.charges) }}
+            <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
+              {{ formatAmount(selectedIncome.data.income) }}
             </dd>
-          </div>
-          <div
-            v-for="entry in selectedIncome.data.chargesBreakdown.length > 1
-              ? selectedIncome.data.chargesBreakdown
-              : []"
-            :key="`charges-${entry.label}`"
-            class="flex flex-row items-start justify-between pl-4">
-            <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              {{ $t(`stats.incomes.charges.${entry.label}`) }}
-            </dt>
-            <dd class="font-mono text-sm text-gray-400">
-              {{ formatAmount(-entry.amount) }}
-            </dd>
-          </div>
 
-          <div
-            :class="[
-              'mt-2 -mr-2.5 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
-              selectedIncome.data.income > selectedIncome.data.charges
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800',
-            ]">
-            {{
-              `${selectedIncome.data.income > selectedIncome.data.charges ? '+' : ''}${formatAmount(selectedIncome.data.income - selectedIncome.data.charges)}`
-            }}
-          </div>
-        </dl>
-      </section>
+            <div class="flex flex-row items-start justify-between">
+              <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
+                <span
+                  class="mt-1.5 block size-3 shrink-0 rounded-full"
+                  :style="`background-color: ${statsColors.charges}`" />
+                {{ $t(`${i18nKeyPrefix}.graph.threshold`) }}
+              </dt>
+              <dd class="font-mono text-base font-medium text-gray-400">
+                {{ formatAmount(-selectedIncome.data.charges) }}
+              </dd>
+            </div>
+            <div
+              v-for="entry in selectedIncome.data.chargesBreakdown.length > 1
+                ? selectedIncome.data.chargesBreakdown
+                : []"
+              :key="`charges-${entry.label}`"
+              class="flex flex-row items-start justify-between pl-4">
+              <dt class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                {{ $t(`stats.incomes.charges.${entry.label}`) }}
+              </dt>
+              <dd class="font-mono text-sm text-gray-400">
+                {{ formatAmount(-entry.amount) }}
+              </dd>
+            </div>
 
-      <!-- Kept while loading or on error, to display these states -->
-      <section
-        v-if="state.isMembersListVisible || !selectedIncome"
-        class="flex max-w-xl shrink grow flex-col self-stretch overflow-hidden">
-        <LoadingSpinner v-if="isPendingIncomes" class="mx-auto size-16 grow" />
-        <ErrorState
-          v-else-if="incomesErrorText"
-          class="m-auto"
-          :description="incomesErrorText"
-          :title="$t('stats.incomes.onFetch.fail')">
-          <template #action>
-            <AppButtonPlain
-              class="mt-6 dark:focus:ring-offset-neutral-800"
-              color="neutral"
-              :icon="mdiRefresh"
-              :loading="isPendingIncomes"
-              @click="refetchIncomes">
-              {{ $t('action.retry') }}
-            </AppButtonPlain>
-          </template>
-        </ErrorState>
-        <ErrorState
-          v-else-if="!selectedIncome"
+            <div
+              :class="[
+                'mt-2 -mr-2.5 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
+                selectedIncome.data.income > selectedIncome.data.charges
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800',
+              ]">
+              {{
+                `${selectedIncome.data.income > selectedIncome.data.charges ? '+' : ''}${formatAmount(selectedIncome.data.income - selectedIncome.data.charges)}`
+              }}
+            </div>
+          </dl>
+        </template>
+        <EmptyState
+          v-else
           class="m-auto"
           :description="$t('stats.incomes.members.onMissingDate.description')"
-          :title="$t('stats.incomes.members.onMissingDate.title')">
-          <template #action><i></i></template>
-        </ErrorState>
-        <template v-else>
-          <AppSearchField
-            id="members-search"
-            v-model="state.search"
-            class="m-4 self-stretch"
-            clearable
-            hide-details
-            input-class="pr-0"
-            name="members-search"
-            :placeholder="$t('stats.incomes.members.search.placeholder')">
-            <template #after>
-              <Menu as="div" class="relative -ml-px block">
-                <MenuButton
-                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
-                  <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
-                  <span class="ml-2 whitespace-nowrap max-sm:hidden">
-                    {{
-                      $t('stats.incomes.members.sort.label', {
-                        ...(state.sort && {
-                          suffix: $t(
-                            `stats.incomes.members.sort.value.${state.sort}`,
-                          ).toLocaleLowerCase(),
-                        }),
-                      })
-                    }}
-                  </span>
-                  <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
-                </MenuButton>
-                <Transition
-                  enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95"
-                  enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100"
-                  leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems
-                    class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
-                    <div class="py-1">
-                      <MenuItem
-                        v-for="listSorter in ALL_LIST_SORTERS"
-                        :key="`members-list-sort-${listSorter.key}`"
-                        v-slot="{ active, close }">
-                        <button
-                          :class="[
-                            active &&
-                              'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
-                            'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
-                          ]"
-                          @click="
-                            () => {
-                              state.sort = listSorter.key !== state.sort ? listSorter.key : null;
-                              close();
-                            }
-                          ">
-                          {{ $t(`stats.incomes.members.sort.value.${listSorter.key}`) }}
-                          <AppIcon
-                            v-if="listSorter.key === state.sort"
-                            class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                            :icon="mdiCheck" />
-                        </button>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </Transition>
-              </Menu>
-            </template>
-          </AppSearchField>
-          <EmptyState
-            v-if="!filteredList.length"
-            :animation="EmptyOffice"
-            animation-class="!-my-8"
-            class="m-auto"
-            :description="$t('stats.incomes.members.empty.description')"
-            loop
-            :title="$t('stats.incomes.members.empty.title')" />
-          <ol
-            v-else
-            ref="membersList"
-            class="grow divide-y divide-gray-200 overflow-y-scroll border-t border-gray-200 bg-white pb-4 text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
-            <IncomeMemberCard
-              v-for="member in slicedList"
-              :key="member._id"
-              as="li"
-              class="w-full"
-              :member="member" />
-            <!-- Next members are rendered when reaching the end of the list -->
-            <li v-if="hasMore" ref="endOfList" class="flex justify-center py-4">
-              <LoadingSpinner class="size-6" />
-            </li>
-          </ol>
-        </template>
+          :title="$t('stats.incomes.members.onMissingDate.title')" />
+      </section>
+
+      <!-- Members: skeleton while loading, list, or empty state -->
+      <section
+        v-if="state.isMembersListVisible"
+        class="flex max-w-xl shrink grow flex-col self-stretch overflow-hidden">
+        <AppSearchField
+          id="members-search"
+          v-model="state.search"
+          class="m-4 self-stretch"
+          clearable
+          hide-details
+          input-class="pr-0"
+          name="members-search"
+          :placeholder="$t('stats.incomes.members.search.placeholder')">
+          <template #after>
+            <Menu as="div" class="relative -ml-px block">
+              <MenuButton
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
+                <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
+                <span class="ml-2 whitespace-nowrap max-sm:hidden">
+                  {{
+                    $t('stats.incomes.members.sort.label', {
+                      ...(state.sort && {
+                        suffix: $t(
+                          `stats.incomes.members.sort.value.${state.sort}`,
+                        ).toLocaleLowerCase(),
+                      }),
+                    })
+                  }}
+                </span>
+                <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
+              </MenuButton>
+              <Transition
+                enter-active-class="transition ease-out duration-100"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95">
+                <MenuItems
+                  class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  <div class="py-1">
+                    <MenuItem
+                      v-for="listSorter in ALL_LIST_SORTERS"
+                      :key="`members-list-sort-${listSorter.key}`"
+                      v-slot="{ active, close }">
+                      <button
+                        :class="[
+                          active &&
+                            'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
+                          'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
+                        ]"
+                        @click="
+                          () => {
+                            state.sort = listSorter.key !== state.sort ? listSorter.key : null;
+                            close();
+                          }
+                        ">
+                        {{ $t(`stats.incomes.members.sort.value.${listSorter.key}`) }}
+                        <AppIcon
+                          v-if="listSorter.key === state.sort"
+                          class="-mr-1.5 ml-2.5 size-4 shrink-0"
+                          :icon="mdiCheck" />
+                      </button>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+              </Transition>
+            </Menu>
+          </template>
+        </AppSearchField>
+        <ol
+          v-if="isPendingIncomes"
+          aria-hidden="true"
+          class="grow divide-y divide-gray-200 overflow-hidden border-t border-gray-200 bg-white text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
+          <li v-for="index in 8" :key="`member-skeleton-${index}`">
+            <MemberCard loading />
+          </li>
+        </ol>
+        <EmptyState
+          v-else-if="!filteredList.length"
+          :animation="EmptyOffice"
+          animation-class="!-my-8"
+          class="m-auto"
+          :description="$t('stats.incomes.members.empty.description')"
+          loop
+          :title="$t('stats.incomes.members.empty.title')" />
+        <ol
+          v-else
+          ref="membersList"
+          class="grow divide-y divide-gray-200 overflow-y-scroll border-t border-gray-200 bg-white pb-4 text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
+          <IncomeMemberCard
+            v-for="member in slicedList"
+            :key="member._id"
+            as="li"
+            class="w-full"
+            :member="member" />
+          <!-- Next members are rendered when reaching the end of the list -->
+          <li v-if="hasMore" ref="endOfList" class="flex justify-center py-4">
+            <LoadingSpinner class="size-6" />
+          </li>
+        </ol>
       </section>
     </div>
   </AppDialog>
@@ -321,15 +342,17 @@
 <script setup lang="ts">
 import IncomeMemberCard from './IncomeMemberCard.vue';
 import StatsIncomeSankeyChart from './StatsIncomeSankeyChart.vue';
+import StatsPeriodSummarySkeleton from '../StatsPeriodSummarySkeleton.vue';
 import { useStatsColors } from '../statsColors';
 import EmptyOffice from '@/assets/animations/empty-office.lottie';
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
-import ErrorState from '@/components/ErrorState.vue';
+import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import MemberCard from '@/components/MemberCard.vue';
 import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
-import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
@@ -354,7 +377,6 @@ import {
   mdiCheck,
   mdiChevronDown,
   mdiClose,
-  mdiRefresh,
   mdiSort,
 } from '@mdi/js';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';

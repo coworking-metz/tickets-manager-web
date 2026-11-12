@@ -25,19 +25,29 @@
     @click="open"
     @keydown.enter.prevent="open"
     @keydown.space.prevent="open">
+    <!--
+      Elements around the field (e.g. previous / next period buttons) have their own action:
+      their clicks and keys must not reach the field and open the calendar
+    -->
     <template #before>
-      <slot name="before" />
+      <div class="contents" @click.stop @keydown.enter.stop @keydown.space.stop>
+        <slot name="before" />
+      </div>
     </template>
     <template v-for="(_, slot) of otherSlots" #[slot]="scope" :key="slot">
       <slot :name="slot" v-bind="scope" />
     </template>
     <template #after>
-      <slot name="after" />
+      <div class="contents" @click.stop @keydown.enter.stop @keydown.space.stop>
+        <slot name="after" />
+      </div>
     </template>
   </AppTextField>
 
+  <!-- Focus the close button rather than the first calendar day -->
   <AppDialogConfirm
     v-model="state.isCalendarOpen"
+    initial-focus="close"
     panel-class="sm:max-w-4xl"
     :title="label"
     @confirm="onConfirm">

@@ -58,6 +58,10 @@
       "title": "Personne"
     },
     "navigateTo": "Consulter le profil de {name}",
+    "onMissingDate": {
+      "description": "Sélectionnez une date pour visualiser le détail de la consommation.",
+      "title": "Aucune donnée"
+    },
     "search": {
       "empty": {
         "title": "Aucun résultat"
@@ -110,6 +114,9 @@
         "threshold": "sur {amount} de charges fixes"
       }
     }
+  },
+  "onFetch": {
+    "fail": "Impossible de récupérer la consommation"
   },
   "period": {
     "label": "Période",

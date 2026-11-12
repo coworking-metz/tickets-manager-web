@@ -58,6 +58,10 @@
       "title": "No one"
     },
     "navigateTo": "Navigate to {name} profile",
+    "onMissingDate": {
+      "description": "Select a date to visualize consumption details.",
+      "title": "No data"
+    },
     "search": {
       "empty": {
         "title": "No results"
@@ -107,6 +111,9 @@
         "threshold": "over {amount} of fixed charges"
       }
     }
+  },
+  "onFetch": {
+    "fail": "Unable to fetch the consumption"
   },
   "period": {
     "label": "Period",

@@ -141,6 +141,9 @@
       }
     }
   },
+  "onFetch": {
+    "fail": "Impossible de récupérer les revenus"
+  },
   "period": {
     "label": "Période",
     "placeholder": "Choissisez une période",

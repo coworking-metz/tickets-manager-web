@@ -2,14 +2,23 @@
   <AppDialog
     v-model="isVisible"
     v-bind="$attrs"
-    dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-[1440px] h-full grow">
+    dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-[1280px] 4xl:max-w-[1440px] h-full grow">
     <LoadingProgressBar v-if="isFetchingUsages" class="absolute top-0 h-px w-full" />
     <header class="mx-3 flex flex-row items-start justify-center sm:mx-24">
-      <h2
-        v-if="title"
-        class="mx-auto shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-        {{ title }}
-      </h2>
+      <div class="mx-auto flex shrink flex-row items-center overflow-hidden">
+        <h2
+          v-if="title"
+          class="shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+          {{ title }}
+        </h2>
+        <ErrorBadge
+          v-if="usagesErrorText"
+          class="ml-2 shrink-0"
+          :description="usagesErrorText"
+          :retrying="isFetchingUsages"
+          :title="$t('stats.usage.onFetch.fail')"
+          @retry="refetchUsages" />
+      </div>
       <div
         class="absolute top-3 right-3 flex flex-row items-center gap-1 rounded-full bg-white/5 backdrop-blur-xl dark:bg-neutral-800/5">
         <div class="relative">
@@ -44,170 +53,171 @@
 
     <div
       class="flex shrink grow basis-0 flex-row divide-x divide-gray-200 overflow-hidden dark:divide-neutral-700">
-      <!-- Scrolls on its own when its content does not fit -->
+      <!-- Summary: skeleton while loading, content, or empty state. Scrolls on its own when its content does not fit -->
       <section
-        v-if="selectedUsage"
         class="flex h-full shrink grow basis-0 flex-row flex-wrap items-stretch gap-4 overflow-y-auto p-4 sm:pr-6">
-        <div
-          :class="[
-            'relative flex w-full min-w-64 shrink grow basis-0 flex-col overflow-hidden',
-            !state.isMembersListVisible && 'min-h-72',
-          ]">
-          <StatsUsageDistributionChart
-            v-model:selected="state.filters"
-            class="min-h-40 shrink grow basis-0 overflow-hidden"
-            :usage="selectedUsage.data" />
-          <AppButtonIcon
-            v-if="state.filters.length"
-            class="absolute! top-1/2 left-1/2 -translate-1/2"
-            :icon="mdiRestore"
-            :title="$t('action.reset')"
-            @click="() => (state.filters = [])" />
-        </div>
-        <StatsPeriodSummary
-          v-if="summary"
-          class="mx-auto w-full max-w-md min-w-64 shrink grow basis-0 self-center dark:text-gray-300"
-          interactive
-          v-bind="summary"
-          @select="onSummarySelect" />
-      </section>
-
-      <!-- Kept while loading or on error, to display these states -->
-      <section
-        v-if="state.isMembersListVisible || !selectedUsage"
-        class="flex max-w-lg shrink grow flex-col self-stretch overflow-hidden">
-        <LoadingSpinner v-if="isPendingUsages" class="mx-auto size-16 grow" />
-        <ErrorState
-          v-else-if="usagesErrorText"
-          class="m-auto"
-          :description="usagesErrorText"
-          :title="$t('stats.usage.onFetch.fail')">
-          <template #action>
-            <AppButtonPlain
-              class="mt-6 dark:focus:ring-offset-neutral-800"
-              color="neutral"
-              :icon="mdiRefresh"
-              :loading="isPendingUsages"
-              @click="refetchUsages">
-              {{ $t('action.retry') }}
-            </AppButtonPlain>
-          </template>
-        </ErrorState>
-        <ErrorState
-          v-else-if="!selectedUsage"
+        <template v-if="isPendingUsages">
+          <div class="flex w-full min-w-64 shrink grow basis-0 items-center justify-center">
+            <!-- Sunburst ring -->
+            <div class="relative aspect-square w-full max-w-64">
+              <LoadingSkeleton class="size-full rounded-full" />
+              <div
+                aria-hidden="true"
+                class="absolute inset-1/4 rounded-full bg-white dark:bg-neutral-800" />
+            </div>
+          </div>
+          <StatsPeriodSummarySkeleton
+            class="mx-auto w-full max-w-md min-w-64 shrink grow basis-0" />
+        </template>
+        <template v-else-if="selectedUsage">
+          <div
+            :class="[
+              'relative flex w-full min-w-64 shrink grow basis-0 flex-col overflow-hidden',
+              !state.isMembersListVisible && 'min-h-72',
+            ]">
+            <StatsUsageDistributionChart
+              v-model:selected="state.filters"
+              class="min-h-40 shrink grow basis-0 overflow-hidden"
+              :usage="selectedUsage.data" />
+            <AppButtonIcon
+              v-if="state.filters.length"
+              class="absolute! top-1/2 left-1/2 -translate-1/2"
+              :icon="mdiFilterOff"
+              :title="$t('action.reset')"
+              @click="() => (state.filters = [])" />
+          </div>
+          <StatsPeriodSummary
+            v-if="summary"
+            class="mx-auto w-full max-w-md min-w-64 shrink grow basis-0 self-center dark:text-gray-300"
+            interactive
+            v-bind="summary"
+            @select="onSummarySelect" />
+        </template>
+        <EmptyState
+          v-else
           class="m-auto"
           :description="$t('stats.usage.members.onMissingDate.description')"
-          :title="$t('stats.usage.members.onMissingDate.title')">
-          <template #action><i></i></template>
-        </ErrorState>
-        <template v-else>
-          <AppSearchField
-            id="members-search"
-            v-model="state.search"
-            class="m-4 self-stretch"
-            clearable
-            hide-details
-            input-class="pr-0"
-            name="members-search"
-            :placeholder="$t('stats.usage.members.search.placeholder')">
-            <template #after>
-              <Menu as="div" class="relative -ml-px block">
-                <MenuButton
-                  class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
-                  <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
-                  <span class="ml-2 whitespace-nowrap max-sm:hidden">
-                    {{
-                      $t('stats.usage.members.sort.label', {
-                        ...(state.sort && {
-                          suffix: $t(
-                            `stats.usage.members.sort.value.${state.sort}`,
-                          ).toLocaleLowerCase(),
-                        }),
-                      })
-                    }}
-                  </span>
-                  <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
-                </MenuButton>
-                <Transition
-                  enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95"
-                  enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100"
-                  leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems
-                    class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
-                    <div class="py-1">
-                      <MenuItem
-                        v-for="listSorter in ALL_LIST_SORTERS"
-                        :key="`members-list-sort-${listSorter.key}`"
-                        v-slot="{ active, close }">
-                        <button
-                          :class="[
-                            active &&
-                              'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
-                            'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
-                          ]"
-                          @click="
-                            () => {
-                              state.sort = listSorter.key !== state.sort ? listSorter.key : null;
-                              close();
-                            }
-                          ">
-                          {{ $t(`stats.usage.members.sort.value.${listSorter.key}`) }}
-                          <AppIcon
-                            v-if="listSorter.key === state.sort"
-                            class="-mr-1.5 ml-2.5 size-4 shrink-0"
-                            :icon="mdiCheck" />
-                        </button>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </Transition>
-              </Menu>
-            </template>
-          </AppSearchField>
-          <EmptyState
-            v-if="!filteredList.length"
-            :animation="EmptyOffice"
-            animation-class="!-my-8"
-            class="m-auto"
-            :description="$t('stats.usage.members.empty.description')"
-            loop
-            :title="$t('stats.usage.members.empty.title')" />
-          <ol
-            v-else
-            ref="membersList"
-            class="grow divide-y divide-gray-200 overflow-y-scroll border-t border-gray-200 bg-white pb-4 text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
-            <UsageMemberCard
-              v-for="member in slicedList"
-              :key="member._id"
-              as="li"
-              class="w-full"
-              :filters="state.filters"
-              :member="member"
-              :prices="{ tickets: ticketsPrices, subscriptions: subscriptionsPrices }">
-              <template v-if="state.sort === 'activity'" #chips:prepend>
-                <span
-                  class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
-                  :style="`background-color: ${statsColors.activity}88; --tw-ring-color: ${statsColors.activity};`">
-                  <i18n-t
-                    keypath="stats.usage.activity.count"
-                    :plural="computeActivityFromUsage(member.usage)"
-                    scope="global">
-                    <template #count>
-                      {{ fractionNumber(computeActivityFromUsage(member.usage)) }}
-                    </template>
-                  </i18n-t>
+          :title="$t('stats.usage.members.onMissingDate.title')" />
+      </section>
+
+      <!-- Members: skeleton while loading, list, or empty state -->
+      <section
+        v-if="state.isMembersListVisible"
+        class="flex max-w-lg shrink grow flex-col self-stretch overflow-hidden">
+        <AppSearchField
+          id="members-search"
+          v-model="state.search"
+          class="m-4 self-stretch"
+          clearable
+          hide-details
+          input-class="pr-0"
+          name="members-search"
+          :placeholder="$t('stats.usage.members.search.placeholder')">
+          <template #after>
+            <Menu as="div" class="relative -ml-px block">
+              <MenuButton
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
+                <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
+                <span class="ml-2 whitespace-nowrap max-sm:hidden">
+                  {{
+                    $t('stats.usage.members.sort.label', {
+                      ...(state.sort && {
+                        suffix: $t(
+                          `stats.usage.members.sort.value.${state.sort}`,
+                        ).toLocaleLowerCase(),
+                      }),
+                    })
+                  }}
                 </span>
-              </template>
-            </UsageMemberCard>
-            <!-- Next members are rendered when reaching the end of the list -->
-            <li v-if="hasMore" ref="endOfList" class="flex justify-center py-4">
-              <LoadingSpinner class="size-6" />
-            </li>
-          </ol>
-        </template>
+                <AppIcon class="-mr-1.5 ml-2.5 size-5 text-gray-400" :icon="mdiChevronDown" />
+              </MenuButton>
+              <Transition
+                enter-active-class="transition ease-out duration-100"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95">
+                <MenuItems
+                  class="absolute right-0 z-10 mt-2 -mr-1 w-56 origin-top-right rounded-md bg-white text-gray-700 shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-neutral-600 dark:bg-neutral-800 dark:text-gray-300">
+                  <div class="py-1">
+                    <MenuItem
+                      v-for="listSorter in ALL_LIST_SORTERS"
+                      :key="`members-list-sort-${listSorter.key}`"
+                      v-slot="{ active, close }">
+                      <button
+                        :class="[
+                          active &&
+                            'bg-gray-100 text-gray-900 dark:bg-neutral-900 dark:text-gray-100',
+                          'flex w-full flex-row justify-between gap-3 px-4 py-2 sm:text-sm',
+                        ]"
+                        @click="
+                          () => {
+                            state.sort = listSorter.key !== state.sort ? listSorter.key : null;
+                            close();
+                          }
+                        ">
+                        {{ $t(`stats.usage.members.sort.value.${listSorter.key}`) }}
+                        <AppIcon
+                          v-if="listSorter.key === state.sort"
+                          class="-mr-1.5 ml-2.5 size-4 shrink-0"
+                          :icon="mdiCheck" />
+                      </button>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+              </Transition>
+            </Menu>
+          </template>
+        </AppSearchField>
+        <ol
+          v-if="isPendingUsages"
+          aria-hidden="true"
+          class="grow divide-y divide-gray-200 overflow-hidden border-t border-gray-200 bg-white text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
+          <li v-for="index in 8" :key="`member-skeleton-${index}`">
+            <MemberCard loading />
+          </li>
+        </ol>
+        <EmptyState
+          v-else-if="!filteredList.length"
+          :animation="EmptyOffice"
+          animation-class="!-my-8"
+          class="m-auto"
+          :description="$t('stats.usage.members.empty.description')"
+          loop
+          :title="$t('stats.usage.members.empty.title')" />
+        <ol
+          v-else
+          ref="membersList"
+          class="grow divide-y divide-gray-200 overflow-y-scroll border-t border-gray-200 bg-white pb-4 text-sm ring-1 ring-black/5 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-800">
+          <UsageMemberCard
+            v-for="member in slicedList"
+            :key="member._id"
+            as="li"
+            class="w-full"
+            :filters="state.filters"
+            :member="member"
+            :prices="{ tickets: ticketsPrices, subscriptions: subscriptionsPrices }">
+            <template v-if="state.sort === 'activity'" #chips:prepend>
+              <span
+                class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
+                :style="`background-color: ${statsColors.activity}88; --tw-ring-color: ${statsColors.activity};`">
+                <i18n-t
+                  keypath="stats.usage.activity.count"
+                  :plural="computeActivityFromUsage(member.usage)"
+                  scope="global">
+                  <template #count>
+                    {{ fractionNumber(computeActivityFromUsage(member.usage)) }}
+                  </template>
+                </i18n-t>
+              </span>
+            </template>
+          </UsageMemberCard>
+          <!-- Next members are rendered when reaching the end of the list -->
+          <li v-if="hasMore" ref="endOfList" class="flex justify-center py-4">
+            <LoadingSpinner class="size-6" />
+          </li>
+        </ol>
       </section>
     </div>
   </AppDialog>
@@ -217,17 +227,19 @@
 import StatsUsageDistributionChart from './StatsUsageDistributionChart.vue';
 import UsageMemberCard from './UsageMemberCard.vue';
 import StatsPeriodSummary from '../StatsPeriodSummary.vue';
+import StatsPeriodSummarySkeleton from '../StatsPeriodSummarySkeleton.vue';
 import { getDistinctPrices } from '../priceBreakdown';
 import { useStatsColors } from '../statsColors';
 import { buildPriceRows, StatsTooltipRow } from '../statsTooltip';
 import EmptyOffice from '@/assets/animations/empty-office.lottie';
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
-import ErrorState from '@/components/ErrorState.vue';
+import ErrorBadge from '@/components/ErrorBadge.vue';
 import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import MemberCard from '@/components/MemberCard.vue';
 import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
-import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
@@ -257,8 +269,7 @@ import {
   mdiCheck,
   mdiChevronDown,
   mdiClose,
-  mdiRefresh,
-  mdiRestore,
+  mdiFilterOff,
   mdiSort,
 } from '@mdi/js';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
