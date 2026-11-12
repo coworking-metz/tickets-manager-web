@@ -136,7 +136,7 @@
       </dl>
     </section>
 
-    <StatsIncomeMembersDialog
+    <StatsIncomeDetailDialog
       v-model="state.isDialogVisible"
       :date="date"
       :frequency="frequency"
@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts" setup>
-import StatsIncomeMembersDialog from './StatsIncomeMembersDialog.vue';
+import StatsIncomeDetailDialog from './StatsIncomeDetailDialog.vue';
 import StatsIncomePeriodGraph from './StatsIncomePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
@@ -166,6 +166,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { useComponentRenderer } from '@/helpers/render';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
@@ -175,7 +176,10 @@ import {
   WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
 } from '@/services/api/stats/income';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
+import StatsPeriodSummary from '@/views/Private/Stats/StatsPeriodSummary.vue';
+import { getDistinctPrices } from '@/views/Private/Stats/priceBreakdown';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
+import { buildPriceRows } from '@/views/Private/Stats/statsTooltip';
 import { Head } from '@unhead/vue/components';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -280,6 +284,15 @@ const getTooltipTitle = (date: string) => {
   }
 };
 
+const renderComponent = useComponentRenderer();
+// Same prices as the bar chart series, so each price gets the same shade in the tooltip
+const ticketsPrices = computed(() =>
+  getDistinctPrices((incomes.value ?? []).map(({ data }) => data.tickets.byPrice)),
+);
+const subscriptionsPrices = computed(() =>
+  getDistinctPrices((incomes.value ?? []).map(({ data }) => data.subscriptions.byPrice)),
+);
+
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
     className:
@@ -289,90 +302,69 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
         data: { income, tickets, subscriptions, memberships, charges },
         date, // @ts-ignore
       } = (incomes.value ?? [])[params[0].dataIndex];
-      return `
-        <dl class="flex flex-col gap-1 p-4">
-          <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
-            ${getTooltipTitle(date)}
-          </dt>
-
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.membershipOrder
-              };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.memberships.label`, {
-                count: memberships.count,
-              })}
-            </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
-              memberships.amount,
-            )}</dd>
-          </div>
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.ticketOrder
-              };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.tickets.label`, {
-                count: tickets.count,
-              })}
-            </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
-              tickets.amount,
-            )}</dd>
-          </div>
-          ${
-            tickets.byPrice.length > 1
-              ? tickets.byPrice
-                  .map(
-                    ({ price, count }) => `
-            <div class="flex flex-row justify-between place-items-end pl-4">
-              <dt class="text-sm text-gray-500 dark:text-gray-400">
-                ${i18n.t('stats.incomes.tickets.byPrice.label', {
+      return renderComponent(StatsPeriodSummary, {
+        class: 'p-4',
+        title: getTooltipTitle(date),
+        rows: [
+          {
+            color: statsColors.value.membershipOrder,
+            label: i18n.t(
+              `${i18nKeyPrefix.value}.graph.tooltip.memberships.label`,
+              { count: memberships.count },
+              memberships.count,
+            ),
+            amount: formatAmount(memberships.amount),
+          },
+          {
+            color: statsColors.value.ticketOrder,
+            label: i18n.t(
+              `${i18nKeyPrefix.value}.graph.tooltip.tickets.label`,
+              { count: tickets.count },
+              tickets.count,
+            ),
+            amount: formatAmount(tickets.amount),
+            children: buildPriceRows({
+              byPrice: tickets.byPrice,
+              prices: ticketsPrices.value,
+              color: statsColors.value.ticketOrder,
+              ramp: statsColors.value.ticketPrices,
+              formatLabel: ({ count, price }) =>
+                i18n.t(
+                  'stats.incomes.tickets.byPrice.label',
+                  { count, price: formatAmount(price) },
                   count,
-                  price: formatAmount(price),
-                })}
-              </dt>
-            </div>`,
-                  )
-                  .join('')
-              : ''
-          }
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.subscriptionOrder
-              };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.tooltip.subscriptions.label`, {
-                count: subscriptions.count,
-              })}
-            </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
-              subscriptions.amount,
-            )}</dd>
-          </div>
-
-          <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            ${formatAmount(income)}
-          </dd>
-
-          <div class="flex flex-row justify-between place-items-end">
-            <dt class="flex flex-row gap-1 items-center text-base font-normal">
-              <span class="block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.charges
-              };"></span>
-              ${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}
-            </dt>
-            <dd class="ml-6 text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
-          </div>
-
-          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full text-base font-medium md:mt-2 lg:mt-0 ${
-            income > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-          }">
-            ${income > charges ? '+' : ''}${formatAmount(income - charges)}
-          </div>
-        </dl>
-      `;
+                ),
+              formatAmount,
+            }),
+          },
+          {
+            color: statsColors.value.subscriptionOrder,
+            label: i18n.t(
+              `${i18nKeyPrefix.value}.graph.tooltip.subscriptions.label`,
+              { count: subscriptions.count },
+              subscriptions.count,
+            ),
+            amount: formatAmount(subscriptions.amount),
+            children: buildPriceRows({
+              byPrice: subscriptions.byPrice,
+              prices: subscriptionsPrices.value,
+              color: statsColors.value.subscriptionOrder,
+              ramp: statsColors.value.subscriptionPrices,
+              formatLabel: ({ count, price }) =>
+                i18n.t(
+                  'stats.incomes.subscriptions.byPrice.label',
+                  { count, price: formatAmount(price) },
+                  count,
+                ),
+              formatAmount,
+            }),
+          },
+        ],
+        total: income,
+        charges,
+        chargesLabel: i18n.t(`${i18nKeyPrefix.value}.graph.threshold`),
+        chargesColor: statsColors.value.charges,
+      });
     },
   },
   xAxis: {

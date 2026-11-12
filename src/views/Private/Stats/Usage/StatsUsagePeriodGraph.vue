@@ -10,6 +10,7 @@
 <script lang="ts" setup>
 import { fractionAmount } from '@/helpers/currency';
 import { PeriodUsage } from '@/services/api/stats/usage';
+import { buildPriceSeries } from '@/views/Private/Stats/priceBreakdown';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -123,32 +124,26 @@ const options = computed<
           },
         ]
       : [
-          {
-            silent: props.disabled,
+          ...buildPriceSeries({
             name: 'subscriptions',
-            data: props.usages.map(({ data }) => ({
-              value: data.subscriptions.amount,
-              itemStyle: {
-                color: statsColors.value.subscription,
-              },
-            })),
-            type: 'bar',
             stack: 'usage',
-            triggerLineEvent: true,
-          },
-          {
-            silent: props.disabled,
+            color: statsColors.value.subscription,
+            ramp: statsColors.value.subscriptionPrices,
+            periods: props.usages,
+            getTotal: ({ data }) => data.subscriptions.amount,
+            getByPrice: ({ data }) => data.subscriptions.byPrice,
+            disabled: props.disabled,
+          }),
+          ...buildPriceSeries({
             name: 'tickets',
-            data: props.usages.map(({ data }) => ({
-              value: data.tickets.amount,
-              itemStyle: {
-                color: statsColors.value.ticket,
-              },
-            })),
-            type: 'bar',
             stack: 'usage',
-            triggerLineEvent: true,
-          },
+            color: statsColors.value.ticket,
+            ramp: statsColors.value.ticketPrices,
+            periods: props.usages,
+            getTotal: ({ data }) => data.tickets.amount,
+            getByPrice: ({ data }) => data.tickets.byPrice,
+            disabled: props.disabled,
+          }),
           {
             silent: props.disabled,
             name: 'debt',
@@ -156,6 +151,8 @@ const options = computed<
               value: data.tickets.debt.amount,
               itemStyle: {
                 color: statsColors.value.debt,
+                // Hatched to be told apart from the lightest (cheapest) tickets
+                decal: statsColors.value.debtDecal,
               },
             })),
             type: 'bar',

@@ -4,36 +4,54 @@
     v-bind="$attrs"
     dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-[1680px] h-full grow">
     <LoadingProgressBar v-if="isFetchingIncomes" class="absolute top-0 h-px w-full" />
-    <header v-if="title" class="mx-3 flex flex-row items-start justify-center sm:mx-12">
-      <AppButtonIcon
-        class="absolute top-3 right-3 dark:ring-offset-neutral-800"
-        :icon="mdiClose"
-        tabindex="0"
-        :title="$t('action.close')"
-        @click="() => (isVisible = false)" />
-      <AppButtonText
-        class="mx-auto shrink overflow-hidden"
-        color="gray"
-        @click="() => (state.isSummaryVisible = !state.isSummaryVisible)">
-        <h2
-          class="shrink truncate text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-          {{ title }}
-        </h2>
-        <AppIcon
-          class="shrink-0 dark:text-gray-500"
-          :icon="state.isSummaryVisible ? mdiUnfoldLessHorizontal : mdiUnfoldMoreHorizontal" />
-      </AppButtonText>
+    <header class="mx-3 flex flex-row items-start justify-center sm:mx-24">
+      <h2
+        v-if="title"
+        class="mx-auto shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+        {{ title }}
+      </h2>
+      <div
+        class="absolute top-3 right-3 flex flex-row items-center gap-1 rounded-full bg-white/5 backdrop-blur-xl dark:bg-neutral-800/5">
+        <div class="relative">
+          <AppButtonIcon
+            :aria-pressed="state.isMembersListVisible"
+            class="dark:ring-offset-neutral-800"
+            :icon="state.isMembersListVisible ? mdiAccountMultiple : mdiAccountMultipleOutline"
+            tabindex="0"
+            :title="
+              $t(
+                state.isMembersListVisible
+                  ? 'stats.incomes.members.toggle.hide'
+                  : 'stats.incomes.members.toggle.show',
+              )
+            "
+            @click="() => (state.isMembersListVisible = !state.isMembersListVisible)" />
+          <span
+            v-if="selectedIncome"
+            class="pointer-events-none absolute -bottom-2 -left-2 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-indigo-600 px-1 text-[10px] leading-none font-semibold text-white tabular-nums ring-2 ring-white dark:bg-indigo-500 dark:ring-neutral-800">
+            {{ filteredList.length }}
+          </span>
+        </div>
+        <AppButtonIcon
+          class="dark:ring-offset-neutral-800"
+          :icon="mdiClose"
+          tabindex="0"
+          :title="$t('action.close')"
+          @click="() => (isVisible = false)" />
+      </div>
     </header>
 
     <div
       class="flex shrink grow basis-0 flex-row divide-x divide-gray-200 overflow-hidden dark:divide-neutral-700">
+      <!-- Scrolls on its own when its content does not fit -->
       <section
-        v-if="selectedIncome && state.isSummaryVisible"
-        class="flex h-full shrink grow basis-0 flex-col items-center gap-4 overflow-hidden p-4 sm:pr-6">
+        v-if="selectedIncome"
+        class="flex h-full shrink grow basis-0 flex-col items-center gap-4 overflow-y-auto p-4 sm:pr-6">
         <StatsIncomeSankeyChart
           class="min-h-64 w-full shrink grow basis-0 overflow-hidden"
           :income="selectedIncome.data" />
-        <dl class="flex w-full shrink grow grow basis-0 flex-col gap-1 dark:text-gray-300">
+        <dl
+          class="flex w-full max-w-md min-w-80 shrink grow basis-0 flex-col gap-1 dark:text-gray-300">
           <div
             v-if="selectedIncome.data.tickets.count"
             class="flex flex-row items-start justify-between">
@@ -176,7 +194,10 @@
         </dl>
       </section>
 
-      <section class="flex shrink grow basis-0 flex-col self-stretch overflow-hidden">
+      <!-- Kept while loading or on error, to display these states -->
+      <section
+        v-if="state.isMembersListVisible || !selectedIncome"
+        class="flex max-w-xl shrink grow flex-col self-stretch overflow-hidden">
         <LoadingSpinner v-if="isPendingIncomes" class="mx-auto size-16 grow" />
         <ErrorState
           v-else-if="incomesErrorText"
@@ -304,7 +325,6 @@ import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
@@ -323,16 +343,17 @@ import {
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
+  mdiAccountMultiple,
+  mdiAccountMultipleOutline,
   mdiCheck,
   mdiChevronDown,
   mdiClose,
   mdiRefresh,
   mdiSort,
-  mdiUnfoldLessHorizontal,
-  mdiUnfoldMoreHorizontal,
 } from '@mdi/js';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { compact } from 'lodash';
-import { computed, PropType, reactive } from 'vue';
+import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const isVisible = defineModel({
@@ -389,10 +410,12 @@ const props = defineProps({
 
 const i18n = useI18n();
 const statsColors = useStatsColors();
+// Below lg, the members list is hidden by default to leave room for the summary
+const isLargeScreen = useBreakpoints(breakpointsTailwind).greaterOrEqual('lg');
 const state = reactive({
   search: null as string | null,
   sort: 'income' as string | null,
-  isSummaryVisible: false,
+  isMembersListVisible: isLargeScreen.value,
 });
 
 const i18nKeyPrefix = computed(() => {
@@ -555,5 +578,11 @@ const selectedIncome = computed(() => {
   }
 
   return incomes.value?.find((m) => m.date === props.date) || null;
+});
+
+watch(isVisible, (visible) => {
+  if (visible) {
+    state.isMembersListVisible = isLargeScreen.value;
+  }
 });
 </script>

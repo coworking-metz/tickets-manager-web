@@ -35,6 +35,7 @@
   "description": "L'usage des tickets/abonnements ainsi que les bénéfices ou pertes par rapport aux charges fixes.",
   "distribution": {
     "debt": "Dette",
+    "debtCount": "Aucun ticket redevable | {count} ticket redevable | {count} tickets redevables",
     "subscriptions": "Abonnements",
     "tickets": "Tickets"
   },
@@ -70,6 +71,10 @@
         "debt": "Par dette",
         "usage": "Par contribution"
       }
+    },
+    "toggle": {
+      "hide": "Masquer la liste des membres",
+      "show": "Afficher la liste des membres"
     }
   },
   "mode": {
@@ -123,10 +128,16 @@
   },
   "subscriptions": {
     "attending": "dont aucun présent | dont {count} présent | dont {count} présents",
+    "byPrice": {
+      "label": "Aucun jour à {price} | {count} jour à {price} | {count} jours à {price}"
+    },
     "count": "Aucun jour abonné | {count} jour abonné | {count} jours abonnés",
     "label": "Aucun abonnement | {count} jour couvert par abonnement | {count} jours couverts par abonnement"
   },
   "tickets": {
+    "byPrice": {
+      "label": "Aucun ticket à {price} | {count} ticket à {price} | {count} tickets à {price}"
+    },
     "debt": {
       "count": "{count} redevable | {count} redevable | {count} redevables",
       "label": "dont aucun redevable | dont {count} redevable | dont {count} redevables"
