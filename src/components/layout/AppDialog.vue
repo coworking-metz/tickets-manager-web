@@ -1,6 +1,10 @@
 <template>
   <TransitionRoot appear as="template" :show="isVisible" v-bind="$attrs">
-    <Dialog as="div" class="relative z-50" @close="!static ? (isVisible = false) : null">
+    <Dialog
+      as="div"
+      class="relative z-50"
+      :initial-focus="initialFocus"
+      @close="!static ? (isVisible = false) : null">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -42,6 +46,7 @@
 
 <script setup lang="ts">
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { PropType } from 'vue';
 
 const isVisible = defineModel({
   type: Boolean,
@@ -56,6 +61,14 @@ defineProps({
   dialogClass: {
     type: String,
     default: '',
+  },
+  /**
+   * Element focused when opening, instead of the first focusable one.
+   * @see https://headlessui.com/v1/vue/dialog#managing-initial-focus
+   */
+  initialFocus: {
+    type: Object as PropType<HTMLElement | null>,
+    default: null,
   },
 });
 </script>

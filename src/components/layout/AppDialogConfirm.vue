@@ -1,5 +1,7 @@
 <template>
-  <AppDialog v-model="isVisible">
+  <AppDialog
+    v-model="isVisible"
+    :initial-focus="initialFocus === 'close' ? (closeButton?.$el ?? null) : null">
     <template #dialog>
       <DialogPanel
         as="form"
@@ -45,6 +47,7 @@
         </footer>
 
         <AppButtonIcon
+          ref="closeButton"
           class="absolute top-3 right-3 sm:right-4 dark:ring-offset-neutral-800"
           :icon="mdiClose"
           :title="$t('action.close')"
@@ -61,7 +64,7 @@ import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { DialogPanel, DialogTitle } from '@headlessui/vue';
 import { mdiClose } from '@mdi/js';
-import { computed } from 'vue';
+import { computed, PropType, useTemplateRef } from 'vue';
 
 const isVisible = defineModel({
   type: Boolean,
@@ -92,7 +95,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Element focused when opening: the first focusable one by default,
+   * or the close button (e.g. when the content starts with an interactive widget).
+   */
+  initialFocus: {
+    type: String as PropType<'auto' | 'close'>,
+    default: 'auto',
+  },
 });
+
+const closeButton = useTemplateRef<InstanceType<typeof AppButtonIcon>>('closeButton');
 
 const iconColors = computed(() => {
   switch (props.type) {

@@ -141,6 +141,9 @@
       }
     }
   },
+  "onFetch": {
+    "fail": "Unable to fetch the revenue"
+  },
   "period": {
     "label": "Period",
     "placeholder": "Choose a period",
