@@ -34,15 +34,15 @@
           </span>
 
           <span
-            v-if="isVisible('subscriptions') && member.usage.subscriptions.count"
+            v-if="isVisible('subscriptions') && subscriptionsPart.count"
             class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
             :style="`background-color: ${statsColors.subscription}88; --tw-ring-color: ${statsColors.subscription};`">
             <i18n-t
               keypath="stats.usage.subscriptions.count"
-              :plural="member.usage.subscriptions.count"
+              :plural="subscriptionsPart.count"
               scope="global">
               <template #count>
-                {{ fractionNumber(member.usage.subscriptions.count) }}
+                {{ fractionNumber(subscriptionsPart.count) }}
               </template>
             </i18n-t>
           </span>
@@ -85,12 +85,27 @@
           </dd>
         </div>
         <div
+          v-for="row in isVisible('tickets') ? ticketsPriceRows : []"
+          :key="`tickets-price-${row.label}`"
+          class="flex flex-row items-start justify-between pl-4.5">
+          <dt
+            class="flex flex-row items-center gap-1.5 text-left text-sm text-gray-500 dark:text-gray-400">
+            <span
+              class="block size-2 shrink-0 rounded-full"
+              :style="{ backgroundColor: row.color }" />
+            {{ row.label }}
+          </dt>
+          <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
+            {{ row.amount }}
+          </dd>
+        </div>
+        <div
           v-if="isVisible('debt') && member.usage.tickets.debt.count"
           class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
               class="mt-1.5 block size-3 shrink-0 rounded-full"
-              :style="`background-color: ${statsColors.debt};`" />
+              :style="{ background: statsColors.debtPattern }" />
             <i18n-t
               keypath="stats.usage.tickets.debt.label"
               :plural="member.usage.tickets.debt.count"
@@ -109,7 +124,7 @@
           </dd>
         </div>
         <div
-          v-if="isVisible('subscriptions') && member.usage.subscriptions.count"
+          v-if="isVisible('subscriptions') && subscriptionsPart.count"
           class="flex flex-row items-start justify-between">
           <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
             <span
@@ -117,13 +132,17 @@
               :style="`background-color: ${statsColors.subscription};`" />
             <i18n-t
               keypath="stats.usage.subscriptions.label"
-              :plural="member.usage.subscriptions.count"
+              :plural="subscriptionsPart.count"
               scope="global">
               <template #count>
-                {{ fractionNumber(member.usage.subscriptions.count) }}
+                {{ fractionNumber(subscriptionsPart.count) }}
               </template>
             </i18n-t>
-            <template v-if="member.usage.subscriptions.attending.count">
+            <!-- Attendance is not broken down by price -->
+            <template
+              v-if="
+                !getPrices('subscriptions')?.length && member.usage.subscriptions.attending.count
+              ">
               <br />
               <i18n-t
                 keypath="stats.usage.subscriptions.attending"
@@ -136,7 +155,22 @@
             </template>
           </dt>
           <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-            {{ formatAmount(member.usage.subscriptions.amount) }}
+            {{ formatAmount(subscriptionsPart.amount) }}
+          </dd>
+        </div>
+        <div
+          v-for="row in isVisible('subscriptions') ? subscriptionsPriceRows : []"
+          :key="`subscriptions-price-${row.label}`"
+          class="flex flex-row items-start justify-between pl-4.5">
+          <dt
+            class="flex flex-row items-center gap-1.5 text-left text-sm text-gray-500 dark:text-gray-400">
+            <span
+              class="block size-2 shrink-0 rounded-full"
+              :style="{ backgroundColor: row.color }" />
+            {{ row.label }}
+          </dt>
+          <dd class="font-mono text-sm text-gray-500 dark:text-gray-400">
+            {{ row.amount }}
           </dd>
         </div>
         <div class="flex flex-row items-start justify-between">
@@ -175,7 +209,9 @@
 </template>
 
 <script setup lang="ts">
+import { getDistinctPrices } from '../priceBreakdown';
 import { useStatsColors } from '../statsColors';
+import { buildPriceRows } from '../statsTooltip';
 import AppIcon from '@/components/AppIcon.vue';
 import MemberCard from '@/components/MemberCard.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
@@ -183,14 +219,19 @@ import { formatAmount, fractionNumber } from '@/helpers/currency';
 import { ROUTE_NAMES } from '@/router/names';
 import {
   computeActivityFromUsage,
-  computeUsageAmountInCategories,
+  computeUsageAmountInFilters,
+  getFilteredPrices,
+  getUsageCategoryPart,
+  isSamePrice,
   MemberListItemWithUsage,
   UsageCategory,
+  UsageFilter,
 } from '@/services/api/stats/usage';
 import { theme } from '@/styles/colors';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { mdiChevronDown, mdiChevronRight, mdiChevronUp } from '@mdi/js';
 import { computed, PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   member: {
@@ -202,33 +243,95 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Only display the contributions of these categories.
+   * Only display the contributions matching these filters.
    * An empty list displays all of them.
    */
-  categories: {
-    type: Array as PropType<UsageCategory[]>,
+  filters: {
+    type: Array as PropType<UsageFilter[]>,
     default: () => [],
+  },
+  /**
+   * Prices displayed elsewhere (e.g. the period distribution chart), to use the same shades.
+   * Defaults to the member own prices.
+   */
+  prices: {
+    type: Object as PropType<{ tickets?: number[]; subscriptions?: number[] }>,
+    default: () => ({}),
   },
 });
 
 const statsColors = useStatsColors();
 
 const totalActivity = computed(() => computeActivityFromUsage(props.member.usage));
-const isVisible = (category: UsageCategory) =>
-  !props.categories.length || props.categories.includes(category);
+/**
+ * Prices displayed for a category: `null` when hidden, empty list for the whole category.
+ */
+const getPrices = (category: UsageCategory) =>
+  props.filters.length ? getFilteredPrices(props.filters, category) : [];
+const isVisible = (category: UsageCategory) => getPrices(category) !== null;
+
+const ticketsPart = computed(() =>
+  getUsageCategoryPart(props.member.usage, 'tickets', getPrices('tickets') ?? []),
+);
+const subscriptionsPart = computed(() =>
+  getUsageCategoryPart(props.member.usage, 'subscriptions', getPrices('subscriptions') ?? []),
+);
 
 // Tickets line includes debt only when debt is displayed too
 const displayedTicketsCount = computed(
   () =>
-    props.member.usage.tickets.count +
+    ticketsPart.value.count +
     (isVisible('debt') ? (props.member.usage.tickets.debt?.count ?? 0) : 0),
 );
 const displayedTicketsAmount = computed(
   () =>
-    props.member.usage.tickets.amount +
+    ticketsPart.value.amount +
     (isVisible('debt') ? (props.member.usage.tickets.debt?.amount ?? 0) : 0),
 );
+const i18n = useI18n();
+
+/**
+ * Breakdown by price of a category, restricted to the selected prices if any.
+ */
+const buildCategoryPriceRows = (
+  category: 'tickets' | 'subscriptions',
+  color: string,
+  ramp: string[],
+  labelKey: string,
+) => {
+  const { byPrice } = props.member.usage[category];
+  const selectedPrices = getPrices(category) ?? [];
+  return buildPriceRows({
+    byPrice: selectedPrices.length
+      ? byPrice?.filter((slice) => selectedPrices.some((price) => isSamePrice(price, slice.price)))
+      : byPrice,
+    prices: props.prices[category] ?? getDistinctPrices([byPrice]),
+    color,
+    ramp,
+    formatLabel: ({ count, price }) =>
+      i18n.t(labelKey, { count: fractionNumber(count), price: formatAmount(price) }, count),
+    formatAmount,
+  });
+};
+
+const ticketsPriceRows = computed(() =>
+  buildCategoryPriceRows(
+    'tickets',
+    statsColors.value.ticket,
+    statsColors.value.ticketPrices,
+    'stats.usage.tickets.byPrice.label',
+  ),
+);
+const subscriptionsPriceRows = computed(() =>
+  buildCategoryPriceRows(
+    'subscriptions',
+    statsColors.value.subscription,
+    statsColors.value.subscriptionPrices,
+    'stats.usage.subscriptions.byPrice.label',
+  ),
+);
+
 const displayedAmount = computed(() =>
-  computeUsageAmountInCategories(props.member.usage, props.categories),
+  computeUsageAmountInFilters(props.member.usage, props.filters),
 );
 </script>

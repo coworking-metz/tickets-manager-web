@@ -10,8 +10,8 @@ import {
   PriceBreakdown,
   StatsIncome,
 } from '@/services/api/stats/income';
-import { useTheme } from '@/services/theme';
-import { useStatsColors } from '@/views/Private/Stats/statsColors';
+import { getPriceShade } from '@/views/Private/Stats/priceBreakdown';
+import { getReadableTextColor, useStatsColors } from '@/views/Private/Stats/statsColors';
 import { SankeyChart } from 'echarts/charts.js';
 import { TooltipComponent } from 'echarts/components.js';
 import { use } from 'echarts/core.js';
@@ -40,15 +40,6 @@ const CHARGE_COLORS: Record<ChargeLabel, string> = {
   other: '#9ca3af',
 };
 
-/**
- * Ordinal ramps for the ticket and subscription price tiers, validated with
- * the dataviz skill's validate_palette.js --ordinal against each surface.
- */
-const TICKET_PRICE_RAMP_LIGHT = ['#60a5fa', '#3b82f6', '#1d4ed8', '#1e3a8a'];
-const TICKET_PRICE_RAMP_DARK = ['#1d4ed8', '#3b82f6', '#60a5fa', '#93c5fd'];
-const SUBSCRIPTION_PRICE_RAMP_LIGHT = ['#f59e0b', '#d97706', '#b45309', '#78350f'];
-const SUBSCRIPTION_PRICE_RAMP_DARK = ['#b45309', '#d97706', '#f59e0b', '#fbbf24'];
-
 const TICKETS_NODE = 'tickets';
 const SUBSCRIPTIONS_NODE = 'subscriptions';
 const MEMBERSHIPS_NODE = 'memberships';
@@ -75,17 +66,18 @@ const props = defineProps({
 });
 
 const i18n = useI18n();
-const currentTheme = useTheme();
 const statsColors = useStatsColors();
 
-const priceColor = (ramp: { light: string[]; dark: string[] }, index: number) => {
-  const colors = currentTheme.value === 'dark' ? ramp.dark : ramp.light;
-  return colors[Math.min(index, colors.length - 1)];
-};
-const ticketPriceColor = (index: number) =>
-  priceColor({ light: TICKET_PRICE_RAMP_LIGHT, dark: TICKET_PRICE_RAMP_DARK }, index);
-const subscriptionPriceColor = (index: number) =>
-  priceColor({ light: SUBSCRIPTION_PRICE_RAMP_LIGHT, dark: SUBSCRIPTION_PRICE_RAMP_DARK }, index);
+// Same price shades as the other stats charts (cheapest = lightest)
+const ticketPriceColor = (index: number, count: number) =>
+  getPriceShade(statsColors.value.ticketPrices, index, count, statsColors.value.ticketOrder);
+const subscriptionPriceColor = (index: number, count: number) =>
+  getPriceShade(
+    statsColors.value.subscriptionPrices,
+    index,
+    count,
+    statsColors.value.subscriptionOrder,
+  );
 
 const nodeLabel = (id: string): string => {
   if (id.startsWith('ticketPrice-')) {
@@ -137,13 +129,13 @@ const options = computed<ComposeOption<SankeySeriesOption | TooltipComponentOpti
       name: ticketPriceNodeId(price),
       value: amount,
       depth: 0,
-      itemStyle: { color: ticketPriceColor(index) },
+      itemStyle: { color: ticketPriceColor(index, ticketsByPrice.length) },
     })),
     ...subscriptionsByPrice.map(({ price, amount }, index) => ({
       name: subscriptionPriceNodeId(price),
       value: amount,
       depth: 0,
-      itemStyle: { color: subscriptionPriceColor(index) },
+      itemStyle: { color: subscriptionPriceColor(index, subscriptionsByPrice.length) },
     })),
     // depth 1: income sources
     {
@@ -266,14 +258,21 @@ const options = computed<ComposeOption<SankeySeriesOption | TooltipComponentOpti
         type: 'sankey',
         emphasis: { focus: 'adjacency' },
         label: {
-          formatter: (params) => {
-            const { name, value } = params as CallbackDataParams;
-            const percent = fractionPercentage(percentOf(value as number), i18n.locale.value);
-            return `${nodeLabel(name)}\n${percent}`;
-          },
+          // Labels get their node color as background (see nodes below) rather than a text outline
+          textBorderWidth: 0,
+          padding: [2, 4],
+          borderRadius: 4,
+          // Only the label: amounts and percentages are in the tooltip
+          formatter: (params) => nodeLabel((params as CallbackDataParams).name),
         },
         lineStyle: { color: 'gradient', opacity: 0.3 },
-        nodes,
+        nodes: nodes.map((node) => ({
+          ...node,
+          label: {
+            backgroundColor: node.itemStyle.color,
+            color: getReadableTextColor(node.itemStyle.color),
+          },
+        })),
         links,
       },
     ],

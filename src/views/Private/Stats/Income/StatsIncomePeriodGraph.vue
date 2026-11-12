@@ -10,6 +10,7 @@
 <script lang="ts" setup>
 import { fractionAmount } from '@/helpers/currency';
 import { IncomePeriod } from '@/services/api/stats/income';
+import { buildPriceSeries } from '@/views/Private/Stats/priceBreakdown';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { useWindowSize } from '@vueuse/core';
 import { BarChart, LineChart } from 'echarts/charts.js';
@@ -123,32 +124,26 @@ const options = computed<
           },
         ]
       : [
-          {
-            silent: props.disabled,
+          ...buildPriceSeries({
             name: 'subscriptions',
-            data: props.incomes.map(({ data }) => ({
-              value: data.subscriptions.amount,
-              itemStyle: {
-                color: statsColors.value.subscriptionOrder,
-              },
-            })),
-            type: 'bar',
             stack: 'incomes',
-            triggerLineEvent: true,
-          },
-          {
-            silent: props.disabled,
+            color: statsColors.value.subscriptionOrder,
+            ramp: statsColors.value.subscriptionPrices,
+            periods: props.incomes,
+            getTotal: ({ data }) => data.subscriptions.amount,
+            getByPrice: ({ data }) => data.subscriptions.byPrice,
+            disabled: props.disabled,
+          }),
+          ...buildPriceSeries({
             name: 'tickets',
-            data: props.incomes.map(({ data }) => ({
-              value: data.tickets.amount,
-              itemStyle: {
-                color: statsColors.value.ticketOrder,
-              },
-            })),
-            type: 'bar',
             stack: 'incomes',
-            triggerLineEvent: true,
-          },
+            color: statsColors.value.ticketOrder,
+            ramp: statsColors.value.ticketPrices,
+            periods: props.incomes,
+            getTotal: ({ data }) => data.tickets.amount,
+            getByPrice: ({ data }) => data.tickets.byPrice,
+            disabled: props.disabled,
+          }),
           {
             silent: props.disabled,
             name: 'memberships',

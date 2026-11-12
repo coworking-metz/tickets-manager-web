@@ -35,6 +35,7 @@
   "description": "The use of tickets/subscriptions as well as the gains or losses compared to fixed charges.",
   "distribution": {
     "debt": "Debt",
+    "debtCount": "No payable ticket | {count} payable ticket | {count} payable tickets",
     "subscriptions": "Subscriptions",
     "tickets": "Tickets"
   },
@@ -70,6 +71,10 @@
         "debt": "By debt",
         "usage": "By usage"
       }
+    },
+    "toggle": {
+      "hide": "Hide members list",
+      "show": "Show members list"
     }
   },
   "mode": {
@@ -120,10 +125,16 @@
   },
   "subscriptions": {
     "attending": "with no attendee | with {count} attendee | with {count} attendees",
+    "byPrice": {
+      "label": "No day at {price} | {count} day at {price} | {count} days at {price}"
+    },
     "count": "No subscription | {count} subscription | {count} subscriptions",
     "label": "No subscription | {count} day covered by subscription | {count} days covered by subscription"
   },
   "tickets": {
+    "byPrice": {
+      "label": "No {price} ticket | {count} {price} ticket | {count} {price} tickets"
+    },
     "debt": {
       "count": "No debt | {count} payable | {count} payable",
       "label": "with no payable ticket | with {count} payable ticket | with {count} payable tickets"

@@ -168,7 +168,7 @@
       </dl>
     </section>
 
-    <StatsUsageMembersDialog
+    <StatsUsageDetailDialog
       v-model="state.isDialogVisible"
       :date="date"
       :frequency="frequency"
@@ -186,7 +186,7 @@
 </template>
 
 <script lang="ts" setup>
-import StatsUsageMembersDialog from './StatsUsageMembersDialog.vue';
+import StatsUsageDetailDialog from './StatsUsageDetailDialog.vue';
 import StatsUsagePeriodGraph from './StatsUsagePeriodGraph.vue';
 import AnalyticsGraph from '@/assets/animations/analytics-graph.lottie';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
@@ -198,13 +198,17 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { formatAmount, fractionAmount, fractionPercentage } from '@/helpers/currency';
 import { DATE_FORMAT } from '@/helpers/dates';
+import { useComponentRenderer } from '@/helpers/render';
 import { useMobileWidth } from '@/helpers/screen';
 import { doesRouteBelongsTo } from '@/router/helpers';
 import { ROUTE_NAMES } from '@/router/names';
 import { Frequency } from '@/services/api/stats/frequency';
 import { getUsagePerFrequency, WHOLE_PERIOD_SUMMARY_ROUTE_PARAM } from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
+import StatsPeriodSummary from '@/views/Private/Stats/StatsPeriodSummary.vue';
+import { getDistinctPrices } from '@/views/Private/Stats/priceBreakdown';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
+import { buildPriceRows } from '@/views/Private/Stats/statsTooltip';
 import { Head } from '@unhead/vue/components';
 import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
@@ -322,6 +326,15 @@ const getTooltipTitle = (date: string) => {
   }
 };
 
+const renderComponent = useComponentRenderer();
+// Same prices as the bar chart series, so each price gets the same shade in the tooltip
+const ticketsPrices = computed(() =>
+  getDistinctPrices((usages.value ?? []).map(({ data }) => data.tickets.byPrice)),
+);
+const subscriptionsPrices = computed(() =>
+  getDistinctPrices((usages.value ?? []).map(({ data }) => data.subscriptions.byPrice)),
+);
+
 const { width } = useWindowSize();
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
@@ -334,88 +347,83 @@ const options = computed<ComposeOption<GridComponentOption | TooltipComponentOpt
       } = (usages.value ?? [])[params[0].dataIndex];
       const totalTicketsCount = tickets.count + (tickets.debt?.count ?? 0);
       const totalTicketsAmount = tickets.amount + (tickets.debt?.amount ?? 0);
-      return `
-        <dl class="flex flex-col gap-1 p-4">
-          <dt class="ml-auto truncate font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
-            ${getTooltipTitle(date)}
-          </dt>
-
-          <div class="flex flex-row justify-between items-start">
-            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.ticket
-              };"></span>
-              ${i18n.t(`stats.usage.tickets.label`, {
-                count: totalTicketsCount,
-              })}
-            </dt>
-            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(
-              totalTicketsAmount,
-            )}</dd>
-          </div>
-
-          ${
-            tickets.debt.count
-              ? `<div class="flex flex-row justify-between items-start">
-              <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-                <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
-                  statsColors.value.debt
-                };"></span>
-                ${i18n.t(`stats.usage.tickets.debt.label`, {
-                  count: tickets.debt.count,
-                })}
-              </dt>
-              <dd class="ml-6 font-mono text-base font-medium text-gray-400">-${formatAmount(
-                tickets.debt.amount,
-              )}</dd>
-            </div>`
-              : ''
-          }
-
-          <div class="flex flex-row justify-between items-start">
-            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-              <span class="mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.subscription
-              };"></span>
-              ${i18n.t(
-                isMobile ? `stats.usage.subscriptions.count` : `stats.usage.subscriptions.label`,
+      return renderComponent(StatsPeriodSummary, {
+        class: 'p-4',
+        title: getTooltipTitle(date),
+        rows: [
+          {
+            color: statsColors.value.ticket,
+            label: i18n.t(
+              'stats.usage.tickets.label',
+              { count: totalTicketsCount },
+              totalTicketsCount,
+            ),
+            amount: formatAmount(totalTicketsAmount),
+            children: buildPriceRows({
+              byPrice: tickets.byPrice,
+              prices: ticketsPrices.value,
+              color: statsColors.value.ticket,
+              ramp: statsColors.value.ticketPrices,
+              formatLabel: ({ count, price }) =>
+                i18n.t(
+                  'stats.usage.tickets.byPrice.label',
+                  { count, price: formatAmount(price) },
+                  count,
+                ),
+              formatAmount,
+            }),
+          },
+          ...(tickets.debt.count
+            ? [
                 {
-                  count: subscriptions.count,
+                  color: statsColors.value.debtPattern,
+                  label: i18n.t(
+                    'stats.usage.tickets.debt.label',
+                    { count: tickets.debt.count },
+                    tickets.debt.count,
+                  ),
+                  amount: `-${formatAmount(tickets.debt.amount)}`,
+                  muted: true,
                 },
-              )}${
-                subscriptions.attending.count
-                  ? `<br />${i18n.t(`stats.usage.subscriptions.attending`, {
-                      count: subscriptions.attending.count,
-                    })}`
-                  : ''
-              }
-            </dt>
-            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${fractionAmount(
-              subscriptions.amount,
-            )}</dd>
-          </div>
-
-          <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            ${formatAmount(amount)}
-          </dd>
-
-          <div class="flex flex-row justify-between items-start">
-            <dt class="flex flex-row gap-1.5 items-start text-left text-base font-normal">
-              <span class="shrink-0 mt-1.5 block h-3 w-3 rounded-full" style="background-color: ${
-                statsColors.value.charges
-              };"></span>
-              <span class="max-sm:max-w-32 truncate">${i18n.t(`${i18nKeyPrefix.value}.graph.threshold`)}</span>
-            </dt>
-            <dd class="ml-6 font-mono text-base font-medium text-gray-900 dark:text-gray-100">${formatAmount(-charges)}</dd>
-          </div>
-
-          <div class="-mr-2.5 inline-flex self-end items-baseline px-2.5 py-0.5 rounded-full font-mono text-base font-medium md:mt-2 lg:mt-0 ${
-            amount > charges ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-          }">
-            ${amount > charges ? '+' : ''}${formatAmount(amount - charges)}
-          </div>
-        </dl>
-      `;
+              ]
+            : []),
+          {
+            color: statsColors.value.subscription,
+            label: i18n.t(
+              isMobile.value
+                ? 'stats.usage.subscriptions.count'
+                : 'stats.usage.subscriptions.label',
+              { count: subscriptions.count },
+              subscriptions.count,
+            ),
+            ...(subscriptions.attending.count && {
+              sublabel: i18n.t(
+                'stats.usage.subscriptions.attending',
+                { count: subscriptions.attending.count },
+                subscriptions.attending.count,
+              ),
+            }),
+            amount: fractionAmount(subscriptions.amount),
+            children: buildPriceRows({
+              byPrice: subscriptions.byPrice,
+              prices: subscriptionsPrices.value,
+              color: statsColors.value.subscription,
+              ramp: statsColors.value.subscriptionPrices,
+              formatLabel: ({ count, price }) =>
+                i18n.t(
+                  'stats.usage.subscriptions.byPrice.label',
+                  { count, price: formatAmount(price) },
+                  count,
+                ),
+              formatAmount,
+            }),
+          },
+        ],
+        total: amount,
+        charges,
+        chargesLabel: i18n.t(`${i18nKeyPrefix.value}.graph.threshold`),
+        chargesColor: statsColors.value.charges,
+      });
     },
   },
   xAxis: {

@@ -91,6 +91,10 @@
         "subscriptions": "By subscriptions",
         "tickets": "By tickets"
       }
+    },
+    "toggle": {
+      "hide": "Hide members list",
+      "show": "Show members list"
     }
   },
   "memberships": {

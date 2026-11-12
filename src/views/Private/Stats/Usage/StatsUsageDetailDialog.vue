@@ -4,144 +4,78 @@
     v-bind="$attrs"
     dialog-class="flex flex-col pt-4 relative overflow-hidden max-h-[min(90vh,840px)] max-w-[1680px] h-full grow">
     <LoadingProgressBar v-if="isFetchingUsages" class="absolute top-0 h-px w-full" />
-    <header v-if="title" class="mx-3 flex flex-row items-start justify-center sm:mx-12">
-      <AppButtonIcon
-        class="absolute top-3 right-3 dark:ring-offset-neutral-800"
-        :icon="mdiClose"
-        tabindex="0"
-        :title="$t('action.close')"
-        @click="() => (isVisible = false)" />
-      <AppButtonText
-        class="mx-auto shrink overflow-hidden"
-        color="gray"
-        @click="() => (state.isSummaryVisible = !state.isSummaryVisible)">
-        <h2
-          class="shrink truncate text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-          {{ title }}
-        </h2>
-        <AppIcon
-          class="shrink-0 dark:text-gray-500"
-          :icon="state.isSummaryVisible ? mdiUnfoldLessHorizontal : mdiUnfoldMoreHorizontal" />
-      </AppButtonText>
+    <header class="mx-3 flex flex-row items-start justify-center sm:mx-24">
+      <h2
+        v-if="title"
+        class="mx-auto shrink truncate py-1.5 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+        {{ title }}
+      </h2>
+      <div
+        class="absolute top-3 right-3 flex flex-row items-center gap-1 rounded-full bg-white/5 backdrop-blur-xl dark:bg-neutral-800/5">
+        <div class="relative">
+          <AppButtonIcon
+            :aria-pressed="state.isMembersListVisible"
+            class="dark:ring-offset-neutral-800"
+            :icon="state.isMembersListVisible ? mdiAccountMultiple : mdiAccountMultipleOutline"
+            tabindex="-1"
+            :title="
+              $t(
+                state.isMembersListVisible
+                  ? 'stats.usage.members.toggle.hide'
+                  : 'stats.usage.members.toggle.show',
+              )
+            "
+            @click="() => (state.isMembersListVisible = !state.isMembersListVisible)" />
+          <!-- Members matching the current selection (and search) -->
+          <span
+            v-if="selectedUsage"
+            class="pointer-events-none absolute -bottom-2 -left-2 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-indigo-600 px-1 text-[10px] leading-none font-semibold text-white tabular-nums ring-2 ring-white dark:bg-indigo-500 dark:ring-neutral-800">
+            {{ filteredList.length }}
+          </span>
+        </div>
+        <AppButtonIcon
+          class="dark:ring-offset-neutral-800"
+          :icon="mdiClose"
+          tabindex="0"
+          :title="$t('action.close')"
+          @click="() => (isVisible = false)" />
+      </div>
     </header>
 
     <div
       class="flex shrink grow basis-0 flex-row divide-x divide-gray-200 overflow-hidden dark:divide-neutral-700">
+      <!-- Scrolls on its own when its content does not fit -->
       <section
-        v-if="selectedUsage && state.isSummaryVisible"
-        class="flex h-full shrink grow basis-0 flex-col items-center gap-4 overflow-hidden p-4 sm:pr-6">
-        <div class="relative flex w-full shrink grow basis-0 flex-col overflow-hidden">
+        v-if="selectedUsage"
+        class="flex h-full shrink grow basis-0 flex-row flex-wrap items-stretch gap-4 overflow-y-auto p-4 sm:pr-6">
+        <div
+          :class="[
+            'relative flex w-full min-w-64 shrink grow basis-0 flex-col overflow-hidden',
+            !state.isMembersListVisible && 'min-h-72',
+          ]">
           <StatsUsageDistributionChart
-            v-model:selected="state.categories"
-            class="shrink grow basis-0 overflow-hidden"
+            v-model:selected="state.filters"
+            class="min-h-40 shrink grow basis-0 overflow-hidden"
             :usage="selectedUsage.data" />
           <AppButtonIcon
-            v-if="state.categories.length"
+            v-if="state.filters.length"
             class="absolute! top-1/2 left-1/2 -translate-1/2"
             :icon="mdiRestore"
             :title="$t('action.reset')"
-            @click="() => (state.categories = [])" />
+            @click="() => (state.filters = [])" />
         </div>
-        <dl class="flex w-full shrink grow basis-0 flex-col gap-1 dark:text-gray-300">
-          <div class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.ticket};`" />
-              <i18n-t
-                keypath="stats.usage.tickets.label"
-                :plural="totalTicketsCount"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(totalTicketsCount) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(totalTicketsAmount) }}
-            </dd>
-          </div>
-          <div
-            v-if="selectedUsage.data.tickets.debt?.count"
-            class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.debt};`" />
-              <i18n-t
-                keypath="stats.usage.tickets.debt.label"
-                :plural="selectedUsage.data.tickets.debt.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(selectedUsage.data.tickets.debt.count) }}
-                </template>
-              </i18n-t>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-400">
-              {{ `-${formatAmount(selectedUsage.data.tickets.debt.amount)}` }}
-            </dd>
-          </div>
-          <div class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.subscription};`" />
-              <i18n-t
-                keypath="stats.usage.subscriptions.label"
-                :plural="selectedUsage.data.subscriptions.count"
-                scope="global">
-                <template #count>
-                  {{ fractionNumber(selectedUsage.data.subscriptions.count) }}
-                </template>
-              </i18n-t>
-              <template v-if="selectedUsage.data.subscriptions.attending.count">
-                <br />
-                <i18n-t
-                  keypath="stats.usage.subscriptions.attending"
-                  :plural="selectedUsage.data.subscriptions.attending.count"
-                  scope="global">
-                  <template #count>
-                    {{ fractionNumber(selectedUsage.data.subscriptions.attending.count) }}
-                  </template>
-                </i18n-t>
-              </template>
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-900 dark:text-gray-100">
-              {{ formatAmount(selectedUsage.data.subscriptions.amount) }}
-            </dd>
-          </div>
-
-          <dd class="ml-auto text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            {{ formatAmount(selectedUsage.data.amount) }}
-          </dd>
-
-          <div class="flex flex-row items-start justify-between">
-            <dt class="flex flex-row items-start gap-1.5 text-left text-base font-normal">
-              <span
-                class="mt-1.5 block size-3 shrink-0 rounded-full"
-                :style="`background-color: ${statsColors.charges}`" />
-              {{ $t(`${i18nKeyPrefix}.graph.threshold`) }}
-            </dt>
-            <dd class="font-mono text-base font-medium text-gray-400">
-              {{ formatAmount(-selectedUsage.data.charges) }}
-            </dd>
-          </div>
-
-          <div
-            :class="[
-              'mt-2 -mr-2.5 inline-flex items-baseline self-end rounded-full px-2.5 py-0.5 font-mono text-base font-medium',
-              selectedUsage.data.amount > selectedUsage.data.charges
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800',
-            ]">
-            {{
-              `${selectedUsage.data.amount > selectedUsage.data.charges ? '+' : ''}${formatAmount(selectedUsage.data.amount - selectedUsage.data.charges)}`
-            }}
-          </div>
-        </dl>
+        <StatsPeriodSummary
+          v-if="summary"
+          class="mx-auto w-full max-w-md min-w-64 shrink grow basis-0 self-center dark:text-gray-300"
+          interactive
+          v-bind="summary"
+          @select="onSummarySelect" />
       </section>
 
-      <section class="flex shrink grow basis-0 flex-col self-stretch overflow-hidden">
+      <!-- Kept while loading or on error, to display these states -->
+      <section
+        v-if="state.isMembersListVisible || !selectedUsage"
+        class="flex max-w-xl shrink grow flex-col self-stretch overflow-hidden">
         <LoadingSpinner v-if="isPendingUsages" class="mx-auto size-16 grow" />
         <ErrorState
           v-else-if="usagesErrorText"
@@ -248,9 +182,10 @@
               v-for="member in filteredList"
               :key="member._id"
               as="li"
-              :categories="state.categories"
               class="w-full"
-              :member="member">
+              :filters="state.filters"
+              :member="member"
+              :prices="{ tickets: ticketsPrices, subscriptions: subscriptionsPrices }">
               <template v-if="state.sort === 'activity'" #chips:prepend>
                 <span
                   class="shrink truncate rounded-full px-2 py-0.5 text-center text-xs leading-6 whitespace-nowrap text-gray-800 ring-1 ring-inset dark:text-gray-100"
@@ -276,7 +211,10 @@
 <script setup lang="ts">
 import StatsUsageDistributionChart from './StatsUsageDistributionChart.vue';
 import UsageMemberCard from './UsageMemberCard.vue';
+import StatsPeriodSummary from '../StatsPeriodSummary.vue';
+import { getDistinctPrices } from '../priceBreakdown';
 import { useStatsColors } from '../statsColors';
+import { buildPriceRows, StatsTooltipRow } from '../statsTooltip';
 import EmptyOffice from '@/assets/animations/empty-office.lottie';
 import AppIcon from '@/components/AppIcon.vue';
 import EmptyState from '@/components/EmptyState.vue';
@@ -285,7 +223,6 @@ import LoadingProgressBar from '@/components/LoadingProgressBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
-import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppSearchField from '@/components/form/AppSearchField.vue';
 import AppDialog from '@/components/layout/AppDialog.vue';
 import { formatAmount, fractionNumber } from '@/helpers/currency';
@@ -293,26 +230,32 @@ import { searchIn } from '@/helpers/text';
 import { Frequency } from '@/services/api/stats/frequency';
 import {
   computeActivityFromUsage,
-  computeUsageAmountInCategories,
+  computeUsageAmountInFilters,
   getUsagePerFrequency,
-  isUsageInCategories,
+  isUsageInFilters,
+  isUsageFilterActive,
+  isUsageFilterSelected,
   MemberListItemWithUsage,
+  mergePriceBreakdowns,
   StatsUsage,
+  toggleUsageFilter,
   UsageCategory,
+  UsageFilter,
   WHOLE_PERIOD_SUMMARY_ROUTE_PARAM,
 } from '@/services/api/stats/usage';
 import { statsQueryKeys, useAppQuery } from '@/services/query';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
+  mdiAccountMultiple,
+  mdiAccountMultipleOutline,
   mdiCheck,
   mdiChevronDown,
   mdiClose,
   mdiRefresh,
   mdiRestore,
   mdiSort,
-  mdiUnfoldLessHorizontal,
-  mdiUnfoldMoreHorizontal,
 } from '@mdi/js';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { compact } from 'lodash';
 import { computed, PropType, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -331,8 +274,8 @@ const ALL_LIST_SORTERS = computed<ListSorter[]>(() => [
   {
     key: 'usage',
     sort: (a, b) =>
-      computeUsageAmountInCategories(b.usage, state.categories) -
-      computeUsageAmountInCategories(a.usage, state.categories),
+      computeUsageAmountInFilters(b.usage, state.filters) -
+      computeUsageAmountInFilters(a.usage, state.filters),
   },
   {
     key: 'debt',
@@ -369,11 +312,13 @@ const props = defineProps({
 
 const i18n = useI18n();
 const statsColors = useStatsColors();
+// Below lg, the members list is hidden by default to leave room for the summary
+const isLargeScreen = useBreakpoints(breakpointsTailwind).greaterOrEqual('lg');
 const state = reactive({
   search: null as string | null,
   sort: 'usage' as string | null,
-  isSummaryVisible: false,
-  categories: [] as UsageCategory[],
+  isMembersListVisible: isLargeScreen.value,
+  filters: [] as UsageFilter[],
 });
 
 const i18nKeyPrefix = computed(() => {
@@ -393,7 +338,7 @@ const i18nKeyPrefix = computed(() => {
 
 const filteredList = computed(() => {
   return (selectedUsage.value?.data.members || [])
-    .filter((member) => isUsageInCategories(member.usage, state.categories))
+    .filter((member) => isUsageInFilters(member.usage, state.filters))
     .filter((member) =>
       searchIn(
         state.search,
@@ -439,6 +384,7 @@ const addAdditionalDataToUsage = (usage: StatsUsage, additionalData: StatsUsage)
     tickets: {
       count: usage.tickets.count + additionalData.tickets.count,
       amount: usage.tickets.amount + additionalData.tickets.amount,
+      byPrice: mergePriceBreakdowns(usage.tickets.byPrice, additionalData.tickets.byPrice),
       debt: {
         count: (usage.tickets.debt?.count ?? 0) + (additionalData.tickets.debt?.count ?? 0),
         amount: (usage.tickets.debt?.amount ?? 0) + (additionalData.tickets.debt?.amount ?? 0),
@@ -447,6 +393,10 @@ const addAdditionalDataToUsage = (usage: StatsUsage, additionalData: StatsUsage)
     subscriptions: {
       count: usage.subscriptions.count + additionalData.subscriptions.count,
       amount: usage.subscriptions.amount + additionalData.subscriptions.amount,
+      byPrice: mergePriceBreakdowns(
+        usage.subscriptions.byPrice,
+        additionalData.subscriptions.byPrice,
+      ),
       attending: {
         count:
           (usage.subscriptions.attending?.count ?? 0) +
@@ -517,12 +467,139 @@ const selectedUsage = computed(() => {
   return usages.value?.find((m) => m.date === props.date) || null;
 });
 
+watch(isVisible, (visible) => {
+  if (visible) {
+    state.isMembersListVisible = isLargeScreen.value;
+  }
+});
+
 watch(
-  () => [props.date, state.isSummaryVisible],
+  () => props.date,
   () => {
-    state.categories = [];
+    state.filters = [];
   },
 );
+
+// Same prices as the distribution chart, so each price gets the same shade
+const ticketsPrices = computed(() =>
+  getDistinctPrices([selectedUsage.value?.data.tickets.byPrice]),
+);
+const subscriptionsPrices = computed(() =>
+  getDistinctPrices([selectedUsage.value?.data.subscriptions.byPrice]),
+);
+
+const onSummarySelect = (filter: unknown) => {
+  state.filters = toggleUsageFilter(state.filters, filter as UsageFilter);
+};
+
+/**
+ * Rows reflect and drive the same selection as the distribution chart.
+ */
+const withSelection = (row: StatsTooltipRow, category: UsageCategory): StatsTooltipRow => ({
+  ...row,
+  data: { category },
+  selected: isUsageFilterSelected(state.filters, category),
+  dimmed: !isUsageFilterActive(state.filters, category),
+  children: row.children?.map((child) => {
+    const price = child.data as number;
+    return {
+      ...child,
+      data: { category, price },
+      selected: isUsageFilterSelected(state.filters, category, price),
+      dimmed: !isUsageFilterActive(state.filters, category, price),
+    };
+  }),
+});
+
+const summary = computed(() => {
+  if (!selectedUsage.value) return null;
+  const { tickets, subscriptions, amount, charges } = selectedUsage.value.data;
+  const debtCount = tickets.debt?.count ?? 0;
+  const attendingCount = subscriptions.attending?.count ?? 0;
+
+  return {
+    rows: [
+      withSelection(
+        {
+          color: statsColors.value.ticket,
+          label: i18n.t(
+            'stats.usage.tickets.label',
+            { count: fractionNumber(totalTicketsCount.value) },
+            totalTicketsCount.value,
+          ),
+          amount: formatAmount(totalTicketsAmount.value),
+          children: buildPriceRows({
+            byPrice: tickets.byPrice,
+            prices: ticketsPrices.value,
+            color: statsColors.value.ticket,
+            ramp: statsColors.value.ticketPrices,
+            formatLabel: ({ count, price }) =>
+              i18n.t(
+                'stats.usage.tickets.byPrice.label',
+                { count: fractionNumber(count), price: formatAmount(price) },
+                count,
+              ),
+            formatAmount,
+          }),
+        },
+        'tickets',
+      ),
+      ...(debtCount
+        ? [
+            withSelection(
+              {
+                color: statsColors.value.debtPattern,
+                label: i18n.t(
+                  'stats.usage.tickets.debt.label',
+                  { count: fractionNumber(debtCount) },
+                  debtCount,
+                ),
+                amount: `-${formatAmount(tickets.debt.amount)}`,
+                muted: true,
+              },
+              'debt',
+            ),
+          ]
+        : []),
+      withSelection(
+        {
+          color: statsColors.value.subscription,
+          label: i18n.t(
+            'stats.usage.subscriptions.label',
+            { count: fractionNumber(subscriptions.count) },
+            subscriptions.count,
+          ),
+          ...(attendingCount && {
+            sublabel: i18n.t(
+              'stats.usage.subscriptions.attending',
+              { count: fractionNumber(attendingCount) },
+              attendingCount,
+            ),
+          }),
+          amount: formatAmount(subscriptions.amount),
+          children: buildPriceRows({
+            byPrice: subscriptions.byPrice,
+            prices: subscriptionsPrices.value,
+            color: statsColors.value.subscription,
+            ramp: statsColors.value.subscriptionPrices,
+            formatLabel: ({ count, price }) =>
+              i18n.t(
+                'stats.usage.subscriptions.byPrice.label',
+                { count: fractionNumber(count), price: formatAmount(price) },
+                count,
+              ),
+            formatAmount,
+          }),
+        },
+        'subscriptions',
+      ),
+    ],
+    total: amount,
+    charges,
+    chargesLabel: i18n.t(`${i18nKeyPrefix.value}.graph.threshold`),
+    chargesColor: statsColors.value.charges,
+  };
+});
 
 const totalTicketsCount = computed(
   () =>

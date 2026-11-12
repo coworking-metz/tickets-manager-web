@@ -91,6 +91,10 @@
         "subscriptions": "Par abonnements",
         "tickets": "Par tickets"
       }
+    },
+    "toggle": {
+      "hide": "Masquer la liste des membres",
+      "show": "Afficher la liste des membres"
     }
   },
   "memberships": {
