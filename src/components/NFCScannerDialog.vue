@@ -216,8 +216,9 @@ const isVisible = defineModel({
   default: false,
 });
 
-const emit = defineEmits({
-  'update:identifier': (_id: string | null) => true,
+const identifier = defineModel('identifier', {
+  type: String,
+  default: null,
 });
 
 const HAS_NFC = 'NDEFReader' in window;
@@ -332,9 +333,9 @@ watch([isVisible, isUnavailable], ([visible, unavailable]) => {
   }
 });
 
-watch(serialNumber, (identifier) => {
-  if (identifier) {
-    emit('update:identifier', identifier);
+watch(serialNumber, (serialNumberIdentifier) => {
+  if (serialNumberIdentifier) {
+    identifier.value = serialNumberIdentifier;
   }
 });
 </script>

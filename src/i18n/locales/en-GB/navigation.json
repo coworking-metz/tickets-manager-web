@@ -2,6 +2,7 @@
   "attendance": "@:attendance.title",
   "close": "Close menu",
   "history": "@:audit.list.title",
+  "loading": "Loading…",
   "members": "@:members.list.title",
   "miscellaneous": "@:miscellaneous.head.title",
   "open": "Open menu",

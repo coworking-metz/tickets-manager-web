@@ -5,6 +5,7 @@
     role="figure">
     <img
       v-if="state.shouldLoadThumbnail"
+      :alt="`${$t('members.detail.profile.picture.label')} - ${name || email}`"
       class="size-full object-cover object-center"
       loading="lazy"
       :src="thumbnail"

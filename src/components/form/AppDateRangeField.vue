@@ -96,10 +96,9 @@ import { type ErrorMessage } from '@/components/form/AppFieldHint.vue';
 import AppTextField from '@/components/form/AppTextField.vue';
 import AppDialogConfirm from '@/components/layout/AppDialogConfirm.vue';
 import { DATE_FORMAT } from '@/helpers/dates';
-import { useMobileWidth } from '@/helpers/screen';
 import { useTheme } from '@/services/theme';
 import { PresetDate, VueDatePicker } from '@vuepic/vue-datepicker';
-import { createReusableTemplate, onKeyStroke, useWindowSize } from '@vueuse/core';
+import { onKeyStroke, useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { computed, PropType, reactive, toValue, useSlots, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -201,7 +200,6 @@ const props = defineProps({
 });
 
 const i18n = useI18n();
-const isMobile = useMobileWidth();
 const theme = useTheme();
 const { width } = useWindowSize();
 const state = reactive({
@@ -213,8 +211,6 @@ const slots = useSlots();
 const otherSlots = computed(() =>
   Object.fromEntries(Object.entries(slots).filter(([name]) => !['before', 'after'].includes(name))),
 );
-
-const [DefinePicker, ReusePicker] = createReusableTemplate();
 
 const displayValue = computed(() =>
   period.value.start && period.value.end

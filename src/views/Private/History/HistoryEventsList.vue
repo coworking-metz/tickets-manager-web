@@ -40,13 +40,11 @@
           input-class="pr-0"
           :loading="state.isSearching"
           name="history-search"
-          :placeholder="$t('audit.list.search.placeholder')"
-          tabindex="1">
+          :placeholder="$t('audit.list.search.placeholder')">
           <template #after>
             <Menu as="div" class="relative -ml-px block">
               <MenuButton
-                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80"
-                tabindex="1">
+                class="relative -ml-px inline-flex h-full items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none sm:text-sm dark:border-neutral-600 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700/50 dark:active:bg-zinc-700/80">
                 <AppIcon class="size-5 shrink-0 text-gray-400" :icon="mdiSort" />
                 <span class="ml-2 whitespace-nowrap max-sm:hidden">
                   {{
@@ -167,7 +165,7 @@ import dayjs from 'dayjs';
 import { compact } from 'lodash';
 import { computed, nextTick, reactive, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { parseAsIndex, parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
+import { parseAsInteger, parseAsString, useQueryStates } from 'vue-qs';
 import { useRoute, useRouter } from 'vue-router';
 
 interface ListSorter {

@@ -1,0 +1,73 @@
+{
+  "connectedTo": "Connected to {name}",
+  "errors": {
+    "byCode": {
+      "battery_too_low": {
+        "title": "Battery too low to print."
+      },
+      "ble": {
+        "title": "Bluetooth error."
+      },
+      "cancelled": {
+        "title": "Print cancelled."
+      },
+      "cassette_missing": {
+        "title": "No cassette detected in the printer."
+      },
+      "connection_failed": {
+        "hint": "The printer is probably already connected to another device. Close the DYMO Connect app on your phone, switch the printer off and on again, then retry.",
+        "title": "Unable to connect to the printer."
+      },
+      "no_reply": {
+        "hint": "Check that the printer is on and the cassette is properly inserted, then retry. If it keeps failing, disconnect and reconnect the printer.",
+        "title": "The printer did not confirm the print."
+      },
+      "not_connected": {
+        "title": "The printer is not connected."
+      },
+      "not_letratag": {
+        "title": "This device is not a LetraTag LT-200B."
+      },
+      "protocol": {
+        "title": "Unreadable reply from the printer."
+      },
+      "unknown": {
+        "title": "Unknown printer error."
+      },
+      "unknown_failure": {
+        "title": "Printing failed."
+      }
+    }
+  },
+  "font": {
+    "label": "Font"
+  },
+  "length": "{length} mm of {max} mm maximum recommended for a mug",
+  "letterSpacing": {
+    "hint": "Between {min} and {max}%",
+    "label": "Letter spacing",
+    "unit": "%"
+  },
+  "onInsecure": {
+    "description": "Bluetooth printing is only available over a secure connection (https).",
+    "title": "Insecure connection"
+  },
+  "onPrint": {
+    "fail": "Unable to print the label",
+    "success": "Label printed"
+  },
+  "onUnavailable": {
+    "description": "Your browser does not support Web Bluetooth.\n\nWe recommend using Chrome or Edge on desktop or Android.",
+    "title": "Bluetooth unavailable"
+  },
+  "print": "Print",
+  "size": {
+    "hint": "Between {min} and {max} mm",
+    "label": "Text height",
+    "unit": "mm"
+  },
+  "text": {
+    "label": "Text"
+  },
+  "title": "Print a label"
+}

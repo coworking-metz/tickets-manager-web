@@ -3,7 +3,7 @@
     <slot :for-id="id" :label="label" name="label" :optional="optional">
       <label
         v-if="label"
-        class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100"
+        class="block text-left font-medium text-gray-900 sm:text-sm dark:text-gray-100"
         :for="id">
         {{
           [label, optional && `(${$t('validations.optional').toLocaleLowerCase()})`]

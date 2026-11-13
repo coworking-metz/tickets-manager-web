@@ -4,14 +4,14 @@
     <AppIcon :class="['size-5 shrink-0', titleColor]" :icon="icon || typeIcon" />
     <slot>
       <div class="flex flex-col gap-2">
-        <h3 v-if="title || $slots.title" :class="['font-medium sm:text-sm', titleColor]">
+        <h3 v-if="title || $slots.title" :class="['text-left font-medium sm:text-sm', titleColor]">
           <slot name="title">
             {{ title }}
           </slot>
         </h3>
         <p
           v-if="description || $slots.description"
-          :class="['text-sm font-normal whitespace-pre-line', descriptionColor]">
+          :class="['text-left text-sm font-normal whitespace-pre-line', descriptionColor]">
           <slot name="description">
             {{ description }}
           </slot>
@@ -19,19 +19,32 @@
         <slot name="action" />
       </div>
     </slot>
+    <AppButtonIcon
+      v-if="dismissable"
+      :class="['-my-1 -mr-2 ml-auto size-7 shrink-0 self-start', titleColor]"
+      :icon="mdiClose"
+      :title="$t('action.close')"
+      @click="emit('dismiss')" />
   </div>
 </template>
 
 <script setup lang="ts">
 import AppIcon from '@/components/AppIcon.vue';
+import AppButtonIcon from '@/components/form/AppButtonIcon.vue';
 import {
   mdiAlertCircleOutline,
   mdiAlertOutline,
   mdiCheckCircleOutline,
+  mdiClose,
   mdiHelpCircleOutline,
   mdiInformationOutline,
 } from '@mdi/js';
 import { PropType, computed } from 'vue';
+
+const emit = defineEmits<{
+  /** Close button clicked: the parent hides the alert (e.g. clears the state behind its `v-if`). */
+  (e: 'dismiss'): void;
+}>();
 
 const props = defineProps({
   type: {
@@ -49,6 +62,11 @@ const props = defineProps({
   icon: {
     type: String,
     default: null,
+  },
+  /** Show a close button, emitting `dismiss` */
+  dismissable: {
+    type: Boolean,
+    default: false,
   },
 });
 

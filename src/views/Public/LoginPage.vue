@@ -16,7 +16,10 @@
           <nav
             aria-label="Global"
             class="flex items-center justify-between sm:h-10 lg:justify-start">
-            <a class="-m-1.5 p-1.5" href="https://www.coworking-metz.fr">
+            <a
+              aria-label="Coworking Metz"
+              class="-m-1.5 p-1.5"
+              href="https://www.coworking-metz.fr">
               <LogoMono alt="Coworking Metz" class="h-16 w-auto text-white dark:text-stone-900" />
             </a>
           </nav>

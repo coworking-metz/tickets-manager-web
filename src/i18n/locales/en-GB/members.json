@@ -12,7 +12,7 @@
         },
         "withNonCompliantValue": {
           "FULL": "{' '}indebted",
-          "HALF": "<br />with half day indebted"
+          "HALF": "\nwith half day indebted"
         }
       },
       "onFetch": {
@@ -259,6 +259,7 @@
         "description": "",
         "label": "Name on the polaroid"
       },
+      "printLabel": "Print a label",
       "since": {
         "label": "Member since"
       },

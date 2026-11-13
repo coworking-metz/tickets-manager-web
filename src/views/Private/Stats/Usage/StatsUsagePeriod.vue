@@ -210,7 +210,6 @@ import { getDistinctPrices } from '@/views/Private/Stats/priceBreakdown';
 import { useStatsColors } from '@/views/Private/Stats/statsColors';
 import { buildPriceRows } from '@/views/Private/Stats/statsTooltip';
 import { Head } from '@unhead/vue/components';
-import { useWindowSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { computed, PropType, reactive, watch } from 'vue';
@@ -335,7 +334,6 @@ const subscriptionsPrices = computed(() =>
   getDistinctPrices((usages.value ?? []).map(({ data }) => data.subscriptions.byPrice)),
 );
 
-const { width } = useWindowSize();
 const options = computed<ComposeOption<GridComponentOption | TooltipComponentOption>>(() => ({
   tooltip: {
     className:

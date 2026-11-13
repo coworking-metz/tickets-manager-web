@@ -2,6 +2,7 @@
   "attendance": "@:attendance.title",
   "close": "Fermer le menu",
   "history": "@:audit.list.title",
+  "loading": "Chargement…",
   "members": "@:members.list.title",
   "messages": "@:messages.title",
   "miscellaneous": "@:miscellaneous.head.title",

@@ -28,5 +28,10 @@
   "head": {
     "title": "Autres"
   },
+  "labelPrinter": {
+    "description": "Imprimer des étiquettes avec l'imprimante DYMO LetraTag LT-200B du Poulailler, connectée en Bluetooth.\n\nFonctionne avec Chrome ou Edge, sur ordinateur ou Android.",
+    "open": "Imprimer une étiquette",
+    "title": "Étiquettes"
+  },
   "title": "Mais encore"
 }

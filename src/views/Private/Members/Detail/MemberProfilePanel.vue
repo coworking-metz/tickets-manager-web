@@ -116,9 +116,7 @@
         </template>
       </AppTextField>
 
-      <NFCScannerDialog
-        v-model="state.isScannerVisible"
-        @update:identifier="(id: string) => (state.badgeId = id)" />
+      <NFCScannerDialog v-model="state.isScannerVisible" v-model:identifier="state.badgeId" />
 
       <ul class="mt-2 mb-5 flex flex-col gap-4">
         <AppSwitchField
@@ -149,6 +147,17 @@
         type="submit">
         {{ $t('action.apply') }}
       </AppButtonPlain>
+      <AppButtonPlain
+        class="dark:focus:ring-offset-neutral-800"
+        color="neutral"
+        :icon="mdiLabelOutline"
+        type="button"
+        @click="state.isLabelPrintVisible = true">
+        {{ $t('members.detail.profile.printLabel') }}
+      </AppButtonPlain>
+      <LabelPrintDialog
+        v-model="state.isLabelPrintVisible"
+        :text="compact([state.firstname, state.lastname]).join(' ')" />
       <AppAlert
         v-if="state.hasFailValidationOnce"
         class="truncate"
@@ -163,6 +172,7 @@
 </template>
 
 <script setup lang="ts">
+import LabelPrintDialog from '@/components/LabelPrintDialog.vue';
 import NFCScannerDialog from '@/components/NFCScannerDialog.vue';
 import AppAlert from '@/components/form/AppAlert.vue';
 import AppButtonPlain from '@/components/form/AppButtonPlain.vue';
@@ -179,7 +189,13 @@ import { withAppI18nMessage } from '@/i18n';
 import { getMember, getMemberAttributes, updateMember } from '@/services/api/members';
 import { membersQueryKeys, useAppQuery } from '@/services/query';
 import { useNotificationsStore } from '@/store/notifications';
-import { mdiCakeVariantOutline, mdiCellphoneNfc, mdiCheckAll, mdiCreditCardOutline } from '@mdi/js';
+import {
+  mdiCakeVariantOutline,
+  mdiCellphoneNfc,
+  mdiCheckAll,
+  mdiCreditCardOutline,
+  mdiLabelOutline,
+} from '@mdi/js';
 import { useQueryClient } from '@tanstack/vue-query';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
@@ -224,6 +240,7 @@ const state = reactive({
   hasFailValidationOnce: false as boolean,
 
   isScannerVisible: false,
+  isLabelPrintVisible: false,
 });
 
 const {

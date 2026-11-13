@@ -28,5 +28,10 @@
   "head": {
     "title": "Miscellaneous"
   },
+  "labelPrinter": {
+    "description": "Print labels with the Poulailler's DYMO LetraTag LT-200B printer, connected over Bluetooth.\n\nWorks with Chrome or Edge, on desktop or Android.",
+    "open": "Print a label",
+    "title": "Labels"
+  },
   "title": "More"
 }

@@ -10,3 +10,6 @@ declare module '*.vue' {
 declare module '@jamescoyle/vue-icon';
 declare module '*.lottie';
 declare module 'vue-number-animation';
+
+// CSS-only package, imported for its side effect (font faces)
+declare module 'typeface-inter';
