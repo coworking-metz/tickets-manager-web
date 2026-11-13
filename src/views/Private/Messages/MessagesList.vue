@@ -18,8 +18,7 @@
           hide-details
           input-class="pr-0"
           name="messages-search"
-          :placeholder="$t('messages.list.search.placeholder')"
-          tabindex="1" />
+          :placeholder="$t('messages.list.search.placeholder')" />
       </div>
       <AppButtonPlain
         class="mx-3 w-full whitespace-nowrap sm:mx-0 sm:w-auto"

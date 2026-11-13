@@ -122,7 +122,8 @@ const iconColors = computed(() => {
   }
 });
 
-const confirmColor = computed(() => {
+// typed for `AppButtonPlain`'s `color` prop (slot consumers pass it along)
+const confirmColor = computed((): 'red' | 'amber' | 'blue' | 'emerald' | 'indigo' => {
   switch (props.type) {
     case 'critical':
       return 'red';

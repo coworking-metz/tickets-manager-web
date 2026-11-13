@@ -5,7 +5,7 @@
     v-model="selectedOption"
     :aria-invalid="isInvalid"
     as="ul"
-    class="flex flex-col"
+    class="flex flex-col items-start"
     :name="name"
     v-bind="$attrs">
     <RadioGroupLabel class="font-medium text-gray-900 sm:text-sm dark:text-gray-100" :for="id">
@@ -14,21 +14,21 @@
     <RadioGroupDescription class="text-sm text-slate-500 dark:text-slate-400">
       {{ description }}
     </RadioGroupDescription>
-    <ul class="mt-1 flex flex-row bg-white dark:bg-neutral-800">
+    <ul
+      class="mt-1 flex max-w-full flex-row divide-x divide-gray-300 overflow-auto rounded-lg border border-gray-300 bg-white dark:divide-neutral-600 dark:border-neutral-600 dark:bg-neutral-800">
       <RadioGroupOption
         v-for="(option, index) in options"
         :key="`toggle-option-${option}`"
         as="li"
-        class="min-w-16 shrink grow basis-0"
+        class="min-w-min shrink grow basis-0"
         :disabled="disabled"
         :value="option"
         v-slot="{ active, checked, disabled: optionDisabled }">
         <div
+          :aria-selected="checked"
           :class="[
-            'flex h-full cursor-pointer flex-row items-center justify-center border-y border-l border-gray-300 p-3 text-center font-medium transition-colors focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm dark:border-neutral-600',
+            'flex h-full cursor-pointer flex-row items-center justify-center  p-3 text-center font-medium transition-colors focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm dark:border-neutral-600',
             active && 'z-10 border-indigo-500',
-            index === 0 && 'rounded-l-lg',
-            index === options.length - 1 && !hasOther && 'rounded-r-lg border-r',
             checked
               ? 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
               : 'bg-neutral-100 text-gray-900 hover:bg-neutral-200 active:bg-neutral-300 dark:bg-neutral-700/40 dark:text-gray-100 dark:hover:bg-neutral-700/80 dark:active:bg-neutral-700',
@@ -45,6 +45,7 @@
               !disabled &&
               ((isValueEmpty && index === 0) || selectedOption === option)
             "
+            aria-hidden="true"
             class="autofill-input"
             :inputmode="otherInputmode"
             :name="name"
@@ -74,6 +75,7 @@
         "
         v-slot="{ active, checked, disabled: optionDisabled }">
         <div
+          :aria-selected="checked"
           :class="[
             'flex h-full cursor-pointer flex-row items-center justify-center rounded-r-lg border border-gray-300 text-center font-medium transition-colors focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 dark:border-neutral-600',
             active && 'z-10 ring-2 ring-offset-0',
@@ -124,6 +126,7 @@
             @focus="state.isInputFocus = true" /> -->
             <input
               v-model="state.inputText"
+              :aria-label="label"
               :autocomplete="name"
               class="m-auto size-full border-none border-transparent bg-transparent p-0 text-center focus:border-transparent focus:ring-0 sm:text-sm"
               :disabled="!!disabled"

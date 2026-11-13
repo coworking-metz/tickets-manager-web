@@ -29,7 +29,7 @@
             }
           "
           :activity="activity"
-          class="pl-2 max-sm:overflow-x-auto max-sm:pr-2"
+          class="overflow-x-scroll pl-2 max-sm:pr-2"
           :selected-date="selectedActivityDate" />
       </div>
 

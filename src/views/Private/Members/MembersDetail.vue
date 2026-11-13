@@ -164,6 +164,7 @@
       dialog-class="max-w-xl relative overflow-hidden min-h-40 !bg-black">
       <img
         v-if="member?.picture"
+        :alt="fullname"
         class="max-h-[80vh] w-full object-contain"
         :src="member.picture" />
       <AppButtonIcon

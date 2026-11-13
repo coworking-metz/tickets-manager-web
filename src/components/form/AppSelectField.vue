@@ -11,7 +11,7 @@
       <slot :for-id="id" :label="label" name="label" :optional="optional">
         <ComboboxLabel
           v-if="label"
-          class="block font-medium text-gray-900 sm:text-sm dark:text-gray-100"
+          class="block text-left font-medium text-gray-900 sm:text-sm dark:text-gray-100"
           :for="id">
           {{
             [label, optional && `(${$t('common.optional').toLocaleLowerCase()})`]
@@ -21,7 +21,7 @@
         </ComboboxLabel>
       </slot>
       <slot :description="description" name="description">
-        <span class="text-sm text-slate-500 dark:text-slate-400">{{ description }}</span>
+        <span class="text-left text-sm text-slate-500 dark:text-slate-400">{{ description }}</span>
       </slot>
       <slot name="above" />
       <div :class="['group relative flex flex-row gap-3', (label || description) && 'mt-1']">

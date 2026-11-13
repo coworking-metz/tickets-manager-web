@@ -100,20 +100,49 @@
           </AppButtonText>
         </div>
       </AppPanel>
+
+      <AppPanel>
+        <h3
+          class="flex flex-row items-center gap-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+          <AppIcon class="size-5" :icon="mdiLabelOutline" />
+          {{ $t('miscellaneous.labelPrinter.title') }}
+        </h3>
+        <p class="mt-2 max-w-prose text-sm whitespace-pre-line text-gray-500 dark:text-gray-400">
+          {{ $t('miscellaneous.labelPrinter.description') }}
+        </p>
+        <div class="mt-5 flex flex-row flex-wrap items-center gap-3">
+          <AppButtonTonal
+            class="dark:focus:ring-offset-neutral-800"
+            color="indigo"
+            :icon="mdiPrinter"
+            @click="state.isLabelPrintVisible = true">
+            {{ $t('miscellaneous.labelPrinter.open') }}
+          </AppButtonTonal>
+        </div>
+        <LabelPrintDialog v-model="state.isLabelPrintVisible" />
+      </AppPanel>
     </div>
   </article>
 </template>
 
 <script lang="ts" setup>
 import AppIcon from '@/components/AppIcon.vue';
+import LabelPrintDialog from '@/components/LabelPrintDialog.vue';
 import AppButtonText from '@/components/form/AppButtonText.vue';
 import AppButtonTonal from '@/components/form/AppButtonTonal.vue';
 import AppPanel from '@/components/layout/AppPanel.vue';
 import {
   mdiBookOpenVariantOutline,
   mdiCalendarMultiple,
+  mdiLabelOutline,
   mdiOpenInNew,
+  mdiPrinter,
   mdiTelevisionGuide,
 } from '@mdi/js';
 import { Head } from '@unhead/vue/components';
+import { reactive } from 'vue';
+
+const state = reactive({
+  isLabelPrintVisible: false,
+});
 </script>

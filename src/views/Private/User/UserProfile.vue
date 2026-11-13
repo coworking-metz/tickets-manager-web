@@ -8,13 +8,13 @@
       <div class="mb-6 shrink grow basis-0">
         <RouterLink
           v-if="authStore.user?.id"
-          class="group relative block shrink-0 self-start overflow-hidden rounded-lg"
+          class="group relative block shrink-0 self-start overflow-hidden"
           :to="{
             name: ROUTE_NAMES.MEMBERS.DETAIL.INDEX,
             params: { memberId: authStore.user.id },
           }">
           <MembersThumbnail
-            class="size-32 rounded-none text-5xl"
+            class="size-32 rounded-xl text-5xl"
             :email="authStore.user.email"
             :name="authStore.user.name"
             :thumbnail="authStore.user.picture">
@@ -31,7 +31,7 @@
           :name="authStore.user?.name"
           :thumbnail="authStore.user?.picture" />
       </div>
-      <div class="flex w-full flex-col md:ml-6">
+      <div class="flex w-full max-w-xl flex-col md:ml-6">
         <div class="md:border-l md:border-gray-200 md:pl-6 dark:border-stone-700">
           <h1
             class="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl dark:text-gray-100">

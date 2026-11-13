@@ -47,8 +47,13 @@
               page-mode>
               <template #default="{ item: member }">
                 <li
+                  :aria-checked="isSelected(member._id)"
                   class="cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-neutral-900/50"
-                  @click="toggleMember(member)">
+                  role="checkbox"
+                  tabindex="0"
+                  @click="toggleMember(member)"
+                  @keydown.enter.prevent="toggleMember(member)"
+                  @keydown.space.prevent="toggleMember(member)">
                   <div class="flex items-center p-4 sm:px-6">
                     <div class="flex min-w-0 flex-1 items-start">
                       <div class="relative">

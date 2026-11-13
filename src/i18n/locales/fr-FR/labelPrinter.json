@@ -1,0 +1,73 @@
+{
+  "connectedTo": "Connectée à {name}",
+  "errors": {
+    "byCode": {
+      "battery_too_low": {
+        "title": "Batterie trop faible pour imprimer."
+      },
+      "ble": {
+        "title": "Erreur Bluetooth."
+      },
+      "cancelled": {
+        "title": "Impression annulée."
+      },
+      "cassette_missing": {
+        "title": "Aucune cassette détectée dans l'imprimante."
+      },
+      "connection_failed": {
+        "hint": "L'imprimante est sans doute déjà connectée à un autre appareil. Fermez l'application DYMO Connect sur votre téléphone, éteignez puis rallumez l'imprimante et réessayez.",
+        "title": "Connexion à l'imprimante impossible."
+      },
+      "no_reply": {
+        "hint": "Vérifiez que l'imprimante est allumée, que la cassette est bien en place, puis réessayez. Si le problème persiste, déconnectez puis reconnectez l'imprimante.",
+        "title": "L'imprimante n'a pas confirmé l'impression."
+      },
+      "not_connected": {
+        "title": "L'imprimante n'est pas connectée."
+      },
+      "not_letratag": {
+        "title": "Cet appareil n'est pas une LetraTag LT-200B."
+      },
+      "protocol": {
+        "title": "Réponse de l'imprimante incompréhensible."
+      },
+      "unknown": {
+        "title": "Erreur inconnue de l'imprimante."
+      },
+      "unknown_failure": {
+        "title": "L'impression a échoué."
+      }
+    }
+  },
+  "font": {
+    "label": "Police"
+  },
+  "length": "{length} mm sur {max} mm maximum recommandés pour une tasse",
+  "letterSpacing": {
+    "hint": "Entre {min} et {max} %",
+    "label": "Espacement des lettres",
+    "unit": "%"
+  },
+  "onInsecure": {
+    "description": "L'impression Bluetooth n'est disponible qu'au travers d'une connexion sécurisée (https).",
+    "title": "Connexion non sécurisée"
+  },
+  "onPrint": {
+    "fail": "Impossible d'imprimer l'étiquette",
+    "success": "Étiquette imprimée"
+  },
+  "onUnavailable": {
+    "description": "Votre navigateur ne supporte pas le Web Bluetooth.\n\nNous recommandons d'utiliser Chrome ou Edge sur ordinateur ou Android.",
+    "title": "Bluetooth indisponible"
+  },
+  "print": "Imprimer",
+  "size": {
+    "hint": "Entre {min} et {max} mm",
+    "label": "Hauteur du texte",
+    "unit": "mm"
+  },
+  "text": {
+    "label": "Texte"
+  },
+  "title": "Imprimer une étiquette"
+}

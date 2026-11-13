@@ -6,7 +6,6 @@ import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescrip
 import importX from 'eslint-plugin-import-x';
 import jsonc from 'eslint-plugin-jsonc';
 import prettierPlugin from 'eslint-plugin-prettier';
-import storybook from 'eslint-plugin-storybook';
 import tailwindcss from 'eslint-plugin-tailwindcss';
 import pluginVue from 'eslint-plugin-vue';
 import vuejsAccessibility from 'eslint-plugin-vuejs-accessibility';
@@ -76,18 +75,12 @@ export default withVueTs(
       },
     },
     rules: {
-      // TODO: fix the accessibility issues these rules report across the app, then remove this
-      // override so they go back to their "error" severity from eslint-plugin-vuejs-accessibility's
-      // recommended config (this plugin was previously registered but never actually enabled).
-      ...Object.fromEntries(
-        Object.keys(vuejsAccessibility.rules).map((rule) => [
-          `vuejs-accessibility/${rule}`,
-          'warn',
-        ]),
-      ),
       // A label is associated to its control either by nesting it or with `for` + `id`:
       // the default requires both, which is impossible when the control is inside a component
-      'vuejs-accessibility/label-has-for': ['warn', { required: { some: ['nesting', 'id'] } }],
+      'vuejs-accessibility/label-has-for': [ERROR, { required: { some: ['nesting', 'id'] } }],
+      // Tailwind's preflight removes list styles, and Safari/VoiceOver then stops announcing lists:
+      // an explicit `role="list"` restores it
+      'vuejs-accessibility/no-redundant-roles': [ERROR, { ul: ['list'], ol: ['list'] }],
       'import-x/prefer-default-export': OFF,
       '@intlify/vue-i18n/no-raw-text': [ERROR],
       // as long as the project doesn't support split namespaces structure
@@ -203,5 +196,4 @@ export default withVueTs(
       ],
     },
   },
-  ...storybook.configs['flat/recommended'],
 );

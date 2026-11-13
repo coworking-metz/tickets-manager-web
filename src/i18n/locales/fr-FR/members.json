@@ -12,7 +12,7 @@
         },
         "withNonCompliantValue": {
           "FULL": "{' '}redevable",
-          "HALF": "<br />dont une demi-journée redevable"
+          "HALF": "\ndont une demi-journée redevable"
         }
       },
       "onFetch": {
@@ -259,6 +259,7 @@
         "description": "",
         "label": "Nom sur le polaroid"
       },
+      "printLabel": "Imprimer une étiquette",
       "since": {
         "label": "Membre depuis le"
       },

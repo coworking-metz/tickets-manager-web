@@ -23,8 +23,13 @@
         <li
           v-for="member in filteredMembers"
           :key="member._id"
+          :aria-checked="isSelected(member._id)"
           class="cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-neutral-900/50"
-          @click="toggleMember(member._id)">
+          role="checkbox"
+          tabindex="0"
+          @click="toggleMember(member._id)"
+          @keydown.enter.prevent="toggleMember(member._id)"
+          @keydown.space.prevent="toggleMember(member._id)">
           <div class="flex items-center p-4 sm:px-6">
             <div class="flex min-w-0 flex-1 items-start">
               <div class="relative">
